@@ -23,18 +23,6 @@ endif()
 add_subdirectory(glfw)
 
 # -----------------------------------------------------------------------------
-# ---- glm --------------------------------------------------------------------
-# -----------------------------------------------------------------------------
-
-if(NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/glm/CMakeLists.txt")
-    	message(FATAL_ERROR "Sennet submodule glm was not downloaded! "
-		"GIT_SUBMODULE was turned off or failed. Please update submodules and "
-		"try again.")
-endif()
-
-add_subdirectory(glm)
-
-# -----------------------------------------------------------------------------
 # ---- imgui ------------------------------------------------------------------
 # -----------------------------------------------------------------------------
 
@@ -45,15 +33,3 @@ if(NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/imgui/CMakeLists.txt")
 endif()
 
 add_subdirectory(imgui)
-
-# -----------------------------------------------------------------------------
-# ---- spdlog -----------------------------------------------------------------
-# -----------------------------------------------------------------------------
-
-if(NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/spdlog/CMakeLists.txt")
-    	message(FATAL_ERROR "Sennet submodule spdlog was not downloaded! "
-		"GIT_SUBMODULE was turned off or failed. Please update submodules and "
-		"try again.")
-endif()
-
-add_subdirectory(spdlog)

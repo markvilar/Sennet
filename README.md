@@ -11,7 +11,52 @@ The requirements are:
 - C++17 compiler
 - CMake 3.16 (or higher)
 
-## GLFW dependencies on Linux distributions
+## Building with CMake
+
+<details>
+<summary>Single configuration generators (Unix Makefiles)</summary>
+
+- Debug mode:
+```
+git clone https://gitub.com/markvilar/Sennet.git
+cd Sennet
+cmake -S . -B build/ -G "Unix Makefiles" "-DCMAKE_BUILD_TYPE=Debug"
+cmake --build build/
+```
+
+- Realese mode:
+```
+git clone https://gitub.com/markvilar/Sennet.git
+cd Sennet
+cmake -S . -B build/ -G "Unix Makefiles" "-DCMAKE_BUILD_TYPE=Realese"
+cmake --build build/
+```
+</details>
+
+
+<details>
+<summary>Multiple configuration generators (Visual Studio)</summary>
+
+- Debug mode:
+```
+git clone https://gitub.com/markvilar/Sennet.git
+cd Sennet
+cmake -S . -B build/ -G "Visual Studio 16 2019" -A x64
+cmake --build build/ --config Debug
+```
+
+- Realese mode:
+```
+git clone https://gitub.com/markvilar/Sennet.git
+cd Sennet
+cmake -S . -B build/ -G "Visual Studio 16 2019" -A x64
+cmake --build build/ --config Realese
+```
+</details>
+
+## Optional Dependencies
+
+### GLFW
 
 Sennet currently uses GLFW for its window and input system. Depending on the
 windowing system of the OS, GLFW requires installation of additional libraries
@@ -22,42 +67,6 @@ requires installation of the following dependencies: `libxrandr-dev`
 To install via `apt`:
 ```
 apt install libxrandr-dev libxinerama-dev libxcursor-dev libxi-dev libxext-dev
-```
-
-## Building with CMake - Single configuration generators (Unix Makefiles)
-
-Debug mode:
-```
-git clone https://gitub.com/markvilar/Sennet.git
-cd Sennet
-cmake -S . -B build/ -G "Unix Makefiles" "-DCMAKE_BUILD_TYPE=Debug"
-cmake --build build/
-```
-
-Realese mode:
-```
-git clone https://gitub.com/markvilar/Sennet.git
-cd Sennet
-cmake -S . -B build/ -G "Unix Makefiles" "-DCMAKE_BUILD_TYPE=Realese"
-cmake --build build/
-```
-
-## Building with CMake - Multiple configuration generators (Visual Studio)
-
-Debug mode:
-```
-git clone https://gitub.com/markvilar/Sennet.git
-cd Sennet
-cmake -S . -B build/ -G "Visual Studio 16 2019" -A x64
-cmake --build build/ --config Debug
-```
-
-Realese mode:
-```
-git clone https://gitub.com/markvilar/Sennet.git
-cd Sennet
-cmake -S . -B build/ -G "Visual Studio 16 2019" -A x64
-cmake --build build/ --config Realese
 ```
 
 ## Development Plan

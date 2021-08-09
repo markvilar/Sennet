@@ -5,31 +5,31 @@
 #if defined(SN_PLATFORM_LINUX)
 #elif defined(SN_PLATFORM_WINDOWS)
 #elif defined(SN_PLATFORM_MACOS)
-#error "MACOS is not supported yet!"
+    #error "MACOS is not supported yet!"
 #elif defined(SN_PLATFORM_IOS)
-#error "IOS is not supported yet!"
+    #error "IOS is not supported yet!"
 #else
-#error "Unknown build platform!"
+    #error "Unknown build platform!"
 #endif
 
 #if defined(SN_DEBUG)
-#elif defined(SN_REALESE)
+#elif defined(SN_RELEASE)
 #else
-#error "Unknown build type!"
+    #error "Unknown build type!"
 #endif
 
 #if defined(SN_DEBUG)
-#if defined(SN_PLATFORM_WINDOWS)
-#define SN_DEBUGBREAK() __debugbreak()
-#elif defined(SN_PLATFORM_LINUX)
-#include <signal.h>
-#define SN_DEBUGBREAK() raise(SIGTRAP)
-#else
-#error "Platform doesn't support debugbreak yet!"
-#endif
-#define SN_ENABLE_ASSERTS
-#else
-#define SN_DEBUGBREAK()
+    #if defined(SN_PLATFORM_WINDOWS)
+        #define SN_DEBUGBREAK() __debugbreak()
+    #elif defined(SN_PLATFORM_LINUX)
+        #include <signal.h>
+        #define SN_DEBUGBREAK() raise(SIGTRAP)
+    #else
+        #error "Platform doesn't support debugbreak yet!"
+    #endif
+    #define SN_ENABLE_ASSERTS
+#elif defined(SN_RELEASE)
+    #define SN_DEBUGBREAK()
 #endif
 
 // TODO: Make macro able to take in no arguments except condition.

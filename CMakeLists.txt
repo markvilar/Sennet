@@ -1,96 +1,67 @@
 cmake_minimum_required(VERSION 3.16)
 
 # -----------------------------------------------------------------------------
-# ---- Sennet project ---------------------------------------------------------
+# ---- Project ----------------------------------------------------------------
 # -----------------------------------------------------------------------------
 
-project(Sennet VERSION 0.1 LANGUAGES CXX)
+project(
+    Sennet
+    VERSION 0.1
+    LANGUAGES CXX)
+
+include(CMake/ProjectSettings.cmake)
+include(CMake/PreventInSourceBuild.cmake)
 
 # -----------------------------------------------------------------------------
-# ---- Main project -----------------------------------------------------------
+# ---- Project options and warnings -------------------------------------------
 # -----------------------------------------------------------------------------
 
-if(NOT DEFINED SENNET_MAIN_PROJECT)
-	if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
-		set(SENNET_MAIN_PROJECT ON)
-	else()
-		set(SENNET_MAIN_PROJECT OFF)
-	endif()
-endif()
+add_library(ProjectOptions INTERFACE)
+target_compile_features(ProjectOptions INTERFACE cxx_std_20)
+
+add_library(ProjectWarnings INTERFACE)
+
 # -----------------------------------------------------------------------------
 # ---- Build options ----------------------------------------------------------
 # -----------------------------------------------------------------------------
 
-option(SENNET_BUILD_SHARED   "Build shared library."     OFF)
-option(SENNET_BUILD_EXAMPLE  "Build examples."           ON)
-option(SENNET_BUILD_EDITOR   "Build editor."             ON)
+option(SENNET_BUILD_SHARED "Build shared library." OFF)
+option(SENNET_BUILD_EXAMPLE "Build examples." ON)
+option(SENNET_BUILD_EDITOR "Build editor." ON)
 option(SENNET_BUILD_WARNINGS "Enable compiler warnings." ON)
-
-# -----------------------------------------------------------------------------
-# ---- Build type -------------------------------------------------------------
-# -----------------------------------------------------------------------------
-
-if (NOT CMAKE_BUILD_TYPE)
-	set(CMAKE_BUILD_TYPE "Realese" CACHE STRING "Choose Realese or Debug." 
-		FORCE)
-endif()
-
-set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -DSN_DEBUG")
-set(CMAKE_CXX_FLAGS_REALESE "${CMAKE_CXX_FLAGS_REALESE} -DSN_REALESE")
 
 # -----------------------------------------------------------------------------
 # ---- Compiler configuration -------------------------------------------------
 # -----------------------------------------------------------------------------
 
-if(NOT CMAKE_CXX_STANDARD)
-	set(CMAKE_CXX_STANDARD 20)
-	set(CMAKE_CXX_STANDARD_REQUIRED ON)
-endif()
+# Enable cache system.
+include(CMake/Cache.cmake)
 
-if(SENNET_MAIN_PROJECT)
-	set(CMAKE_CXX_EXTENSIONS OFF)
-	set_property(GLOBAL PROPERTY USE_FOLDERS ON)
-endif()
+# Standard compiler warnings.
+include(CMake/CompilerWarning.cmake)
+set_project_warnings(ProjectWarnings)
 
-# -----------------------------------------------------------------------------
-# ---- Git --------------------------------------------------------------------
-# -----------------------------------------------------------------------------
+# Sanitizer options if supported by compiler.
+include(CMake/Sanitizers.cmake)
+enable_sanitizers(ProjectOptions)
 
-find_package(Git QUIET REQUIRED)
-
-if(GIT_FOUND AND EXISTS "${PROJECT_SOURCE_DIR}/.git")
-    option(GIT_SUBMODULE "Check submodules during build" ON)
-    if(GIT_SUBMODULE)
-        message(STATUS "Submodule update")
-        execute_process(COMMAND ${GIT_EXECUTABLE} submodule update --init 
-			--recursive WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} 
-			RESULT_VARIABLE GIT_SUBMOD_RESULT)
-        if(NOT GIT_SUBMOD_RESULT EQUAL "0")
-            message(FATAL_ERROR CONCAT "git submodule update --init failed "
-				"with ${GIT_SUBMOD_RESULT}, please checkout submodules.")
-        endif()
-    endif()
-endif()
+# Allow static analysis options.
+include(CMake/StaticAnalyzers.cmake)
 
 # -----------------------------------------------------------------------------
-# ---- Build platform ---------------------------------------------------------
+# ---- Tools ------------------------------------------------------------------
 # -----------------------------------------------------------------------------
 
-# TODO: Cross-compilation support.
-if(UNIX)
-	string(JOIN " " CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}" "-DSN_PLATFORM_LINUX"
-		"-DGLFW_INCLUDE_NONE")
-elseif(WIN32)
-	string(JOIN " " CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}" "-DSN_PLATFORM_WINDOWS"
-		"-DGLFW_INCLUDE_NONE")
-endif()
+# Doxygen
+include(CMake/Doxygen.cmake)
+enable_doxygen()
 
-# -----------------------------------------------------------------------------
-# ---- Print ------------------------------------------------------------------
-# -----------------------------------------------------------------------------
+# Git
+include(CMake/GitSetup.cmake)
 
-message(STATUS "Sennet build type: ${CMAKE_BUILD_TYPE}")
-message(STATUS "Sennet C++ flags: ${CMAKE_CXX_FLAGS}")
+# Conan
+include(CMake/Conan.cmake)
+run_conan()
 
 # -----------------------------------------------------------------------------
 # ---- Source -----------------------------------------------------------------
@@ -99,5 +70,5 @@ message(STATUS "Sennet C++ flags: ${CMAKE_CXX_FLAGS}")
 add_subdirectory(Sennet)
 
 if(SENNET_BUILD_EDITOR)
-	add_subdirectory(Editor)
+    add_subdirectory(Editor)
 endif()
