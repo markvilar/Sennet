@@ -25,6 +25,7 @@ add_library(ProjectWarnings INTERFACE)
 # ---- Build options ----------------------------------------------------------
 # -----------------------------------------------------------------------------
 
+option(SENNET_USE_VENDOR_IMGUI "Use imgui from vendor." ON)
 option(SENNET_BUILD_SHARED "Build shared library." OFF)
 option(SENNET_BUILD_EXAMPLE "Build examples." ON)
 option(SENNET_BUILD_EDITOR "Build editor." ON)

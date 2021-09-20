@@ -11,6 +11,16 @@ The requirements are:
 - C++17 compiler
 - CMake 3.16 (or higher)
 
+## Dependencies
+
+asio
+glad
+glfw
+glm
+imgui
+spdlog
+stb
+
 ## Building with CMake
 
 <details>

@@ -4,20 +4,14 @@ set(SENNET_EDITOR_VENDOR_DIR "${PROJECT_SOURCE_DIR}/Editor/Vendor")
 
 set(SENNET_EDITOR_HDR "${SENNET_EDITOR_INCLUDE_DIR}/Editor/EditorLayer.hpp")
 set(SENNET_EDITOR_SRC "${SENNET_EDITOR_SOURCE_DIR}/Editor/EditorLayer.cpp")
-	
-add_library(Sennet-Editor STATIC 
-	${SENNET_EDITOR_HDR}
-	${SENNET_EDITOR_SRC})
 
-target_include_directories(Sennet-Editor PUBLIC
-	"${SENNET_EDITOR_INCLUDE_DIR}"
-	"${SENNET_VENDOR_DIR}/glm"
-	"${SENNET_VENDOR_DIR}/imgui"
-	"${SENNET_VENDOR_DIR}/spdlog/include")
+add_library(Sennet-Editor STATIC ${SENNET_EDITOR_HDR} ${SENNET_EDITOR_SRC})
 
-add_subdirectory(Vendor)
+target_include_directories(Sennet-Editor PUBLIC "${SENNET_EDITOR_INCLUDE_DIR}"
+)# glm, imgui, spdlog
+
 add_subdirectory(Application)
 
 target_link_libraries(Sennet-Editor PRIVATE Sennet)
 target_compile_definitions(Sennet-Editor PRIVATE)
-target_compile_features(Sennet-Editor PUBLIC cxx_std_17)
+target_compile_features(Sennet-Editor PUBLIC cxx_std_20)

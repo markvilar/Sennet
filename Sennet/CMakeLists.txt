@@ -1,6 +1,5 @@
 set(SENNET_INCLUDE_DIR "${PROJECT_SOURCE_DIR}/Sennet/Include")
 set(SENNET_SOURCE_DIR "${PROJECT_SOURCE_DIR}/Sennet/Source")
-set(SENNET_VENDOR_DIR "${PROJECT_SOURCE_DIR}/Sennet/Vendor")
 
 set(SENNET_HDR
     "${SENNET_INCLUDE_DIR}/Sennet/Sennet.hpp"
@@ -103,51 +102,50 @@ add_library(Sennet::Sennet ALIAS Sennet)
 
 target_precompile_headers(Sennet PRIVATE "${SENNET_INCLUDE_DIR}/Sennet/Pch.hpp")
 
-add_subdirectory(Vendor)
-
 if(SENNET_BUILD_EXAMPLE)
     add_subdirectory(Example)
 endif()
 
-message(STATUS "Conan asio:   ${CONAN_INCLUDE_DIRS_ASIO}"  )
-message(STATUS "Conan glm:    ${CONAN_INCLUDE_DIRS_GLM}"   )
-message(STATUS "Conan spdlog: ${CONAN_INCLUDE_DIRS_SPDLOG}")
-message(STATUS "Conan glad:   ${CONAN_INCLUDE_DIRS_GLAD}"  )
-message(STATUS "Conan glfw:   ${CONAN_INCLUDE_DIRS_GLFW}"  )
+add_subdirectory(Vendor)
+
+# TODO: Add find_package() support for imgui.
+find_package(asio REQUIRED)
+find_package(glad REQUIRED)
+find_package(glfw3 REQUIRED)
+find_package(glm REQUIRED)
+find_package(spdlog REQUIRED)
+find_package(stb REQUIRED)
 
 target_include_directories(
     Sennet
-    PUBLIC "${SENNET_INCLUDE_DIR}"
-            "${CONAN_INCLUDE_DIRS_ASIO}"
-           "${CONAN_INCLUDE_DIRS_GLM}"
-            "${SENNET_VENDOR_DIR}/imgui"            
-            "${CONAN_INCLUDE_DIRS_SPDLOG}"
-    PRIVATE "${SENNET_SOURCE_DIR}"
-            "${SENNET_VENDOR_DIR}/glad/include"
-            "${SENNET_VENDOR_DIR}/glfw/include"
-            "${SENNET_VENDOR_DIR}/stb")
+    PUBLIC ${SENNET_INCLUDE_DIR} ${glm_INCLUDE_DIRS}
+    PRIVATE ${SENNET_SOURCE_DIR})
 
 target_link_libraries(
     Sennet
-    PUBLIC imgui CONAN_PKG::glm CONAN_PKG::spdlog
-    PRIVATE glad glfw)
+    PUBLIC imgui::imgui glm::glm spdlog::spdlog
+    PRIVATE glad::glad glfw::glfw stb::stb)
 
 # TODO: Replace with generator expression?
 if(MSVC)
     target_compile_definitions(
         Sennet
-        PUBLIC "-DSN_PLATFORM_WINDOWS"
-                "$<$<CONFIG:Debug>:SN_DEBUG=1>"
-                "$<$<CONFIG:Release>:SN_RELEASE=1>"
-               "-DGLFW_INCLUDE_NONE"
+        PUBLIC SN_PLATFORM_WINDOWS
+               IMGUI_IMPL_GLFW_OPENGL3
+               IMGUI_IMPL_OPENGL_LOADER_GLAD
+               GLFW_INCLUDE_NONE
+               "$<$<CONFIG:Debug>:SN_DEBUG=1>"
+               "$<$<CONFIG:Release>:SN_RELEASE=1>"
         PRIVATE)
 elseif(UNIX)
     target_compile_definitions(
         Sennet
-        PUBLIC "-DSN_PLATFORM_LINUX"
-                "$<$<CONFIG:Debug>:SN_DEBUG=1>"
-                "$<$<CONFIG:Release>:SN_RELEASE=1>"
-               "-DGLFW_INCLUDE_NONE"
+        PUBLIC SN_PLATFORM_LINUX
+               IMGUI_IMPL_GLFW_OPENGL3
+               IMGUI_IMPL_OPENGL_LOADER_GLAD
+               GLFW_INCLUDE_NONE
+               "$<$<CONFIG:Debug>:SN_DEBUG=1>"
+               "$<$<CONFIG:Release>:SN_RELEASE=1>"
         PRIVATE)
 
 endif()

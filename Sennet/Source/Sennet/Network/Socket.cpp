@@ -8,7 +8,7 @@
 namespace Sennet
 {
 
-Ref<Socket> Socket::Create(const SocketSpecification& specs)
+Ref<Socket> Socket::Create(const Socket::Specification& specs)
 {
 #if defined(SN_PLATFORM_LINUX)
     return CreateRef<LinuxSocket>(specs);

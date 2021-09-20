@@ -8,22 +8,25 @@ namespace Sennet
 class LinuxSocket : public Socket
 {
 public:
-    LinuxSocket(const SocketSpecification& specs);
+    LinuxSocket(const Socket::Specification& specs);
     virtual ~LinuxSocket() = default;
 
     // Generic methods.
     virtual void Open() override;
     virtual void Close() override;
-    virtual size_t Send() override;
-    virtual size_t Receive() override;
+    virtual size_t Send(const void* data, size_t size) override;
+    virtual size_t Receive(void* data, size_t size) override;
 
     // Server methods.
-    virtual void Bind() override;
+    virtual void Bind(const std::string_view host,
+        const uint16_t port) override;
     virtual void Listen() override;
-    virtual void Accept() override;
+    virtual void Accept(const std::string_view host,
+        const uint16_t port) override;
 
     // Client methods.
-    virtual void Connect() override;
+    virtual void Connect(const std::string_view host,
+        const uint16_t port) override;
     virtual void Disconnect() override;
 
     // Status methods.
@@ -32,8 +35,7 @@ public:
     virtual bool IsOpen() override;
 
 private:
-    SocketSpecification m_Specifications; // TODO: Move to socket interface?
-    int m_FileDescriptor = 0;
+    int m_ID = -1;
 };
 
-}
+} // namespace Sennet

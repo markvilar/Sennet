@@ -1,5 +1,8 @@
 #include "Sennet/Pch.hpp"
 
-#define IMGUI_IMPL_OPENGL_LOADER_GLAD
-#include "examples/imgui_impl_glfw.cpp"
-#include "examples/imgui_impl_opengl3.cpp"
+#if not defined(IMGUI_IMPL_OPENGL_LOADER_GLAD)
+    #define IMGUI_IMPL_OPENGL_LOADER_GLAD
+#endif
+
+#include "backends/imgui_impl_glfw.h"
+#include "backends/imgui_impl_opengl3.h"

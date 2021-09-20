@@ -2,8 +2,8 @@
 #include "Sennet/ImGui/ImGuiLayer.hpp"
 
 #include "imgui.h"
-#include "examples/imgui_impl_glfw.h"
-#include "examples/imgui_impl_opengl3.h"
+#include "backends/imgui_impl_glfw.h"
+#include "backends/imgui_impl_opengl3.h"
 
 #include "Sennet/Core/Application.hpp"
 
@@ -25,8 +25,8 @@ void ImGuiLayer::OnAttach()
 	ImGui::CreateContext();
 
 	ImGuiIO& io = ImGui::GetIO();
-	io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
 	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+	io.ConfigFlags |= ImGuiConfigFlags_None; 
 	io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
 	
 	ImGui::StyleColorsDark();
