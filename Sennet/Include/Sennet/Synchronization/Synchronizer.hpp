@@ -28,7 +28,7 @@ public:
         {
             if (Log::GetCoreLogger())
             {
-                SN_CORE_ERROR("Synchronizer::BeginSession('{0}') when session \
+                SENNET_CORE_ERROR("Synchronizer::BeginSession('{0}') when session \
 					'{1}' already open.",
                     name,
                     m_CurrentSession->Name);
@@ -46,7 +46,7 @@ public:
         {
             if (Log::GetCoreLogger())
             {
-                SN_CORE_ERROR("Synchronizer could not open synchronization \
+                SENNET_CORE_ERROR("Synchronizer could not open synchronization \
 					file '{0}'",
                     filepath);
             }

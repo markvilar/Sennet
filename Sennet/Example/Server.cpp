@@ -42,7 +42,7 @@ protected:
 		switch (message.Header.ID)
 		{
 		case CustomMessageTypes::ServerPing:
-			SN_INFO("[{0}] Server Ping.", client->GetID());
+			SENNET_INFO("[{0}] Server Ping.", client->GetID());
 			// Bounce message back to client.
 			client->Send(message);
 			break;

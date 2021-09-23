@@ -49,7 +49,7 @@ static uint32_t ShaderDataTypeSize(ShaderDataType type)
         return 0;
     }
 
-    SN_CORE_ASSERT(false, "Unknown ShaderDataType!");
+    SENNET_CORE_ASSERT(false, "Unknown ShaderDataType!");
     return 0;
 }
 
@@ -100,7 +100,7 @@ struct BufferElement
             return 0;
         }
 
-        SN_CORE_ASSERT(false, "Unknown ShaderDataType!");
+        SENNET_CORE_ASSERT(false, "Unknown ShaderDataType!");
         return 0;
     }
 };

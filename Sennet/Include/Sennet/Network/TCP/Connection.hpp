@@ -110,7 +110,7 @@ private:
                 }
                 else
                 {
-                    SN_CORE_ERROR("[{0}] Read Header Failed.", m_ID);
+                    SENNET_CORE_ERROR("[{0}] Read Header Failed.", m_ID);
                     m_Socket.close();
                 }
             });
@@ -129,7 +129,7 @@ private:
                 }
                 else
                 {
-                    SN_CORE_ERROR("[{0}] ReadBody() failed.", m_ID);
+                    SENNET_CORE_ERROR("[{0}] ReadBody() failed.", m_ID);
                     m_Socket.close();
                 }
             });
@@ -159,7 +159,7 @@ private:
                 }
                 else
                 {
-                    SN_CORE_ERROR("[{0}] WriteHeader() failed.", ec.message());
+                    SENNET_CORE_ERROR("[{0}] WriteHeader() failed.", ec.message());
                     m_Socket.close();
                 }
             });
@@ -183,7 +183,7 @@ private:
                 }
                 else
                 {
-                    SN_CORE_ERROR("[{0}] WriteBody() failed.", m_ID);
+                    SENNET_CORE_ERROR("[{0}] WriteBody() failed.", m_ID);
                     m_Socket.close();
                 }
             });

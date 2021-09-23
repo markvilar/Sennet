@@ -1,8 +1,6 @@
 #pragma once
 #include "Sennet/Sennet.hpp"
 
-//#include "entt/entt.hpp"
-
 namespace Sennet
 {
 

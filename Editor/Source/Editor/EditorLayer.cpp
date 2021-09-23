@@ -30,7 +30,7 @@ void EditorLayer::OnDetach() {}
 
 void EditorLayer::OnUpdate(Timestep ts)
 {
-    SN_PROFILE_FUNCTION();
+    SENNET_PROFILE_FUNCTION();
 
     // Resize framebuffer and camera.
     FramebufferSpecification spec = m_Framebuffer->GetSpecification();
@@ -49,7 +49,7 @@ void EditorLayer::OnUpdate(Timestep ts)
     // Render.
     Renderer2D::ResetStats();
     {
-        SN_PROFILE_SCOPE("Renderer Prep");
+        SENNET_PROFILE_SCOPE("Renderer Prep");
         m_Framebuffer->Bind();
         RenderCommand::SetClearColor({0.1f, 0.1f, 0.1f, 1});
         RenderCommand::Clear();
@@ -59,7 +59,7 @@ void EditorLayer::OnUpdate(Timestep ts)
         static float rotation = 0.0f;
         rotation += ts * 50.0f;
 
-        SN_PROFILE_SCOPE("Renderer Draw");
+        SENNET_PROFILE_SCOPE("Renderer Draw");
 
         Renderer2D::BeginScene(m_CameraController.GetCamera());
         Renderer2D::DrawRotatedQuad({0.0f, 0.0f},
@@ -98,11 +98,13 @@ void EditorLayer::OnUpdate(Timestep ts)
 
 void EditorLayer::OnImGuiRender()
 {
-    SN_PROFILE_FUNCTION();
+    SENNET_PROFILE_FUNCTION();
 
     static bool dockspaceOpen = true;
     static bool optionFullscreenPersistant = true;
     bool optionFullscreen = optionFullscreenPersistant;
+
+    /*
     static ImGuiDockNodeFlags dockspaceFlags = ImGuiDockNodeFlags_None;
 
     ImGuiWindowFlags window_flags =
@@ -139,6 +141,7 @@ void EditorLayer::OnImGuiRender()
         ImGuiID dockspaceID = ImGui::GetID("MyDockSpace");
         ImGui::DockSpace(dockspaceID, ImVec2(0.0f, 0.0f), dockspaceFlags);
     }
+    */
 
     if (ImGui::BeginMenuBar())
     {

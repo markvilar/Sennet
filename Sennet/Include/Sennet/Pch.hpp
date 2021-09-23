@@ -24,6 +24,6 @@
 #include "Sennet/Core/Log.hpp"
 #include "Sennet/Debug/Instrumentor.hpp"
 
-#ifdef SN_PLATFORM_WINDOWS
+#ifdef SENNET_PLATFORM_WINDOWS
 #include <Windows.h>
 #endif

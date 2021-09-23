@@ -7,8 +7,7 @@ set(SENNET_EDITOR_SRC "${SENNET_EDITOR_SOURCE_DIR}/Editor/EditorLayer.cpp")
 
 add_library(Sennet-Editor STATIC ${SENNET_EDITOR_HDR} ${SENNET_EDITOR_SRC})
 
-target_include_directories(Sennet-Editor PUBLIC "${SENNET_EDITOR_INCLUDE_DIR}"
-)# glm, imgui, spdlog
+target_include_directories(Sennet-Editor PUBLIC "${SENNET_EDITOR_INCLUDE_DIR}")
 
 add_subdirectory(Application)
 

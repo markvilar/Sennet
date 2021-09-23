@@ -34,11 +34,11 @@ public:
         }
         catch (std::exception& e)
         {
-            SN_CORE_ERROR("[Server] Exception: {0}", e.what());
+            SENNET_CORE_ERROR("[Server] Exception: {0}", e.what());
             return false;
         }
 
-        SN_CORE_INFO("[Server] Started!");
+        SENNET_CORE_INFO("[Server] Started!");
         return true;
     }
 
@@ -51,7 +51,7 @@ public:
             m_ContextThread.join();
         }
 
-        SN_CORE_INFO("[Server] Stopped!");
+        SENNET_CORE_INFO("[Server] Stopped!");
     }
 
     // ASYNC - Instruct asio to wait for connection.
@@ -61,7 +61,7 @@ public:
             [this](std::error_code ec, asio::ip::tcp::socket socket) {
                 if (!ec)
                 {
-                    SN_CORE_INFO("[Server] New Connection: {0}",
+                    SENNET_CORE_INFO("[Server] New Connection: {0}",
                         socket.remote_endpoint());
 
                     auto newConn =
@@ -74,17 +74,17 @@ public:
                     {
                         m_Connections.push_back(newConn);
                         m_Connections.back()->ConnectToClient(m_IDCounter++);
-                        SN_CORE_INFO("[Server] Connection {0} approved.",
+                        SENNET_CORE_INFO("[Server] Connection {0} approved.",
                             m_Connections.back()->GetID());
                     }
                     else
                     {
-                        SN_CORE_INFO("[Server] Connection denied.");
+                        SENNET_CORE_INFO("[Server] Connection denied.");
                     }
                 }
                 else
                 {
-                    SN_CORE_ERROR(
+                    SENNET_CORE_ERROR(
                         "[Server] New connection error: {0}", ec.message());
                 }
 

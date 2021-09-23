@@ -28,15 +28,15 @@ inline std::ostream& operator<<(std::ostream& os, const MouseCode mouseCode)
 
 } // namespace Sennet
 
-#define SN_MOUSE_BUTTON_0 ::Sennet::Mouse::Button0
-#define SN_MOUSE_BUTTON_1 ::Sennet::Mouse::Button1
-#define SN_MOUSE_BUTTON_2 ::Sennet::Mouse::Button2
-#define SN_MOUSE_BUTTON_3 ::Sennet::Mouse::Button3
-#define SN_MOUSE_BUTTON_4 ::Sennet::Mouse::Button4
-#define SN_MOUSE_BUTTON_5 ::Sennet::Mouse::Button5
-#define SN_MOUSE_BUTTON_6 ::Sennet::Mouse::Button6
-#define SN_MOUSE_BUTTON_7 ::Sennet::Mouse::Button7
-#define SN_MOUSE_BUTTON_LAST ::Sennet::Mouse::ButtonLast
-#define SN_MOUSE_BUTTON_LEFT ::Sennet::Mouse::ButtonLeft
-#define SN_MOUSE_BUTTON_RIGHT ::Sennet::Mouse::ButtonRight
-#define SN_MOUSE_BUTTON_MIDDLE ::Sennet::Mouse::ButtonMiddle
+#define SENNET_MOUSE_BUTTON_0 ::Sennet::Mouse::Button0
+#define SENNET_MOUSE_BUTTON_1 ::Sennet::Mouse::Button1
+#define SENNET_MOUSE_BUTTON_2 ::Sennet::Mouse::Button2
+#define SENNET_MOUSE_BUTTON_3 ::Sennet::Mouse::Button3
+#define SENNET_MOUSE_BUTTON_4 ::Sennet::Mouse::Button4
+#define SENNET_MOUSE_BUTTON_5 ::Sennet::Mouse::Button5
+#define SENNET_MOUSE_BUTTON_6 ::Sennet::Mouse::Button6
+#define SENNET_MOUSE_BUTTON_7 ::Sennet::Mouse::Button7
+#define SENNET_MOUSE_BUTTON_LAST ::Sennet::Mouse::ButtonLast
+#define SENNET_MOUSE_BUTTON_LEFT ::Sennet::Mouse::ButtonLeft
+#define SENNET_MOUSE_BUTTON_RIGHT ::Sennet::Mouse::ButtonRight
+#define SENNET_MOUSE_BUTTON_MIDDLE ::Sennet::Mouse::ButtonMiddle

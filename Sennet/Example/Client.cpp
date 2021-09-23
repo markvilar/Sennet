@@ -45,7 +45,7 @@ int main(int argc, char** argv)
 			{
 				std::this_thread::sleep_for(
 					std::chrono::seconds(1));
-				SN_INFO("Pinging server!");
+				SENNET_INFO("Pinging server!");
 				client.PingServer();
 				sent = true;
 			}
@@ -62,14 +62,14 @@ int main(int argc, char** argv)
 					message >> z;
 					auto time = std::chrono::duration<double>
 						(t - z).count();
-					SN_INFO("Ping: {0}", time);
+					SENNET_INFO("Ping: {0}", time);
 					break;
 				}
 			}
 		}
 		else
 		{
-			SN_INFO("Server Down.");
+			SENNET_INFO("Server Down.");
 			quit = true;
 		}
 	}

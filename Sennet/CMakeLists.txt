@@ -113,6 +113,7 @@ find_package(asio REQUIRED)
 find_package(glad REQUIRED)
 find_package(glfw3 REQUIRED)
 find_package(glm REQUIRED)
+find_package(imgui REQUIRED)
 find_package(spdlog REQUIRED)
 find_package(stb REQUIRED)
 
@@ -123,31 +124,30 @@ target_include_directories(
 
 target_link_libraries(
     Sennet
-    PUBLIC imgui::imgui glm::glm spdlog::spdlog
+    PUBLIC asio::asio imgui::imgui glm::glm spdlog::spdlog
     PRIVATE glad::glad glfw::glfw stb::stb)
 
 # TODO: Replace with generator expression?
 if(MSVC)
     target_compile_definitions(
         Sennet
-        PUBLIC SN_PLATFORM_WINDOWS
+        PUBLIC SENNET_PLATFORM_WINDOWS
                IMGUI_IMPL_GLFW_OPENGL3
                IMGUI_IMPL_OPENGL_LOADER_GLAD
                GLFW_INCLUDE_NONE
-               "$<$<CONFIG:Debug>:SN_DEBUG=1>"
-               "$<$<CONFIG:Release>:SN_RELEASE=1>"
+               "$<$<CONFIG:Debug>:SENNET_DEBUG>"
+               "$<$<CONFIG:Release>:SENNET_RELEASE>"
         PRIVATE)
 elseif(UNIX)
     target_compile_definitions(
         Sennet
-        PUBLIC SN_PLATFORM_LINUX
+        PUBLIC SENNET_PLATFORM_LINUX
                IMGUI_IMPL_GLFW_OPENGL3
                IMGUI_IMPL_OPENGL_LOADER_GLAD
                GLFW_INCLUDE_NONE
-               "$<$<CONFIG:Debug>:SN_DEBUG=1>"
-               "$<$<CONFIG:Release>:SN_RELEASE=1>"
+               "$<$<CONFIG:Debug>:SENNET_DEBUG>"
+               "$<$<CONFIG:Release>:SENNET_RELEASE>"
         PRIVATE)
-
 endif()
 
 target_compile_features(Sennet PUBLIC cxx_std_20)

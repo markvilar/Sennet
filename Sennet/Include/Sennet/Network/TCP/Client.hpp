@@ -42,7 +42,7 @@ public:
         }
         catch (std::exception& e)
         {
-            SN_CORE_ERROR("[Client] Exception: {0}", e.what());
+            SENNET_CORE_ERROR("[Client] Exception: {0}", e.what());
             return false;
         }
         return true;

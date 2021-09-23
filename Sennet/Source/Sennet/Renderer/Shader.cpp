@@ -13,13 +13,13 @@ Ref<Shader> Shader::Create(const std::string& filepath)
 	switch (Renderer::GetAPI())
 	{
 		case RendererAPI::API::None: 
-			SN_CORE_ASSERT(false, "Renderer API None is currently not \
+			SENNET_CORE_ASSERT(false, "Renderer API None is currently not \
 				supported!");
 		case RendererAPI::API::OpenGL:
 			return CreateRef<OpenGLShader>(filepath);
 	}
 	
-	SN_CORE_ASSERT(false, "Unknown Renderer API.");
+	SENNET_CORE_ASSERT(false, "Unknown Renderer API.");
 	return nullptr;
 }
 
@@ -29,13 +29,13 @@ Ref<Shader> Shader::Create(const std::string& name,
 	switch (Renderer::GetAPI())
 	{
 		case RendererAPI::API::None: 
-			SN_CORE_ASSERT(false, "Renderer API None is currently not \
+			SENNET_CORE_ASSERT(false, "Renderer API None is currently not \
 				supported!");
 		case RendererAPI::API::OpenGL:
 			return CreateRef<OpenGLShader>(name, vertexSrc, fragmentSrc);
 	}
 	
-	SN_CORE_ASSERT(false, "Unknown Renderer API.");
+	SENNET_CORE_ASSERT(false, "Unknown Renderer API.");
 	return nullptr;
 }
 
@@ -47,7 +47,7 @@ void ShaderLibrary::Add(const Ref<Shader>& shader)
 
 void ShaderLibrary::Add(const std::string& name, const Ref<Shader>& shader)
 {
-	SN_CORE_ASSERT(!Exists(name), "Shader already exists!");
+	SENNET_CORE_ASSERT(!Exists(name), "Shader already exists!");
 	m_Shaders[name] = shader;
 }
 
@@ -68,7 +68,7 @@ Ref<Shader> ShaderLibrary::Load(const std::string& name,
 
 Ref<Shader> ShaderLibrary::Get(const std::string& name)
 {
-	SN_CORE_ASSERT(Exists(name), "Shader not found!");
+	SENNET_CORE_ASSERT(Exists(name), "Shader not found!");
 	return m_Shaders[name];
 }
 

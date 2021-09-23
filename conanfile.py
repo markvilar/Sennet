@@ -5,9 +5,11 @@ class Sennet(ConanFile):
     version = "0.1"
     requires = (
         "asio/[>=1.18.0]",
+        "entt/[>=3.8.1]",
         "glad/[>=0.1.29]",
         "glfw/[>=3.3]",
         "glm/[>=0.9.9]",
+        "imgui/[>=1.84.2]",
         "spdlog/[>=1.9.2]",
         "stb/cci.20210713",
     )
@@ -21,7 +23,6 @@ class Sennet(ConanFile):
     def configure(self):
         """ Configure dependencies. """
         self.options["glad"].shared        = False
-        self.options["glad"].fPIC          = True
         self.options["glad"].no_loader     = False
         self.options["glad"].spec          = "gl"
         self.options["glad"].gl_profile    = "core"

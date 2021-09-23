@@ -16,7 +16,7 @@ static uint8_t s_GLFWWindowCount = 0;
 
 static void GLFWErrorCallback(int error, const char* description)
 {
-    SN_CORE_ERROR("GLFW error ({0}): {1}", error, description);
+    SENNET_CORE_ERROR("GLFW error ({0}): {1}", error, description);
 }
 
 LinuxWindow::LinuxWindow(const WindowProperties& props) { Init(props); }
@@ -51,21 +51,21 @@ void LinuxWindow::Init(const WindowProperties& props)
     m_Data.Width = props.Width;
     m_Data.Height = props.Height;
 
-    SN_CORE_INFO("Creating window {0}, ({1}, {2})",
+    SENNET_CORE_INFO("Creating window {0}, ({1}, {2})",
         props.Title,
         props.Width,
         props.Height);
 
     if (s_GLFWWindowCount == 0)
     {
-        SN_CORE_INFO("Initializing GLFW.");
+        SENNET_CORE_INFO("Initializing GLFW.");
         int success = glfwInit();
-        SN_CORE_ASSERT(success, "Could not initialize GLFW!");
+        SENNET_CORE_ASSERT(success, "Could not initialize GLFW!");
         glfwSetErrorCallback(GLFWErrorCallback);
     }
 
     {
-#if defined(SN_DEBUG)
+#if defined(SENNET_DEBUG)
         glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GLFW_TRUE);
 #endif
         m_Window = glfwCreateWindow((int)props.Width,
@@ -89,7 +89,7 @@ void LinuxWindow::Init(const WindowProperties& props)
             data.Height = height;
 
             WindowResizeEvent event(width, height);
-            SN_CORE_WARN("Window Resize: {0}, {1}", width, height);
+            SENNET_CORE_WARN("Window Resize: {0}, {1}", width, height);
             data.EventCallback(event);
         });
 
@@ -180,7 +180,7 @@ void LinuxWindow::Init(const WindowProperties& props)
 
 void LinuxWindow::Shutdown()
 {
-    SN_CORE_INFO("Deleting window {0}, ({1}, {2})",
+    SENNET_CORE_INFO("Deleting window {0}, ({1}, {2})",
         m_Data.Title,
         m_Data.Width,
         m_Data.Height);
@@ -190,7 +190,7 @@ void LinuxWindow::Shutdown()
 
     if (s_GLFWWindowCount == 0)
     {
-        SN_CORE_INFO("Terminating GLFW");
+        SENNET_CORE_INFO("Terminating GLFW");
         glfwTerminate();
     }
 }

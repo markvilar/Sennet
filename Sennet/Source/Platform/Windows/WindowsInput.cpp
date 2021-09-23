@@ -1,4 +1,4 @@
-#if defined(SN_PLATFORM_WINDOWS)
+#if defined(SENNET_PLATFORM_WINDOWS)
 
 #include "Sennet/Core/Input.hpp"
 #include "Sennet/Pch.hpp"
