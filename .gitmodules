@@ -1,4 +1,0 @@
-[submodule "Sennet/Vendor/imgui"]
-	path = Sennet/Vendor/imgui
-	url = https://github.com/markvilar/imgui.git
-	branch = docking
