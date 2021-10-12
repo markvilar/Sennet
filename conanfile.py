@@ -1,20 +1,14 @@
 from conans import ConanFile, CMake, tools
 
 class Sennet(ConanFile):
-    name = "Sennet"
+    name = "sennet"
     version = "0.1"
-    requires = (
-        "asio/[>=1.18.0]",
-        "entt/[>=3.8.1]",
-        "glad/[>=0.1.29]",
-        "glfw/[>=3.3]",
-        "glm/[>=0.9.9]",
-        "imgui/[>=1.84.2]",
-        "spdlog/[>=1.9.2]",
-        "stb/cci.20210713",
-    )
-    generators = "cmake", "gcc", "txt", "cmake_find_package"
+    generators = "cmake_find_package"
     settings = "os", "compiler", "build_type", "arch"
+    license = "Apache 2.0"
+    author = "Martin Kvisvik Larsen"
+
+    _source_dir = ""
 
     def source(self):
         """  Defines the source code origin. """
@@ -31,14 +25,37 @@ class Sennet(ConanFile):
         self.options["glad"].gles2_version = "None"
         self.options["glad"].glsc2_version = "None"
 
-    def build(self):
-        """ Wrapper for the build system. """
+        self.options["spdlog"].header_only = True
+
+    def requirements(self):
+        """ Specifies the requirements of the package. """
+        self.requires("asio/[>=1.18.0]")
+        self.requires("entt/[>=3.8.1]")
+        self.requires("glad/[>=0.1.29]")
+        self.requires("glfw/[>=3.3]")
+        self.requires("glm/[>=0.9.9]")
+        self.requires("imgui/1.84.2")
+        self.requires("spdlog/[>=1.9.2]")
+
+    def imports(self):
+        """ Imports source code from the dependencies. """
         pass
 
+    def validate(self):
+        """ """
+        pass
+
+    def build(self):
+        """ """
+        cmake = CMake(self)
+        cmake.configure()
+        cmake.build()
+        cmake.test()
+
     def package(self):
-        """ Defines the contents that will be in the package. """
+        """ """
         pass
 
     def package_info(self):
-        """ Defines the information of the package. """
-        self.cpp_info.libs = ["Sennet"]
+        """"""
+        pass

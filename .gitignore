@@ -21,3 +21,6 @@ ipch/
 *.vsp
 *.vspx
 *.sap
+
+# ImGui implementations.
+imgui_impl*

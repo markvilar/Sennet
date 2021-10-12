@@ -14,70 +14,54 @@ The requirements are:
 ## Dependencies
 
 asio
-glad
+EnTT
+glad (OpenGL 4.6+)
 glfw
 glm
 imgui
 spdlog
-stb
 
-## Building with CMake
+## Building with CMake and Conan
 
 <details>
-<summary>Single configuration generators (Unix Makefiles)</summary>
+<summary>Single configuration generators</summary>
 
 - Debug mode:
 ```
 git clone https://gitub.com/markvilar/Sennet.git
 cd Sennet
-cmake -S . -B build/ -G "Unix Makefiles" "-DCMAKE_BUILD_TYPE=Debug"
-cmake --build build/
+mkdir build && cd build
+conan install .. -s build_type=Debug
+cmake .. -G "Ninja" -DCMAKE_BUILD_TYPE=Debug
+cmake --build .
 ```
 
 - Realese mode:
 ```
 git clone https://gitub.com/markvilar/Sennet.git
 cd Sennet
-cmake -S . -B build/ -G "Unix Makefiles" "-DCMAKE_BUILD_TYPE=Realese"
-cmake --build build/
+mkdir build && cd build
+conan install .. -s build_type=Release
+cmake .. -G "Ninja" -DCMAKE_BUILD_TYPE=Realese
+cmake --build .
 ```
 </details>
 
 
 <details>
-<summary>Multiple configuration generators (Visual Studio)</summary>
+<summary>Multiple configuration generators</summary>
 
-- Debug mode:
 ```
 git clone https://gitub.com/markvilar/Sennet.git
 cd Sennet
-cmake -S . -B build/ -G "Visual Studio 16 2019" -A x64
-cmake --build build/ --config Debug
+mkdir build && cd build
+conan install .. -s build_type=Release
+conan install .. -s build_type=Debug
+cmake .. -G "Ninja Multi-Config" -A x64
+cmake --build . --config Release
 ```
 
-- Realese mode:
-```
-git clone https://gitub.com/markvilar/Sennet.git
-cd Sennet
-cmake -S . -B build/ -G "Visual Studio 16 2019" -A x64
-cmake --build build/ --config Realese
-```
 </details>
-
-## Optional Dependencies
-
-### GLFW
-
-Sennet currently uses GLFW for its window and input system. Depending on the
-windowing system of the OS, GLFW requires installation of additional libraries
-on Linux. For example, Linux distributions using the X11 windowing system
-requires installation of the following dependencies: `libxrandr-dev` 
-`libxinerama-dev` `libxcursor-dev` `libxi-dev` `libxext-dev`
-
-To install via `apt`:
-```
-apt install libxrandr-dev libxinerama-dev libxcursor-dev libxi-dev libxext-dev
-```
 
 ## Development Plan
 

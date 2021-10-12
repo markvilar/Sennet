@@ -1,75 +1,46 @@
 cmake_minimum_required(VERSION 3.16)
 
-# -----------------------------------------------------------------------------
-# ---- Project ----------------------------------------------------------------
-# -----------------------------------------------------------------------------
-
 project(
-    Sennet
+    sennet
     VERSION 0.1
     LANGUAGES CXX)
 
-include(CMake/ProjectSettings.cmake)
-include(CMake/PreventInSourceBuild.cmake)
+include(cmake/ProjectSettings.cmake)
+include(cmake/PreventInSourceBuild.cmake)
 
-# -----------------------------------------------------------------------------
-# ---- Project options and warnings -------------------------------------------
-# -----------------------------------------------------------------------------
+# Add build directory to module and prefix path.
+list(APPEND CMAKE_MODULE_PATH ${CMAKE_BINARY_DIR})
+list(APPEND CMAKE_PREFIX_PATH ${CMAKE_BINARY_DIR})
 
 add_library(ProjectOptions INTERFACE)
 target_compile_features(ProjectOptions INTERFACE cxx_std_20)
 
 add_library(ProjectWarnings INTERFACE)
 
-# -----------------------------------------------------------------------------
-# ---- Build options ----------------------------------------------------------
-# -----------------------------------------------------------------------------
-
-option(SENNET_USE_VENDOR_IMGUI "Use imgui from vendor." OFF)
-option(SENNET_BUILD_SHARED "Build shared library." OFF)
-option(SENNET_BUILD_EXAMPLE "Build examples." ON)
-option(SENNET_BUILD_EDITOR "Build editor." OFF)
-option(SENNET_BUILD_WARNINGS "Enable compiler warnings." ON)
-
-# -----------------------------------------------------------------------------
-# ---- Compiler configuration -------------------------------------------------
-# -----------------------------------------------------------------------------
-
 # Enable cache system.
-include(CMake/Cache.cmake)
+include(cmake/Cache.cmake)
 
 # Standard compiler warnings.
-include(CMake/CompilerWarning.cmake)
+include(cmake/CompilerWarning.cmake)
 set_project_warnings(ProjectWarnings)
 
 # Sanitizer options if supported by compiler.
-include(CMake/Sanitizers.cmake)
+include(cmake/Sanitizers.cmake)
 enable_sanitizers(ProjectOptions)
 
 # Allow static analysis options.
-include(CMake/StaticAnalyzers.cmake)
-
-# -----------------------------------------------------------------------------
-# ---- Tools ------------------------------------------------------------------
-# -----------------------------------------------------------------------------
+include(cmake/StaticAnalyzers.cmake)
 
 # Doxygen
-include(CMake/Doxygen.cmake)
+include(cmake/Doxygen.cmake)
 enable_doxygen()
 
-# Git
-include(CMake/GitSetup.cmake)
-
 # Conan
-include(CMake/Conan.cmake)
-run_conan()
+#include(cmake/Conan.cmake)
+#run_conan()
 
-# -----------------------------------------------------------------------------
-# ---- Source -----------------------------------------------------------------
-# -----------------------------------------------------------------------------
+# Add library.
+add_subdirectory(src)
 
-add_subdirectory(Sennet)
-
-if(SENNET_BUILD_EDITOR)
-    add_subdirectory(Editor)
-endif()
+# Add examples.
+add_subdirectory(examples)
