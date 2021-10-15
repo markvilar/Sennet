@@ -1,5 +1,4 @@
 # Sennet 
-[![Build Status](https://travis-ci.com/markvilar/Sennet.svg?branch=master)](https://travis-ci.com/markvilar/Sennet)
 
 ## Description
 Sennet is a static, cross-platform library for creating C++ applications 
@@ -13,13 +12,15 @@ The requirements are:
 
 ## Dependencies
 
-asio
-EnTT
-glad (OpenGL 4.6+)
-glfw
-glm
-imgui
-spdlog
+| **Library** | **Version** | **Library information.**            |
+|-------------|-------------|-------------------------------------|
+| asio        | 1.18.0+     | Network and asynchronicity.         |
+| EnTT        | 3.8.1+      | Entity component system.            |
+| glad        | 0.1.29+     | Bindings and loaders of OpenGL 4.6. |
+| glfw        | 3.3+        | Window and input handling.          |
+| glm         | 0.9.9+      | Mathematics for graphics.           |
+| imgui       | 1.84.2      | User interface.                     |
+| spdlog      | 1.9.2+      | Console and file logging.           |
 
 ## Building with CMake and Conan
 
