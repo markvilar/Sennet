@@ -1,4 +1,4 @@
-name: build-debug
+name: Debug
 
 on: [push, pull_request]
 
@@ -30,6 +30,7 @@ jobs:
         conan install . 
         --install-folder ${{github.workspace}}/build 
         --settings build_type=${{env.BUILD_TYPE}}
+        --build missing
 
     - name: Configure CMake
       run: > 
