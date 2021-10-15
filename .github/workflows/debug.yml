@@ -23,7 +23,7 @@ jobs:
            ls
 
     - name: Download OpenGL
-      run: apt install libgl-dev
+      run: sudo apt install libgl-dev
 
     - name: Configure Conan
       run: >
