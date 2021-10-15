@@ -1,0 +1,45 @@
+name: build-debug
+
+on: [push, pull_request]
+
+env:
+  BUILD_TYPE: Debug
+
+jobs:
+  ubuntu-build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Install Conan
+      run:
+        - pwd
+        - pip3 install wheel setuptools
+        - pip3 install conan
+        - export PATH=$PATH:/home/runner/.local/bin
+        - echo $PATH
+        - conan --version
+        - ls
+
+    - name: Conan version
+      run: echo "${{ steps.conan.outputs.version }}"
+
+    - name: Configure Conan
+      run: >
+        conan install . 
+        --install-folder ${{github.workspace}}/build 
+        --settings build_type=${{env.BUILD_TYPE}}
+
+    - name: Configure CMake
+      run: > 
+        cmake -B ${{github.workspace}}/build -D 
+        CMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
+
+    - name: Build
+      run: >
+        cmake --build ${{github.workspace}}/build
+
+    - name: Test
+      working-directory: ${{github.workspace}}/build
+      run: ctest -C ${{env.BUILD_TYPE}}
