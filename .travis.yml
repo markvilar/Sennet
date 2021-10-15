@@ -20,6 +20,7 @@ jobs:
           packages:
             - doxygen
             - python3-pip
+            - clang-10
 
     # Linux - GCC
     - os: linux
@@ -35,6 +36,8 @@ jobs:
           packages:
             - doxygen
             - python3-pip
+            - gcc-9
+            - g++-9
 
     # Linux - Ninja
     - os: linux
@@ -47,10 +50,7 @@ jobs:
           packages:
             - doxygen
             - python3-pip
-
-    # Windows - Ninja
-    - os: windows
-      compiler: ninja
+            - ninja-build
 
 before_script:
   - eval "${MATRIX_EVAL}"
