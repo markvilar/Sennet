@@ -22,8 +22,8 @@ jobs:
            conan --version
            ls
 
-    - name: Conan version
-      run: echo "${{ steps.conan.outputs.version }}"
+    - name: Download OpenGL
+      run: apt install libgl-dev
 
     - name: Configure Conan
       run: >
