@@ -12,18 +12,15 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
+    - name: Update apt-get
+      run: |
+           sudo apt-get update -y
+
     - name: Install Conan
       run: |
-           pwd
            pip3 install wheel setuptools
            pip3 install conan
            export PATH=$PATH:/home/runner/.local/bin
-           echo $PATH
-           conan --version
-           ls
-
-    - name: Download OpenGL
-      run: sudo apt install libgl-dev
 
     - name: Configure Conan
       run: >

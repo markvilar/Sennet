@@ -3,16 +3,17 @@ add_library(sennet::sennet ALIAS sennet)
 
 target_sources(
     sennet
-    PUBLIC 
-           include/Sennet/Sennet.hpp
+    PUBLIC include/Sennet/Sennet.hpp
            include/Sennet/Core/Application.hpp
            include/Sennet/Core/Base.hpp
+           include/Sennet/Core/Buffer.hpp
            include/Sennet/Core/Input.hpp
            include/Sennet/Core/KeyCodes.hpp
            include/Sennet/Core/Layer.hpp
            include/Sennet/Core/LayerStack.hpp
            include/Sennet/Core/Log.hpp
            include/Sennet/Core/MouseCodes.hpp
+           include/Sennet/Core/Platform.hpp
            include/Sennet/Core/Timestep.hpp
            include/Sennet/Core/Window.hpp
            include/Sennet/Debug/Instrumentor.hpp
@@ -55,12 +56,10 @@ target_sources(
            include/Sennet/Renderer/Shader.hpp
            include/Sennet/Renderer/Texture.hpp
            include/Sennet/Renderer/VertexArray.hpp
-    PRIVATE 
-            src/Sennet/Core/Application.cpp
+    PRIVATE src/Sennet/Core/Application.cpp
             src/Sennet/Core/Layer.cpp
             src/Sennet/Core/LayerStack.cpp
             src/Sennet/Core/Log.cpp
-            src/Sennet/Core/Window.cpp
             src/Sennet/ImGui/imgui_impl_glfw.cpp
             src/Sennet/ImGui/imgui_impl_opengl3.cpp
             src/Sennet/ImGui/ImGuiHelpers.cpp
