@@ -35,10 +35,6 @@ include(cmake/StaticAnalyzers.cmake)
 include(cmake/Doxygen.cmake)
 enable_doxygen()
 
-# Conan
-#include(cmake/Conan.cmake)
-#run_conan()
-
 # Add library.
 add_subdirectory(src)
 
