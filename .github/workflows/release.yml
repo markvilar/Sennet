@@ -12,9 +12,10 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
-    - name: Update apt-get
+    - name: Install system requirements
       run: |
-           sudo apt-get update -y
+           sudo apt update -y
+           sudo apt install -y libgl-dev
 
     - name: Install Conan
       run: |
