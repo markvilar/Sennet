@@ -35,7 +35,6 @@ class Sennet(ConanFile):
         self.requires("glfw/[>=3.3]")
         self.requires("glm/[>=0.9.9]")
         self.requires("imgui/1.84.2")
-        self.requires("opengl/system")
         self.requires("spdlog/[>=1.9.2]")
 
     def imports(self):
