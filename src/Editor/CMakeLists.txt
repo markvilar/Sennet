@@ -1,6 +1,7 @@
 add_library(sennet-editor STATIC)
 
-target_sources(sennet-editor 
+target_sources(
+    sennet-editor
     PUBLIC include/Editor/EditorLayer.hpp
     PRIVATE src/Editor/EditorLayer.cpp)
 

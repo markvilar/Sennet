@@ -19,42 +19,28 @@ static void GLFWErrorCallback(int error, const char* description)
     SENNET_CORE_ERROR("GLFW error ({0}): {1}", error, description);
 }
 
-LinuxWindow::LinuxWindow(const WindowProperties& props) { Init(props); }
+static Window* Create(const Window::Specification& specs)
+{
+    return new LinuxWindow(specs);
+}
+
+LinuxWindow::LinuxWindow(const Window::Specification& specs)
+    : m_Specification(specs)
+{
+}
 
 LinuxWindow::~LinuxWindow() { Shutdown(); }
 
-void LinuxWindow::OnUpdate()
+void LinuxWindow::Init()
 {
-    glfwPollEvents();
-    m_Context->SwapBuffers();
-}
-
-void LinuxWindow::SetVSync(bool enabled)
-{
-    if (enabled)
-    {
-        glfwSwapInterval(1);
-    }
-    else
-    {
-        glfwSwapInterval(0);
-    }
-
-    m_Data.VSync = enabled;
-}
-
-bool LinuxWindow::IsVSync() const { return m_Data.VSync; }
-
-void LinuxWindow::Init(const WindowProperties& props)
-{
-    m_Data.Title = props.Title;
-    m_Data.Width = props.Width;
-    m_Data.Height = props.Height;
+    m_Data.Title = m_Specification.Title;
+    m_Data.Width = m_Specification.Width;
+    m_Data.Height = m_Specification.Height;
 
     SENNET_CORE_INFO("Creating window {0}, ({1}, {2})",
-        props.Title,
-        props.Width,
-        props.Height);
+        m_Data.Title,
+        m_Data.Width,
+        m_Data.Height);
 
     if (s_GLFWWindowCount == 0)
     {
@@ -68,15 +54,16 @@ void LinuxWindow::Init(const WindowProperties& props)
 #if defined(SENNET_DEBUG)
         glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GLFW_TRUE);
 #endif
-        m_Window = glfwCreateWindow((int)props.Width,
-            (int)props.Height,
+        m_Window = glfwCreateWindow((int)m_Data.Width,
+            (int)m_Data.Height,
             m_Data.Title.c_str(),
             nullptr,
             nullptr);
         ++s_GLFWWindowCount;
     }
 
-    m_Context = GraphicsContext::Create(m_Window);
+    m_Context =
+        std::unique_ptr<GraphicsContext>(GraphicsContext::Create(m_Window));
     m_Context->Init();
 
     glfwSetWindowUserPointer(m_Window, &m_Data);
@@ -87,7 +74,6 @@ void LinuxWindow::Init(const WindowProperties& props)
             WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
             data.Width = width;
             data.Height = height;
-
             WindowResizeEvent event(width, height);
             SENNET_CORE_WARN("Window Resize: {0}, {1}", width, height);
             data.EventCallback(event);
@@ -96,7 +82,6 @@ void LinuxWindow::Init(const WindowProperties& props)
     glfwSetWindowIconifyCallback(
         m_Window, [](GLFWwindow* window, int iconified) {
             WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
-
             WindowIconifyEvent event(iconified == 1);
             data.EventCallback(event);
         });
@@ -110,7 +95,6 @@ void LinuxWindow::Init(const WindowProperties& props)
     glfwSetKeyCallback(m_Window,
         [](GLFWwindow* window, int key, int scancode, int action, int mods) {
             WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
-
             switch (action)
             {
             case GLFW_PRESS:
@@ -143,7 +127,6 @@ void LinuxWindow::Init(const WindowProperties& props)
     glfwSetMouseButtonCallback(
         m_Window, [](GLFWwindow* window, int button, int action, int mods) {
             WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
-
             switch (action)
             {
             case GLFW_PRESS:
@@ -164,7 +147,6 @@ void LinuxWindow::Init(const WindowProperties& props)
     glfwSetScrollCallback(
         m_Window, [](GLFWwindow* window, double offsetX, double offsetY) {
             WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
-
             MouseScrolledEvent event((float)offsetX, (float)offsetY);
             data.EventCallback(event);
         });
@@ -172,10 +154,69 @@ void LinuxWindow::Init(const WindowProperties& props)
     glfwSetCursorPosCallback(
         m_Window, [](GLFWwindow* window, double posX, double posY) {
             WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
-
             MouseMovedEvent event((float)posX, (float)posY);
             data.EventCallback(event);
         });
+}
+
+void LinuxWindow::PollEvents() { glfwPollEvents(); }
+
+void LinuxWindow::SwapBuffers() { m_Context->SwapBuffers(); }
+
+std::pair<uint32_t, uint32_t> LinuxWindow::GetSize() const
+{
+    return {m_Data.Width, m_Data.Height};
+}
+
+std::pair<float, float> LinuxWindow::GetWindowPos() const
+{
+    int x, y;
+    glfwGetWindowPos(m_Window, &x, &y);
+    return {(float)x, (float)y};
+}
+
+void LinuxWindow::Maximize() { glfwMaximizeWindow(m_Window); }
+
+void LinuxWindow::CenterWindow()
+{
+    const GLFWvidmode* videoMode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+    int x = (videoMode->width / 2) - (m_Data.Width / 2);
+    int y = (videoMode->height / 2) - (m_Data.Height / 2);
+    glfwSetWindowPos(m_Window, x, y);
+}
+
+void LinuxWindow::SetEventCallback(const EventCallbackFn& callback)
+{
+    m_Data.EventCallback = callback;
+}
+
+void LinuxWindow::SetVSync(bool enabled)
+{
+    if (enabled)
+    {
+        glfwSwapInterval(1);
+    }
+    else
+    {
+        glfwSwapInterval(0);
+    }
+    m_Data.VSync = enabled;
+}
+
+bool LinuxWindow::IsVSync() const { return m_Data.VSync; }
+
+void LinuxWindow::SetResizable(bool resizable) const
+{
+    glfwSetWindowAttrib(
+        m_Window, GLFW_RESIZABLE, resizable ? GLFW_TRUE : GLFW_FALSE);
+}
+
+const std::string& LinuxWindow::GetTitle() const { return m_Data.Title; }
+
+void LinuxWindow::SetTitle(const std::string& title)
+{
+    m_Data.Title = title;
+    glfwSetWindowTitle(m_Window, m_Data.Title.c_str());
 }
 
 void LinuxWindow::Shutdown()

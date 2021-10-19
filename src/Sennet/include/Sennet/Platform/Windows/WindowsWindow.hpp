@@ -11,37 +11,44 @@ namespace Sennet
 class WindowsWindow : public Window
 {
 public:
-    WindowsWindow(const WindowProperties& props);
+    WindowsWindow(const Window::Specification& specs);
     virtual ~WindowsWindow();
 
-    void OnUpdate() override;
+    virtual void Init() override;
+    virtual void PollEvents() override;
+    virtual void SwapBuffers() override;
 
-    unsigned int GetWidth() const override { return m_Data.Width; }
-    unsigned int GetHeight() const override { return m_Data.Height; }
+    inline uint32_t GetWidth() const override { return m_Data.Width; }
+    inline uint32_t GetHeight() const override { return m_Data.Height; }
+    virtual std::pair<uint32_t, uint32_t> GetSize() const override;
+    virtual std::pair<float, float> GetWindowPos() const override;
 
-    // Window attributes.
-    void SetEventCallback(const EventCallbackFn& callback) override
-    {
-        m_Data.EventCallback = callback;
-    }
-    void SetVSync(bool enabled) override;
-    bool IsVSync() const override;
+    virtual void Maximize() override;
+    virtual void CenterWindow() override;
+
+    virtual void SetEventCallback(const EventCallbackFn& callback) override;
+    virtual void SetVSync(bool enabled) override;
+    virtual bool IsVSync() const override;
+    virtual void SetResizable(bool resizable) const override;
+
+    virtual const std::string& GetTitle() const override;
+    virtual void SetTitle(const std::string& title) override;
 
     virtual void* GetNativeWindow() const override { return m_Window; }
 
 private:
-    virtual void Init(const WindowProperties& props);
     virtual void Shutdown();
 
 private:
     GLFWwindow* m_Window;
-    Scope<GraphicsContext> m_Context;
+    std::unique_ptr<GraphicsContext> m_Context;
+    Window::Specification m_Specification;
 
     struct WindowData
     {
         std::string Title;
-        unsigned int Width;
-        unsigned int Height;
+        uint32_t Width;
+        uint32_t Height;
         bool VSync;
 
         EventCallbackFn EventCallback;

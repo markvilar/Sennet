@@ -11,6 +11,8 @@
 
 #include "Sennet/ImGui/ImGuiLayer.hpp"
 
+#include "Sennet/Renderer/Renderer.hpp"
+
 int main(int argc, char** argv);
 
 namespace Sennet
@@ -19,44 +21,67 @@ namespace Sennet
 class Application
 {
 public:
-    Application(const std::string& name = "Sennet App");
+    struct Specification
+    {
+        std::string WorkingDirectory;
+        std::string Name = "Sennet App";
+        uint32_t WindowWidth = 1600;
+        uint32_t WindowHeight = 800;
+        bool StartMaximized = true;
+        bool VSync = true;
+        bool Resizable = true;
+        bool EnableImGui = true;
+        bool Fullscreen = false;
+    };
+
+public:
+    Application(const Specification& specs);
     virtual ~Application();
+
+    void Run();
+    void Close();
+
+    virtual void OnInit() {}
+    virtual void OnShutdown() {}
+    virtual void OnUpdate() {}
 
     void OnEvent(Event& e);
 
     void PushLayer(Layer* layer);
     void PushOverlay(Layer* overlay);
+    void PopLayer(Layer* layer);
+    void PopOverlay(Layer* overlay);
+    void RenderImGui();
 
-    Window& GetWindow() { return *m_Window; }
-
-    void Close();
+    inline Window& GetWindow() { return *m_Window; }
 
     ImGuiLayer* GetImGuiLayer() { return m_ImGuiLayer; }
 
-    static Application& Get() { return *s_Instance; }
+    static inline Application& Get() { return *s_Instance; }
+
+    const Specification& GetSpecification() const { return m_Specification; }
 
 private:
-    void Run();
     bool OnWindowClose(WindowCloseEvent& e);
     bool OnWindowResize(WindowResizeEvent& e);
     bool OnWindowIconify(WindowIconifyEvent& e);
 
-protected:
-    Scope<Window> m_Window;
+private:
+    std::unique_ptr<Window> m_Window;
+    Specification m_Specification;
+
     ImGuiLayer* m_ImGuiLayer;
     LayerStack m_LayerStack;
 
     bool m_Running = true;
     bool m_Minimized = false;
     float m_LastFrameTime = 0.0f;
+    Timestep m_Timestep;
 
-private:
     static Application* s_Instance;
-    friend int ::main(int argc, char** argv);
-    friend int ::main(int argc, char* argv[]);
 };
 
 // To be defined in client.
-Application* CreateApplication();
+Application* CreateApplication(int argc, char** argv);
 
 } // namespace Sennet

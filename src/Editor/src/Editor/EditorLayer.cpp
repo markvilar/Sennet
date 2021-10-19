@@ -15,8 +15,8 @@ EditorLayer::EditorLayer()
 
 void EditorLayer::OnAttach()
 {
-    m_CheckerboardTexture = Texture2D::Create(
-        "../../../../assets/Textures/Checkerboard.png");
+    m_CheckerboardTexture =
+        Texture2D::Create("../../../../assets/Textures/Checkerboard.png");
 
     FramebufferSpecification fbSpec;
     fbSpec.Width = 1280;
