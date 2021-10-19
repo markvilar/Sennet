@@ -5,6 +5,7 @@ target_sources(
     sennet
     PUBLIC include/Sennet/Sennet.hpp
            include/Sennet/Core/Application.hpp
+           include/Sennet/Core/Assert.hpp
            include/Sennet/Core/Base.hpp
            include/Sennet/Core/Input.hpp
            include/Sennet/Core/KeyCodes.hpp
