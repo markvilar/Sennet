@@ -1,5 +1,7 @@
 # Sennet 
-[![Build Status](https://travis-ci.com/markvilar/Sennet.svg?branch=master)](https://travis-ci.com/markvilar/Sennet)
+
+![example workflow](https://github.com/markvilar/Sennet/actions/workflows/release.yml/badge.svg)
+![example workflow](https://github.com/markvilar/Sennet/actions/workflows/debug.yml/badge.svg)
 
 ## Description
 Sennet is a static, cross-platform library for creating C++ applications 
@@ -11,54 +13,59 @@ The requirements are:
 - C++17 compiler
 - CMake 3.16 (or higher)
 
-## GLFW dependencies on Linux distributions
+## Dependencies
 
-Sennet currently uses GLFW for its window and input system. Depending on the
-windowing system of the OS, GLFW requires installation of additional libraries
-on Linux. For example, Linux distributions using the X11 windowing system
-requires installation of the following dependencies: `libxrandr-dev` 
-`libxinerama-dev` `libxcursor-dev` `libxi-dev` `libxext-dev`
+| **Library** | **Version** | **Library information.**            |
+|-------------|-------------|-------------------------------------|
+| asio        | 1.18.0+     | Network and asynchronicity.         |
+| EnTT        | 3.8.1+      | Entity component system.            |
+| glad        | 0.1.29+     | Bindings and loaders of OpenGL 4.6. |
+| glfw        | 3.3+        | Window and input handling.          |
+| glm         | 0.9.9+      | Mathematics for graphics.           |
+| imgui       | 1.84.2      | User interface.                     |
+| spdlog      | 1.9.2+      | Console and file logging.           |
 
-To install via `apt`:
-```
-apt install libxrandr-dev libxinerama-dev libxcursor-dev libxi-dev libxext-dev
-```
+## Building with CMake and Conan
 
-## Building with CMake - Single configuration generators (Unix Makefiles)
+<details>
+<summary>Single configuration generators</summary>
 
-Debug mode:
+- Debug mode:
 ```
 git clone https://gitub.com/markvilar/Sennet.git
 cd Sennet
-cmake -S . -B build/ -G "Unix Makefiles" "-DCMAKE_BUILD_TYPE=Debug"
-cmake --build build/
+mkdir build && cd build
+conan install .. -s build_type=Debug
+cmake .. -G "Ninja" -DCMAKE_BUILD_TYPE=Debug
+cmake --build .
 ```
 
-Realese mode:
+- Realese mode:
 ```
 git clone https://gitub.com/markvilar/Sennet.git
 cd Sennet
-cmake -S . -B build/ -G "Unix Makefiles" "-DCMAKE_BUILD_TYPE=Realese"
-cmake --build build/
+mkdir build && cd build
+conan install .. -s build_type=Release
+cmake .. -G "Ninja" -DCMAKE_BUILD_TYPE=Realese
+cmake --build .
 ```
+</details>
 
-## Building with CMake - Multiple configuration generators (Visual Studio)
 
-Debug mode:
+<details>
+<summary>Multiple configuration generators</summary>
+
 ```
 git clone https://gitub.com/markvilar/Sennet.git
 cd Sennet
-cmake -S . -B build/ -G "Visual Studio 16 2019" -A x64
-cmake --build build/ --config Debug
+mkdir build && cd build
+conan install .. -s build_type=Release
+conan install .. -s build_type=Debug
+cmake .. -G "Ninja Multi-Config" -A x64
+cmake --build . --config Release
 ```
 
-Realese mode:
-```
-git clone https://gitub.com/markvilar/Sennet.git
-cd Sennet
-cmake -S . -B build/ -G "Visual Studio 16 2019" -A x64
-cmake --build build/ --config Realese
-```
+</details>
 
 ## Development Plan
 
