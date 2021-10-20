@@ -1,7 +1,6 @@
 #pragma once
 
 #include <string>
-#include <string>
 #include <unordered_map>
 
 #include <glm/glm.hpp>
@@ -36,16 +35,19 @@ public:
 class ShaderLibrary
 {
 public:
+    ShaderLibrary();
+    ~ShaderLibrary();
+
     void Add(const std::string& name, const Ref<Shader>& shader);
     void Add(const Ref<Shader>& shader);
 
     Ref<Shader> Load(const std::string& name, const std::string filepath);
     Ref<Shader> Load(const std::string& filepath);
 
-    Ref<Shader> Get(const std::string& name);
+    const Ref<Shader>& Get(const std::string& name) const;
 
-    bool Exists(const std::string& name);
-    
+    bool Exists(const std::string& name) const;
+
 private:
     std::unordered_map<std::string, Ref<Shader>> m_Shaders;
 };

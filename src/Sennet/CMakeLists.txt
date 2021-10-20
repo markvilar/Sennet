@@ -56,39 +56,39 @@ target_sources(
            include/Sennet/Renderer/Shader.hpp
            include/Sennet/Renderer/Texture.hpp
            include/Sennet/Renderer/VertexArray.hpp
-    PRIVATE src/Sennet/Core/Application.cpp
-            src/Sennet/Core/Layer.cpp
-            src/Sennet/Core/LayerStack.cpp
-            src/Sennet/Core/Log.cpp
-            src/Sennet/ImGui/imgui_impl_glfw.cpp
-            src/Sennet/ImGui/imgui_impl_opengl3.cpp
-            src/Sennet/ImGui/ImGuiHelpers.cpp
-            src/Sennet/ImGui/ImGuiLayer.cpp
-            src/Sennet/Network/Socket.cpp
-            src/Sennet/Platform/OpenGL/OpenGLBuffer.cpp
-            src/Sennet/Platform/OpenGL/OpenGLFramebuffer.cpp
-            src/Sennet/Platform/OpenGL/OpenGLContext.cpp
-            src/Sennet/Platform/OpenGL/OpenGLRendererAPI.cpp
-            src/Sennet/Platform/OpenGL/OpenGLShader.cpp
-            src/Sennet/Platform/OpenGL/OpenGLTexture.cpp
-            src/Sennet/Platform/OpenGL/OpenGLVertexArray.cpp
-            src/Sennet/Platform/Windows/WindowsInput.cpp
-            src/Sennet/Platform/Windows/WindowsWindow.cpp
-            src/Sennet/Platform/Linux/LinuxInput.cpp
-            src/Sennet/Platform/Linux/LinuxSocket.cpp
-            src/Sennet/Platform/Linux/LinuxWindow.cpp
-            src/Sennet/Renderer/Buffer.cpp
-            src/Sennet/Renderer/Framebuffer.cpp
-            src/Sennet/Renderer/GraphicsContext.cpp
-            src/Sennet/Renderer/OrthographicCamera.cpp
-            src/Sennet/Renderer/OrthographicCameraController.cpp
-            src/Sennet/Renderer/RenderCommand.cpp
-            src/Sennet/Renderer/Renderer.cpp
-            src/Sennet/Renderer/Renderer2D.cpp
-            src/Sennet/Renderer/RendererAPI.cpp
-            src/Sennet/Renderer/Shader.cpp
-            src/Sennet/Renderer/Texture.cpp
-            src/Sennet/Renderer/VertexArray.cpp)
+    PRIVATE src/Core/Application.cpp
+            src/Core/Layer.cpp
+            src/Core/LayerStack.cpp
+            src/Core/Log.cpp
+            src/ImGui/imgui_impl_glfw.cpp
+            src/ImGui/imgui_impl_opengl3.cpp
+            src/ImGui/ImGuiHelpers.cpp
+            src/ImGui/ImGuiLayer.cpp
+            src/Network/Socket.cpp
+            src/Platform/OpenGL/OpenGLBuffer.cpp
+            src/Platform/OpenGL/OpenGLFramebuffer.cpp
+            src/Platform/OpenGL/OpenGLContext.cpp
+            src/Platform/OpenGL/OpenGLRendererAPI.cpp
+            src/Platform/OpenGL/OpenGLShader.cpp
+            src/Platform/OpenGL/OpenGLTexture.cpp
+            src/Platform/OpenGL/OpenGLVertexArray.cpp
+            src/Platform/Windows/WindowsInput.cpp
+            src/Platform/Windows/WindowsWindow.cpp
+            src/Platform/Linux/LinuxInput.cpp
+            src/Platform/Linux/LinuxSocket.cpp
+            src/Platform/Linux/LinuxWindow.cpp
+            src/Renderer/Buffer.cpp
+            src/Renderer/Framebuffer.cpp
+            src/Renderer/GraphicsContext.cpp
+            src/Renderer/OrthographicCamera.cpp
+            src/Renderer/OrthographicCameraController.cpp
+            src/Renderer/RenderCommand.cpp
+            src/Renderer/Renderer.cpp
+            src/Renderer/Renderer2D.cpp
+            src/Renderer/RendererAPI.cpp
+            src/Renderer/Shader.cpp
+            src/Renderer/Texture.cpp
+            src/Renderer/VertexArray.cpp)
 
 target_precompile_headers(sennet PRIVATE include/Sennet/Pch.hpp)
 

@@ -12,8 +12,22 @@ namespace Sennet
 Scope<Renderer::SceneData> Renderer::s_SceneData =
     CreateScope<Renderer::SceneData>();
 
+/*
+struct Renderer::Data
+{
+    Ref<ShaderLibrary> Library;
+    Ref<Texture2D> BlackTexture;
+    Ref<Texture2D> WhiteTexture;
+};
+
+static Renderer::Data* s_Data = nullptr;
+*/
+
 void Renderer::Init()
 {
+    //s_Data = new Data();
+    //s_Data->Library = Ref<ShaderLibrary>();
+
     RenderCommand::Init();
     Renderer2D::Init();
 }

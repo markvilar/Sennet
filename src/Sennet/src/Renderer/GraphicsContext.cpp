@@ -6,10 +6,10 @@
 namespace Sennet
 {
 
-Scope<GraphicsContext> GraphicsContext::Create(void* window)
+GraphicsContext* GraphicsContext::Create(void* window)
 {
     // TODO: Add support for different renderer APIs later?
-    return CreateScope<OpenGLContext>(static_cast<GLFWwindow*>(window));
+    return new OpenGLContext(static_cast<GLFWwindow*>(window));
 }
 
 } // namespace Sennet
