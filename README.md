@@ -1,5 +1,8 @@
 # Sennet 
 
+![example workflow](https://github.com/markvilar/Sennet/actions/workflows/release.yml/badge.svg)
+![example workflow](https://github.com/markvilar/Sennet/actions/workflows/debug.yml/badge.svg)
+
 ## Description
 Sennet is a static, cross-platform library for creating C++ applications 
 with graphics and networking functionality, that is developed with focus on 
