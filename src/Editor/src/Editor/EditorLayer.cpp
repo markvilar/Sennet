@@ -187,8 +187,6 @@ void EditorLayer::OnImGuiRender()
         ImVec2{1, 0});
     ImGui::End();
     ImGui::PopStyleVar();
-
-    ImGui::End();
 }
 
 void EditorLayer::OnEvent(Event& e) { m_CameraController.OnEvent(e); }

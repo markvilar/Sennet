@@ -1,14 +1,21 @@
-add_library(sennet-editor STATIC)
+add_library(editor STATIC)
+add_library(sennet::editor ALIAS editor)
 
 target_sources(
-    sennet-editor
+    editor
     PUBLIC include/Editor/EditorLayer.hpp
     PRIVATE src/Editor/EditorLayer.cpp)
 
-target_include_directories(sennet-editor PUBLIC include)
+target_include_directories(editor PUBLIC include)
 
 add_subdirectory(app)
 
-target_link_libraries(sennet-editor PUBLIC sennet)
-target_compile_definitions(sennet-editor PUBLIC)
-target_compile_features(sennet-editor PUBLIC cxx_std_20)
+target_link_libraries(editor PUBLIC sennet::sennet)
+target_compile_definitions(editor PUBLIC)
+target_compile_features(editor PUBLIC cxx_std_20)
+
+set_target_properties(
+    editor
+    PROPERTIES ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib"
+               LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib"
+               RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")

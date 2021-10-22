@@ -129,3 +129,9 @@ target_compile_definitions(
     PRIVATE)
 
 target_compile_features(sennet PUBLIC cxx_std_20)
+
+set_target_properties(
+    sennet
+    PROPERTIES ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib"
+               LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib"
+               RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")

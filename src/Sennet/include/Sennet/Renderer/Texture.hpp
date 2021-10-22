@@ -46,11 +46,18 @@ class Texture2D : public Texture
 {
 public:
     static Ref<Texture2D> Create(const uint32_t width, const uint32_t height);
+
     static Ref<Texture2D> Create(const uint32_t width,
         const uint32_t height,
         const InternalFormat internalFormat,
         const DataFormat dataFormat);
+
     static Ref<Texture2D> Create(const std::string& path);
+
+    static Ref<Texture2D> Create(const uint32_t width,
+        const uint32_t height,
+        const DataFormat dataFormat,
+        const void* data = nullptr);
 };
 
 } // namespace Sennet

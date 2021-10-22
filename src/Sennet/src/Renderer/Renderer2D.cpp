@@ -2,6 +2,7 @@
 #include "Sennet/Pch.hpp"
 
 #include "Sennet/Renderer/RenderCommand.hpp"
+#include "Sennet/Renderer/Renderer.hpp"
 #include "Sennet/Renderer/Shader.hpp"
 #include "Sennet/Renderer/VertexArray.hpp"
 
@@ -30,8 +31,6 @@ struct Renderer2DData
 
     Ref<VertexArray> QuadVertexArray;
     Ref<VertexBuffer> QuadVertexBuffer;
-    Ref<Shader> TextureShader;
-    Ref<Texture2D> WhiteTexture;
 
     uint32_t QuadIndexCount = 0;
     QuadVertex* QuadVertexBufferBase = nullptr;
@@ -88,23 +87,16 @@ void Renderer2D::Init()
     s_Data.QuadVertexArray->SetIndexBuffer(quadIB);
     delete[] quadIndices;
 
-    // Texture.
-    s_Data.WhiteTexture = Texture2D::Create(1, 1);
-    uint32_t whiteTextureData = 0xffffffff;
-    s_Data.WhiteTexture->SetData(&whiteTextureData, sizeof(uint32_t));
-
     int32_t samplers[s_Data.MaxTextureSlots];
     for (uint32_t i = 0; i < s_Data.MaxTextureSlots; i++)
         samplers[i] = i;
 
-    // Shader. TODO: Absolute shader path.
-    s_Data.TextureShader = Shader::Create("../assets/Shaders/Texture.glsl");
-    s_Data.TextureShader->Bind();
-    s_Data.TextureShader->SetIntArray(
-        "u_Textures", samplers, s_Data.MaxTextureSlots);
+    auto shader = Renderer::GetShaderLibrary()->Get("Renderer2D");
+    shader->Bind();
+    shader->SetIntArray("u_Textures", samplers, s_Data.MaxTextureSlots);
 
     // Add white texture to slot zero.
-    s_Data.TextureSlots[0] = s_Data.WhiteTexture;
+    s_Data.TextureSlots[0] = Renderer::GetWhiteTexture();
 
     // Vertex positions.
     s_Data.QuadVertexPositions[0] = {-0.5f, -0.5f, 0.0f, 1.0f};
@@ -130,9 +122,9 @@ void Renderer2D::Shutdown()
 
 void Renderer2D::BeginScene(const OrthographicCamera& camera)
 {
-    s_Data.TextureShader->Bind();
-    s_Data.TextureShader->SetMat4(
-        "u_ViewProjection", camera.GetViewProjectionMatrix());
+    auto shader = Renderer::GetShaderLibrary()->Get("Renderer2D");
+    shader->Bind();
+    shader->SetMat4("u_ViewProjection", camera.GetViewProjectionMatrix());
 
     s_Data.QuadIndexCount = 0;
     s_Data.QuadVertexBufferPtr = s_Data.QuadVertexBufferBase;
