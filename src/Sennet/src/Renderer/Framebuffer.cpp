@@ -8,7 +8,7 @@
 namespace Sennet
 {
 
-Ref<Framebuffer> Framebuffer::Create(const FramebufferSpecification& spec)
+Ref<Framebuffer> Framebuffer::Create(const Framebuffer::Specification& specs)
 {
     switch (Renderer::GetAPI())
     {
@@ -17,7 +17,7 @@ Ref<Framebuffer> Framebuffer::Create(const FramebufferSpecification& spec)
 				supported!");
         return nullptr;
     case RendererAPI::API::OpenGL:
-        return CreateRef<OpenGLFramebuffer>(spec);
+        return CreateRef<OpenGLFramebuffer>(specs);
     }
 
     SENNET_CORE_ASSERT(false, "Unknown RendererAPI!");

@@ -69,7 +69,7 @@ void Application::Run()
     while (m_Running)
     {
         // TODO: Temporary.
-        float time = glfwGetTime(); // Platform::GetTime
+        auto time = glfwGetTime(); // Platform::GetTime
         m_Timestep = time - m_LastFrameTime;
 
         m_Window->PollEvents();

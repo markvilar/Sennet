@@ -43,7 +43,6 @@ Ref<Shader> Shader::Create(const std::string& name,
 void ShaderLibrary::Add(const std::string& name, const Ref<Shader>& shader)
 {
     SENNET_CORE_ASSERT(!Exists(name), "Shader {0} already exists.", name);
-    SENNET_CORE_INFO("Shader: {0}", name);
     m_Shaders[name] = shader;
 }
 
@@ -71,7 +70,6 @@ Ref<Shader> ShaderLibrary::Load(const std::string& filepath)
 
 const Ref<Shader>& ShaderLibrary::Get(const std::string& name) const
 {
-    SENNET_CORE_INFO("Shader: {0}", name);
     SENNET_CORE_ASSERT(Exists(name), "Shader does not exist.");
     return m_Shaders.at(name);
 }

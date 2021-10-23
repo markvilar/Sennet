@@ -8,8 +8,8 @@ namespace Sennet
 
 static const uint32_t s_MaxFramebufferSize = 8192;
 
-OpenGLFramebuffer::OpenGLFramebuffer(const FramebufferSpecification& spec)
-    : m_Specification(spec)
+OpenGLFramebuffer::OpenGLFramebuffer(const Framebuffer::Specification& specs)
+    : m_Specification(specs)
 {
     Invalidate();
 }

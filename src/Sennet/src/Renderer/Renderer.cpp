@@ -33,15 +33,13 @@ void Renderer::Init()
     Renderer::GetShaderLibrary()->Load(
         "../../resources/shaders/Renderer2D.glsl");
 
-    // TODO: Implement corresponding texture methods.
-    constexpr uint32_t whiteTextureData = 0xffffffff;
-    s_Data->WhiteTexture =
-        Texture2D::Create(1, 1, Texture::DataFormat::RGBA, &whiteTextureData);
+    uint32_t whiteTextureData = 0xffffffff;
+    s_Data->WhiteTexture = Texture2D::Create(1, 1);
+    s_Data->WhiteTexture->SetData(&whiteTextureData, sizeof(uint32_t));
 
-    // TODO: Implement corresponding texture methods.
-    constexpr uint32_t blackTextureData = 0xff000000;
-    s_Data->BlackTexture =
-        Texture2D::Create(1, 1, Texture::DataFormat::RGBA, &blackTextureData);
+    uint32_t blackTextureData = 0xff000000;
+    s_Data->BlackTexture = Texture2D::Create(1, 1);
+    s_Data->BlackTexture->SetData(&blackTextureData, sizeof(uint32_t));
 
     RenderCommand::Init();
     Renderer2D::Init();

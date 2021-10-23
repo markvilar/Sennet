@@ -64,15 +64,8 @@ OpenGLTexture2D::OpenGLTexture2D(const uint32_t width,
 
 OpenGLTexture2D::OpenGLTexture2D(const std::string& path) : m_Source(path)
 {
-    // TODO: Implement.
-}
-
-OpenGLTexture2D::OpenGLTexture2D(const uint32_t width,
-    const uint32_t height,
-    const DataFormat dataFormat,
-    const void* data)
-{
-    // TODO: Implement.
+    SENNET_CORE_ASSERT(false, "OpenGLTexture2D constructor not implemented.");
+    // TODO: Implement image loader and use it here.
 }
 
 OpenGLTexture2D::~OpenGLTexture2D() { glDeleteTextures(1, &m_RendererID); }

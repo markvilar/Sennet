@@ -15,15 +15,10 @@ EditorLayer::EditorLayer()
 
 void EditorLayer::OnAttach()
 {
-    m_CheckerboardTexture =
-        Texture2D::Create("../../../../assets/Textures/Checkerboard.png");
-
-    FramebufferSpecification fbSpec;
-    fbSpec.Width = 1280;
-    fbSpec.Height = 720;
-    m_Framebuffer = Framebuffer::Create(fbSpec);
-
-    Renderer2D::Init();
+    Framebuffer::Specification specs;
+    specs.Width = 1280;
+    specs.Height = 720;
+    m_Framebuffer = Framebuffer::Create(specs);
 }
 
 void EditorLayer::OnDetach() {}
@@ -33,9 +28,9 @@ void EditorLayer::OnUpdate(Timestep ts)
     SENNET_PROFILE_FUNCTION();
 
     // Resize framebuffer and camera.
-    FramebufferSpecification spec = m_Framebuffer->GetSpecification();
+    auto specs = m_Framebuffer->GetSpecification();
     if (m_ViewportSize.x > 0.0f && m_ViewportSize.y > 0.0f &&
-        (spec.Width != m_ViewportSize.x || spec.Height != m_ViewportSize.y))
+        (specs.Width != m_ViewportSize.x || specs.Height != m_ViewportSize.y))
     {
         m_Framebuffer->Resize(
             (uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
@@ -69,17 +64,6 @@ void EditorLayer::OnUpdate(Timestep ts)
         Renderer2D::DrawQuad(
             {2.0f, -2.0f}, {0.8f, 0.8f}, {0.8f, 0.2f, 0.3f, 1.0f});
         Renderer2D::DrawQuad({2.0f, 2.0f}, {0.5f, 0.75f}, m_QuadColor);
-        Renderer2D::DrawQuad({0.0f, 0.0f, -0.2f},
-            {20.0f, 20.0f},
-            m_CheckerboardTexture,
-            4.0f,
-            glm::vec4(1.0f, 0.9f, 0.9f, 1.0f));
-        Renderer2D::DrawRotatedQuad({-2.0f, -2.0f, 0.0f},
-            {1.0f, 1.0f},
-            glm::radians(45.0f),
-            m_CheckerboardTexture,
-            1.0f,
-            glm::vec4(1.0f, 0.9f, 0.9f, 1.0f));
 
         for (float y = -5.0f; y < 5.0f; y += 0.5f)
         {
@@ -180,7 +164,7 @@ void EditorLayer::OnImGuiRender()
     ImVec2 viewportPanelSize = ImGui::GetContentRegionAvail();
     m_ViewportSize = {viewportPanelSize.x, viewportPanelSize.y};
 
-    uint32_t textureID = m_Framebuffer->GetColorAttachmentRendererID();
+    auto textureID = m_Framebuffer->GetColorAttachmentRendererID();
     ImGui::Image((void*)textureID,
         ImVec2{viewportPanelSize.x, viewportPanelSize.y},
         ImVec2{0, 1},

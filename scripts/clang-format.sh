@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/bash
 
 find . -type d \( -path ./lib/external -o -path ./os -o -path ./lib/libc \
     -o -path ./lib/libmemory \) -prune -o -iname *.h -o -iname *.c \

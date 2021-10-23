@@ -53,11 +53,6 @@ public:
         const DataFormat dataFormat);
 
     static Ref<Texture2D> Create(const std::string& path);
-
-    static Ref<Texture2D> Create(const uint32_t width,
-        const uint32_t height,
-        const DataFormat dataFormat,
-        const void* data = nullptr);
 };
 
 } // namespace Sennet
