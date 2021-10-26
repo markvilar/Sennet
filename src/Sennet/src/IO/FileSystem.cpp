@@ -1,0 +1,118 @@
+#include "Sennet/IO/FileSystem.hpp"
+#include "Sennet/Pch.hpp"
+
+namespace Sennet
+{
+
+bool FileSystem::CreateDirectory(const std::filesystem::path& directory)
+{
+    return std::filesystem::create_directory(directory);
+}
+
+bool FileSystem::CreateDirectory(const std::string& directory)
+{
+    return CreateDirectory(std::filesystem::path(directory));
+}
+
+bool FileSystem::Exists(const std::filesystem::path& filepath)
+{
+    return std::filesystem::exists(filepath);
+}
+
+bool FileSystem::Exists(const std::string& filepath)
+{
+    return std::filesystem::exists(std::filesystem::path(filepath));
+}
+
+bool FileSystem::Copy(const std::filesystem::path& oldFilepath,
+    const std::filesystem::path& newFilepath)
+{
+    std::error_code ec;
+    std::filesystem::copy(oldFilepath, newFilepath, ec);
+    return !ec;
+}
+
+bool FileSystem::Rename(const std::filesystem::path& oldFilepath,
+    const std::filesystem::path& newFilepath)
+{
+    std::error_code ec;
+    std::filesystem::rename(oldFilepath, newFilepath, ec);
+    return !ec;
+}
+
+bool FileSystem::MoveFile(const std::filesystem::path& filepath,
+    const std::filesystem::path& destination)
+{
+    std::error_code ec;
+    std::filesystem::rename(filepath, destination, ec);
+    return !ec;
+}
+
+bool FileSystem::RenameFile(const std::filesystem::path& oldFilepath,
+    const std::string& newName)
+{
+    // TODO: Revise this function.
+    std::error_code ec;
+    if (IsFile(oldFilepath))
+    {
+        auto parent = oldFilepath.parent_path();
+        auto oldName = oldFilepath.filename();
+        auto newFilepath = parent / newName;
+        std::filesystem::rename(oldFilepath, newFilepath, ec);
+    }
+    return !ec;
+}
+
+bool FileSystem::DeleteFile(const std::filesystem::path& filepath)
+{
+    // TODO: Revise this function.
+    auto deleted = false;
+    if (IsFile(filepath))
+    {
+        deleted = std::filesystem::remove(filepath);
+    }
+    return deleted;
+}
+
+bool FileSystem::IsEmpty(const std::filesystem::path& filepath)
+{
+    return std::filesystem::is_empty(filepath);
+}
+
+bool FileSystem::IsEqual(const std::filesystem::path& filepath,
+    const std::filesystem::path& other)
+{
+    return std::filesystem::equivalent(filepath, other);
+}
+
+bool FileSystem::IsFile(const std::filesystem::path& filepath)
+{
+    return std::filesystem::is_regular_file(filepath);
+}
+
+bool FileSystem::IsDirectory(const std::filesystem::path& filepath)
+{
+    return std::filesystem::is_directory(filepath);
+}
+
+bool FileSystem::SetWorkingDirectory(const std::filesystem::path& filepath)
+{
+    // TODO: Revise this function.
+    if (IsDirectory(filepath))
+    {
+        std::error_code ec;
+        std::filesystem::current_path(filepath, ec);
+        return (!ec) ? true : false;
+    }
+    else
+    {
+        return false;
+    }
+}
+
+std::filesystem::path FileSystem::GetWorkingDirectory()
+{
+    return std::filesystem::current_path();
+}
+
+} // namespace Sennet

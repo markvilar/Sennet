@@ -27,6 +27,7 @@ target_sources(
            include/Sennet/ImGui/ImGuiBuild.hpp
            include/Sennet/ImGui/ImGuiHelpers.hpp
            include/Sennet/ImGui/ImGuiLayer.hpp
+           include/Sennet/IO/FileSystem.hpp
            include/Sennet/Network/Base.hpp
            include/Sennet/Network/Socket.hpp
            include/Sennet/Network/ThreadSafeQueue.hpp
@@ -64,6 +65,7 @@ target_sources(
             src/ImGui/imgui_impl_opengl3.cpp
             src/ImGui/ImGuiHelpers.cpp
             src/ImGui/ImGuiLayer.cpp
+            src/IO/FileSystem.cpp
             src/Network/Socket.cpp
             src/Platform/OpenGL/OpenGLBuffer.cpp
             src/Platform/OpenGL/OpenGLFramebuffer.cpp
