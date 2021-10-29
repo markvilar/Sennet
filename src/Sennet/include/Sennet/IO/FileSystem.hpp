@@ -36,7 +36,7 @@ public:
 
     static bool Copy(const std::filesystem::path& oldFilepath,
         const std::filesystem::path& newFilepath);
-    static bool Rename(const std::filesystem::path& oldFilepath,
+    static bool Move(const std::filesystem::path& oldFilepath,
         const std::filesystem::path& newFilepath);
 
     static bool MoveFile(const std::filesystem::path& filepath,
