@@ -18,7 +18,7 @@ void EditorLayer::OnAttach()
     Framebuffer::Specification specs;
     specs.Width = 1280;
     specs.Height = 720;
-    m_Framebuffer = Framebuffer::Create(specs);
+    m_ViewportFramebuffer = Framebuffer::Create(specs);
 }
 
 void EditorLayer::OnDetach() {}
@@ -28,11 +28,11 @@ void EditorLayer::OnUpdate(Timestep ts)
     SENNET_PROFILE_FUNCTION();
 
     // Resize framebuffer and camera.
-    auto specs = m_Framebuffer->GetSpecification();
+    auto specs = m_ViewportFramebuffer->GetSpecification();
     if (m_ViewportSize.x > 0.0f && m_ViewportSize.y > 0.0f &&
         (specs.Width != m_ViewportSize.x || specs.Height != m_ViewportSize.y))
     {
-        m_Framebuffer->Resize(
+        m_ViewportFramebuffer->Resize(
             (uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
         m_CameraController.OnResize(m_ViewportSize.x, m_ViewportSize.y);
     }
@@ -45,7 +45,13 @@ void EditorLayer::OnUpdate(Timestep ts)
     Renderer2D::ResetStats();
     {
         SENNET_PROFILE_SCOPE("Renderer Prep");
-        m_Framebuffer->Bind();
+
+        // Set background color.
+        RenderCommand::SetClearColor({0.1f, 0.1f, 0.1f, 1});
+        RenderCommand::Clear();
+
+        // Set viewport background color.
+        m_ViewportFramebuffer->Bind();
         RenderCommand::SetClearColor({0.1f, 0.1f, 0.1f, 1});
         RenderCommand::Clear();
     }
@@ -76,7 +82,7 @@ void EditorLayer::OnUpdate(Timestep ts)
         }
 
         Renderer2D::EndScene();
-        m_Framebuffer->Unbind();
+        m_ViewportFramebuffer->Unbind();
     }
 }
 
@@ -84,21 +90,12 @@ void EditorLayer::OnImGuiRender()
 {
     SENNET_PROFILE_FUNCTION();
 
-    static bool dockspaceOpen = true;
     static bool optionFullscreenPersistant = true;
     bool optionFullscreen = optionFullscreenPersistant;
 
-    /*
-    static ImGuiDockNodeFlags dockspaceFlags = ImGuiDockNodeFlags_None;
-
-    ImGuiWindowFlags window_flags =
-        ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDocking;
+    ImGuiWindowFlags window_flags = ImGuiWindowFlags_MenuBar;
     if (optionFullscreen)
     {
-        ImGuiViewport* viewport = ImGui::GetMainViewport();
-        ImGui::SetNextWindowPos(viewport->GetWorkPos());
-        ImGui::SetNextWindowSize(viewport->GetWorkSize());
-        ImGui::SetNextWindowViewport(viewport->ID);
         ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
         ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
         window_flags |= ImGuiWindowFlags_NoTitleBar |
@@ -108,26 +105,11 @@ void EditorLayer::OnImGuiRender()
             ImGuiWindowFlags_NoNavFocus;
     }
 
-    if (dockspaceFlags & ImGuiDockNodeFlags_PassthruCentralNode)
-        window_flags |= ImGuiWindowFlags_NoBackground;
-
-    ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
-    ImGui::Begin("DockSpace Demo", &dockspaceOpen, window_flags);
-    ImGui::PopStyleVar();
-
     if (optionFullscreen)
         ImGui::PopStyleVar(2);
 
-    // DockSpace
-    ImGuiIO& io = ImGui::GetIO();
-    if (io.ConfigFlags & ImGuiConfigFlags_DockingEnable)
-    {
-        ImGuiID dockspaceID = ImGui::GetID("MyDockSpace");
-        ImGui::DockSpace(dockspaceID, ImVec2(0.0f, 0.0f), dockspaceFlags);
-    }
-    */
-
-    if (ImGui::BeginMenuBar())
+    // Menu bar.
+    if (ImGui::BeginMainMenuBar())
     {
         if (ImGui::BeginMenu("File"))
         {
@@ -135,7 +117,8 @@ void EditorLayer::OnImGuiRender()
                 Sennet::Application::Get().Close();
             ImGui::EndMenu();
         }
-        ImGui::EndMenuBar();
+
+        ImGui::EndMainMenuBar();
     }
 
     // Settings window.
@@ -164,8 +147,8 @@ void EditorLayer::OnImGuiRender()
     ImVec2 viewportPanelSize = ImGui::GetContentRegionAvail();
     m_ViewportSize = {viewportPanelSize.x, viewportPanelSize.y};
 
-    auto textureID = m_Framebuffer->GetColorAttachmentRendererID();
-    ImGui::Image((void*)textureID,
+    auto textureID = m_ViewportFramebuffer->GetColorAttachmentRendererID();
+    ImGui::Image(reinterpret_cast<void*>(textureID),
         ImVec2{viewportPanelSize.x, viewportPanelSize.y},
         ImVec2{0, 1},
         ImVec2{1, 0});

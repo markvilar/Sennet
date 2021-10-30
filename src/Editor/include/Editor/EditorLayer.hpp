@@ -21,7 +21,7 @@ public:
 private:
     OrthographicCameraController m_CameraController;
 
-    Ref<Framebuffer> m_Framebuffer;
+    Ref<Framebuffer> m_ViewportFramebuffer;
 
     bool m_ViewportFocused = false;
     bool m_ViewportHovered = false;

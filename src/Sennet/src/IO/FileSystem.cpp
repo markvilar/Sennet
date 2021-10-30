@@ -49,8 +49,8 @@ bool FileSystem::MoveFile(const std::filesystem::path& filepath,
 bool FileSystem::RenameFile(const std::filesystem::path& oldFilepath,
     const std::string& newName)
 {
-    auto newFilepath = oldFilepath.parent_path() / newName 
-        / oldFilepath.extension();
+    auto newFilepath =
+        oldFilepath.parent_path() / newName / oldFilepath.extension();
     return Move(oldFilepath, newFilepath);
 }
 

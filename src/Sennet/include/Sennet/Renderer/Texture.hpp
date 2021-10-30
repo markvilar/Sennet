@@ -13,18 +13,16 @@ class Texture
 public:
     enum class InternalFormat : uint8_t
     {
-        None = 0,
-        RGBA8 = 1,
-        RGB8 = 2,
+        RGBA8,
+        RGB8,
     };
 
     enum class DataFormat : uint8_t
     {
-        None = 0,
-        RGBA = 1,
-        BGRA = 2,
-        RGB = 3,
-        BGR = 4,
+        RGBA,
+        BGRA,
+        RGB,
+        BGR,
     };
 
     virtual ~Texture() = default;

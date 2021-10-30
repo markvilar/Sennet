@@ -25,11 +25,10 @@ void Renderer::Init()
 {
     s_Data = new Data();
 
-    SENNET_CORE_INFO("Initializing renderer.");
-
     // Initialize shader library and load shaders.
     s_Data->Library = CreateRef<ShaderLibrary>();
-    SENNET_CORE_ASSERT(s_Data->Library, "Uninitialized shader library.");
+
+    // TODO: Fix working directory and shader paths.
     Renderer::GetShaderLibrary()->Load(
         "../../resources/shaders/Renderer2D.glsl");
 
