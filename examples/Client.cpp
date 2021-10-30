@@ -51,16 +51,19 @@ int main(int argc, char** argv)
             if (!client.Incoming().empty())
             {
                 auto message = client.Incoming().pop_front().Msg;
+                std::chrono::system_clock::time_point t;
+                std::chrono::system_clock::time_point z;
+                double time;
 
                 switch (message.Header.ID)
                 {
                 case CustomMessageTypes::ServerPing:
-                    std::chrono::system_clock::time_point t =
-                        std::chrono::system_clock::now();
-                    std::chrono::system_clock::time_point z;
+                    t = std::chrono::system_clock::now();
                     message >> z;
-                    auto time = std::chrono::duration<double>(t - z).count();
+                    time = std::chrono::duration<double>(t - z).count();
                     SENNET_INFO("Ping: {0}", time);
+                    break;
+                default:
                     break;
                 }
             }

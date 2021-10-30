@@ -44,6 +44,8 @@ protected:
             // Bounce message back to client.
             client->Send(message);
             break;
+        default:
+            break;
         }
     }
 };
