@@ -35,8 +35,8 @@ public:
 class ShaderLibrary
 {
 public:
-    ShaderLibrary();
-    ~ShaderLibrary();
+    ShaderLibrary() = default;
+    ~ShaderLibrary() = default;
 
     void Add(const std::string& name, const Ref<Shader>& shader);
     void Add(const Ref<Shader>& shader);

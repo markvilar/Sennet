@@ -7,6 +7,7 @@
 #include "Sennet/Renderer/OrthographicCamera.hpp"
 #include "Sennet/Renderer/RendererAPI.hpp"
 #include "Sennet/Renderer/Shader.hpp"
+#include "Sennet/Renderer/Texture.hpp"
 
 namespace Sennet
 {
@@ -20,6 +21,9 @@ public:
     static void OnWindowResize(uint32_t width, uint32_t height);
 
     static Ref<ShaderLibrary> GetShaderLibrary();
+
+    static Ref<Texture2D> GetBlackTexture();
+    static Ref<Texture2D> GetWhiteTexture();
 
     static void BeginScene(OrthographicCamera& camera);
     static void EndScene();

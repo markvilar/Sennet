@@ -44,8 +44,8 @@ GLenum SennetToOpenGL(const Texture::DataFormat& dataFormat)
     return glDataFormat;
 }
 
-OpenGLTexture2D::OpenGLTexture2D(const uint32_t& width,
-    const uint32_t& height,
+OpenGLTexture2D::OpenGLTexture2D(const uint32_t width,
+    const uint32_t height,
     const InternalFormat internalFormat,
     const DataFormat dataFormat)
     : m_Source(""), m_Width(width), m_Height(height),
@@ -64,63 +64,8 @@ OpenGLTexture2D::OpenGLTexture2D(const uint32_t& width,
 
 OpenGLTexture2D::OpenGLTexture2D(const std::string& path) : m_Source(path)
 {
-    /*
-    int width, height, channels;
-    stbi_set_flip_vertically_on_load(1);
-    stbi_uc* data = stbi_load(path.c_str(), &width, &height, &channels, 0);
-
-    if (!data)
-    {
-        SENNET_CORE_ERROR("Could not load texture '{0}'", path);
-        SENNET_CORE_ASSERT(false, "Texture loading failed!");
-    }
-
-    m_Width = width;
-    m_Height = height;
-
-    auto internalFormat = InternalFormat::None;
-    auto dataFormat = DataFormat::None;
-    if (channels == 4)
-    {
-        internalFormat = InternalFormat::RGBA8;
-        dataFormat = DataFormat::RGBA;
-    }
-    else if (channels == 3)
-    {
-        internalFormat = InternalFormat::RGB8;
-        dataFormat = DataFormat::RGB;
-    }
-
-    m_InternalFormat = internalFormat;
-    m_DataFormat = dataFormat;
-
-    SENNET_CORE_ASSERT(!(internalFormat == InternalFormat::None),
-        "Texture internal format is not supported!");
-    SENNET_CORE_ASSERT(!(dataFormat == DataFormat::None),
-        "Texture data format is not supported!");
-
-    glCreateTextures(GL_TEXTURE_2D, 1, &m_RendererID);
-    glTextureStorage2D(
-        m_RendererID, 1, SennetToOpenGL(m_InternalFormat), m_Width, m_Height);
-
-    glTextureParameteri(m_RendererID, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTextureParameteri(m_RendererID, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-
-    glTextureParameteri(m_RendererID, GL_TEXTURE_WRAP_S, GL_REPEAT);
-    glTextureParameteri(m_RendererID, GL_TEXTURE_WRAP_T, GL_REPEAT);
-
-    glTextureSubImage2D(m_RendererID,
-        0,
-        0,
-        0,
-        m_Width,
-        m_Height,
-        SennetToOpenGL(m_DataFormat),
-        GL_UNSIGNED_BYTE,
-        data);
-
-    stbi_image_free(data);
-    */
+    SENNET_CORE_ASSERT(false, "OpenGLTexture2D constructor not implemented.");
+    // TODO: Implement image loader and use it here.
 }
 
 OpenGLTexture2D::~OpenGLTexture2D() { glDeleteTextures(1, &m_RendererID); }

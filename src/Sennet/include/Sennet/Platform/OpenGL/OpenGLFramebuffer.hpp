@@ -8,7 +8,7 @@ namespace Sennet
 class OpenGLFramebuffer : public Framebuffer
 {
 public:
-    OpenGLFramebuffer(const FramebufferSpecification& spec);
+    OpenGLFramebuffer(const Framebuffer::Specification& specs);
     virtual ~OpenGLFramebuffer();
 
     void Invalidate();
@@ -23,7 +23,7 @@ public:
         return m_ColorAttachment;
     }
 
-    virtual const FramebufferSpecification& GetSpecification() const override
+    virtual const Framebuffer::Specification& GetSpecification() const override
     {
         return m_Specification;
     }
@@ -32,7 +32,7 @@ private:
     RendererID m_RendererID = 0;
     RendererID m_ColorAttachment = 0;
     RendererID m_DepthAttachment = 0;
-    FramebufferSpecification m_Specification;
+    Framebuffer::Specification m_Specification;
 };
 
 } // namespace Sennet

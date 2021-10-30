@@ -16,6 +16,8 @@
 #include "Sennet/ImGui/ImGuiHelpers.hpp"
 #include "Sennet/ImGui/ImGuiLayer.hpp"
 
+#include "Sennet/IO/FileSystem.hpp"
+
 #include "Sennet/Network/TCP/Client.hpp"
 #include "Sennet/Network/TCP/Connection.hpp"
 #include "Sennet/Network/TCP/Message.hpp"

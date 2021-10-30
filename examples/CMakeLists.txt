@@ -1,17 +1,14 @@
-# Client
-add_executable(Client Client.cpp)
-target_compile_features(Client PRIVATE cxx_std_20)
-target_compile_definitions(Client PRIVATE)
-target_link_libraries(Client PRIVATE sennet::sennet)
+add_executable(client Client.cpp)
+target_compile_features(client PRIVATE cxx_std_20)
+target_compile_definitions(client PRIVATE)
+target_link_libraries(client PRIVATE sennet::sennet)
 
-# Sandbox
-add_executable(Sandbox Sandbox.cpp)
-target_compile_features(Sandbox PRIVATE cxx_std_20)
-target_compile_definitions(Sandbox PRIVATE)
-target_link_libraries(Sandbox PRIVATE sennet::sennet)
+add_executable(sandbox Sandbox.cpp)
+target_compile_features(sandbox PRIVATE cxx_std_20)
+target_compile_definitions(sandbox PRIVATE)
+target_link_libraries(sandbox PRIVATE sennet::sennet)
 
-# Server
-add_executable(Server Server.cpp)
-target_compile_features(Server PRIVATE cxx_std_20)
-target_compile_definitions(Server PRIVATE)
-target_link_libraries(Server PRIVATE sennet::sennet)
+add_executable(server Server.cpp)
+target_compile_features(server PRIVATE cxx_std_20)
+target_compile_definitions(server PRIVATE)
+target_link_libraries(server PRIVATE sennet::sennet)

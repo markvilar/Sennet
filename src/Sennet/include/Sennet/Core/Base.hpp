@@ -1,6 +1,7 @@
 #pragma once
 
 #if defined(SENNET_DEBUG)
+#define SENNET_ENABLE_ASSERTS
 #elif defined(SENNET_RELEASE)
 #else
 #error "Unknown build type!"

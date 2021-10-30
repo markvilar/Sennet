@@ -8,11 +8,16 @@ namespace Sennet
 class OpenGLTexture2D : public Texture2D
 {
 public:
-    OpenGLTexture2D(const uint32_t& width,
-        const uint32_t& height,
+    OpenGLTexture2D(const uint32_t width,
+        const uint32_t height,
         const InternalFormat internalFormat,
         const DataFormat dataFormat);
     OpenGLTexture2D(const std::string& path);
+    OpenGLTexture2D(const uint32_t width,
+        const uint32_t height,
+        const DataFormat dataFormat,
+        const void* data = nullptr);
+
     ~OpenGLTexture2D();
 
     virtual uint32_t GetWidth() const override { return m_Width; }

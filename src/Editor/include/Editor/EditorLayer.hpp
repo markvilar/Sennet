@@ -21,7 +21,6 @@ public:
 private:
     OrthographicCameraController m_CameraController;
 
-    Ref<Texture2D> m_CheckerboardTexture;
     Ref<Framebuffer> m_Framebuffer;
 
     bool m_ViewportFocused = false;
