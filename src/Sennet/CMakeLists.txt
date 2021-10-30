@@ -132,7 +132,7 @@ target_compile_definitions(
 
 target_compile_features(sennet PUBLIC cxx_std_20)
 
-target_compile_options(sennet PUBLIC -std=c++20)
+target_compile_options(sennet PUBLIC -std=c++2a)
 
 set_target_properties(
     sennet
