@@ -130,9 +130,9 @@ target_compile_definitions(
            $<$<CONFIG:Release>:SENNET_RELEASE>
     PRIVATE)
 
-target_compile_features(sennet PUBLIC cxx_std_20)
+target_compile_features(sennet PUBLIC cxx_std_17)
 
-target_compile_options(sennet PUBLIC -std=c++2a)
+target_compile_options(sennet PUBLIC -std=c++17)
 
 set_target_properties(
     sennet

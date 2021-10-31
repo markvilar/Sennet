@@ -15,7 +15,7 @@ The requirements are:
 
 ## Dependencies
 
-| **Library** | **Version** | **Library information.**            |
+| **Library** | **Version** | **Library purpose.**                |
 |-------------|-------------|-------------------------------------|
 | asio        | 1.18.0+     | Network and asynchronicity.         |
 | EnTT        | 3.8.1+      | Entity component system.            |
@@ -78,4 +78,3 @@ I would like to acknowledge the following projects for inspiring this one:
 - [olcPixelGameEngine](https://github.com/OneLoneCoder/olcPixelGameEngine)
 - [anki-3d-engine](https://github.com/godlikepanos/anki-3d-engine)
 - [cilantro](https://github.com/kzampog/cilantro)
-- [tinyply](https://github.com/ddiakopoulos/tinyply)
