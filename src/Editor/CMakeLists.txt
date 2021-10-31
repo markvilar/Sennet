@@ -12,8 +12,8 @@ add_subdirectory(app)
 
 target_link_libraries(editor PUBLIC sennet::sennet)
 target_compile_definitions(editor PUBLIC)
-target_compile_features(editor PUBLIC cxx_std_20)
-target_compile_options(editor PRIVATE -std=c++2a)
+target_compile_features(editor PUBLIC cxx_std_17)
+target_compile_options(editor PRIVATE -std=c++17)
 
 set_target_properties(
     editor
