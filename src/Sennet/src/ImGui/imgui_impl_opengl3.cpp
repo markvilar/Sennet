@@ -178,20 +178,20 @@
 
 // Desktop GL 3.2+ has glDrawElementsBaseVertex() which GL ES and WebGL don't
 // have.
-#if !defined(IMGUI_IMPL_OPENGL_ES2) && !defined(IMGUI_IMPL_OPENGL_ES3) &&      \
-    defined(GL_VERSION_3_2)
+#if !defined(IMGUI_IMPL_OPENGL_ES2) && !defined(IMGUI_IMPL_OPENGL_ES3)         \
+    && defined(GL_VERSION_3_2)
 #define IMGUI_IMPL_OPENGL_MAY_HAVE_VTX_OFFSET
 #endif
 
 // Desktop GL 3.3+ has glBindSampler()
-#if !defined(IMGUI_IMPL_OPENGL_ES2) && !defined(IMGUI_IMPL_OPENGL_ES3) &&      \
-    defined(GL_VERSION_3_3)
+#if !defined(IMGUI_IMPL_OPENGL_ES2) && !defined(IMGUI_IMPL_OPENGL_ES3)         \
+    && defined(GL_VERSION_3_3)
 #define IMGUI_IMPL_OPENGL_MAY_HAVE_BIND_SAMPLER
 #endif
 
 // Desktop GL 3.1+ has GL_PRIMITIVE_RESTART state
-#if !defined(IMGUI_IMPL_OPENGL_ES2) && !defined(IMGUI_IMPL_OPENGL_ES3) &&      \
-    defined(GL_VERSION_3_1)
+#if !defined(IMGUI_IMPL_OPENGL_ES2) && !defined(IMGUI_IMPL_OPENGL_ES3)         \
+    && defined(GL_VERSION_3_1)
 #define IMGUI_IMPL_OPENGL_MAY_HAVE_PRIMITIVE_RESTART
 #endif
 
@@ -235,12 +235,12 @@ static ImGui_ImplOpenGL3_Data* ImGui_ImplOpenGL3_GetBackendData()
 bool ImGui_ImplOpenGL3_Init(const char* glsl_version)
 {
     ImGuiIO& io = ImGui::GetIO();
-    IM_ASSERT(io.BackendRendererUserData == NULL &&
-        "Already initialized a renderer backend!");
+    IM_ASSERT(io.BackendRendererUserData == NULL
+        && "Already initialized a renderer backend!");
 
     // Initialize our loader
-#if !defined(IMGUI_IMPL_OPENGL_ES2) && !defined(IMGUI_IMPL_OPENGL_ES3) &&      \
-    !defined(IMGUI_IMPL_OPENGL_LOADER_CUSTOM)
+#if !defined(IMGUI_IMPL_OPENGL_ES2) && !defined(IMGUI_IMPL_OPENGL_ES3)         \
+    && !defined(IMGUI_IMPL_OPENGL_LOADER_CUSTOM)
     if (imgl3wInit() != 0)
     {
         fprintf(stderr, "Failed to initialize OpenGL loader!\n");
@@ -581,8 +581,8 @@ void ImGui_ImplOpenGL3_RenderDrawData(ImDrawData* draw_data)
                 clip_rect.z = (pcmd->ClipRect.z - clip_off.x) * clip_scale.x;
                 clip_rect.w = (pcmd->ClipRect.w - clip_off.y) * clip_scale.y;
 
-                if (clip_rect.x < fb_width && clip_rect.y < fb_height &&
-                    clip_rect.z >= 0.0f && clip_rect.w >= 0.0f)
+                if (clip_rect.x < fb_width && clip_rect.y < fb_height
+                    && clip_rect.z >= 0.0f && clip_rect.w >= 0.0f)
                 {
                     // Apply scissor/clipping rectangle
                     glScissor((int)clip_rect.x,

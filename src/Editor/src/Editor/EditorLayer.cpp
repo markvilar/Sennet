@@ -30,8 +30,9 @@ void EditorLayer::OnUpdate(Timestep ts)
 
     // Resize framebuffer and update camera settings.
     auto specs = m_ViewportFramebuffer->GetSpecification();
-    if (m_ViewportSize.x > 0.0f && m_ViewportSize.y > 0.0f &&
-        (specs.Width != m_ViewportSize.x || specs.Height != m_ViewportSize.y))
+    if (m_ViewportSize.x > 0.0f && m_ViewportSize.y > 0.0f
+        && (specs.Width != m_ViewportSize.x
+            || specs.Height != m_ViewportSize.y))
     {
         m_ViewportFramebuffer->Resize((uint32_t)m_ViewportSize.x,
             (uint32_t)m_ViewportSize.y);
@@ -109,11 +110,11 @@ void EditorLayer::OnImGuiRender()
         ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
         ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{0, 0});
 
-        window_flags |= ImGuiWindowFlags_NoTitleBar |
-            ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize |
-            ImGuiWindowFlags_NoMove;
-        window_flags |= ImGuiWindowFlags_NoBringToFrontOnFocus |
-            ImGuiWindowFlags_NoNavFocus;
+        window_flags |= ImGuiWindowFlags_NoTitleBar
+            | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize
+            | ImGuiWindowFlags_NoMove;
+        window_flags |= ImGuiWindowFlags_NoBringToFrontOnFocus
+            | ImGuiWindowFlags_NoNavFocus;
     }
 
     if (optionFullscreen)
@@ -159,10 +160,10 @@ void EditorLayer::OnImGuiRender()
 
     ImGui::Begin("Settings",
         nullptr,
-        ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_MenuBar |
-            ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove |
-            ImGuiWindowFlags_NoCollapse |
-            ImGuiWindowFlags_NoBringToFrontOnFocus);
+        ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_MenuBar
+            | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove
+            | ImGuiWindowFlags_NoCollapse
+            | ImGuiWindowFlags_NoBringToFrontOnFocus);
 
     auto stats = Sennet::Renderer2D::GetStats();
     ImGui::Text("Renderer2D Stats:");
@@ -183,10 +184,10 @@ void EditorLayer::OnImGuiRender()
 
     ImGui::Begin("Viewport",
         nullptr,
-        ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize |
-            ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse |
-            ImGuiWindowFlags_NoBringToFrontOnFocus |
-            ImGuiWindowFlags_NoScrollbar);
+        ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize
+            | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse
+            | ImGuiWindowFlags_NoBringToFrontOnFocus
+            | ImGuiWindowFlags_NoScrollbar);
 
     m_ViewportFocused = ImGui::IsWindowFocused();
     m_ViewportHovered = ImGui::IsWindowHovered();
@@ -210,10 +211,10 @@ void EditorLayer::OnImGuiRender()
 
     ImGui::Begin("Test",
         nullptr,
-        ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize |
-            ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse |
-            ImGuiWindowFlags_NoBringToFrontOnFocus |
-            ImGuiWindowFlags_NoScrollbar);
+        ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize
+            | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse
+            | ImGuiWindowFlags_NoBringToFrontOnFocus
+            | ImGuiWindowFlags_NoScrollbar);
     ImGui::End();
 
     if (showDemoWindow)

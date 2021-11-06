@@ -73,28 +73,28 @@
 #include <GLFW/glfw3native.h> // for glfwGetWin32Window
 #endif
 #define GLFW_HAS_WINDOW_TOPMOST                                                \
-    (GLFW_VERSION_MAJOR * 1000 + GLFW_VERSION_MINOR * 100 >=                   \
-        3200) // 3.2+ GLFW_FLOATING
+    (GLFW_VERSION_MAJOR * 1000 + GLFW_VERSION_MINOR * 100                      \
+        >= 3200) // 3.2+ GLFW_FLOATING
 #define GLFW_HAS_WINDOW_HOVERED                                                \
-    (GLFW_VERSION_MAJOR * 1000 + GLFW_VERSION_MINOR * 100 >=                   \
-        3300) // 3.3+ GLFW_HOVERED
+    (GLFW_VERSION_MAJOR * 1000 + GLFW_VERSION_MINOR * 100                      \
+        >= 3300) // 3.3+ GLFW_HOVERED
 #define GLFW_HAS_WINDOW_ALPHA                                                  \
-    (GLFW_VERSION_MAJOR * 1000 + GLFW_VERSION_MINOR * 100 >=                   \
-        3300) // 3.3+ glfwSetWindowOpacity
+    (GLFW_VERSION_MAJOR * 1000 + GLFW_VERSION_MINOR * 100                      \
+        >= 3300) // 3.3+ glfwSetWindowOpacity
 #define GLFW_HAS_PER_MONITOR_DPI                                               \
-    (GLFW_VERSION_MAJOR * 1000 + GLFW_VERSION_MINOR * 100 >=                   \
-        3300) // 3.3+ glfwGetMonitorContentScale
+    (GLFW_VERSION_MAJOR * 1000 + GLFW_VERSION_MINOR * 100                      \
+        >= 3300) // 3.3+ glfwGetMonitorContentScale
 #define GLFW_HAS_VULKAN                                                        \
-    (GLFW_VERSION_MAJOR * 1000 + GLFW_VERSION_MINOR * 100 >=                   \
-        3200)                  // 3.2+ glfwCreateWindowSurface
+    (GLFW_VERSION_MAJOR * 1000 + GLFW_VERSION_MINOR * 100                      \
+        >= 3200)               // 3.2+ glfwCreateWindowSurface
 #ifdef GLFW_RESIZE_NESW_CURSOR // Let's be nice to people who pulled GLFW
                                // between 2019-04-16 (3.4 define) and 2019-11-29
                                // (cursors defines) // FIXME: Remove when
                                // GLFW 3.4 is released?
 #define GLFW_HAS_NEW_CURSORS                                                   \
-    (GLFW_VERSION_MAJOR * 1000 + GLFW_VERSION_MINOR * 100 >=                   \
-        3400) // 3.4+ GLFW_RESIZE_ALL_CURSOR, GLFW_RESIZE_NESW_CURSOR,
-              // GLFW_RESIZE_NWSE_CURSOR, GLFW_NOT_ALLOWED_CURSOR
+    (GLFW_VERSION_MAJOR * 1000 + GLFW_VERSION_MINOR * 100                      \
+        >= 3400) // 3.4+ GLFW_RESIZE_ALL_CURSOR, GLFW_RESIZE_NESW_CURSOR,
+                 // GLFW_RESIZE_NWSE_CURSOR, GLFW_NOT_ALLOWED_CURSOR
 #else
 #define GLFW_HAS_NEW_CURSORS (0)
 #endif
@@ -169,8 +169,8 @@ void ImGui_ImplGlfw_MouseButtonCallback(
     if (bd->PrevUserCallbackMousebutton != NULL && window == bd->Window)
         bd->PrevUserCallbackMousebutton(window, button, action, mods);
 
-    if (action == GLFW_PRESS && button >= 0 &&
-        button < IM_ARRAYSIZE(bd->MouseJustPressed))
+    if (action == GLFW_PRESS && button >= 0
+        && button < IM_ARRAYSIZE(bd->MouseJustPressed))
         bd->MouseJustPressed[button] = true;
 }
 
@@ -203,8 +203,8 @@ void ImGui_ImplGlfw_KeyCallback(
     }
 
     // Modifiers are not reliable across systems
-    io.KeyCtrl = io.KeysDown[GLFW_KEY_LEFT_CONTROL] ||
-        io.KeysDown[GLFW_KEY_RIGHT_CONTROL];
+    io.KeyCtrl = io.KeysDown[GLFW_KEY_LEFT_CONTROL]
+        || io.KeysDown[GLFW_KEY_RIGHT_CONTROL];
     io.KeyShift =
         io.KeysDown[GLFW_KEY_LEFT_SHIFT] || io.KeysDown[GLFW_KEY_RIGHT_SHIFT];
     io.KeyAlt =
@@ -260,8 +260,8 @@ static bool ImGui_ImplGlfw_Init(
     GLFWwindow* window, bool install_callbacks, GlfwClientApi client_api)
 {
     ImGuiIO& io = ImGui::GetIO();
-    IM_ASSERT(io.BackendPlatformUserData == NULL &&
-        "Already initialized a platform backend!");
+    IM_ASSERT(io.BackendPlatformUserData == NULL
+        && "Already initialized a platform backend!");
 
     // Setup backend capabilities flags
     ImGui_ImplGlfw_Data* bd = IM_NEW(ImGui_ImplGlfw_Data)();
@@ -466,8 +466,8 @@ static void ImGui_ImplGlfw_UpdateMouseCursor()
 {
     ImGuiIO& io = ImGui::GetIO();
     ImGui_ImplGlfw_Data* bd = ImGui_ImplGlfw_GetBackendData();
-    if ((io.ConfigFlags & ImGuiConfigFlags_NoMouseCursorChange) ||
-        glfwGetInputMode(bd->Window, GLFW_CURSOR) == GLFW_CURSOR_DISABLED)
+    if ((io.ConfigFlags & ImGuiConfigFlags_NoMouseCursorChange)
+        || glfwGetInputMode(bd->Window, GLFW_CURSOR) == GLFW_CURSOR_DISABLED)
         return;
 
     ImGuiMouseCursor imgui_cursor = ImGui::GetMouseCursor();

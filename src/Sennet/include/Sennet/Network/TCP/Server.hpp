@@ -18,7 +18,7 @@ template <typename T> class Server
 public:
     Server(uint16_t port)
         : m_Acceptor(
-              m_Context, asio::ip::tcp::endpoint(asio::ip::tcp::v4(), port))
+            m_Context, asio::ip::tcp::endpoint(asio::ip::tcp::v4(), port))
     {
     }
 
