@@ -55,11 +55,14 @@ public:
 
     inline Window& GetWindow() { return *m_Window; }
 
-    ImGuiLayer* GetImGuiLayer() { return m_ImGuiLayer; }
+    inline ImGuiLayer* GetImGuiLayer() { return m_ImGuiLayer; }
 
     static inline Application& Get() { return *s_Instance; }
 
-    const Specification& GetSpecification() const { return m_Specification; }
+    inline const Specification& GetSpecification() const
+    {
+        return m_Specification;
+    }
 
 private:
     bool OnWindowClose(WindowCloseEvent& e);

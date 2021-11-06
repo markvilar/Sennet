@@ -343,9 +343,7 @@ void ImGui_ImplOpenGL3_NewFrame()
 }
 
 static void ImGui_ImplOpenGL3_SetupRenderState(ImDrawData* draw_data,
-    int fb_width,
-    int fb_height,
-    GLuint vertex_array_object)
+    int fb_width, int fb_height, GLuint vertex_array_object)
 {
     ImGui_ImplOpenGL3_Data* bd = ImGui_ImplOpenGL3_GetBackendData();
 
@@ -353,8 +351,10 @@ static void ImGui_ImplOpenGL3_SetupRenderState(ImDrawData* draw_data,
     // testing, scissor enabled, polygon fill
     glEnable(GL_BLEND);
     glBlendEquation(GL_FUNC_ADD);
-    glBlendFuncSeparate(
-        GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+    glBlendFuncSeparate(GL_SRC_ALPHA,
+        GL_ONE_MINUS_SRC_ALPHA,
+        GL_ONE,
+        GL_ONE_MINUS_SRC_ALPHA);
     glDisable(GL_CULL_FACE);
     glDisable(GL_DEPTH_TEST);
     glDisable(GL_STENCIL_TEST);
@@ -404,14 +404,16 @@ static void ImGui_ImplOpenGL3_SetupRenderState(ImDrawData* draw_data,
     };
     glUseProgram(bd->ShaderHandle);
     glUniform1i(bd->AttribLocationTex, 0);
-    glUniformMatrix4fv(
-        bd->AttribLocationProjMtx, 1, GL_FALSE, &ortho_projection[0][0]);
+    glUniformMatrix4fv(bd->AttribLocationProjMtx,
+        1,
+        GL_FALSE,
+        &ortho_projection[0][0]);
 
 #ifdef IMGUI_IMPL_OPENGL_MAY_HAVE_BIND_SAMPLER
     if (bd->GlVersion >= 330)
-        glBindSampler(
-            0, 0); // We use combined texture/sampler state. Applications using
-                   // GL 3.3 may set that otherwise.
+        glBindSampler(0,
+            0); // We use combined texture/sampler state. Applications using
+                // GL 3.3 may set that otherwise.
 #endif
 
     (void)vertex_array_object;
@@ -526,8 +528,10 @@ void ImGui_ImplOpenGL3_RenderDrawData(ImDrawData* draw_data)
 #ifdef IMGUI_IMPL_OPENGL_USE_VERTEX_ARRAY
     glGenVertexArrays(1, &vertex_array_object);
 #endif
-    ImGui_ImplOpenGL3_SetupRenderState(
-        draw_data, fb_width, fb_height, vertex_array_object);
+    ImGui_ImplOpenGL3_SetupRenderState(draw_data,
+        fb_width,
+        fb_height,
+        vertex_array_object);
 
     // Will project scissor/clipping rectangles into framebuffer space
     ImVec2 clip_off =
@@ -561,8 +565,10 @@ void ImGui_ImplOpenGL3_RenderDrawData(ImDrawData* draw_data)
                 // used by the user to request the renderer to reset render
                 // state.)
                 if (pcmd->UserCallback == ImDrawCallback_ResetRenderState)
-                    ImGui_ImplOpenGL3_SetupRenderState(
-                        draw_data, fb_width, fb_height, vertex_array_object);
+                    ImGui_ImplOpenGL3_SetupRenderState(draw_data,
+                        fb_width,
+                        fb_height,
+                        vertex_array_object);
                 else
                     pcmd->UserCallback(cmd_list, pcmd);
             }
@@ -585,8 +591,8 @@ void ImGui_ImplOpenGL3_RenderDrawData(ImDrawData* draw_data)
                         (int)(clip_rect.w - clip_rect.y));
 
                     // Bind texture, Draw
-                    glBindTexture(
-                        GL_TEXTURE_2D, (GLuint)(intptr_t)pcmd->GetTexID());
+                    glBindTexture(GL_TEXTURE_2D,
+                        (GLuint)(intptr_t)pcmd->GetTexID());
 #ifdef IMGUI_IMPL_OPENGL_MAY_HAVE_VTX_OFFSET
                     if (bd->GlVersion >= 320)
                         glDrawElementsBaseVertex(GL_TRIANGLES,
@@ -923,15 +929,15 @@ bool ImGui_ImplOpenGL3_CreateDeviceObjects()
     }
 
     // Create shaders
-    const GLchar* vertex_shader_with_version[2] = {
-        bd->GlslVersionString, vertex_shader};
+    const GLchar* vertex_shader_with_version[2] = {bd->GlslVersionString,
+        vertex_shader};
     GLuint vert_handle = glCreateShader(GL_VERTEX_SHADER);
     glShaderSource(vert_handle, 2, vertex_shader_with_version, NULL);
     glCompileShader(vert_handle);
     CheckShader(vert_handle, "vertex shader");
 
-    const GLchar* fragment_shader_with_version[2] = {
-        bd->GlslVersionString, fragment_shader};
+    const GLchar* fragment_shader_with_version[2] = {bd->GlslVersionString,
+        fragment_shader};
     GLuint frag_handle = glCreateShader(GL_FRAGMENT_SHADER);
     glShaderSource(frag_handle, 2, fragment_shader_with_version, NULL);
     glCompileShader(frag_handle);

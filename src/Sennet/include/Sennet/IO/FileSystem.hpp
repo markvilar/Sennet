@@ -41,8 +41,8 @@ public:
 
     static bool MoveFile(const std::filesystem::path& filepath,
         const std::filesystem::path& destination);
-    static bool RenameFile(const std::filesystem::path& oldFilepath,
-        const std::string& newName);
+    static bool RenameFile(
+        const std::filesystem::path& oldFilepath, const std::string& newName);
     static bool DeleteFile(const std::filesystem::path& filepath);
 
     static bool IsEmpty(const std::filesystem::path& filepath);

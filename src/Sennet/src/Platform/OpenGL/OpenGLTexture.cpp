@@ -44,16 +44,17 @@ GLenum SennetToOpenGL(const Texture::DataFormat& dataFormat)
     return glDataFormat;
 }
 
-OpenGLTexture2D::OpenGLTexture2D(const uint32_t width,
-    const uint32_t height,
-    const InternalFormat internalFormat,
-    const DataFormat dataFormat)
+OpenGLTexture2D::OpenGLTexture2D(const uint32_t width, const uint32_t height,
+    const InternalFormat internalFormat, const DataFormat dataFormat)
     : m_Source(""), m_Width(width), m_Height(height),
       m_InternalFormat(internalFormat), m_DataFormat(dataFormat)
 {
     glCreateTextures(GL_TEXTURE_2D, 1, &m_RendererID);
-    glTextureStorage2D(
-        m_RendererID, 1, SennetToOpenGL(m_InternalFormat), m_Width, m_Height);
+    glTextureStorage2D(m_RendererID,
+        1,
+        SennetToOpenGL(m_InternalFormat),
+        m_Width,
+        m_Height);
 
     glTextureParameteri(m_RendererID, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTextureParameteri(m_RendererID, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
@@ -88,8 +89,8 @@ void OpenGLTexture2D::SetData(void* data, const uint32_t& size)
         bpp = 3;
         break;
     }
-    SENNET_CORE_ASSERT(
-        size == m_Width * m_Height * bpp, "Data must be entire texture.");
+    SENNET_CORE_ASSERT(size == m_Width * m_Height * bpp,
+        "Data must be entire texture.");
     glTextureSubImage2D(m_RendererID,
         0,
         0,

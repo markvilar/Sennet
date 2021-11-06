@@ -18,8 +18,11 @@ LinuxSocket::LinuxSocket(const Socket::Specification& specs)
     m_ID = socket(domain, socketType, 0);
     SENNET_CORE_ASSERT(m_ID >= 0, "Error occured while creating socket.");
 
-    setsockopt(
-        m_ID, SOL_SOCKET, SO_REUSEADDR | SO_REUSEPORT, &opt, sizeof(opt));
+    setsockopt(m_ID,
+        SOL_SOCKET,
+        SO_REUSEADDR | SO_REUSEPORT,
+        &opt,
+        sizeof(opt));
 }
 
 void LinuxSocket::Open()
@@ -58,8 +61,8 @@ void LinuxSocket::Listen()
 {
     int backlog = 3;
     auto listenStatus = listen(m_ID, backlog);
-    SENNET_CORE_ASSERT(
-        listenStatus == 0, "Error occured while listening on socket.");
+    SENNET_CORE_ASSERT(listenStatus == 0,
+        "Error occured while listening on socket.");
 }
 
 void LinuxSocket::Accept(const std::string_view host, const uint16_t port)
@@ -72,8 +75,8 @@ void LinuxSocket::Accept(const std::string_view host, const uint16_t port)
 
     auto remote =
         accept(m_ID, (struct sockaddr*)&address, (socklen_t*)&addressLength);
-    SENNET_CORE_ASSERT(
-        remote >= 0, "Error occured while accepting connections.");
+    SENNET_CORE_ASSERT(remote >= 0,
+        "Error occured while accepting connections.");
 }
 
 // ----------------------------------------------------------------------------
@@ -89,8 +92,8 @@ void LinuxSocket::Connect(const std::string_view host, const uint16_t port)
 
     auto remote =
         connect(m_ID, (struct sockaddr*)&serverAddress, sizeof(serverAddress));
-    SENNET_CORE_ASSERT(
-        remote >= 0, "Error occured while connecting to server.");
+    SENNET_CORE_ASSERT(remote >= 0,
+        "Error occured while connecting to server.");
 }
 
 void LinuxSocket::Disconnect()

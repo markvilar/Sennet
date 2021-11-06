@@ -47,8 +47,8 @@ template <typename T> struct Message
     }
 
     template <typename D>
-    friend Message<T>& operator<<(Message<T>& message,
-        const std::vector<D>& data)
+    friend Message<T>& operator<<(
+        Message<T>& message, const std::vector<D>& data)
     {
         static_assert(std::is_standard_layout<D>::value,
             "Data is too complex to be pushed into vector.");
@@ -115,8 +115,8 @@ template <typename T> struct OwnedMessage
     Ref<Connection<T>> Remote = nullptr;
     Message<T> Msg;
 
-    friend std::ostream& operator<<(std::ostream& os,
-        const OwnedMessage<T>& message)
+    friend std::ostream& operator<<(
+        std::ostream& os, const OwnedMessage<T>& message)
     {
         os << message.Msg;
         return os;

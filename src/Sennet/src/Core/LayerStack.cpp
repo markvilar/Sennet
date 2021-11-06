@@ -29,8 +29,9 @@ void LayerStack::PushOverlay(Layer* overlay)
 void LayerStack::PopLayer(Layer* layer)
 {
     // Look for Layer among the pushed Layers.
-    auto it = std::find(
-        m_Layers.begin(), m_Layers.begin() + m_LayerInsertIndex, layer);
+    auto it = std::find(m_Layers.begin(),
+        m_Layers.begin() + m_LayerInsertIndex,
+        layer);
     if (it != m_Layers.begin() + m_LayerInsertIndex)
     {
         layer->OnDetach();
@@ -42,8 +43,9 @@ void LayerStack::PopLayer(Layer* layer)
 void LayerStack::PopOverlay(Layer* overlay)
 {
     // Look for overlay among the pushed overlays.
-    auto it = std::find(
-        m_Layers.begin() + m_LayerInsertIndex, m_Layers.end(), overlay);
+    auto it = std::find(m_Layers.begin() + m_LayerInsertIndex,
+        m_Layers.end(),
+        overlay);
     if (it != m_Layers.end())
     {
         overlay->OnDetach();

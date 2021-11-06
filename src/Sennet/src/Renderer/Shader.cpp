@@ -24,8 +24,7 @@ Ref<Shader> Shader::Create(const std::string& filepath)
 }
 
 Ref<Shader> Shader::Create(const std::string& name,
-    const std::string& vertexSrc,
-    const std::string& fragmentSrc)
+    const std::string& vertexSrc, const std::string& fragmentSrc)
 {
     switch (Renderer::GetAPI())
     {
@@ -52,8 +51,8 @@ void ShaderLibrary::Add(const Ref<Shader>& shader)
     Add(name, shader);
 }
 
-Ref<Shader> ShaderLibrary::Load(const std::string& name,
-    const std::string filepath)
+Ref<Shader> ShaderLibrary::Load(
+    const std::string& name, const std::string filepath)
 {
     auto shader = Shader::Create(filepath);
     SENNET_CORE_ASSERT(shader, "Shader is null.");

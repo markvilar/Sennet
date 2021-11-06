@@ -62,8 +62,7 @@ struct BufferElement
     bool Normalized;
 
     BufferElement() {}
-    BufferElement(const ShaderDataType type,
-        const std::string& name,
+    BufferElement(const ShaderDataType type, const std::string& name,
         const bool normalized = false)
         : Type(type), Name(name), Size(ShaderDataTypeSize(type)), Offset(0),
           Normalized(normalized)
