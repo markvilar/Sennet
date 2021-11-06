@@ -18,15 +18,15 @@ public:
     virtual size_t Receive(void* data, size_t size) override;
 
     // Server methods.
-    virtual void Bind(const std::string_view host,
-        const uint16_t port) override;
+    virtual void Bind(
+        const std::string_view host, const uint16_t port) override;
     virtual void Listen() override;
-    virtual void Accept(const std::string_view host,
-        const uint16_t port) override;
+    virtual void Accept(
+        const std::string_view host, const uint16_t port) override;
 
     // Client methods.
-    virtual void Connect(const std::string_view host,
-        const uint16_t port) override;
+    virtual void Connect(
+        const std::string_view host, const uint16_t port) override;
     virtual void Disconnect() override;
 
     // Status methods.

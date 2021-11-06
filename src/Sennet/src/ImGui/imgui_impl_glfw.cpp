@@ -162,10 +162,8 @@ static void ImGui_ImplGlfw_SetClipboardText(void* user_data, const char* text)
     glfwSetClipboardString((GLFWwindow*)user_data, text);
 }
 
-void ImGui_ImplGlfw_MouseButtonCallback(GLFWwindow* window,
-    int button,
-    int action,
-    int mods)
+void ImGui_ImplGlfw_MouseButtonCallback(
+    GLFWwindow* window, int button, int action, int mods)
 {
     ImGui_ImplGlfw_Data* bd = ImGui_ImplGlfw_GetBackendData();
     if (bd->PrevUserCallbackMousebutton != NULL && window == bd->Window)
@@ -176,9 +174,8 @@ void ImGui_ImplGlfw_MouseButtonCallback(GLFWwindow* window,
         bd->MouseJustPressed[button] = true;
 }
 
-void ImGui_ImplGlfw_ScrollCallback(GLFWwindow* window,
-    double xoffset,
-    double yoffset)
+void ImGui_ImplGlfw_ScrollCallback(
+    GLFWwindow* window, double xoffset, double yoffset)
 {
     ImGui_ImplGlfw_Data* bd = ImGui_ImplGlfw_GetBackendData();
     if (bd->PrevUserCallbackScroll != NULL && window == bd->Window)
@@ -189,11 +186,8 @@ void ImGui_ImplGlfw_ScrollCallback(GLFWwindow* window,
     io.MouseWheel += (float)yoffset;
 }
 
-void ImGui_ImplGlfw_KeyCallback(GLFWwindow* window,
-    int key,
-    int scancode,
-    int action,
-    int mods)
+void ImGui_ImplGlfw_KeyCallback(
+    GLFWwindow* window, int key, int scancode, int action, int mods)
 {
     ImGui_ImplGlfw_Data* bd = ImGui_ImplGlfw_GetBackendData();
     if (bd->PrevUserCallbackKey != NULL && window == bd->Window)
@@ -262,9 +256,8 @@ void ImGui_ImplGlfw_MonitorCallback(GLFWmonitor*, int)
     // install this one too.
 }
 
-static bool ImGui_ImplGlfw_Init(GLFWwindow* window,
-    bool install_callbacks,
-    GlfwClientApi client_api)
+static bool ImGui_ImplGlfw_Init(
+    GLFWwindow* window, bool install_callbacks, GlfwClientApi client_api)
 {
     ImGuiIO& io = ImGui::GetIO();
     IM_ASSERT(io.BackendPlatformUserData == NULL &&
@@ -365,12 +358,12 @@ static bool ImGui_ImplGlfw_Init(GLFWwindow* window,
     if (install_callbacks)
     {
         bd->InstalledCallbacks = true;
-        bd->PrevUserCallbackWindowFocus = glfwSetWindowFocusCallback(
-            window, ImGui_ImplGlfw_WindowFocusCallback);
-        bd->PrevUserCallbackCursorEnter = glfwSetCursorEnterCallback(
-            window, ImGui_ImplGlfw_CursorEnterCallback);
-        bd->PrevUserCallbackMousebutton = glfwSetMouseButtonCallback(
-            window, ImGui_ImplGlfw_MouseButtonCallback);
+        bd->PrevUserCallbackWindowFocus = glfwSetWindowFocusCallback(window,
+            ImGui_ImplGlfw_WindowFocusCallback);
+        bd->PrevUserCallbackCursorEnter = glfwSetCursorEnterCallback(window,
+            ImGui_ImplGlfw_CursorEnterCallback);
+        bd->PrevUserCallbackMousebutton = glfwSetMouseButtonCallback(window,
+            ImGui_ImplGlfw_MouseButtonCallback);
         bd->PrevUserCallbackScroll =
             glfwSetScrollCallback(window, ImGui_ImplGlfw_ScrollCallback);
         bd->PrevUserCallbackKey =
@@ -397,8 +390,9 @@ bool ImGui_ImplGlfw_InitForVulkan(GLFWwindow* window, bool install_callbacks)
 
 bool ImGui_ImplGlfw_InitForOther(GLFWwindow* window, bool install_callbacks)
 {
-    return ImGui_ImplGlfw_Init(
-        window, install_callbacks, GlfwClientApi_Unknown);
+    return ImGui_ImplGlfw_Init(window,
+        install_callbacks,
+        GlfwClientApi_Unknown);
 }
 
 void ImGui_ImplGlfw_Shutdown()
@@ -455,8 +449,9 @@ static void ImGui_ImplGlfw_UpdateMousePosAndButtons()
     // Set OS mouse position from Dear ImGui if requested (rarely used, only
     // when ImGuiConfigFlags_NavEnableSetMousePos is enabled by user)
     if (io.WantSetMousePos && focused)
-        glfwSetCursorPos(
-            bd->Window, (double)mouse_pos_prev.x, (double)mouse_pos_prev.y);
+        glfwSetCursorPos(bd->Window,
+            (double)mouse_pos_prev.x,
+            (double)mouse_pos_prev.y);
 
     // Set Dear ImGui mouse position from OS position
     if (mouse_window != NULL)

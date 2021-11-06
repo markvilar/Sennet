@@ -17,8 +17,8 @@ template <typename T> class Server
     // Server class interface.
 public:
     Server(uint16_t port)
-        : m_Acceptor(m_Context,
-              asio::ip::tcp::endpoint(asio::ip::tcp::v4(), port))
+        : m_Acceptor(
+              m_Context, asio::ip::tcp::endpoint(asio::ip::tcp::v4(), port))
     {
     }
 
@@ -84,8 +84,8 @@ public:
                 }
                 else
                 {
-                    SENNET_CORE_ERROR(
-                        "[Server] New connection error: {0}", ec.message());
+                    SENNET_CORE_ERROR("[Server] New connection error: {0}",
+                        ec.message());
                 }
 
                 WaitForClientConnection();
@@ -108,8 +108,8 @@ public:
         }
     }
 
-    void MessageAllClients(const Message<T>& message,
-        Ref<Connection<T>> ignoreClient = nullptr)
+    void MessageAllClients(
+        const Message<T>& message, Ref<Connection<T>> ignoreClient = nullptr)
     {
         bool invalidClientExists = false;
         for (auto& client : m_Connections)
@@ -131,9 +131,9 @@ public:
 
         if (invalidClientExists)
         {
-            m_Connections.erase(
-                std::remove(
-                    m_Connections.begin(), m_Connections.end(), nullptr),
+            m_Connections.erase(std::remove(m_Connections.begin(),
+                                    m_Connections.end(),
+                                    nullptr),
                 m_Connections.end());
         }
     }

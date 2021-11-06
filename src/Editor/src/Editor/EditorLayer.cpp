@@ -18,8 +18,8 @@ void EditorLayer::OnAttach()
     specs.Width = m_ViewportSize.x;
     specs.Height = m_ViewportSize.y;
     m_ViewportFramebuffer = Framebuffer::Create(specs);
-    m_CameraController.OnResize(
-        (uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
+    m_CameraController.OnResize(static_cast<uint32_t>(m_ViewportSize.x),
+        static_cast<uint32_t>(m_ViewportSize.y));
 }
 
 void EditorLayer::OnDetach() {}
@@ -33,8 +33,8 @@ void EditorLayer::OnUpdate(Timestep ts)
     if (m_ViewportSize.x > 0.0f && m_ViewportSize.y > 0.0f &&
         (specs.Width != m_ViewportSize.x || specs.Height != m_ViewportSize.y))
     {
-        m_ViewportFramebuffer->Resize(
-            (uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
+        m_ViewportFramebuffer->Resize((uint32_t)m_ViewportSize.x,
+            (uint32_t)m_ViewportSize.y);
         m_CameraController.OnResize(m_ViewportSize.x, m_ViewportSize.y);
     }
 
@@ -63,20 +63,26 @@ void EditorLayer::OnUpdate(Timestep ts)
         SENNET_PROFILE_SCOPE("Renderer Draw");
 
         Renderer2D::BeginScene(m_CameraController.GetCamera());
+
+        // Draw individual quads.
         Renderer2D::DrawRotatedQuad({0.0f, 0.0f},
             {0.8f, 0.8f},
             glm::radians(m_QuadRotation),
             {0.9f, 0.1f, 0.2f, 1.0f});
-        Renderer2D::DrawQuad(
-            {2.0f, -2.0f}, {0.8f, 0.8f}, {0.8f, 0.2f, 0.3f, 1.0f});
+        Renderer2D::DrawQuad({2.0f, -2.0f},
+            {0.8f, 0.8f},
+            {0.8f, 0.2f, 0.3f, 1.0f});
         Renderer2D::DrawQuad({2.0f, 2.0f}, {0.5f, 0.75f}, m_QuadColor);
 
+        // Draw grid of quads.
         for (float y = -5.0f; y < 5.0f; y += 0.5f)
         {
             for (float x = -5.0f; x < 5.0f; x += 0.5f)
             {
-                glm::vec4 color = {
-                    (x + 5.0f) / 10.0f, 0.4f, (y + 5.0f) / 10.0f, 0.7f};
+                glm::vec4 color = {(x + 5.0f) / 10.0f,
+                    0.4f,
+                    (y + 5.0f) / 10.0f,
+                    0.7f};
                 Renderer2D::DrawQuad({x, y, -0.1f}, {0.45f, 0.45f}, color);
             }
         }
@@ -148,7 +154,8 @@ void EditorLayer::OnImGuiRender()
         ImVec2(m_SettingsPanelPosition.x, m_SettingsPanelPosition.y),
         ImGuiCond_Always);
     ImGui::SetNextWindowSize(
-        ImVec2(m_SettingsPanelSize.x, m_SettingsPanelSize.y), ImGuiCond_Always);
+        ImVec2(m_SettingsPanelSize.x, m_SettingsPanelSize.y),
+        ImGuiCond_Always);
 
     ImGui::Begin("Settings",
         nullptr,
@@ -169,10 +176,10 @@ void EditorLayer::OnImGuiRender()
     ImGui::End();
 
     // Viewport window.
-    ImGui::SetNextWindowPos(
-        ImVec2(m_ViewportPosition.x, m_ViewportPosition.y), ImGuiCond_Always);
-    ImGui::SetNextWindowSize(
-        ImVec2(m_ViewportSize.x, m_ViewportSize.y), ImGuiCond_Always);
+    ImGui::SetNextWindowPos(ImVec2(m_ViewportPosition.x, m_ViewportPosition.y),
+        ImGuiCond_Always);
+    ImGui::SetNextWindowSize(ImVec2(m_ViewportSize.x, m_ViewportSize.y),
+        ImGuiCond_Always);
 
     ImGui::Begin("Viewport",
         nullptr,
@@ -196,9 +203,10 @@ void EditorLayer::OnImGuiRender()
 
     // Viewport window.
     ImGui::SetNextWindowPos(
-        ImVec2(m_TestPanelPosition.x, m_TestPanelPosition.y), ImGuiCond_Always);
-    ImGui::SetNextWindowSize(
-        ImVec2(m_TestPanelSize.x, m_TestPanelSize.y), ImGuiCond_Always);
+        ImVec2(m_TestPanelPosition.x, m_TestPanelPosition.y),
+        ImGuiCond_Always);
+    ImGui::SetNextWindowSize(ImVec2(m_TestPanelSize.x, m_TestPanelSize.y),
+        ImGuiCond_Always);
 
     ImGui::Begin("Test",
         nullptr,

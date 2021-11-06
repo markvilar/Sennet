@@ -21,8 +21,7 @@ public:
         Client
     };
 
-    Connection(Owner parent,
-        asio::io_context& context,
+    Connection(Owner parent, asio::io_context& context,
         asio::ip::tcp::socket socket,
         ThreadSafeQueue<OwnedMessage<T>>& messagesIn)
         : m_Context(context), m_Socket(std::move(socket)),
@@ -91,8 +90,8 @@ private:
     void ReadHeader()
     {
         asio::async_read(m_Socket,
-            asio::buffer(
-                &m_MessageTemporaryIn.Header, sizeof(MessageHeader<T>)),
+            asio::buffer(&m_MessageTemporaryIn.Header,
+                sizeof(MessageHeader<T>)),
             [this](std::error_code ec, uint64_t length) {
                 if (!ec)
                 {
@@ -139,8 +138,8 @@ private:
     void WriteHeader()
     {
         asio::async_write(m_Socket,
-            asio::buffer(
-                &m_MessagesOut.front().Header, sizeof(MessageHeader<T>)),
+            asio::buffer(&m_MessagesOut.front().Header,
+                sizeof(MessageHeader<T>)),
             [this](std::error_code ec, uint64_t length) {
                 if (!ec)
                 {
@@ -159,8 +158,8 @@ private:
                 }
                 else
                 {
-                    SENNET_CORE_ERROR(
-                        "[{0}] WriteHeader() failed.", ec.message());
+                    SENNET_CORE_ERROR("[{0}] WriteHeader() failed.",
+                        ec.message());
                     m_Socket.close();
                 }
             });

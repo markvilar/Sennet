@@ -69,8 +69,8 @@ void WindowsWindow::Init()
     glfwSetWindowUserPointer(m_Window, &m_Data);
     SetVSync(true);
 
-    glfwSetWindowSizeCallback(
-        m_Window, [](GLFWwindow* window, int width, int height) {
+    glfwSetWindowSizeCallback(m_Window,
+        [](GLFWwindow* window, int width, int height) {
             WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
             data.Width = width;
             data.Height = height;
@@ -78,8 +78,8 @@ void WindowsWindow::Init()
             data.EventCallback(event);
         });
 
-    glfwSetWindowIconifyCallback(
-        m_Window, [](GLFWwindow* window, int iconified) {
+    glfwSetWindowIconifyCallback(m_Window,
+        [](GLFWwindow* window, int iconified) {
             WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
             WindowIconifyEvent event(iconified == 1);
             data.EventCallback(event);
@@ -123,8 +123,8 @@ void WindowsWindow::Init()
         data.EventCallback(event);
     });
 
-    glfwSetMouseButtonCallback(
-        m_Window, [](GLFWwindow* window, int button, int action, int mods) {
+    glfwSetMouseButtonCallback(m_Window,
+        [](GLFWwindow* window, int button, int action, int mods) {
             WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
             switch (action)
             {
@@ -143,15 +143,15 @@ void WindowsWindow::Init()
             }
         });
 
-    glfwSetScrollCallback(
-        m_Window, [](GLFWwindow* window, double offsetX, double offsetY) {
+    glfwSetScrollCallback(m_Window,
+        [](GLFWwindow* window, double offsetX, double offsetY) {
             WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
             MouseScrolledEvent event((float)offsetX, (float)offsetY);
             data.EventCallback(event);
         });
 
-    glfwSetCursorPosCallback(
-        m_Window, [](GLFWwindow* window, double posX, double posY) {
+    glfwSetCursorPosCallback(m_Window,
+        [](GLFWwindow* window, double posX, double posY) {
             WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
             MouseMovedEvent event((float)posX, (float)posY);
             data.EventCallback(event);
@@ -206,8 +206,9 @@ bool WindowsWindow::IsVSync() const { return m_Data.VSync; }
 
 void WindowsWindow::SetResizable(bool resizable) const
 {
-    glfwSetWindowAttrib(
-        m_Window, GLFW_RESIZABLE, resizable ? GLFW_TRUE : GLFW_FALSE);
+    glfwSetWindowAttrib(m_Window,
+        GLFW_RESIZABLE,
+        resizable ? GLFW_TRUE : GLFW_FALSE);
 }
 
 const std::string& WindowsWindow::GetTitle() const { return m_Data.Title; }
