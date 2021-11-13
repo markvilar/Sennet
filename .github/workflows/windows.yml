@@ -4,10 +4,10 @@ on: [push, pull_request]
 
 jobs:
   debug:
-    uses: markvilar/Sennet/.github/workflows/windows-base.yml@v1
+    uses: ./.github/workflows/windows-base.yml
     with:
       build_type: Debug
   release:
-    uses: markvilar/Sennet/.github/workflows/windows-base.yml@v1
+    uses: ./.github/workflows/windows-base.yml
     with:
       build_type: Release
