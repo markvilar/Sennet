@@ -1,0 +1,13 @@
+name: Ubuntu
+
+on: [push, pull_request]
+
+jobs:
+  debug:
+    uses: markvilar/Sennet/.github/workflows/ubuntu-base.yml@v1
+    with:
+      build_type: Debug
+  release:
+    uses: markvilar/Sennet/.github/workflows/ubuntu-base.yml@v1
+    with:
+      build_type: Release
