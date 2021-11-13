@@ -4,10 +4,10 @@ on: [push, pull_request]
 
 jobs:
   debug:
-    uses: ./.github/workflows/windows-base.yml
+    uses: ./.github/workflows/windows-base.yml@v1
     with:
       build_type: Debug
   release:
-    uses: ./.github/workflows/windows-base.yml
+    uses: ./.github/workflows/windows-base.yml@v1
     with:
       build_type: Release

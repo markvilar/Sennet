@@ -4,10 +4,10 @@ on: [push, pull_request]
 
 jobs:
   debug:
-    uses: ./.github/workflows/ubuntu-base.yml
+    uses: ./.github/workflows/ubuntu-base.yml@v1
     with:
       build_type: Debug
   release:
-    uses: ./.github/workflows/ubuntu-base.yml
+    uses: ./.github/workflows/ubuntu-base.yml@v1
     with:
       build_type: Release
