@@ -1,0 +1,67 @@
+name: Build
+
+on: [push, pull_request]
+
+defaults:
+  run:
+    shells: bash
+
+env:
+  build_dir: ./build
+
+jobs:
+  build:
+    name: >
+      ${{ matrix.os }}-${{ matrix.build }}-${{ matrix.compiler }}
+
+
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+
+        generator: [Ninja]
+
+        compiler: [g++-10, g++-11, clang++-11, clang++-12]
+
+        build_type: [Release, Debug]
+
+        # TODO: Targets: msvc-x64-static-release etc.
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Install Ubuntu dependencies
+      if: ${{ matrix.os == "ubuntu-latest" }}      
+      run: |
+        sudo apt update -y
+        sudo apt install -y libgl-dev
+        pip3 install wheel setuptools
+        pip3 install conan
+        export PATH=$PATH:~/.local/bin
+
+    - name: Install Windows dependencies
+      if: ${{ matrix.os == "windows-latest" }}      
+      run: |
+        pip3 install wheel setuptools
+        pip3 install conan
+
+    - name: Install packages
+      run: >
+        conan install . 
+        --install-folder ${{ env.build_dir }} 
+        --settings build_type=${{ matrix.build_type }}
+        --build missing
+
+    - name: Generate build
+      run: >
+        cmake 
+        -B ${{ env.build_dir }}
+        -G ${{ matrix.generator }} 
+        -D CMAKE_CXX_COMPILER=${{ matrix.compiler }}
+        -D CMAKE_BUILD_TYPE=${{ matrix.build_type }}
+
+    - name: Build
+      run: cmake --build ${{ env.build_dir }}
