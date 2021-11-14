@@ -4,7 +4,7 @@ on: [push, pull_request]
 
 defaults:
   run:
-    shells: bash
+    shell: bash
 
 env:
   build_dir: ./build
@@ -33,8 +33,15 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v2
 
+    - name: Echo build configuration
+      run: |
+        echo OS         ${{ matrix.os }}
+        echo Generator  ${{ matrix.generator }}
+        echo Compiler   ${{ matrix.compiler }}
+        echo Build type ${{ matrix.build_type }}
+
     - name: Install Ubuntu dependencies
-      if: ${{ matrix.os == "ubuntu-latest" }}      
+      if: ${{ matrix.os == 'ubuntu-latest' }}      
       run: |
         sudo apt update -y
         sudo apt install -y libgl-dev
@@ -43,7 +50,7 @@ jobs:
         export PATH=$PATH:~/.local/bin
 
     - name: Install Windows dependencies
-      if: ${{ matrix.os == "windows-latest" }}      
+      if: ${{ matrix.os == 'windows-latest' }}      
       run: |
         pip3 install wheel setuptools
         pip3 install conan
