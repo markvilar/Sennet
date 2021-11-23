@@ -18,15 +18,12 @@ jobs:
     runs-on: ${{ matrix.os }}
 
     strategy:
+      fail-fast: false
       matrix:
         os: [ubuntu-latest, windows-latest]
-
         generator: [Ninja]
-
         compiler: [g++-10, g++-11, clang++-11, clang++-12]
-
         build_type: [Release, Debug]
-
         # TODO: Targets: msvc-x64-static-release etc.
 
     steps:
@@ -46,6 +43,7 @@ jobs:
         sudo apt update -y
         sudo apt install -y libgl-dev 
         sudo apt install -y ninja-build
+        sudo apt install -y ${{ matrix.compiler }}
         pip3 install wheel setuptools
         pip3 install conan
         export PATH=$PATH:~/.local/bin
@@ -54,6 +52,7 @@ jobs:
       if: ${{ matrix.os == 'windows-latest' }}      
       run: |
         choco install -y ninja
+        choco install -y ${{ matrix.compiler }}
         pip3 install wheel setuptools
         pip3 install conan
 
