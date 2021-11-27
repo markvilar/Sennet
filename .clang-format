@@ -1,6 +1,6 @@
 ---
 # Programming language.
-Language:        Cpp
+Language: Cpp
 
 # The extra indent or outdent of access modifiers, e.g. public:.
 AccessModifierOffset: -4
@@ -74,25 +74,25 @@ BinPackArguments: false
 
 # Control of individual brace wrapping cases.
 BraceWrapping:
-  AfterCaseLabel:  false
-  AfterClass:      false
+  AfterCaseLabel: false
+  AfterClass: false
   AfterControlStatement: false
-  AfterEnum:       false
-  AfterFunction:   false
-  AfterNamespace:  false
+  AfterEnum: false
+  AfterFunction: false
+  AfterNamespace: false
   AfterObjCDeclaration: false
-  AfterStruct:     false
-  AfterUnion:      false
+  AfterStruct: false
+  AfterUnion: false
   AfterExternBlock: false
-  BeforeCatch:     false
-  BeforeElse:      false
-  IndentBraces:    false
+  BeforeCatch: false
+  BeforeElse: false
+  IndentBraces: false
   SplitEmptyFunction: true
   SplitEmptyRecord: true
   SplitEmptyNamespace: true
 
 # The way to wrap binary operators.
-BreakBeforeBinaryOperators: None
+BreakBeforeBinaryOperators: NonAssignment
 
 # The brace breaking style to use.
 BreakBeforeBraces: Allman
@@ -110,11 +110,11 @@ BreakConstructorInitializers: BeforeColon
 BreakStringLiterals: true
 
 # The column limit.
-ColumnLimit:     80
+ColumnLimit: 80
 
 # A regular expression that describes comments with special meaning, which 
 # should not be split into lines or otherwise changed.
-CommentPragmas:  '^ IWYU pragma:'
+CommentPragmas: '^ IWYU pragma:'
 
 # If true, consecutive namespace declarations will be on the same line. If 
 # false, each namespace is declared on a new line.
@@ -161,7 +161,7 @@ ForEachMacros:
 
 # Dependent on the value, multiple #include blocks can be sorted as one and 
 # divided based on category.
-IncludeBlocks:   Preserve
+IncludeBlocks: Preserve
 
 # Regular expressions denoting the different #include categories used for 
 # ordering #includes.
@@ -206,7 +206,7 @@ KeepEmptyLinesAtTheStartOfBlocks: true
 MacroBlockBegin: ''
 
 # A regular expression matching macros that end a block.
-MacroBlockEnd:   ''
+MacroBlockEnd: ''
 
 # The maximum number of consecutive empty lines to keep.
 MaxEmptyLinesToKeep: 1
@@ -233,7 +233,7 @@ ObjCSpaceBeforeProtocolList: true
 PenaltyBreakAssignment: 2
 
 # The penalty for breaking a function call after call(.
-PenaltyBreakBeforeFirstCallParameter: 19
+PenaltyBreakBeforeFirstCallParameter: 1000
 
 # The penalty for each line break introduced inside a comment.
 PenaltyBreakComment: 300
@@ -306,7 +306,7 @@ SpaceInEmptyParentheses: false
 SpacesBeforeTrailingComments: 1
 
 # The SpacesInAnglesStyle to use for template argument lists.
-SpacesInAngles:  false
+SpacesInAngles: false
 
 # If true, spaces will be inserted around if/for/switch/while conditions.
 SpacesInConditionalStatement: false
@@ -330,7 +330,7 @@ SpacesInSquareBrackets: false
 SpaceBeforeSquareBrackets: false
 
 # Parse and format C++ constructs compatible with this standard.
-Standard:        Latest
+Standard: Latest
 
 # A vector of macros that should be interpreted as complete statements.
 StatementMacros:
@@ -338,12 +338,12 @@ StatementMacros:
   - QT_REQUIRE_VERSION
 
 # The number of columns used for tab stops.
-TabWidth:        4
+TabWidth: 4
 
 # Use \r\n instead of \n for line breaks. Also used as fallback if 
 # DeriveLineEnding is true.
-UseCRLF:         false
+UseCRLF: false
 
 # The way to use tab characters in the resulting file.
-UseTab:          Never
+UseTab: Never
 ...
