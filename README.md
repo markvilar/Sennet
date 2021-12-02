@@ -1,6 +1,7 @@
 # Sennet 
 
 [![Build](https://github.com/markvilar/Sennet/actions/workflows/build.yml/badge.svg)](https://github.com/markvilar/Sennet/actions/workflows/build.yml)
+[![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
 ## Description
 Sennet is a static, cross-platform library for creating C++ applications 
@@ -14,15 +15,15 @@ The requirements are:
 
 ## Dependencies
 
-| **Library** | **Version** | **Library purpose.**                |
-|-------------|-------------|-------------------------------------|
-| asio        | 1.18.0+     | Network and asynchronicity.         |
-| EnTT        | 3.8.1+      | Entity component system.            |
-| glad        | 0.1.29+     | Bindings and loaders of OpenGL 4.6. |
-| glfw        | 3.3+        | Window and input handling.          |
-| glm         | 0.9.9+      | Mathematics for graphics.           |
-| imgui       | 1.84.2      | User interface.                     |
-| spdlog      | 1.9.2+      | Console and file logging.           |
+| **Library** | **Version**  | **Library purpose.**                |
+|-------------|--------------|-------------------------------------|
+| asio        | 1.18.0       | Network and asynchronicity.         |
+| EnTT        | 3.8.1        | Entity component system.            |
+| glad        | 0.1.34       | Bindings and loaders of OpenGL 4.6. |
+| glfw        | 3.3.4        | Window and input handling.          |
+| glm         | 0.9.9.8      | Mathematics for graphics.           |
+| imgui       | 1.85         | User interface.                     |
+| spdlog      | 1.9.2        | Console and file logging.           |
 
 ## Building with CMake and Conan
 
@@ -73,7 +74,4 @@ cmake --build . --config Release
 ## Acknowledgements
 I would like to acknowledge the following projects for inspiring this one:
 - [Hazel](https://github.com/TheCherno/Hazel)
-- [FlexEngine](https://github.com/ajweeks/FlexEngine)
 - [olcPixelGameEngine](https://github.com/OneLoneCoder/olcPixelGameEngine)
-- [anki-3d-engine](https://github.com/godlikepanos/anki-3d-engine)
-- [cilantro](https://github.com/kzampog/cilantro)

@@ -28,6 +28,7 @@
 
 #include "Sennet/Renderer/Buffer.hpp"
 #include "Sennet/Renderer/Framebuffer.hpp"
+#include "Sennet/Renderer/Image.hpp"
 #include "Sennet/Renderer/OrthographicCamera.hpp"
 #include "Sennet/Renderer/OrthographicCameraController.hpp"
 #include "Sennet/Renderer/RenderCommand.hpp"

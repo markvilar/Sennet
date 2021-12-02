@@ -3,6 +3,9 @@
 
 #include "glad/glad.h"
 
+#include <filesystem>
+#include <fstream>
+
 namespace Sennet
 {
 
@@ -66,29 +69,27 @@ OpenGLTexture2D::OpenGLTexture2D(const uint32_t width, const uint32_t height,
 OpenGLTexture2D::OpenGLTexture2D(const std::string& path) : m_Source(path)
 {
     SENNET_CORE_ASSERT(false, "OpenGLTexture2D constructor not implemented.");
-    // TODO: Implement image loader and use it here.
 }
 
 OpenGLTexture2D::~OpenGLTexture2D() { glDeleteTextures(1, &m_RendererID); }
 
-void OpenGLTexture2D::SetData(void* data, const uint32_t& size)
+void OpenGLTexture2D::SetData(const void* data, const uint32_t size)
 {
-    uint32_t bpp = 0;
-    switch (m_DataFormat)
-    {
-    case DataFormat::RGBA:
-        bpp = 4;
-        break;
-    case DataFormat::BGRA:
-        bpp = 4;
-        break;
-    case DataFormat::RGB:
-        bpp = 3;
-        break;
-    case DataFormat::BGR:
-        bpp = 3;
-        break;
-    }
+    const uint32_t bpp = [this] {
+        switch (m_DataFormat)
+        {
+        case DataFormat::RGBA:
+            return 4;
+        case DataFormat::BGRA:
+            return 4;
+        case DataFormat::RGB:
+            return 3;
+        case DataFormat::BGR:
+            return 3;
+        default:
+            return 0;
+        }
+    }();
     SENNET_CORE_ASSERT(size == m_Width * m_Height * bpp,
         "Data must be entire texture.");
     glTextureSubImage2D(m_RendererID,
