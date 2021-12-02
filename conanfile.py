@@ -29,13 +29,14 @@ class Sennet(ConanFile):
 
     def requirements(self):
         """ Specifies the requirements of the package. """
-        self.requires("asio/[>=1.18.0]")
-        self.requires("entt/[>=3.8.1]")
-        self.requires("glad/[>=0.1.29]")
-        self.requires("glfw/[>=3.3]")
-        self.requires("glm/[>=0.9.9]")
-        self.requires("imgui/1.84.2")
-        self.requires("spdlog/[>=1.9.2]")
+        self.requires("asio/1.18.0")
+        self.requires("entt/3.8.1")
+        self.requires("glad/0.1.34")
+        self.requires("glfw/3.3.4")
+        self.requires("glm/0.9.9.8")
+        self.requires("imgui/1.85")
+        self.requires("spdlog/1.9.2")
+        self.requires("stb/cci.20210713")
 
     def imports(self):
         """ Imports source code from the dependencies. """

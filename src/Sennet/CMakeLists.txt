@@ -48,6 +48,7 @@ target_sources(
            include/Sennet/Renderer/Buffer.hpp
            include/Sennet/Renderer/Framebuffer.hpp
            include/Sennet/Renderer/GraphicsContext.hpp
+           include/Sennet/Renderer/Image.hpp
            include/Sennet/Renderer/OrthographicCamera.hpp
            include/Sennet/Renderer/OrthographicCameraController.hpp
            include/Sennet/Renderer/RenderCommand.hpp
@@ -82,6 +83,7 @@ target_sources(
             src/Renderer/Buffer.cpp
             src/Renderer/Framebuffer.cpp
             src/Renderer/GraphicsContext.cpp
+            src/Renderer/Image.cpp
             src/Renderer/OrthographicCamera.cpp
             src/Renderer/OrthographicCameraController.cpp
             src/Renderer/RenderCommand.cpp
@@ -101,10 +103,11 @@ find_package(glfw3 REQUIRED)
 find_package(glm REQUIRED)
 find_package(imgui REQUIRED)
 find_package(spdlog REQUIRED)
+find_package(stb REQUIRED)
 
 target_include_directories(
     sennet
-    PUBLIC include ${glm_INCLUDE_DIRS}
+    PUBLIC include
     PRIVATE src)
 
 target_link_libraries(
@@ -113,7 +116,10 @@ target_link_libraries(
            imgui::imgui
            glm::glm
            spdlog::spdlog
-    PRIVATE glad::glad glfw::glfw EnTT::EnTT)
+    PRIVATE glad::glad
+            glfw::glfw
+            EnTT::EnTT
+            stb::stb)
 
 if(MSVC)
     target_compile_definitions(sennet PUBLIC SENNET_PLATFORM_WINDOWS)

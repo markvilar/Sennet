@@ -29,14 +29,13 @@ void Renderer::Init()
     s_Data->Library = CreateRef<ShaderLibrary>();
 
     // TODO: Fix working directory and shader paths.
-    Renderer::GetShaderLibrary()->Load(
-        "../../resources/shaders/Renderer2D.glsl");
+    Renderer::GetShaderLibrary()->Load("../resources/shaders/Renderer2D.glsl");
 
-    uint32_t whiteTextureData = 0xffffffff;
+    const uint32_t whiteTextureData = 0xffffffff;
     s_Data->WhiteTexture = Texture2D::Create(1, 1);
     s_Data->WhiteTexture->SetData(&whiteTextureData, sizeof(uint32_t));
 
-    uint32_t blackTextureData = 0xff000000;
+    const uint32_t blackTextureData = 0xff000000;
     s_Data->BlackTexture = Texture2D::Create(1, 1);
     s_Data->BlackTexture->SetData(&blackTextureData, sizeof(uint32_t));
 

@@ -1,4 +1,5 @@
 # Custom directories
+/bin*
 /build*
 
 # Vim files

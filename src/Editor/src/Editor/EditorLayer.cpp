@@ -20,6 +20,12 @@ void EditorLayer::OnAttach()
     m_ViewportFramebuffer = Framebuffer::Create(specs);
     m_CameraController.OnResize(static_cast<uint32_t>(m_ViewportSize.x),
         static_cast<uint32_t>(m_ViewportSize.y));
+
+    /*
+    TODO: Fix texture API to allow for this syntax.
+    m_CheckerboardTexture =
+        Texture2D::Create("../../resources/textures/Checkerboard.png");
+    */
 }
 
 void EditorLayer::OnDetach() {}
@@ -65,7 +71,7 @@ void EditorLayer::OnUpdate(Timestep ts)
 
         Renderer2D::BeginScene(m_CameraController.GetCamera());
 
-        // Draw individual quads.
+        // Draw flat colored quads.
         Renderer2D::DrawRotatedQuad({0.0f, 0.0f},
             {0.8f, 0.8f},
             glm::radians(m_QuadRotation),
@@ -74,6 +80,12 @@ void EditorLayer::OnUpdate(Timestep ts)
             {0.8f, 0.8f},
             {0.8f, 0.2f, 0.3f, 1.0f});
         Renderer2D::DrawQuad({2.0f, 2.0f}, {0.5f, 0.75f}, m_QuadColor);
+
+        /*
+        TODO: Fix texture API to allow for this syntax.
+        Renderer2D::DrawQuad({ 0.0f, 0.0f, -0.2f }, { 20.0f, 20.0f },
+            m_CheckerboardTexture, 4.0f, glm::vec4(1.0f, 0.9f, 0.9f, 1.0f));
+        */
 
         // Draw grid of quads.
         for (float y = -5.0f; y < 5.0f; y += 0.5f)
@@ -173,6 +185,18 @@ void EditorLayer::OnImGuiRender()
     ImGui::Text("Indices: %d", stats.GetTotalIndexCount());
 
     ImGui::ColorEdit4("Square Color", glm::value_ptr(m_QuadColor));
+
+    static char imagePath[128] = "";
+    ImGui::InputText("Image path", imagePath, IM_ARRAYSIZE(imagePath));
+    if (ImGui::Button("Load image"))
+    {
+        auto image = ReadImage(std::string(imagePath));
+        SENNET_INFO("Image: {0}, {1}, {2}, {3}",
+            image.Width,
+            image.Height,
+            image.Channels,
+            image.Format);
+    }
 
     ImGui::End();
 
