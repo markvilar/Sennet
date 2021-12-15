@@ -303,6 +303,8 @@ void EditorLayer::RenderMainMenu()
 {
     // ImGui static variables.
     static bool showImGuiDemoWindow = false;
+    static bool showImGuiMetrics = false;
+    static bool showImGuiStackTool = false;
 
     if (ImGui::BeginMainMenuBar())
     {
@@ -364,15 +366,16 @@ void EditorLayer::RenderMainMenu()
         if (ImGui::BeginMenu("Interface"))
         {
             ImGui::Checkbox("Show ImGui demo window", &showImGuiDemoWindow);
+            ImGui::Checkbox("Show ImGui metrics", &showImGuiMetrics);
+            ImGui::Checkbox("Show ImGui stack tool", &showImGuiStackTool);
             ImGui::EndMenu();
         }
         ImGui::EndMainMenuBar();
     }
 
-    if (showImGuiDemoWindow)
-    {
-        ImGui::ShowDemoWindow();
-    }
+    if (showImGuiDemoWindow) ImGui::ShowDemoWindow();
+    if (showImGuiMetrics) ImGui::ShowMetricsWindow();
+    if (showImGuiStackTool) ImGui::ShowStackToolWindow();
 }
 
 void EditorLayer::RenderFileSystemPopup() {}
