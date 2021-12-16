@@ -32,7 +32,6 @@ const PanelLayout CalculateRightPanelLayout(
     return PanelLayout(position, size);
 }
 
-
 const PanelLayout CalculateBottomPanelLayout(
     const uint32_t windowWidth, const uint32_t windowHeight)
 {
@@ -196,12 +195,9 @@ ImGuiWindowFlags EditorLayer::ConfigureImGui(const bool fullscreen)
 
 void EditorLayer::RenderViewportPanel(const PanelLayout& layout)
 {
-    // Viewport window.
-    ImGui::SetNextWindowPos(
-        ImVec2(layout.Position.x, layout.Position.y),
+    ImGui::SetNextWindowPos(ImVec2(layout.Position.x, layout.Position.y),
         ImGuiCond_Always);
-    ImGui::SetNextWindowSize(
-        ImVec2(layout.Size.x, layout.Size.y),
+    ImGui::SetNextWindowSize(ImVec2(layout.Size.x, layout.Size.y),
         ImGuiCond_Always);
 
     ImGui::Begin("Viewport",
@@ -227,15 +223,12 @@ void EditorLayer::RenderViewportPanel(const PanelLayout& layout)
 
 void EditorLayer::RenderLeftPanel(const PanelLayout& layout)
 {
-    // Settings window.
-    ImGui::SetNextWindowPos(
-        ImVec2(layout.Position.x, layout.Position.y),
+    ImGui::SetNextWindowPos(ImVec2(layout.Position.x, layout.Position.y),
         ImGuiCond_Always);
-    ImGui::SetNextWindowSize(
-        ImVec2(layout.Size.x, layout.Size.y),
+    ImGui::SetNextWindowSize(ImVec2(layout.Size.x, layout.Size.y),
         ImGuiCond_Always);
 
-    ImGui::Begin("Left-Panel",
+    ImGui::Begin("LeftPanel",
         nullptr,
         ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_MenuBar
             | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove
@@ -255,25 +248,27 @@ void EditorLayer::RenderLeftPanel(const PanelLayout& layout)
     ImGui::InputText("Image path", imagePath, IM_ARRAYSIZE(imagePath));
     if (ImGui::Button("Load image"))
     {
-        auto image = ReadImage(std::string(imagePath));
-        SENNET_INFO("Image: {0}, {1}, {2}, {3}",
-            image.Width,
-            image.Height,
-            image.Channels,
-            image.Format);
+        if (Sennet::FileSystem::IsFile(imagePath))
+        {
+            auto image = ReadImage(imagePath);
+            SENNET_INFO("Image: {0}, {1}, {2}, {3}",
+                image.Width,
+                image.Height,
+                image.Channels,
+                image.Format);
+        }
     }
     ImGui::End();
 }
 
 void EditorLayer::RenderRightPanel(const PanelLayout& layout)
 {
-    ImGui::SetNextWindowPos(
-        ImVec2(layout.Position.x, layout.Position.y),
+    ImGui::SetNextWindowPos(ImVec2(layout.Position.x, layout.Position.y),
         ImGuiCond_Always);
     ImGui::SetNextWindowSize(ImVec2(layout.Size.x, layout.Size.y),
         ImGuiCond_Always);
 
-    ImGui::Begin("Right-Panel",
+    ImGui::Begin("RightPanel",
         nullptr,
         ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize
             | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse
@@ -284,13 +279,12 @@ void EditorLayer::RenderRightPanel(const PanelLayout& layout)
 
 void EditorLayer::RenderBottomPanel(const PanelLayout& layout)
 {
-    ImGui::SetNextWindowPos(
-        ImVec2(layout.Position.x, layout.Position.y),
+    ImGui::SetNextWindowPos(ImVec2(layout.Position.x, layout.Position.y),
         ImGuiCond_Always);
     ImGui::SetNextWindowSize(ImVec2(layout.Size.x, layout.Size.y),
         ImGuiCond_Always);
 
-    ImGui::Begin("Bottom-Panel",
+    ImGui::Begin("BottomPanel",
         nullptr,
         ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize
             | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse
@@ -310,16 +304,13 @@ void EditorLayer::RenderMainMenu()
     {
         if (ImGui::BeginMenu("File"))
         {
-            if (ImGui::MenuItem("Open"))
+            if (ImGui::MenuItem("Open", "Ctrl+O"))
             {
             }
-            if (ImGui::MenuItem("Save"))
+            if (ImGui::MenuItem("Save", "Ctrl+S"))
             {
             }
-            if (ImGui::MenuItem("Save As"))
-            {
-            }
-            if (ImGui::MenuItem("Exit"))
+            if (ImGui::MenuItem("Exit", "Ctrl+W"))
             {
                 Sennet::Application::Get().Close();
             }
@@ -342,19 +333,19 @@ void EditorLayer::RenderMainMenu()
 
         if (ImGui::BeginMenu("Directory"))
         {
-
             if (ImGui::MenuItem("Working directory"))
             {
                 ImGui::OpenPopup("FileSystem");
-                if (ImGui::BeginPopup("FileSystem"))
-                {
-                    static char workingDirectoryBuffer[256] = "";
-                    strcpy(workingDirectoryBuffer,
-                        Sennet::FileSystem::GetWorkingDirectory().c_str());
-                    ImGui::Text("Working directory: %s",
-                        workingDirectoryBuffer);
-                    ImGui::EndPopup();
-                }
+                
+            }
+            if (ImGui::BeginPopup("FileSystem"))
+            {
+                static char workingDirectoryBuffer[256] = "";
+                strcpy(workingDirectoryBuffer,
+                    Sennet::FileSystem::GetWorkingDirectory().c_str());
+                ImGui::Text("Working directory: %s",
+                    workingDirectoryBuffer);
+                ImGui::EndPopup();
             }
             if (ImGui::MenuItem("Asset directory"))
             {
@@ -373,15 +364,16 @@ void EditorLayer::RenderMainMenu()
         ImGui::EndMainMenuBar();
     }
 
-    if (showImGuiDemoWindow) ImGui::ShowDemoWindow();
-    if (showImGuiMetrics) ImGui::ShowMetricsWindow();
-    if (showImGuiStackTool) ImGui::ShowStackToolWindow();
+    if (showImGuiDemoWindow)
+        ImGui::ShowDemoWindow();
+    if (showImGuiMetrics)
+        ImGui::ShowMetricsWindow();
+    if (showImGuiStackTool)
+        ImGui::ShowStackToolWindow();
 }
 
 void EditorLayer::RenderFileSystemPopup() {}
 
 void EditorLayer::RenderAssetPopup() {}
-
-
 
 } // namespace Sennet
