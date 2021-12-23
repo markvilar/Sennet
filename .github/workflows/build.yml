@@ -48,7 +48,7 @@ jobs:
         echo "Build type:   ${{ matrix.build_type }}"
 
     - name: Install Linux dependencies
-      if: runner.os == "linux"
+      if: runner.os == 'linux'
       run: |
         sudo apt update -y
         sudo apt install -y libgl-dev 
@@ -64,20 +64,20 @@ jobs:
         platform: x64
 
     - name: Set up GCC
-      if: runner.os == "linux"
+      if: runner.os == 'linux'
       uses: egor-tensin/setup-gcc@v1
       with:
         version: latest
         platform: x64
 
     - name: Set up MinGW
-      if: runner.os == "windows"      
+      if: runner.os == 'windows'      
       uses: egor-tensin/setup-mingw@v2
       with:
         platform: x64
 
     - name: Install Windows dependencies
-      if: runner.os == "windows"
+      if: runner.os == 'windows'
       run: |
         choco install -y ninja
         pip3 install wheel setuptools
@@ -93,12 +93,12 @@ jobs:
     - name: Generate build
       run: >
         cmake 
+        -S .
         -B ${{ env.build_dir }}
         -G ${{ matrix.generator }} 
         -D CMAKE_C_COMPILER=${{ matrix.compiler.c }}
         -D CMAKE_CXX_COMPILER=${{ matrix.compiler.cpp }}
         -D CMAKE_BUILD_TYPE=${{ matrix.build_type }}
-        .
 
     - name: Build
       run: cmake --build ${{ env.build_dir }}
