@@ -19,7 +19,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, windows-latest]
+        os: [ubuntu-latest] # TODO: Add windows-latest.
         generator: [Ninja]
         compiler: [g++-10, g++-11, clang++-11, clang++-12]
         build_type: [Release, Debug]
