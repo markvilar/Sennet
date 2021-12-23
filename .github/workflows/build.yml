@@ -1,6 +1,9 @@
 name: Build
 
-on: [push]
+on: 
+  push:
+  pull_request:
+    branches: [master]
 
 defaults:
   run:
@@ -12,26 +15,33 @@ env:
 jobs:
   build:
     name: >
-      ${{ matrix.os }}-${{ matrix.build_type }}-${{ matrix.compiler }}
+      ${{ matrix.os }}-${{ matrix.compiler.c }}-${{ matrix.build_type }}
 
     runs-on: ${{ matrix.os }}
 
     strategy:
       fail-fast: false
       matrix:
-        build_type: [Release, Debug]
         include:
+          - os: ubuntu-latest
+            compiler: { c: gcc-9, cpp: g++-9 }
+            generator: Ninja
+            build_type: Release
+
           - os: ubuntu-latest
             compiler: { c: gcc-10, cpp: g++-10 }
             generator: Ninja
+            build_type: Release
 
           - os: ubuntu-latest
             compiler: { c: clang-11, cpp: clang++-11 }
             generator: Ninja
+            build_type: Release
 
           - os: ubuntu-latest
             compiler: { c: clang-12, cpp: clang++-12 }
             generator: Ninja
+            build_type: Release
 
         # TODO: Add tarets to build matrix.
 
@@ -47,15 +57,6 @@ jobs:
         echo "C++ Compiler: ${{ matrix.compiler.cpp }}"
         echo "Build type:   ${{ matrix.build_type }}"
 
-    - name: Install Linux dependencies
-      if: runner.os == 'linux'
-      run: |
-        sudo apt update -y
-        sudo apt install -y libgl-dev 
-        sudo apt install -y ninja-build
-        pip3 install wheel setuptools
-        pip3 install conan
-        export PATH=$PATH:~/.local/bin
 
     - name: Set up Clang
       uses: egor-tensin/setup-clang@v1
@@ -75,6 +76,16 @@ jobs:
       uses: egor-tensin/setup-mingw@v2
       with:
         platform: x64
+
+    - name: Install Linux dependencies
+      if: runner.os == 'linux'
+      run: |
+        sudo apt update -y
+        sudo apt install -y libgl-dev 
+        sudo apt install -y ninja-build
+        pip3 install wheel setuptools
+        pip3 install conan
+        export PATH=$PATH:~/.local/bin
 
     - name: Install Windows dependencies
       if: runner.os == 'windows'
