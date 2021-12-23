@@ -1,6 +1,6 @@
 name: Build
 
-on: [push, pull_request]
+on: [push]
 
 defaults:
   run:
@@ -19,11 +19,21 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest] # TODO: Add windows-latest.
-        generator: [Ninja]
-        compiler: [g++-10, g++-11, clang++-11, clang++-12]
         build_type: [Release, Debug]
-        # TODO: Targets: msvc-x64-static-release etc.
+        include:
+          - os: ubuntu-latest
+            compiler: { c: gcc-10, cpp: g++-10 }
+            generator: Ninja
+
+          - os: ubuntu-latest
+            compiler: { c: clang-11, cpp: clang++-11 }
+            generator: Ninja
+
+          - os: ubuntu-latest
+            compiler: { c: clang-12, cpp: clang++-12 }
+            generator: Ninja
+
+        # TODO: Add tarets to build matrix.
 
     steps:
     - name: Checkout code
@@ -31,13 +41,14 @@ jobs:
 
     - name: Echo build configuration
       run: |
-        echo OS         ${{ matrix.os }}
-        echo Generator  ${{ matrix.generator }}
-        echo Compiler   ${{ matrix.compiler }}
-        echo Build type ${{ matrix.build_type }}
+        echo "OS:           ${{ matrix.os }}"
+        echo "Generator:    ${{ matrix.generator }}"
+        echo "C Compiler:   ${{ matrix.compiler.c }}"
+        echo "C++ Compiler: ${{ matrix.compiler.cpp }}"
+        echo "Build type:   ${{ matrix.build_type }}"
 
     - name: Install Linux dependencies
-      if: runner.os == 'linux'      
+      if: runner.os == "linux"
       run: |
         sudo apt update -y
         sudo apt install -y libgl-dev 
@@ -53,20 +64,20 @@ jobs:
         platform: x64
 
     - name: Set up GCC
-      if: runner.os == 'linux'      
+      if: runner.os == "linux"
       uses: egor-tensin/setup-gcc@v1
       with:
         version: latest
         platform: x64
 
     - name: Set up MinGW
-      if: runner.os == 'windows'      
+      if: runner.os == "windows"      
       uses: egor-tensin/setup-mingw@v2
       with:
         platform: x64
 
     - name: Install Windows dependencies
-      if: runner.os == 'windows'
+      if: runner.os == "windows"
       run: |
         choco install -y ninja
         pip3 install wheel setuptools
@@ -84,8 +95,10 @@ jobs:
         cmake 
         -B ${{ env.build_dir }}
         -G ${{ matrix.generator }} 
-        -D CMAKE_CXX_COMPILER=${{ matrix.compiler }}
+        -D CMAKE_C_COMPILER=${{ matrix.compiler.c }}
+        -D CMAKE_CXX_COMPILER=${{ matrix.compiler.cpp }}
         -D CMAKE_BUILD_TYPE=${{ matrix.build_type }}
+        .
 
     - name: Build
       run: cmake --build ${{ env.build_dir }}
