@@ -44,7 +44,7 @@ struct Image
     uint8_t Channels;
     ImageFormat Format;
 
-    const std::vector<uint8_t> Buffer;
+    std::vector<uint8_t> Buffer;
 
 public:
     Image() = default;
@@ -53,10 +53,11 @@ public:
     Image(const uint8_t* data, const uint32_t width, const uint32_t height,
         const uint8_t channels, const ImageFormat format);
     ~Image() = default;
+
+    Image& operator=(const Image& image) = default;
 };
 
-const Image ReadImage(
-    const std::filesystem::path& filepath, const bool flip = false);
+Image ReadImage(const std::filesystem::path& filepath, const bool flip = false);
 
 bool WriteImage(const std::filesystem::path& filepath, const Image& image,
     const bool flip = false);

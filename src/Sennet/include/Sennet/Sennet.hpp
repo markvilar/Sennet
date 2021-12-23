@@ -16,8 +16,6 @@
 #include "Sennet/ImGui/ImGuiHelpers.hpp"
 #include "Sennet/ImGui/ImGuiLayer.hpp"
 
-#include "Sennet/IO/FileSystem.hpp"
-
 #include "Sennet/Network/TCP/Client.hpp"
 #include "Sennet/Network/TCP/Connection.hpp"
 #include "Sennet/Network/TCP/Message.hpp"
@@ -37,3 +35,6 @@
 #include "Sennet/Renderer/Shader.hpp"
 #include "Sennet/Renderer/Texture.hpp"
 #include "Sennet/Renderer/VertexArray.hpp"
+
+#include "Sennet/Utils/FileSystem.hpp"
+#include "Sennet/Utils/Math.hpp"

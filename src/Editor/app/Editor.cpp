@@ -38,9 +38,9 @@ Sennet::Application* Sennet::CreateApplication(int argc, char** argv)
     specs.WindowHeight = 720;
     specs.StartMaximized = true;
     specs.VSync = true;
-    specs.Resizable = false;
+    specs.Resizable = true;
     specs.EnableImGui = true;
-    specs.Fullscreen = true;
+    specs.Fullscreen = false;
 
     return new Editor(specs, projectPath);
 }

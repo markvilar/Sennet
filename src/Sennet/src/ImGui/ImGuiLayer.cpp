@@ -23,6 +23,7 @@ void ImGuiLayer::OnAttach()
 
     auto& io = ImGui::GetIO();
     io.ConfigFlags |= ImGuiConfigFlags_None;
+    io.IniFilename = nullptr;
 
     ImGui::StyleColorsDark();
 
