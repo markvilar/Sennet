@@ -4,12 +4,10 @@
 #include "imgui.h"
 
 #include "Sennet/ImGui/ImGuiBuild.hpp"
-//#include "Sennet/ImGui/imgui_impl_glfw.h"
-//#include "Sennet/ImGui/imgui_impl_opengl3.h"
 
 #include "Sennet/Core/Application.hpp"
 
-// TEMPORARY
+// TODO: TEMPORARY
 #include "GLFW/glfw3.h"
 #include "glad/glad.h"
 
@@ -23,23 +21,14 @@ void ImGuiLayer::OnAttach()
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
 
-    ImGuiIO& io = ImGui::GetIO();
+    auto& io = ImGui::GetIO();
     io.ConfigFlags |= ImGuiConfigFlags_None;
+    io.IniFilename = nullptr;
 
     ImGui::StyleColorsDark();
 
-    ImGuiStyle& style = ImGui::GetStyle();
-    /*
-    if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
-    {
-        style.WindowRounding = 0.0f;
-        style.Colors[ImGuiCol_WindowBg].w = 1.0f;
-    }
-    */
-
-    Application& app = Application::Get();
-    GLFWwindow* window =
-        static_cast<GLFWwindow*>(app.GetWindow().GetNativeWindow());
+    auto& app = Application::Get();
+    auto window = static_cast<GLFWwindow*>(app.GetWindow().GetNativeWindow());
 
     ImGui_ImplGlfw_InitForOpenGL(window, true);
     ImGui_ImplOpenGL3_Init("#version 410");
@@ -56,7 +45,7 @@ void ImGuiLayer::OnEvent(Event& e)
 {
     if (m_BlockEvents)
     {
-        ImGuiIO& io = ImGui::GetIO();
+        auto& io = ImGui::GetIO();
         e.Handled |= e.IsInCategory(EventCategoryMouse) & io.WantCaptureMouse;
         e.Handled |=
             e.IsInCategory(EventCategoryKeyboard) & io.WantCaptureKeyboard;
@@ -72,23 +61,13 @@ void ImGuiLayer::Begin()
 
 void ImGuiLayer::End()
 {
-    ImGuiIO& io = ImGui::GetIO();
-    Application& app = Application::Get();
+    auto& io = ImGui::GetIO();
+    auto& app = Application::Get();
     io.DisplaySize =
         ImVec2(app.GetWindow().GetWidth(), app.GetWindow().GetHeight());
 
     ImGui::Render();
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-
-    /*
-    if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
-    {
-        GLFWwindow* backupCurrentContext = glfwGetCurrentContext();
-        ImGui::UpdatePlatformWindows();
-        ImGui::RenderPlatformWindowsDefault();
-        glfwMakeContextCurrent(backupCurrentContext);
-    }
-    */
 }
 
 } // namespace Sennet

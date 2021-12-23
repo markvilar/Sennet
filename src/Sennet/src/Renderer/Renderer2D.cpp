@@ -5,6 +5,7 @@
 #include "Sennet/Renderer/Renderer.hpp"
 #include "Sennet/Renderer/Shader.hpp"
 #include "Sennet/Renderer/VertexArray.hpp"
+#include "Sennet/Utils/Math.hpp"
 
 #include <glm/gtc/matrix_transform.hpp>
 
@@ -13,9 +14,9 @@ namespace Sennet
 
 struct QuadVertex
 {
-    glm::vec3 Position;
-    glm::vec4 Color;
-    glm::vec2 TextureCoord;
+    Vec3 Position;
+    Vec4 Color;
+    Vec2 TextureCoord;
     float TextureIndex;
     float TilingFactor;
 };
@@ -39,8 +40,8 @@ struct Renderer2DData
     std::array<Ref<Texture2D>, MaxTextureSlots> TextureSlots;
     uint32_t TextureSlotIndex = 1; // 0 = white texture
 
-    glm::vec4 QuadVertexPositions[Renderer2D::QuadData::VerticesPerQuad];
-    glm::vec2 QuadTextureCoords[Renderer2D::QuadData::VerticesPerQuad];
+    Vec4 QuadVertexPositions[Renderer2D::QuadData::VerticesPerQuad];
+    Vec2 QuadTextureCoords[Renderer2D::QuadData::VerticesPerQuad];
 
     Renderer2D::Statistics Stats;
 };

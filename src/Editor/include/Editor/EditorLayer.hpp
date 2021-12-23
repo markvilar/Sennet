@@ -4,6 +4,20 @@
 namespace Sennet
 {
 
+struct InterfaceLayout
+{
+    Vec2 Position;
+    Vec2 Size;
+
+public:
+    InterfaceLayout(const Vec2& position, const Vec2& size)
+        : Position(position), Size(size)
+    {
+    }
+
+    ~InterfaceLayout() = default;
+};
+
 class EditorLayer : public Layer
 {
 public:
@@ -19,27 +33,31 @@ public:
     virtual void OnEvent(Event& e) override;
 
 private:
-    void UpdatePanelLayout();
+    ImGuiWindowFlags ConfigureImGui(const bool fullscreen);
+
+    // ImGui functions.
+    void RenderViewport(const InterfaceLayout& layout);
+
+    void RenderLeftPanel(const InterfaceLayout& layout);
+    void RenderRightPanel(const InterfaceLayout& layout);
+    void RenderBottomPanel(const InterfaceLayout& layout);
+
+    void RenderMainMenu(const InterfaceLayout& layout);
+
+    void SetDarkThemeColors();
 
 private:
     OrthographicCameraController m_CameraController;
 
-    Ref<Framebuffer> m_ViewportFramebuffer;
-    Ref<Texture2D> m_CheckerboardTexture;
+    Image m_Image;
+
+    std::shared_ptr<Framebuffer> m_ViewportFramebuffer;
+    std::shared_ptr<Texture2D> m_CheckerboardTexture;
 
     bool m_ViewportFocused = false;
     bool m_ViewportHovered = false;
 
-    glm::vec2 m_SettingsPanelPosition = {0.0f, 0.0f};
-    glm::vec2 m_SettingsPanelSize = {0.0f, 0.0f};
-
-    glm::vec2 m_ViewportPosition = {0.0f, 0.0f};
-    glm::vec2 m_ViewportSize = {0.0f, 0.0f};
-
-    glm::vec2 m_TestPanelPosition = {0.0f, 0.0f};
-    glm::vec2 m_TestPanelSize = {0.0f, 0.0f};
-
-    glm::vec4 m_QuadColor = {0.2f, 0.3f, 0.8f, 1.0f};
+    Vec4 m_QuadColor = {0.2f, 0.3f, 0.8f, 1.0f};
 
     float m_QuadRotation = 0.0f;
 };

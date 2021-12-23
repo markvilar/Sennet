@@ -62,7 +62,7 @@ Image::Image(const uint8_t* data, const uint32_t width, const uint32_t height,
 {
 }
 
-const Image ReadImage(const std::filesystem::path& filepath, const bool flip)
+Image ReadImage(const std::filesystem::path& filepath, const bool flip)
 {
     int width, height, channels = 0;
     const auto data =
