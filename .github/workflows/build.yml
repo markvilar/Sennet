@@ -10,40 +10,52 @@ defaults:
     shell: bash
 
 env:
-  build_dir: ./build
+  source_dir: ${{github.workspace}}
+  build_dir: ${{github.workspace}}/build
 
 jobs:
   build:
-    name: >
-      ${{ matrix.os }}-${{ matrix.compiler.c }}-${{ matrix.build_type }}
-
-    runs-on: ${{ matrix.os }}
-
+    name: ${{matrix.os}}-${{matrix.compiler.c}}-${{matrix.build_type}}
+    runs-on: ${{matrix.os}}
     strategy:
       fail-fast: false
       matrix:
         include:
           - os: ubuntu-latest
-            compiler: { c: gcc-9, cpp: g++-9 }
+            compiler: { c: gcc-10, cpp: g++-10 }
             generator: Ninja
             build_type: Release
+            platform: x64
 
           - os: ubuntu-latest
             compiler: { c: gcc-10, cpp: g++-10 }
             generator: Ninja
-            build_type: Release
+            build_type: Debug
+            platform: x64
 
           - os: ubuntu-latest
             compiler: { c: clang-11, cpp: clang++-11 }
             generator: Ninja
             build_type: Release
+            platform: x64
+
+          - os: ubuntu-latest
+            compiler: { c: clang-11, cpp: clang++-11 }
+            generator: Ninja
+            build_type: Debug
+            platform: x64
 
           - os: ubuntu-latest
             compiler: { c: clang-12, cpp: clang++-12 }
             generator: Ninja
             build_type: Release
+            platform: x64
 
-        # TODO: Add tarets to build matrix.
+          - os: ubuntu-latest
+            compiler: { c: clang-12, cpp: clang++-12 }
+            generator: Ninja
+            build_type: Debug
+            platform: x64
 
     steps:
     - name: Checkout code
@@ -51,31 +63,30 @@ jobs:
 
     - name: Echo build configuration
       run: |
-        echo "OS:           ${{ matrix.os }}"
-        echo "Generator:    ${{ matrix.generator }}"
-        echo "C Compiler:   ${{ matrix.compiler.c }}"
-        echo "C++ Compiler: ${{ matrix.compiler.cpp }}"
-        echo "Build type:   ${{ matrix.build_type }}"
-
+        echo "OS:           ${{matrix.os}}"
+        echo "Generator:    ${{matrix.generator}}"
+        echo "C Compiler:   ${{matrix.compiler.c}}"
+        echo "C++ Compiler: ${{matrix.compiler.cpp}}"
+        echo "Build type:   ${{matrix.build_type}}"
 
     - name: Set up Clang
       uses: egor-tensin/setup-clang@v1
       with:
         version: latest
-        platform: x64
+        platform: ${{matrix.platform}}
 
     - name: Set up GCC
       if: runner.os == 'linux'
       uses: egor-tensin/setup-gcc@v1
       with:
         version: latest
-        platform: x64
+        platform: ${{matrix.platform}}
 
     - name: Set up MinGW
       if: runner.os == 'windows'      
       uses: egor-tensin/setup-mingw@v2
       with:
-        platform: x64
+        platform: ${{matrix.platform}}
 
     - name: Install Linux dependencies
       if: runner.os == 'linux'
@@ -96,20 +107,20 @@ jobs:
 
     - name: Install packages
       run: >
-        conan install . 
-        --install-folder ${{ env.build_dir }} 
-        --settings build_type=${{ matrix.build_type }}
-        --build missing
+        conan install    ${{env.source_dir}}
+        --install-folder ${{env.build_dir}} 
+        --settings       build_type=${{matrix.build_type}}
+        --build          missing
 
     - name: Generate build
       run: >
         cmake 
-        -S .
-        -B ${{ env.build_dir }}
-        -G ${{ matrix.generator }} 
-        -D CMAKE_C_COMPILER=${{ matrix.compiler.c }}
-        -D CMAKE_CXX_COMPILER=${{ matrix.compiler.cpp }}
-        -D CMAKE_BUILD_TYPE=${{ matrix.build_type }}
+        -S ${{env.source_dir}}
+        -B ${{env.build_dir}}
+        -G ${{matrix.generator}} 
+        -D CMAKE_C_COMPILER=${{matrix.compiler.c}}
+        -D CMAKE_CXX_COMPILER=${{matrix.compiler.cpp}}
+        -D CMAKE_BUILD_TYPE=${{matrix.build_type}}
 
     - name: Build
-      run: cmake --build ${{ env.build_dir }}
+      run: cmake --build ${{env.build_dir}} --config ${{matrix.build_type}}
