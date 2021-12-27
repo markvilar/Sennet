@@ -70,11 +70,9 @@ GLenum OpenGLDataFormat(const ImageFormat& imageFormat)
 }
 
 OpenGLTexture2D::OpenGLTexture2D(const std::filesystem::path& imagePath)
-    : m_Source(imagePath)
+    : OpenGLTexture2D(ReadImage(imagePath))
 {
-    m_Image = ReadImage(imagePath);
-    m_Width = m_Image.Width;
-    m_Height = m_Image.Height;
+    m_Source = imagePath;
 }
 
 OpenGLTexture2D::OpenGLTexture2D(const Image& image)
