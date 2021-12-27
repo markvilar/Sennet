@@ -8,52 +8,30 @@
 namespace Sennet
 {
 
-Ref<Texture2D> Texture2D::Create(const uint32_t width, const uint32_t height)
+Ref<Texture2D> Texture2D::Create(const std::filesystem::path& filePath)
 {
     switch (Renderer::GetAPI())
     {
     case RendererAPI::API::None:
         SENNET_CORE_ASSERT(false, "Renderer API None is currently not \
-				supported!");
+			supported!");
     case RendererAPI::API::OpenGL:
-        return CreateRef<OpenGLTexture2D>(width,
-            height,
-            InternalFormat::RGBA8,
-            DataFormat::RGBA);
+        return CreateRef<OpenGLTexture2D>(filePath);
     }
 
     SENNET_CORE_ASSERT(false, "Unknown Renderer API.");
     return nullptr;
 }
 
-Ref<Texture2D> Texture2D::Create(const uint32_t width, const uint32_t height,
-    const InternalFormat internalFormat, const DataFormat dataFormat)
+Ref<Texture2D> Texture2D::Create(const Image& image)
 {
     switch (Renderer::GetAPI())
     {
     case RendererAPI::API::None:
         SENNET_CORE_ASSERT(false, "Renderer API None is currently not \
-				supported!");
+            supported!");
     case RendererAPI::API::OpenGL:
-        return CreateRef<OpenGLTexture2D>(width,
-            height,
-            internalFormat,
-            dataFormat);
-    }
-
-    SENNET_CORE_ASSERT(false, "Unknown Renderer API.");
-    return nullptr;
-}
-
-Ref<Texture2D> Texture2D::Create(const std::string& path)
-{
-    switch (Renderer::GetAPI())
-    {
-    case RendererAPI::API::None:
-        SENNET_CORE_ASSERT(false, "Renderer API None is currently not \
-				supported!");
-    case RendererAPI::API::OpenGL:
-        return CreateRef<OpenGLTexture2D>(path);
+        return CreateRef<OpenGLTexture2D>(image);
     }
 
     SENNET_CORE_ASSERT(false, "Unknown Renderer API.");

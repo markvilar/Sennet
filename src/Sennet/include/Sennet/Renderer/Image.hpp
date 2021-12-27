@@ -5,16 +5,17 @@
 
 namespace Sennet
 {
-
 enum class TextureFormat : uint8_t
 {
+    UNKNOWN,
     RED,
     RG,
     RGB,
     BGR,
     RGBA,
     BGRA,
-    DEPTH
+    DEPTH,
+    STENCIL
 };
 
 enum class ImageFileFormat : uint8_t
@@ -28,13 +29,15 @@ enum class ImageFileFormat : uint8_t
 
 enum class ImageFormat : uint8_t
 {
+    UNKNOWN = static_cast<uint8_t>(TextureFormat::UNKNOWN),
     GRAY = static_cast<uint8_t>(TextureFormat::RED),
     GRAY_ALPHA = static_cast<uint8_t>(TextureFormat::RG),
     RGB = static_cast<uint8_t>(TextureFormat::RGB),
     BGR = static_cast<uint8_t>(TextureFormat::BGR),
     RGBA = static_cast<uint8_t>(TextureFormat::RGBA),
     BGRA = static_cast<uint8_t>(TextureFormat::BGRA),
-    DEPTH = static_cast<uint8_t>(TextureFormat::DEPTH)
+    DEPTH = static_cast<uint8_t>(TextureFormat::DEPTH),
+    STENCIL = static_cast<uint8_t>(TextureFormat::STENCIL),
 };
 
 struct Image
@@ -58,7 +61,6 @@ public:
 };
 
 Image ReadImage(const std::filesystem::path& filepath, const bool flip = false);
-
 bool WriteImage(const std::filesystem::path& filepath, const Image& image,
     const bool flip = false);
 

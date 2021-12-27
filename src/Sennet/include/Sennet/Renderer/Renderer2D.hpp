@@ -3,6 +3,8 @@
 #include "Sennet/Renderer/OrthographicCamera.hpp"
 #include "Sennet/Renderer/Texture.hpp"
 
+#include "Sennet/Utils/Math.hpp"
+
 namespace Sennet
 {
 
@@ -16,34 +18,31 @@ public:
     static void EndScene();
     static void Flush();
 
-    static void DrawQuad(const glm::vec2& position, const glm::vec2& size,
-        const glm::vec4& color);
-    static void DrawQuad(const glm::vec3& position, const glm::vec2& size,
-        const glm::vec4& color);
-    static void DrawQuad(const glm::vec2& position, const glm::vec2& size,
+    static void DrawQuad(
+        const Vec2& position, const Vec2& size, const Vec4& color);
+    static void DrawQuad(
+        const Vec3& position, const Vec2& size, const Vec4& color);
+    static void DrawQuad(const Vec2& position, const Vec2& size,
         const Ref<Texture2D>& texture, const float tilingFactor = 1.0f,
-        const glm::vec4& tintColor = glm::vec4(1.0f));
-    static void DrawQuad(const glm::vec3& position, const glm::vec2& size,
+        const Vec4& tintColor = Vec4(1.0f));
+    static void DrawQuad(const Vec3& position, const Vec2& size,
         const Ref<Texture2D>& texture, const float tilingFactor = 1.0f,
-        const glm::vec4& tintColor = glm::vec4(1.0f));
+        const Vec4& tintColor = Vec4(1.0f));
 
-    static void DrawRotatedQuad(const glm::vec2& position,
-        const glm::vec2& size, const float rotation, const glm::vec4& color);
-    static void DrawRotatedQuad(const glm::vec3& position,
-        const glm::vec2& size, const float rotation, const glm::vec4& color);
-    static void DrawRotatedQuad(const glm::vec2& position,
-        const glm::vec2& size, const float rotation,
-        const Ref<Texture2D>& texture, const float tilingFactor = 1.0f,
-        const glm::vec4& tintColor = glm::vec4(1.0f));
-    static void DrawRotatedQuad(const glm::vec3& position,
-        const glm::vec2& size, const float rotation,
-        const Ref<Texture2D>& texture, const float tilingFactor = 1.0f,
-        const glm::vec4& tintColor = glm::vec4(1.0f));
+    static void DrawRotatedQuad(const Vec2& position, const Vec2& size,
+        const float rotation, const Vec4& color);
+    static void DrawRotatedQuad(const Vec3& position, const Vec2& size,
+        const float rotation, const Vec4& color);
+    static void DrawRotatedQuad(const Vec2& position, const Vec2& size,
+        const float rotation, const Ref<Texture2D>& texture,
+        const float tilingFactor = 1.0f, const Vec4& tintColor = Vec4(1.0f));
+    static void DrawRotatedQuad(const Vec3& position, const Vec2& size,
+        const float rotation, const Ref<Texture2D>& texture,
+        const float tilingFactor = 1.0f, const Vec4& tintColor = Vec4(1.0f));
 
-    static void DrawQuad(const glm::mat4& transform, const glm::vec4& color);
-    static void DrawQuad(const glm::mat4& transform,
-        const Ref<Texture2D>& texture, const float tilingFactor = 1.0f,
-        const glm::vec4& tintColor = glm::vec4(1.0f));
+    static void DrawQuad(const Mat4& transform, const Vec4& color);
+    static void DrawQuad(const Mat4& transform, const Ref<Texture2D>& texture,
+        const float tilingFactor = 1.0f, const Vec4& tintColor = Vec4(1.0f));
 
     struct QuadData
     {

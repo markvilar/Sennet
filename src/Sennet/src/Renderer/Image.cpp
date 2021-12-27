@@ -14,7 +14,7 @@
 namespace Sennet
 {
 
-const ImageFormat ParseImageFormat(const uint8_t channels)
+ImageFormat ParseImageFormat(const uint8_t channels)
 {
     switch (channels)
     {
@@ -31,7 +31,7 @@ const ImageFormat ParseImageFormat(const uint8_t channels)
     }
 }
 
-const ImageFileFormat ParseImageFileFormat(const std::string_view fileExtension)
+ImageFileFormat ParseImageFileFormat(const std::string_view fileExtension)
 {
     if (fileExtension == ".png")
     {
