@@ -20,6 +20,21 @@ typedef glm::quat Quat;
 
 template <typename T> float Radians(const T& t) { return glm::radians(t); }
 
+template <typename... Args> Mat4 Translate(Args... args)
+{
+    return glm::translate(args...);
+}
+
+template <typename... Args> Mat4 Rotate(Args... args)
+{
+    return glm::rotate(args...);
+}
+
+template <typename... Args> Mat4 Scale(Args... args)
+{
+    return glm::scale(args...);
+}
+
 template <typename T> typename T::value_type* ValuePtr(T& t)
 {
     return glm::value_ptr(t);
