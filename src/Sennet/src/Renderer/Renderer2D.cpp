@@ -171,8 +171,8 @@ void Renderer2D::DrawQuad(
 void Renderer2D::DrawQuad(
     const Vec3& position, const Vec2& size, const Vec4& color)
 {
-    Mat4 transform = glm::translate(Mat4(1.0f), position)
-        * glm::scale(Mat4(1.0f), {size.x, size.y, 1.0f});
+    Mat4 transform = Translate(Mat4(1.0f), position)
+        * Scale(Mat4(1.0f), Vec3(size.x, size.y, 1.0f));
 
     DrawQuad(transform, color);
 }
@@ -192,8 +192,8 @@ void Renderer2D::DrawQuad(const Vec3& position, const Vec2& size,
     const Ref<Texture2D>& texture, const float tilingFactor,
     const Vec4& tintColor)
 {
-    Mat4 transform = glm::translate(Mat4(1.0f), position)
-        * glm::scale(Mat4(1.0f), {size.x, size.y, 1.0f});
+    Mat4 transform = Translate(Mat4(1.0f), position)
+        * Scale(Mat4(1.0f), Vec3(size.x, size.y, 1.0f));
 
     DrawQuad(transform, texture, tilingFactor, tintColor);
 }
@@ -207,9 +207,9 @@ void Renderer2D::DrawRotatedQuad(const Vec2& position, const Vec2& size,
 void Renderer2D::DrawRotatedQuad(const Vec3& position, const Vec2& size,
     const float rotation, const Vec4& color)
 {
-    Mat4 transform = glm::translate(Mat4(1.0f), position)
-        * glm::rotate(Mat4(1.0f), rotation, {0.0f, 0.0f, 1.0f})
-        * glm::scale(Mat4(1.0f), {size.x, size.y, 1.0f});
+    Mat4 transform = Translate(Mat4(1.0f), position)
+        * Rotate(Mat4(1.0f), rotation, Vec3(0.0f, 0.0f, 1.0f))
+        * Scale(Mat4(1.0f), Vec3(size.x, size.y, 1.0f));
 
     DrawQuad(transform, color);
 }
@@ -231,9 +231,9 @@ void Renderer2D::DrawRotatedQuad(const Vec3& position, const Vec2& size,
     const float tilingFactor, const Vec4& tintColor)
 {
 
-    Mat4 transform = glm::translate(Mat4(1.0f), position)
-        * glm::rotate(Mat4(1.0f), rotation, {0.0f, 0.0f, 1.0f})
-        * glm::scale(Mat4(1.0f), {size.x, size.y, 1.0f});
+    Mat4 transform = Translate(Mat4(1.0f), position)
+        * Rotate(Mat4(1.0f), rotation, Vec3(0.0f, 0.0f, 1.0f))
+        * Scale(Mat4(1.0f), Vec3(size.x, size.y, 1.0f));
 
     DrawQuad(transform, texture, tilingFactor, tintColor);
 }
