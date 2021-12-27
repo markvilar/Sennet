@@ -9,101 +9,104 @@
 namespace Sennet
 {
 
-GLenum SennetToOpenGL(const Texture::InternalFormat& internalFormat)
+GLenum OpenGLInternalFormat(const ImageFormat& imageFormat)
 {
-    GLenum glInternalFormat = 0;
-    switch (internalFormat)
-    {
-    case Texture::InternalFormat::RGBA8:
-        glInternalFormat = GL_RGBA8;
-        break;
-    case Texture::InternalFormat::RGB8:
-        glInternalFormat = GL_RGB8;
-        break;
-    }
-    SENNET_CORE_ASSERT(glInternalFormat, "Invalid OpenGL internal format.");
-    return glInternalFormat;
-}
-
-GLenum SennetToOpenGL(const Texture::DataFormat& dataFormat)
-{
-    GLenum glDataFormat = 0;
-    switch (dataFormat)
-    {
-    case Texture::DataFormat::RGBA:
-        glDataFormat = GL_RGBA;
-        break;
-    case Texture::DataFormat::BGRA:
-        glDataFormat = GL_BGRA;
-        break;
-    case Texture::DataFormat::RGB:
-        glDataFormat = GL_RGB;
-        break;
-    case Texture::DataFormat::BGR:
-        glDataFormat = GL_BGR;
-        break;
-    }
-    SENNET_CORE_ASSERT(glDataFormat, "Invalid OpenGL data format.");
-    return glDataFormat;
-}
-
-OpenGLTexture2D::OpenGLTexture2D(const uint32_t width, const uint32_t height,
-    const InternalFormat internalFormat, const DataFormat dataFormat)
-    : m_Source(""), m_Width(width), m_Height(height),
-      m_InternalFormat(internalFormat), m_DataFormat(dataFormat)
-{
-    glCreateTextures(GL_TEXTURE_2D, 1, &m_RendererID);
-    glTextureStorage2D(m_RendererID,
-        1,
-        SennetToOpenGL(m_InternalFormat),
-        m_Width,
-        m_Height);
-
-    glTextureParameteri(m_RendererID, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTextureParameteri(m_RendererID, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-
-    glTextureParameteri(m_RendererID, GL_TEXTURE_WRAP_S, GL_REPEAT);
-    glTextureParameteri(m_RendererID, GL_TEXTURE_WRAP_T, GL_REPEAT);
-}
-
-OpenGLTexture2D::OpenGLTexture2D(const std::string& path) : m_Source(path)
-{
-    SENNET_CORE_ASSERT(false, "OpenGLTexture2D constructor not implemented.");
-}
-
-OpenGLTexture2D::~OpenGLTexture2D() { glDeleteTextures(1, &m_RendererID); }
-
-void OpenGLTexture2D::SetData(const void* data, const uint32_t size)
-{
-    const uint32_t bpp = [this] {
-        switch (m_DataFormat)
+    const auto textureFormat = static_cast<TextureFormat>(imageFormat);
+    const auto internalFormat = [textureFormat] {
+        switch (textureFormat)
         {
-        case DataFormat::RGBA:
-            return 4;
-        case DataFormat::BGRA:
-            return 4;
-        case DataFormat::RGB:
-            return 3;
-        case DataFormat::BGR:
-            return 3;
+        case TextureFormat::RED:
+            return GL_R8;
+        case TextureFormat::RG:
+            return GL_RG8;
+        case TextureFormat::RGB:
+            return GL_RGB8;
+        case TextureFormat::BGR:
+            return GL_RGB8;
+        case TextureFormat::RGBA:
+            return GL_RGBA8;
+        case TextureFormat::BGRA:
+            return GL_RGBA8;
+        case TextureFormat::DEPTH:
+            return GL_DEPTH_COMPONENT32F;
         default:
             return 0;
         }
     }();
-    SENNET_CORE_ASSERT(size == m_Width * m_Height * bpp,
-        "Data must be entire texture.");
+
+    SENNET_CORE_ASSERT(internalFormat, "Invalid OpenGL data format.");
+    return internalFormat;
+}
+
+GLenum OpenGLDataFormat(const ImageFormat& imageFormat)
+{
+    const auto textureFormat = static_cast<TextureFormat>(imageFormat);
+    const auto internalFormat = [textureFormat] {
+        switch (textureFormat)
+        {
+        case TextureFormat::RED:
+            return GL_RED;
+        case TextureFormat::RG:
+            return GL_RG;
+        case TextureFormat::RGB:
+            return GL_RGB;
+        case TextureFormat::BGR:
+            return GL_BGR;
+        case TextureFormat::RGBA:
+            return GL_RGBA;
+        case TextureFormat::BGRA:
+            return GL_BGRA;
+        case TextureFormat::DEPTH:
+            return GL_DEPTH_COMPONENT;
+        case TextureFormat::STENCIL:
+            return GL_STENCIL_INDEX;
+        default:
+            return 0;
+        }
+    }();
+
+    SENNET_CORE_ASSERT(internalFormat, "Invalid OpenGL data format.");
+    return internalFormat;
+}
+
+OpenGLTexture2D::OpenGLTexture2D(const std::filesystem::path& imagePath)
+    : m_Source(imagePath)
+{
+    m_Image = ReadImage(imagePath);
+    m_Width = m_Image.Width;
+    m_Height = m_Image.Height;
+}
+
+OpenGLTexture2D::OpenGLTexture2D(const Image& image)
+    : m_Source(""), m_Width(image.Width), m_Height(image.Height)
+{
+    glCreateTextures(GL_TEXTURE_2D, 1, &m_RendererID);
+
+    glTextureStorage2D(m_RendererID,
+        1,
+        OpenGLInternalFormat(image.Format),
+        image.Width,
+        image.Height);
+
+    glTextureParameteri(m_RendererID, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTextureParameteri(m_RendererID, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTextureParameteri(m_RendererID, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTextureParameteri(m_RendererID, GL_TEXTURE_WRAP_T, GL_REPEAT);
+
     glTextureSubImage2D(m_RendererID,
         0,
         0,
         0,
-        m_Width,
-        m_Height,
-        SennetToOpenGL(m_DataFormat),
+        image.Width,
+        image.Height,
+        OpenGLDataFormat(image.Format),
         GL_UNSIGNED_BYTE,
-        data);
+        static_cast<const void*>(image.Buffer.data()));
 }
 
-void OpenGLTexture2D::Bind(uint32_t slot) const
+OpenGLTexture2D::~OpenGLTexture2D() { glDeleteTextures(1, &m_RendererID); }
+
+void OpenGLTexture2D::Bind(const uint32_t slot) const
 {
     glBindTextureUnit(slot, m_RendererID);
 }

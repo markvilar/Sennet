@@ -31,19 +31,32 @@ void Renderer::Init()
     // TODO: Fix working directory and shader paths.
     Renderer::GetShaderLibrary()->Load("../resources/shaders/Renderer2D.glsl");
 
-    const uint32_t whiteTextureData = 0xffffffff;
-    s_Data->WhiteTexture = Texture2D::Create(1, 1);
-    s_Data->WhiteTexture->SetData(&whiteTextureData, sizeof(uint32_t));
+    constexpr uint32_t width = 1;
+    constexpr uint32_t height = 1;
+    constexpr uint32_t channels = 4;
+    constexpr uint32_t size = width * height * channels;
+    constexpr std::array<uint8_t, size> whiteColor = {255, 255, 255, 255};
+    constexpr std::array<uint8_t, size> blackColor = {0, 0, 0, 255};
 
-    const uint32_t blackTextureData = 0xff000000;
-    s_Data->BlackTexture = Texture2D::Create(1, 1);
-    s_Data->BlackTexture->SetData(&blackTextureData, sizeof(uint32_t));
+    Image whiteImage(whiteColor.data(),
+        width,
+        height,
+        channels,
+        ImageFormat::RGBA);
+    Image blackImage(blackColor.data(),
+        width,
+        height,
+        channels,
+        ImageFormat::RGBA);
+
+    s_Data->WhiteTexture = Texture2D::Create(whiteImage);
+    s_Data->BlackTexture = Texture2D::Create(blackImage);
 
     RenderCommand::Init();
     Renderer2D::Init();
 }
 
-void Renderer::OnWindowResize(uint32_t width, uint32_t height)
+void Renderer::OnWindowResize(const uint32_t width, const uint32_t height)
 {
     RenderCommand::SetViewport(0, 0, width, height);
 }
@@ -66,7 +79,7 @@ Ref<Texture2D> Renderer::GetWhiteTexture()
     return s_Data->WhiteTexture;
 }
 
-void Renderer::BeginScene(OrthographicCamera& camera)
+void Renderer::BeginScene(const OrthographicCamera& camera)
 {
     s_SceneData->ViewProjectionMatrix = camera.GetViewProjectionMatrix();
 }
@@ -74,7 +87,7 @@ void Renderer::BeginScene(OrthographicCamera& camera)
 void Renderer::EndScene() {}
 
 void Renderer::Submit(const Ref<Shader>& shader,
-    const Ref<VertexArray>& vertexArray, const glm::mat4& transform)
+    const Ref<VertexArray>& vertexArray, const Mat4& transform)
 {
     shader->Bind();
     shader->SetMat4("u_ViewProjection", s_SceneData->ViewProjectionMatrix);
