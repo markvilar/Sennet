@@ -97,87 +97,81 @@ void EditorLayer::OnUpdate(Timestep ts)
 
     // Render.
     Renderer2D::ResetStats();
-    {
-        SENNET_PROFILE_SCOPE("Renderer Prep");
+    
+    // Set background color.
+    RenderCommand::SetClearColor({0.1f, 0.1f, 0.1f, 1.0f});
+    RenderCommand::Clear();
 
-        // Set background color.
-        RenderCommand::SetClearColor({0.1f, 0.1f, 0.1f, 1.0f});
-        RenderCommand::Clear();
+    // Set viewport background color.
+    m_ViewportFramebuffer->Bind();
+    RenderCommand::SetClearColor({0.1f, 0.1f, 0.1f, 1.0f});
+    RenderCommand::Clear();
 
-        // Set viewport background color.
-        m_ViewportFramebuffer->Bind();
-        RenderCommand::SetClearColor({0.1f, 0.1f, 0.1f, 1.0f});
-        RenderCommand::Clear();
-    }
+    m_QuadRotation += ts * 50.0f;
 
-    {
-        m_QuadRotation += ts * 50.0f;
+    Renderer2D::BeginScene(m_CameraController.GetCamera());
 
-        SENNET_PROFILE_SCOPE("Renderer Draw");
+    // Draw flat colored quads.
+    Renderer2D::DrawRotatedQuad({0.0f, 0.0f},
+        {0.8f, 0.8f},
+        Radians(m_QuadRotation),
+        {0.9f, 0.1f, 0.2f, 1.0f});
+    Renderer2D::DrawQuad({2.0f, -2.0f},
+        {0.8f, 0.8f},
+        {0.8f, 0.2f, 0.3f, 1.0f});
+    Renderer2D::DrawQuad({2.0f, 2.0f}, {0.5f, 0.75f}, m_QuadColor);
 
-        Renderer2D::BeginScene(m_CameraController.GetCamera());
 
-        // Draw flat colored quads.
-        Renderer2D::DrawRotatedQuad({0.0f, 0.0f},
-            {0.8f, 0.8f},
-            Radians(m_QuadRotation),
-            {0.9f, 0.1f, 0.2f, 1.0f});
-        Renderer2D::DrawQuad({2.0f, -2.0f},
-            {0.8f, 0.8f},
-            {0.8f, 0.2f, 0.3f, 1.0f});
-        Renderer2D::DrawQuad({2.0f, 2.0f}, {0.5f, 0.75f}, m_QuadColor);
-
-        /*
-        TODO: Fix texture API to allow for this syntax.
-        Renderer2D::DrawQuad({ 0.0f, 0.0f, -0.2f }, { 20.0f, 20.0f },
-            m_CheckerboardTexture, 4.0f, Vec4{1.0f, 0.9f, 0.9f, 1.0f});
-        */
-
-        // Draw grid of quads.
-        constexpr auto ys = []() {
-            std::array<float, 20> arr = {0.0f};
-            auto value = -5.0f;
-            auto increment = 0.5f;
-            for (auto& entry : arr)
-            {
-                entry = value;
-                value += increment;
-            }
-            return arr;
-        }();
-
-        constexpr auto xs = []() {
-            std::array<float, 20> arr = {0.0f};
-            auto value = -5.0f;
-            auto increment = 0.5f;
-            for (auto& entry : arr)
-            {
-                entry = value;
-                value += increment;
-            }
-            return arr;
-        }();
-
-        for (auto y : ys)
+    // Draw grid of quads.
+    constexpr auto ys = []() {
+        std::array<float, 20> arr = {0.0f};
+        auto value = -5.0f;
+        auto increment = 0.5f;
+        for (auto& entry : arr)
         {
-            for (auto x : xs)
-            {
-                Vec4 color = {(x + 5.0f) / 10.0f,
-                    0.4f,
-                    (y + 5.0f) / 10.0f,
-                    0.7f};
-                Renderer2D::DrawQuad({x, y, -0.1f}, {0.45f, 0.45f}, color);
-            }
+            entry = value;
+            value += increment;
         }
+        return arr;
+    }();
 
-        Renderer2D::EndScene();
-        m_ViewportFramebuffer->Unbind();
+    constexpr auto xs = []() {
+        std::array<float, 20> arr = {0.0f};
+        auto value = -5.0f;
+        auto increment = 0.5f;
+        for (auto& entry : arr)
+        {
+            entry = value;
+            value += increment;
+        }
+        return arr;
+    }();
+
+    for (auto y : ys)
+    {
+        for (auto x : xs)
+        {
+            Vec4 color = {(x + 5.0f) / 10.0f,
+                0.4f,
+                (y + 5.0f) / 10.0f,
+                0.7f};
+            Renderer2D::DrawQuad({x, y, -0.1f}, {0.45f, 0.45f}, color);
+        }
     }
+
+    if (m_Texture)
+    {
+        Renderer2D::DrawQuad({ -16.0f, 0.0f, -0.2f }, { 16.0f, 9.0f },
+            m_Texture, 1.0f, Vec4{1.0f, 1.0f, 1.0f, 1.0f});
+    }
+
+    Renderer2D::EndScene();
+    m_ViewportFramebuffer->Unbind();
 }
 
 void EditorLayer::OnImGuiRender()
 {
-    const auto windowSize = Sennet::Application::Get().GetWindow().GetSize();
+    const auto windowSize = Application::Get().GetWindow().GetSize();
 
     const auto mainMenuLayout =
         CalculateMainMenuLayout(windowSize.first, windowSize.second);
@@ -272,21 +266,20 @@ void EditorLayer::RenderLeftPanel(const InterfaceLayout& layout)
 
     ImGui::ColorEdit4("Square Color", ValuePtr(m_QuadColor));
 
+    static bool flipImage = false;
     static char imagePath[256] = "";
     ImGui::InputText("Image path", imagePath, IM_ARRAYSIZE(imagePath));
     if (ImGui::Button("Load image"))
     {
         if (Sennet::FileSystem::IsFile(imagePath))
         {
-            m_Image = ReadImage(imagePath);
-            SENNET_INFO("{0}: {1}, {2}, {3}, {4}",
-                imagePath,
-                m_Image.Width,
-                m_Image.Height,
-                m_Image.Channels,
-                m_Image.Format);
+            m_Texture = Texture2D::Create(ReadImage(imagePath, flipImage));
+            SENNET_INFO("Loaded image: {}", imagePath);
         }
     }
+    ImGui::SameLine();
+    ImGui::Checkbox("Flip image", &flipImage);
+
     ImGui::End();
 }
 

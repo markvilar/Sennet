@@ -52,7 +52,7 @@ private:
     Image m_Image;
 
     std::shared_ptr<Framebuffer> m_ViewportFramebuffer;
-    std::shared_ptr<Texture2D> m_CheckerboardTexture;
+    std::shared_ptr<Texture2D> m_Texture;
 
     bool m_ViewportFocused = false;
     bool m_ViewportHovered = false;

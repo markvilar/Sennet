@@ -65,6 +65,9 @@ Image::Image(const uint8_t* data, const uint32_t width, const uint32_t height,
 Image ReadImage(const std::filesystem::path& filepath, const bool flip)
 {
     int width, height, channels = 0;
+
+    stbi_set_flip_vertically_on_load(flip);
+
     const auto data =
         stbi_load(filepath.c_str(), &width, &height, &channels, 0);
     const auto format = ParseImageFormat(channels);
@@ -77,6 +80,9 @@ bool WriteImage(
 {
     const auto fileExtension = filepath.extension();
     const auto fileFormat = ParseImageFileFormat(fileExtension.c_str());
+
+    stbi_set_flip_vertically_on_load(flip);
+
     const auto writeResult = [filepath, image, fileFormat] {
         switch (fileFormat)
         {
