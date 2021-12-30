@@ -8,12 +8,8 @@ project(
 include(cmake/ProjectSettings.cmake)
 include(cmake/PreventInSourceBuild.cmake)
 
-# Add build directory to module and prefix path.
-list(APPEND CMAKE_MODULE_PATH ${CMAKE_BINARY_DIR})
-list(APPEND CMAKE_PREFIX_PATH ${CMAKE_BINARY_DIR})
-
 add_library(ProjectOptions INTERFACE)
-target_compile_features(ProjectOptions INTERFACE cxx_std_20)
+target_compile_features(ProjectOptions INTERFACE cxx_std_17)
 
 add_library(ProjectWarnings INTERFACE)
 

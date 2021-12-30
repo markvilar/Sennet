@@ -5,7 +5,7 @@ target_compile_definitions(client PRIVATE)
 target_link_libraries(client PRIVATE sennet::sennet)
 
 set_target_properties(client PROPERTIES RUNTIME_OUTPUT_DIRECTORY
-                                        "${CMAKE_SOURCE_DIR}/bin")
+                                        "${CMAKE_BINARY_DIR}/bin")
 
 add_executable(sandbox Sandbox.cpp)
 target_compile_features(sandbox PRIVATE cxx_std_17)
@@ -14,7 +14,7 @@ target_compile_definitions(sandbox PRIVATE)
 target_link_libraries(sandbox PRIVATE sennet::sennet)
 
 set_target_properties(sandbox PROPERTIES RUNTIME_OUTPUT_DIRECTORY
-                                         "${CMAKE_SOURCE_DIR}/bin")
+                                        "${CMAKE_BINARY_DIR}/bin")
 
 add_executable(server Server.cpp)
 target_compile_features(server PRIVATE cxx_std_17)
@@ -23,4 +23,5 @@ target_compile_definitions(server PRIVATE)
 target_link_libraries(server PRIVATE sennet::sennet)
 
 set_target_properties(server PROPERTIES RUNTIME_OUTPUT_DIRECTORY
-                                        "${CMAKE_SOURCE_DIR}/bin")
+                                        "${CMAKE_BINARY_DIR}/bin")
+

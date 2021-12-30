@@ -19,4 +19,4 @@ set_target_properties(
     editor
     PROPERTIES ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib"
                LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib"
-               RUNTIME_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/bin")
+               RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")

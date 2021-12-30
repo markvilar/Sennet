@@ -10,13 +10,14 @@ defaults:
     shell: bash
 
 env:
-  source_dir: ${{github.workspace}}
-  build_dir: ${{github.workspace}}/build
+  source_dir: "${{github.workspace}}"
+  build_dir: "${{github.workspace}}/build"
+  package_dir: "${{github.workspace}}/packages"
 
 jobs:
   build:
-    name: ${{matrix.os}}-${{matrix.compiler.c}}-${{matrix.build_type}}
-    runs-on: ${{matrix.os}}
+    name: "${{matrix.os}}-${{matrix.compiler.c}}-${{matrix.build_type}}"
+    runs-on: "${{matrix.os}}"
     strategy:
       fail-fast: false
       matrix:
@@ -108,19 +109,18 @@ jobs:
     - name: Install packages
       run: >
         conan install    ${{env.source_dir}}
-        --install-folder ${{env.build_dir}} 
+        --install-folder ${{env.package_dir}} 
         --settings       build_type=${{matrix.build_type}}
         --build          missing
 
     - name: Generate build
-      run: >
-        cmake 
-        -S ${{env.source_dir}}
-        -B ${{env.build_dir}}
-        -G ${{matrix.generator}} 
-        -D CMAKE_C_COMPILER=${{matrix.compiler.c}}
-        -D CMAKE_CXX_COMPILER=${{matrix.compiler.cpp}}
-        -D CMAKE_BUILD_TYPE=${{matrix.build_type}}
+      run: |
+        export CMAKE_GENERATOR="${{matrix.generator}}"
+        export CMAKE_BUILD_TYPE="${{matrix.build_type}}"
+        export CMAKE_C_COMPILER="${{matrix.compiler.c}}"
+        export CMAKE_CXX_COMPILER="${{matrix.compiler.cpp}}"
+        cmake -S ${{env.source_dir}} -B ${{env.build_dir}} \
+          -D CMAKE_MODULE_PATH=${{env.package_dir}}
 
     - name: Build
-      run: cmake --build ${{env.build_dir}} --config ${{matrix.build_type}}
+      run: cmake --build ${{env.build_dir}}
