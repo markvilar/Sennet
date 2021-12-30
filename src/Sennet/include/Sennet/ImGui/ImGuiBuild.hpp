@@ -2,5 +2,5 @@
 
 #include "imgui.h"
 
-#include "Sennet/ImGui/imgui_impl_glfw.h"
-#include "Sennet/ImGui/imgui_impl_opengl3.h"
+#include "Sennet/ImGui/ImGuiImplGLFW.hpp"
+#include "Sennet/ImGui/ImGuiImplOpenGL3.hpp"

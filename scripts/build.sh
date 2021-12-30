@@ -2,7 +2,7 @@
 
 SOURCE_DIR="${PWD}"
 BUILD_DIR="${SOURCE_DIR}/build/"
-CONAN_DIR="${SOURCE_DIR}/conan-packages/"
+CONAN_DIR="${SOURCE_DIR}/packages/"
 
 GENERATOR="Ninja"
 BUILD_TYPE="Debug"
