@@ -102,7 +102,7 @@ Image ReadImage(const std::filesystem::path& filepath, const ImageFormat format,
     const bool flip)
 {
     int width, height, channels = 0;
-    auto desiredChannels = static_cast<int>(NumberOfChannels(format));
+    auto desiredChannels = NumberOfChannels(format);
 
     stbi_set_flip_vertically_on_load(flip);
 
@@ -110,7 +110,7 @@ Image ReadImage(const std::filesystem::path& filepath, const ImageFormat format,
         &width,
         &height,
         &channels,
-        desiredChannels);
+        static_cast<int>(desiredChannels));
 
     return Image(data, width, height, format);
 }

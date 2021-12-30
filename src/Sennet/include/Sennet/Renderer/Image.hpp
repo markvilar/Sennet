@@ -5,6 +5,7 @@
 
 namespace Sennet
 {
+
 enum class TextureFormat : uint8_t
 {
     UNKNOWN,
