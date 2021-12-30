@@ -9,12 +9,10 @@
 #include "stb_image.h"
 #include "stb_image_write.h"
 
-#include <fstream>
-
 namespace Sennet
 {
 
-ImageFormat ParseImageFormat(const uint8_t channels)
+constexpr ImageFormat ParseImageFormat(const uint8_t channels)
 {
     switch (channels)
     {
@@ -27,11 +25,12 @@ ImageFormat ParseImageFormat(const uint8_t channels)
     case 4:
         return ImageFormat::RGBA;
     default:
-        return ImageFormat::RGBA;
+        return ImageFormat::GRAY;
     }
 }
 
-ImageFileFormat ParseImageFileFormat(const std::string_view fileExtension)
+constexpr ImageFileFormat ParseImageFileFormat(
+    const std::string_view fileExtension)
 {
     if (fileExtension == ".png")
     {
@@ -55,11 +54,35 @@ ImageFileFormat ParseImageFileFormat(const std::string_view fileExtension)
     }
 }
 
-Image::Image(const uint8_t* data, const uint32_t width, const uint32_t height,
-    const uint8_t channels, const ImageFormat format)
-    : Buffer(data, data + width * height * channels), Width(width),
-      Height(height), Channels(channels), Format(format)
+constexpr uint32_t NumberOfChannels(const ImageFormat format)
 {
+    switch (format)
+    {
+    case ImageFormat::UNKNOWN:
+        return 0;
+    case ImageFormat::GRAY:
+        return 1;
+    case ImageFormat::GRAY_ALPHA:
+        return 2;
+    case ImageFormat::RGB:
+        return 3;
+    case ImageFormat::BGR:
+        return 3;
+    case ImageFormat::RGBA:
+        return 4;
+    case ImageFormat::BGRA:
+        return 4;
+    default:
+        return 0;
+    }
+}
+
+Image::Image(const uint8_t* data, const uint32_t width, const uint32_t height,
+    const ImageFormat format)
+    : Width(width), Height(height), Format(format)
+{
+    const auto channels = NumberOfChannels(format);
+    Buffer = std::vector<uint8_t>(data, data + width * height * channels);
 }
 
 Image ReadImage(const std::filesystem::path& filepath, const bool flip)
@@ -72,7 +95,24 @@ Image ReadImage(const std::filesystem::path& filepath, const bool flip)
         stbi_load(filepath.c_str(), &width, &height, &channels, 0);
     const auto format = ParseImageFormat(channels);
 
-    return Image(data, width, height, channels, format);
+    return Image(data, width, height, format);
+}
+
+Image ReadImage(const std::filesystem::path& filepath, const ImageFormat format,
+    const bool flip)
+{
+    int width, height, channels = 0;
+    auto desiredChannels = NumberOfChannels(format);
+
+    stbi_set_flip_vertically_on_load(flip);
+
+    const auto data = stbi_load(filepath.c_str(),
+        &width,
+        &height,
+        &channels,
+        static_cast<int>(desiredChannels));
+
+    return Image(data, width, height, format);
 }
 
 bool WriteImage(
@@ -83,34 +123,36 @@ bool WriteImage(
 
     stbi_set_flip_vertically_on_load(flip);
 
-    const auto writeResult = [filepath, image, fileFormat] {
+    const auto channels = NumberOfChannels(image.Format);
+
+    const auto writeResult = [filepath, image, channels, fileFormat]() {
         switch (fileFormat)
         {
         case ImageFileFormat::JPG:
             return stbi_write_jpg(filepath.c_str(),
                 image.Width,
                 image.Height,
-                image.Channels,
+                channels,
                 image.Buffer.data(),
                 100);
         case ImageFileFormat::PNG:
             return stbi_write_png(filepath.c_str(),
                 image.Width,
                 image.Height,
-                image.Channels,
+                channels,
                 image.Buffer.data(),
-                image.Width * image.Channels);
+                image.Width * channels);
         case ImageFileFormat::BMP:
             return stbi_write_bmp(filepath.c_str(),
                 image.Width,
                 image.Height,
-                image.Channels,
+                channels,
                 image.Buffer.data());
         case ImageFileFormat::TGA:
             return stbi_write_tga(filepath.c_str(),
                 image.Width,
                 image.Height,
-                image.Channels,
+                channels,
                 image.Buffer.data());
         default:
             return 0;

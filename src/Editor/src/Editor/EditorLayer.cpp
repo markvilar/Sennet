@@ -97,7 +97,7 @@ void EditorLayer::OnUpdate(Timestep ts)
 
     // Render.
     Renderer2D::ResetStats();
-    
+
     // Set background color.
     RenderCommand::SetClearColor({0.1f, 0.1f, 0.1f, 1.0f});
     RenderCommand::Clear();
@@ -116,11 +116,8 @@ void EditorLayer::OnUpdate(Timestep ts)
         {0.8f, 0.8f},
         Radians(m_QuadRotation),
         {0.9f, 0.1f, 0.2f, 1.0f});
-    Renderer2D::DrawQuad({2.0f, -2.0f},
-        {0.8f, 0.8f},
-        {0.8f, 0.2f, 0.3f, 1.0f});
+    Renderer2D::DrawQuad({2.0f, -2.0f}, {0.8f, 0.8f}, {0.8f, 0.2f, 0.3f, 1.0f});
     Renderer2D::DrawQuad({2.0f, 2.0f}, {0.5f, 0.75f}, m_QuadColor);
-
 
     // Draw grid of quads.
     constexpr auto ys = []() {
@@ -151,18 +148,18 @@ void EditorLayer::OnUpdate(Timestep ts)
     {
         for (auto x : xs)
         {
-            Vec4 color = {(x + 5.0f) / 10.0f,
-                0.4f,
-                (y + 5.0f) / 10.0f,
-                0.7f};
+            Vec4 color = {(x + 5.0f) / 10.0f, 0.4f, (y + 5.0f) / 10.0f, 0.7f};
             Renderer2D::DrawQuad({x, y, -0.1f}, {0.45f, 0.45f}, color);
         }
     }
 
     if (m_Texture)
     {
-        Renderer2D::DrawQuad({ -16.0f, 0.0f, -0.2f }, { 16.0f, 9.0f },
-            m_Texture, 1.0f, Vec4{1.0f, 1.0f, 1.0f, 1.0f});
+        Renderer2D::DrawQuad({-16.0f, 0.0f, -0.2f},
+            {16.0f, 9.0f},
+            m_Texture,
+            1.0f,
+            Vec4{1.0f, 1.0f, 1.0f, 1.0f});
     }
 
     Renderer2D::EndScene();

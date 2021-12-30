@@ -1,10 +1,18 @@
-# Custom directories
-/bin*
-/build*
+# Ignore all directories by default
+**/
+
+# Allow directories within the project structure
+!cmake/
+!examples/
+!resources/
+!scripts/
+!src/
+!test/
 
 # Vim files
 *.swp
 *.swo
+*.swa
 
 # Visual C++ cache files
 out/

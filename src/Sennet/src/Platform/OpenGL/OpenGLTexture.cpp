@@ -12,7 +12,7 @@ namespace Sennet
 GLenum OpenGLInternalFormat(const ImageFormat& imageFormat)
 {
     const auto textureFormat = static_cast<TextureFormat>(imageFormat);
-    const auto internalFormat = [textureFormat] {
+    const auto internalFormat = [textureFormat]() {
         switch (textureFormat)
         {
         case TextureFormat::RED:
@@ -27,8 +27,6 @@ GLenum OpenGLInternalFormat(const ImageFormat& imageFormat)
             return GL_RGBA8;
         case TextureFormat::BGRA:
             return GL_RGBA8;
-        case TextureFormat::DEPTH:
-            return GL_DEPTH_COMPONENT32F;
         default:
             return 0;
         }
@@ -41,7 +39,7 @@ GLenum OpenGLInternalFormat(const ImageFormat& imageFormat)
 GLenum OpenGLDataFormat(const ImageFormat& imageFormat)
 {
     const auto textureFormat = static_cast<TextureFormat>(imageFormat);
-    const auto internalFormat = [textureFormat] {
+    const auto internalFormat = [textureFormat]() {
         switch (textureFormat)
         {
         case TextureFormat::RED:
@@ -56,10 +54,6 @@ GLenum OpenGLDataFormat(const ImageFormat& imageFormat)
             return GL_RGBA;
         case TextureFormat::BGRA:
             return GL_BGRA;
-        case TextureFormat::DEPTH:
-            return GL_DEPTH_COMPONENT;
-        case TextureFormat::STENCIL:
-            return GL_STENCIL_INDEX;
         default:
             return 0;
         }

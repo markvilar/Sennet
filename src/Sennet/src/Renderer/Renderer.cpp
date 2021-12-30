@@ -33,21 +33,11 @@ void Renderer::Init()
 
     constexpr uint32_t width = 1;
     constexpr uint32_t height = 1;
-    constexpr uint32_t channels = 4;
-    constexpr uint32_t size = width * height * channels;
-    constexpr std::array<uint8_t, size> whiteColor = {255, 255, 255, 255};
-    constexpr std::array<uint8_t, size> blackColor = {0, 0, 0, 255};
+    constexpr std::array<uint8_t, 4> whiteColor = {255, 255, 255, 255};
+    constexpr std::array<uint8_t, 4> blackColor = {0, 0, 0, 255};
 
-    Image whiteImage(whiteColor.data(),
-        width,
-        height,
-        channels,
-        ImageFormat::RGBA);
-    Image blackImage(blackColor.data(),
-        width,
-        height,
-        channels,
-        ImageFormat::RGBA);
+    Image whiteImage(whiteColor.data(), width, height, ImageFormat::RGBA);
+    Image blackImage(blackColor.data(), width, height, ImageFormat::RGBA);
 
     s_Data->WhiteTexture = Texture2D::Create(whiteImage);
     s_Data->BlackTexture = Texture2D::Create(blackImage);
