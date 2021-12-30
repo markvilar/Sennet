@@ -29,7 +29,8 @@ constexpr ImageFormat ParseImageFormat(const uint8_t channels)
     }
 }
 
-constexpr ImageFileFormat ParseImageFileFormat(const std::string_view fileExtension)
+constexpr ImageFileFormat ParseImageFileFormat(
+    const std::string_view fileExtension)
 {
     if (fileExtension == ".png")
     {
@@ -57,18 +58,26 @@ constexpr uint32_t NumberOfChannels(const ImageFormat format)
 {
     switch (format)
     {
-    case ImageFormat::UNKNOWN:    return 0;
-    case ImageFormat::GRAY:       return 1;
-    case ImageFormat::GRAY_ALPHA: return 2;
-    case ImageFormat::RGB:        return 3;
-    case ImageFormat::BGR:        return 3;
-    case ImageFormat::RGBA:       return 4;
-    case ImageFormat::BGRA:       return 4;
-    default:                      return 0;
+    case ImageFormat::UNKNOWN:
+        return 0;
+    case ImageFormat::GRAY:
+        return 1;
+    case ImageFormat::GRAY_ALPHA:
+        return 2;
+    case ImageFormat::RGB:
+        return 3;
+    case ImageFormat::BGR:
+        return 3;
+    case ImageFormat::RGBA:
+        return 4;
+    case ImageFormat::BGRA:
+        return 4;
+    default:
+        return 0;
     }
 }
 
-Image::Image(const uint8_t* data, const uint32_t width, const uint32_t height, 
+Image::Image(const uint8_t* data, const uint32_t width, const uint32_t height,
     const ImageFormat format)
     : Width(width), Height(height), Format(format)
 {
@@ -89,15 +98,18 @@ Image ReadImage(const std::filesystem::path& filepath, const bool flip)
     return Image(data, width, height, format);
 }
 
-Image ReadImage(const std::filesystem::path& filepath, const ImageFormat format, const bool flip)
+Image ReadImage(const std::filesystem::path& filepath, const ImageFormat format,
+    const bool flip)
 {
     int width, height, channels = 0;
     auto desiredChannels = static_cast<int>(NumberOfChannels(format));
 
     stbi_set_flip_vertically_on_load(flip);
 
-    const auto data =
-        stbi_load(filepath.c_str(), &width, &height, &channels, 
+    const auto data = stbi_load(filepath.c_str(),
+        &width,
+        &height,
+        &channels,
         desiredChannels);
 
     return Image(data, width, height, format);
@@ -113,7 +125,7 @@ bool WriteImage(
 
     const auto channels = NumberOfChannels(image.Format);
 
-    const auto writeResult = [filepath, image, channels, fileFormat](){
+    const auto writeResult = [filepath, image, channels, fileFormat]() {
         switch (fileFormat)
         {
         case ImageFileFormat::JPG:

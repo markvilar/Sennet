@@ -47,7 +47,7 @@ public:
     Image() = default;
     Image(const Image& image) = default;
     Image(Image&& image) = default;
-    Image(const uint8_t* data, const uint32_t width, const uint32_t height, 
+    Image(const uint8_t* data, const uint32_t width, const uint32_t height,
         const ImageFormat format);
     ~Image() = default;
 
@@ -56,8 +56,8 @@ public:
 };
 
 Image ReadImage(const std::filesystem::path& filepath, const bool flip = false);
-Image ReadImage(const std::filesystem::path& filepath, 
-    const ImageFormat format, const bool flip = false);
+Image ReadImage(const std::filesystem::path& filepath, const ImageFormat format,
+    const bool flip = false);
 
 bool WriteImage(const std::filesystem::path& filepath, const Image& image,
     const bool flip = false);

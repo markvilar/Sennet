@@ -12,7 +12,7 @@ namespace Sennet
 GLenum OpenGLInternalFormat(const ImageFormat& imageFormat)
 {
     const auto textureFormat = static_cast<TextureFormat>(imageFormat);
-    const auto internalFormat = [textureFormat](){
+    const auto internalFormat = [textureFormat]() {
         switch (textureFormat)
         {
         case TextureFormat::RED:
@@ -39,7 +39,7 @@ GLenum OpenGLInternalFormat(const ImageFormat& imageFormat)
 GLenum OpenGLDataFormat(const ImageFormat& imageFormat)
 {
     const auto textureFormat = static_cast<TextureFormat>(imageFormat);
-    const auto internalFormat = [textureFormat](){
+    const auto internalFormat = [textureFormat]() {
         switch (textureFormat)
         {
         case TextureFormat::RED:

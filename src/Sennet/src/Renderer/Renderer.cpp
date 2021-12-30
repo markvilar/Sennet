@@ -36,14 +36,8 @@ void Renderer::Init()
     constexpr std::array<uint8_t, 4> whiteColor = {255, 255, 255, 255};
     constexpr std::array<uint8_t, 4> blackColor = {0, 0, 0, 255};
 
-    Image whiteImage(whiteColor.data(),
-        width,
-        height,
-        ImageFormat::RGBA);
-    Image blackImage(blackColor.data(),
-        width,
-        height,
-        ImageFormat::RGBA);
+    Image whiteImage(whiteColor.data(), width, height, ImageFormat::RGBA);
+    Image blackImage(blackColor.data(), width, height, ImageFormat::RGBA);
 
     s_Data->WhiteTexture = Texture2D::Create(whiteImage);
     s_Data->BlackTexture = Texture2D::Create(blackImage);
