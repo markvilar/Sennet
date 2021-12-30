@@ -1,13 +1,7 @@
-# Ignore all directories by default
-**/
-
-# Allow directories within the project structure
-!cmake/*
-!examples/*
-!resources/*
-!scripts/*
-!src/*
-!test/*
+# Ignore some common directories
+bin/
+build/
+packages/
 
 # Vim files
 *.swp

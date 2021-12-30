@@ -21,9 +21,9 @@ target_sources(
            include/Sennet/Events/Event.hpp
            include/Sennet/Events/KeyEvent.hpp
            include/Sennet/Events/MouseEvent.hpp
-           include/Sennet/ImGui/imgui_impl_glfw.h
-           include/Sennet/ImGui/imgui_impl_opengl3.h
-           include/Sennet/ImGui/imgui_impl_opengl3_loader.h
+           include/Sennet/ImGui/ImGuiImplGLFW.hpp
+           include/Sennet/ImGui/ImGuiImplOpenGL3.hpp
+           include/Sennet/ImGui/ImGuiImplOpenGL3Loader.hpp
            include/Sennet/ImGui/ImGuiBuild.hpp
            include/Sennet/ImGui/ImGuiHelpers.hpp
            include/Sennet/ImGui/ImGuiLayer.hpp
@@ -63,8 +63,8 @@ target_sources(
             src/Core/Layer.cpp
             src/Core/LayerStack.cpp
             src/Core/Log.cpp
-            src/ImGui/imgui_impl_glfw.cpp
-            src/ImGui/imgui_impl_opengl3.cpp
+            src/ImGui/ImGuiImplGLFW.cpp
+            src/ImGui/ImGuiImplOpenGL3.cpp
             src/ImGui/ImGuiHelpers.cpp
             src/ImGui/ImGuiLayer.cpp
             src/Network/Socket.cpp
