@@ -1,5 +1,5 @@
-# Ignore all directories
-*/*
+# Ignore all directories by default
+**/
 
 # Allow directories within the project structure
 !cmake/
@@ -12,6 +12,7 @@
 # Vim files
 *.swp
 *.swo
+*.swa
 
 # Visual C++ cache files
 out/
