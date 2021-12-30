@@ -1,4 +1,4 @@
-# Ignore all directories by default
+# Ignore some common directories
 bin/
 build/
 packages/
