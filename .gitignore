@@ -2,12 +2,12 @@
 **/
 
 # Allow directories within the project structure
-!cmake/
-!examples/
-!resources/
-!scripts/
-!src/
-!test/
+!cmake/*
+!examples/*
+!resources/*
+!scripts/*
+!src/*
+!test/*
 
 # Vim files
 *.swp
