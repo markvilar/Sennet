@@ -1,6 +1,10 @@
 # Custom directories
-/bin*
-/build*
+**/
+!cmake/
+!examples/
+!resources/
+!src/
+!test/
 
 # Vim files
 *.swp
