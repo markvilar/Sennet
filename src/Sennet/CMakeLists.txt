@@ -21,12 +21,6 @@ target_sources(
            include/Sennet/Events/Event.hpp
            include/Sennet/Events/KeyEvent.hpp
            include/Sennet/Events/MouseEvent.hpp
-           include/Sennet/UI/UI.hpp
-           include/Sennet/UI/ImGuiImplGLFW.hpp
-           include/Sennet/UI/ImGuiImplOpenGL3.hpp
-           include/Sennet/UI/ImGuiImplOpenGL3Loader.hpp
-           include/Sennet/UI/ImGuiHelpers.hpp
-           include/Sennet/UI/ImGuiLayer.hpp
            include/Sennet/Network/Base.hpp
            include/Sennet/Network/Socket.hpp
            include/Sennet/Network/ThreadSafeQueue.hpp
@@ -57,16 +51,17 @@ target_sources(
            include/Sennet/Renderer/Shader.hpp
            include/Sennet/Renderer/Texture.hpp
            include/Sennet/Renderer/VertexArray.hpp
+           include/Sennet/UI/UI.hpp
+           include/Sennet/UI/ImGuiImplGLFW.hpp
+           include/Sennet/UI/ImGuiImplOpenGL3.hpp
+           include/Sennet/UI/ImGuiImplOpenGL3Loader.hpp
+           include/Sennet/UI/ImGuiLayer.hpp
            include/Sennet/Utils/FileSystem.hpp
            include/Sennet/Utils/Math.hpp
     PRIVATE src/Core/Application.cpp
             src/Core/Layer.cpp
             src/Core/LayerStack.cpp
             src/Core/Log.cpp
-            src/UI/ImGuiImplGLFW.cpp
-            src/UI/ImGuiImplOpenGL3.cpp
-            src/UI/ImGuiHelpers.cpp
-            src/UI/ImGuiLayer.cpp
             src/Network/Socket.cpp
             src/Platform/OpenGL/OpenGLBuffer.cpp
             src/Platform/OpenGL/OpenGLFramebuffer.cpp
@@ -93,6 +88,10 @@ target_sources(
             src/Renderer/Shader.cpp
             src/Renderer/Texture.cpp
             src/Renderer/VertexArray.cpp
+            src/UI/UI.cpp
+            src/UI/ImGuiImplGLFW.cpp
+            src/UI/ImGuiImplOpenGL3.cpp
+            src/UI/ImGuiLayer.cpp
             src/Utils/FileSystem.cpp)
 
 target_precompile_headers(sennet PRIVATE include/Sennet/Pch.hpp)
