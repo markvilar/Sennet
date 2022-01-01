@@ -1,6 +1,6 @@
-#include "Sennet/ImGui/ImGuiHelpers.hpp"
+#include "Sennet/UI/ImGuiHelpers.hpp"
 
-#include "imgui.h"
+#include "Sennet/UI/UI.hpp"
 
 namespace Sennet
 {

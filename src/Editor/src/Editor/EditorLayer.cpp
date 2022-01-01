@@ -1,8 +1,8 @@
 #include "Editor/EditorLayer.hpp"
 
-#include "Sennet/Utils/Math.hpp"
+#include "Sennet/UI/UI.hpp"
 
-#include <imgui.h>
+#include "Sennet/Utils/Math.hpp"
 
 #include <array>
 

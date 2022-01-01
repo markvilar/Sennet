@@ -9,7 +9,7 @@
 #include "Sennet/Events/ApplicationEvent.hpp"
 #include "Sennet/Events/Event.hpp"
 
-#include "Sennet/ImGui/ImGuiLayer.hpp"
+#include "Sennet/UI/ImGuiLayer.hpp"
 
 #include "Sennet/Renderer/Renderer.hpp"
 

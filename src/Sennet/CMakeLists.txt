@@ -21,12 +21,12 @@ target_sources(
            include/Sennet/Events/Event.hpp
            include/Sennet/Events/KeyEvent.hpp
            include/Sennet/Events/MouseEvent.hpp
-           include/Sennet/ImGui/ImGuiImplGLFW.hpp
-           include/Sennet/ImGui/ImGuiImplOpenGL3.hpp
-           include/Sennet/ImGui/ImGuiImplOpenGL3Loader.hpp
-           include/Sennet/ImGui/ImGuiBuild.hpp
-           include/Sennet/ImGui/ImGuiHelpers.hpp
-           include/Sennet/ImGui/ImGuiLayer.hpp
+           include/Sennet/UI/UI.hpp
+           include/Sennet/UI/ImGuiImplGLFW.hpp
+           include/Sennet/UI/ImGuiImplOpenGL3.hpp
+           include/Sennet/UI/ImGuiImplOpenGL3Loader.hpp
+           include/Sennet/UI/ImGuiHelpers.hpp
+           include/Sennet/UI/ImGuiLayer.hpp
            include/Sennet/Network/Base.hpp
            include/Sennet/Network/Socket.hpp
            include/Sennet/Network/ThreadSafeQueue.hpp
@@ -63,10 +63,10 @@ target_sources(
             src/Core/Layer.cpp
             src/Core/LayerStack.cpp
             src/Core/Log.cpp
-            src/ImGui/ImGuiImplGLFW.cpp
-            src/ImGui/ImGuiImplOpenGL3.cpp
-            src/ImGui/ImGuiHelpers.cpp
-            src/ImGui/ImGuiLayer.cpp
+            src/UI/ImGuiImplGLFW.cpp
+            src/UI/ImGuiImplOpenGL3.cpp
+            src/UI/ImGuiHelpers.cpp
+            src/UI/ImGuiLayer.cpp
             src/Network/Socket.cpp
             src/Platform/OpenGL/OpenGLBuffer.cpp
             src/Platform/OpenGL/OpenGLFramebuffer.cpp
@@ -114,8 +114,8 @@ target_include_directories(
 target_link_libraries(
     sennet
     PUBLIC asio::asio
-           imgui::imgui
            glm::glm
+           imgui::imgui
            spdlog::spdlog
     PRIVATE glad::glad
             glfw::glfw

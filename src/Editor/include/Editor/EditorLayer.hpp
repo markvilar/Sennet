@@ -1,4 +1,5 @@
 #pragma once
+
 #include "Sennet/Sennet.hpp"
 
 namespace Sennet

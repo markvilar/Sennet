@@ -2,19 +2,19 @@
 
 #include "Sennet/Core/Application.hpp"
 #include "Sennet/Core/Base.hpp"
-#include "Sennet/Core/Layer.hpp"
-#include "Sennet/Core/Log.hpp"
-#include "Sennet/Core/Timestep.hpp"
-
 #include "Sennet/Core/Input.hpp"
 #include "Sennet/Core/KeyCodes.hpp"
+#include "Sennet/Core/Layer.hpp"
+#include "Sennet/Core/Log.hpp"
 #include "Sennet/Core/MouseCodes.hpp"
+#include "Sennet/Core/Timestep.hpp"
+#include "Sennet/Core/Window.hpp"
 
 #include "Sennet/Debug/Instrumentor.hpp"
 
-#include "Sennet/ImGui/ImGuiBuild.hpp"
-#include "Sennet/ImGui/ImGuiHelpers.hpp"
-#include "Sennet/ImGui/ImGuiLayer.hpp"
+#include "Sennet/UI/UI.hpp"
+#include "Sennet/UI/ImGuiHelpers.hpp"
+#include "Sennet/UI/ImGuiLayer.hpp"
 
 #include "Sennet/Network/TCP/Client.hpp"
 #include "Sennet/Network/TCP/Connection.hpp"

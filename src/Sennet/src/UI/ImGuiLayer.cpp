@@ -1,11 +1,9 @@
-#include "Sennet/ImGui/ImGuiLayer.hpp"
+#include "Sennet/UI/ImGuiLayer.hpp"
 #include "Sennet/Pch.hpp"
 
-#include "imgui.h"
-
-#include "Sennet/ImGui/ImGuiBuild.hpp"
-
 #include "Sennet/Core/Application.hpp"
+
+#include "Sennet/UI/UI.hpp"
 
 // TODO: TEMPORARY
 #include "GLFW/glfw3.h"
