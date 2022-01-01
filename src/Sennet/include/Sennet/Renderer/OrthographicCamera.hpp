@@ -1,6 +1,6 @@
 #pragma once
 
-#include <glm/glm.hpp>
+#include "Sennet/Utils/Math.hpp"
 
 namespace Sennet
 {
@@ -12,8 +12,8 @@ public:
 
     void SetProjection(float left, float right, float bottom, float top);
 
-    const glm::vec3& GetPosition() const { return m_Position; }
-    void SetPosition(const glm::vec3& position)
+    const Vec3& GetPosition() const { return m_Position; }
+    void SetPosition(const Vec3& position)
     {
         m_Position = position;
         RecalculateViewMatrix();
@@ -26,11 +26,11 @@ public:
         RecalculateViewMatrix();
     }
 
-    const glm::mat4& GetProjectionMatrix() const { return m_ProjectionMatrix; }
+    const Mat4& GetProjectionMatrix() const { return m_ProjectionMatrix; }
 
-    const glm::mat4& GetViewMatrix() const { return m_ViewMatrix; }
+    const Mat4& GetViewMatrix() const { return m_ViewMatrix; }
 
-    const glm::mat4& GetViewProjectionMatrix() const
+    const Mat4& GetViewProjectionMatrix() const
     {
         return m_ViewProjectionMatrix;
     }
@@ -39,11 +39,11 @@ private:
     void RecalculateViewMatrix();
 
 private:
-    glm::mat4 m_ProjectionMatrix;
-    glm::mat4 m_ViewMatrix;
-    glm::mat4 m_ViewProjectionMatrix;
+    Mat4 m_ProjectionMatrix;
+    Mat4 m_ViewMatrix;
+    Mat4 m_ViewProjectionMatrix;
 
-    glm::vec3 m_Position = {0.0f, 0.0f, 0.0f};
+    Vec3 m_Position = {0.0f, 0.0f, 0.0f};
     float m_Rotation = 0.0f; // Rotation in radians.
 };
 

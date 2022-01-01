@@ -35,6 +35,16 @@ template <typename... Args> Mat4 Scale(Args... args)
     return glm::scale(args...);
 }
 
+template <typename... Args> Mat4 Ortho(Args... args)
+{
+    return glm::ortho(args...);
+}
+
+template <typename... Args> Mat4 Inverse(Args... args)
+{
+    return glm::inverse(args...);
+}
+
 template <typename T> typename T::value_type* ValuePtr(T& t)
 {
     return glm::value_ptr(t);
