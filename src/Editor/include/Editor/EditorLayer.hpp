@@ -1,4 +1,5 @@
 #pragma once
+
 #include "Sennet/Sennet.hpp"
 
 namespace Sennet
@@ -35,16 +36,8 @@ public:
 private:
     ImGuiWindowFlags ConfigureImGui(const bool fullscreen);
 
-    // ImGui functions.
     void RenderViewport(const InterfaceLayout& layout);
-
-    void RenderLeftPanel(const InterfaceLayout& layout);
-    void RenderRightPanel(const InterfaceLayout& layout);
-    void RenderBottomPanel(const InterfaceLayout& layout);
-
     void RenderMainMenu(const InterfaceLayout& layout);
-
-    void SetDarkThemeColors();
 
 private:
     OrthographicCameraController m_CameraController;

@@ -62,7 +62,7 @@
 //  unavailable/missing (instead of -1,-1). 2016-10-15: Misc: Added a void*
 //  user_data parameter to Clipboard function handlers.
 
-#include "Sennet/ImGui/ImGuiImplGLFW.hpp"
+#include "Sennet/UI/ImGuiImplGLFW.hpp"
 #include "imgui.h"
 
 // GLFW
