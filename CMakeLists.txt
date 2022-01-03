@@ -5,6 +5,11 @@ project(
     VERSION 0.1
     LANGUAGES CXX)
 
+option(SENNET_BUILD_EDITOR "Build editor." ON)
+option(SENNET_BUILD_SHARED "Build shared library." OFF)
+option(SENNET_BUILD_EXAMPLE "Build examples." ON)
+option(SENNET_BUILD_WARNINGS "Enable compiler warnings." ON)
+
 include(cmake/ProjectSettings.cmake)
 include(cmake/PreventInSourceBuild.cmake)
 
@@ -32,7 +37,13 @@ include(cmake/Doxygen.cmake)
 enable_doxygen()
 
 # Add library.
-add_subdirectory(src)
+add_subdirectory(sennet)
+
+if(SENNET_BUILD_EDITOR)
+    add_subdirectory(editor)
+endif()
 
 # Add examples.
-add_subdirectory(examples)
+if(SENNET_BUILD_EXAMPLES)
+    add_subdirectory(examples)
+endif()

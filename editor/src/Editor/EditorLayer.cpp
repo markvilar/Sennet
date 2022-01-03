@@ -171,10 +171,6 @@ void EditorLayer::OnImGuiRender()
     const auto bottomInterfaceLayout =
         CalculateBottomPanelLayout(windowSize.first, windowSize.second);
 
-    const auto fullscreen =
-        Sennet::Application::Get().GetSpecification().Fullscreen;
-    //const auto windowFlags = UI::ConfigureWindowFlags(fullscreen);
-
     UI::AddMainMenuBar([]() {
         static bool showImGuiDemoWindow = false;
         static bool showImGuiMetrics = false;
