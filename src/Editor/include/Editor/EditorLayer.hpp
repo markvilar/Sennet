@@ -34,12 +34,6 @@ public:
     virtual void OnEvent(Event& e) override;
 
 private:
-    ImGuiWindowFlags ConfigureImGui(const bool fullscreen);
-
-    void RenderViewport(const InterfaceLayout& layout);
-    void RenderMainMenu(const InterfaceLayout& layout);
-
-private:
     OrthographicCameraController m_CameraController;
 
     Image m_Image;

@@ -173,112 +173,14 @@ void EditorLayer::OnImGuiRender()
 
     const auto fullscreen =
         Sennet::Application::Get().GetSpecification().Fullscreen;
-    const auto windowFlags = ConfigureImGui(fullscreen);
+    //const auto windowFlags = UI::ConfigureWindowFlags(fullscreen);
 
-    RenderMainMenu(mainMenuLayout);
+    UI::AddMainMenuBar([]() {
+        static bool showImGuiDemoWindow = false;
+        static bool showImGuiMetrics = false;
+        static bool showImGuiStackTool = false;
+        static bool showFileSystemPopup = false;
 
-    RenderViewport(viewportLayout);
-
-    UI::AddWindow("Left", leftInterfaceLayout.Position,
-        rightInterfaceLayout.Size, [this]
-    {
-        auto stats = Sennet::Renderer2D::GetStats();
-        ImGui::Text("Renderer2D Stats:");
-        ImGui::Text("Draw Calls: %d", stats.DrawCalls);
-        ImGui::Text("Quads: %d", stats.QuadCount);
-        ImGui::Text("Vertices: %d", stats.GetTotalVertexCount());
-        ImGui::Text("Indices: %d", stats.GetTotalIndexCount());
-
-        ImGui::ColorEdit4("Square Color", ValuePtr(m_QuadColor));
-
-        static bool flipImage = false;
-        static char imagePath[256] = "";
-        ImGui::InputText("Image path", imagePath, IM_ARRAYSIZE(imagePath));
-        if (ImGui::Button("Load image"))
-        {
-            if (Sennet::FileSystem::IsFile(imagePath))
-            {
-                m_Texture = Texture2D::Create(ReadImage(imagePath, flipImage));
-                SENNET_INFO("Loaded image: {}", imagePath);
-            }
-        }
-        ImGui::SameLine();
-        ImGui::Checkbox("Flip image", &flipImage);
-    });
-
-    UI::AddWindow("Right", rightInterfaceLayout.Position, 
-        rightInterfaceLayout.Size, []
-    {
-        // TODO: Add functionality here.
-        ImGui::TextUnformatted("This is a text field.");
-    });
-
-
-    UI::AddWindow("Bottom", bottomInterfaceLayout.Position,
-        bottomInterfaceLayout.Size, []
-    {
-        // TODO: Add functionality here.
-        ImGui::TextUnformatted("This is a text field.");
-    });
-}
-
-void EditorLayer::OnEvent(Event& e) { m_CameraController.OnEvent(e); }
-
-ImGuiWindowFlags EditorLayer::ConfigureImGui(const bool fullscreen)
-{
-    ImGuiWindowFlags windowFlags = ImGuiWindowFlags_MenuBar;
-    if (fullscreen)
-    {
-        ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
-        ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
-        ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{0.0f, 0.0f});
-
-        windowFlags |= ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse
-            | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove;
-        windowFlags |= ImGuiWindowFlags_NoBringToFrontOnFocus
-            | ImGuiWindowFlags_NoNavFocus;
-        ImGui::PopStyleVar(3);
-    }
-    return windowFlags;
-}
-
-void EditorLayer::RenderViewport(const InterfaceLayout& layout)
-{
-    ImGui::SetNextWindowPos(ImVec2(layout.Position.x, layout.Position.y),
-        ImGuiCond_Always);
-    ImGui::SetNextWindowSize(ImVec2(layout.Size.x, layout.Size.y),
-        ImGuiCond_Always);
-
-    ImGui::Begin("Viewport",
-        nullptr,
-        ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize
-            | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse
-            | ImGuiWindowFlags_NoBringToFrontOnFocus
-            | ImGuiWindowFlags_NoScrollbar);
-
-    m_ViewportFocused = ImGui::IsWindowFocused();
-    m_ViewportHovered = ImGui::IsWindowHovered();
-    Application::Get().GetImGuiLayer()->BlockEvents(
-        !m_ViewportFocused || !m_ViewportHovered);
-
-    auto textureID = m_ViewportFramebuffer->GetColorAttachmentRendererID();
-    ImGui::Image(reinterpret_cast<void*>(textureID),
-        ImVec2{layout.Size.x, layout.Size.y},
-        ImVec2{0, 1},
-        ImVec2{1, 0});
-    ImGui::End();
-}
-
-void EditorLayer::RenderMainMenu(const InterfaceLayout& layout)
-{
-    // ImGui static variables.
-    static bool showImGuiDemoWindow = false;
-    static bool showImGuiMetrics = false;
-    static bool showImGuiStackTool = false;
-    static bool showFileSystemPopup = false;
-
-    if (ImGui::BeginMainMenuBar())
-    {
         if (ImGui::BeginMenu("File"))
         {
             if (ImGui::MenuItem("Open", "Ctrl+O"))
@@ -342,15 +244,72 @@ void EditorLayer::RenderMainMenu(const InterfaceLayout& layout)
             ImGui::Checkbox("Show ImGui stack tool", &showImGuiStackTool);
             ImGui::EndMenu();
         }
-        ImGui::EndMainMenuBar();
-    }
 
-    if (showImGuiDemoWindow)
-        ImGui::ShowDemoWindow();
-    if (showImGuiMetrics)
-        ImGui::ShowMetricsWindow();
-    if (showImGuiStackTool)
-        ImGui::ShowStackToolWindow();
+        if (showImGuiDemoWindow)
+            ImGui::ShowDemoWindow();
+        if (showImGuiMetrics)
+            ImGui::ShowMetricsWindow();
+        if (showImGuiStackTool)
+            ImGui::ShowStackToolWindow();
+    });
+
+    UI::AddViewport("Viewport",
+        viewportLayout.Position,
+        viewportLayout.Size,
+        m_ViewportFramebuffer,
+        [this] {
+            m_ViewportFocused = ImGui::IsWindowFocused();
+            m_ViewportHovered = ImGui::IsWindowHovered();
+            Application::Get().GetImGuiLayer()->BlockEvents(
+                !m_ViewportFocused || !m_ViewportHovered);
+        });
+
+    UI::AddWindow("Left",
+        leftInterfaceLayout.Position,
+        rightInterfaceLayout.Size,
+        [this] {
+            auto stats = Sennet::Renderer2D::GetStats();
+            ImGui::Text("Renderer2D Stats:");
+            ImGui::Text("Draw Calls: %d", stats.DrawCalls);
+            ImGui::Text("Quads: %d", stats.QuadCount);
+            ImGui::Text("Vertices: %d", stats.GetTotalVertexCount());
+            ImGui::Text("Indices: %d", stats.GetTotalIndexCount());
+
+            ImGui::ColorEdit4("Square Color", ValuePtr(m_QuadColor));
+
+            static bool flipImage = false;
+            static char imagePath[256] = "";
+            ImGui::InputText("Image path", imagePath, IM_ARRAYSIZE(imagePath));
+            if (ImGui::Button("Load image"))
+            {
+                if (Sennet::FileSystem::IsFile(imagePath))
+                {
+                    m_Texture =
+                        Texture2D::Create(ReadImage(imagePath, flipImage));
+                    SENNET_INFO("Loaded image: {}", imagePath);
+                }
+            }
+            ImGui::SameLine();
+            ImGui::Checkbox("Flip image", &flipImage);
+        });
+
+    UI::AddWindow("Right",
+        rightInterfaceLayout.Position,
+        rightInterfaceLayout.Size,
+        [] {
+            // TODO: Add functionality here.
+            ImGui::TextUnformatted("This is a text field.");
+        });
+
+    UI::AddWindow("Bottom",
+        bottomInterfaceLayout.Position,
+        bottomInterfaceLayout.Size,
+        [] {
+            // TODO: Add functionality here.
+            ImGui::TextUnformatted("This is a text field.");
+        });
 }
+
+void EditorLayer::OnEvent(Event& e) { m_CameraController.OnEvent(e); }
 
 } // namespace Sennet
