@@ -5,6 +5,19 @@ namespace Sennet
 namespace UI
 {
 
+WindowFlags ConfigureWindowFlags(const bool fullscreen)
+{
+    ImGuiWindowFlags windowFlags = ImGuiWindowFlags_MenuBar;
+    if (fullscreen)
+    {
+        windowFlags |= ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse
+            | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove;
+        windowFlags |= ImGuiWindowFlags_NoBringToFrontOnFocus
+            | ImGuiWindowFlags_NoNavFocus;
+    }
+    return windowFlags;
+}
+
 void SetDarkTheme(Style& style)
 {
     auto& colors = style.Colors;
