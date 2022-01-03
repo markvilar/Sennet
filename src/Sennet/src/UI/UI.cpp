@@ -1,6 +1,9 @@
 #include "Sennet/UI/UI.hpp"
 
-namespace Sennet { namespace UI {
+namespace Sennet
+{
+namespace UI
+{
 
 void SetDarkTheme(Style& style)
 {
@@ -66,5 +69,5 @@ void ImGuiHelpMarker(const char* desc)
     }
 }
 
-}
-}
+} // namespace UI
+} // namespace Sennet

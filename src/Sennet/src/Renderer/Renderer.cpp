@@ -29,7 +29,8 @@ void Renderer::Init()
     s_Data->Library = CreateRef<ShaderLibrary>();
 
     // TODO: Fix working directory and shader paths.
-    Renderer::GetShaderLibrary()->Load("../../resources/shaders/Renderer2D.glsl");
+    Renderer::GetShaderLibrary()->Load(
+        "../../resources/shaders/Renderer2D.glsl");
 
     constexpr uint32_t width = 1;
     constexpr uint32_t height = 1;

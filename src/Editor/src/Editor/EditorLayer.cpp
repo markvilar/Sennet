@@ -179,47 +179,50 @@ void EditorLayer::OnImGuiRender()
 
     RenderViewport(viewportLayout);
 
-    UI::AddWindow("Left", leftInterfaceLayout.Position,
-        rightInterfaceLayout.Size, [this]
-    {
-        auto stats = Sennet::Renderer2D::GetStats();
-        ImGui::Text("Renderer2D Stats:");
-        ImGui::Text("Draw Calls: %d", stats.DrawCalls);
-        ImGui::Text("Quads: %d", stats.QuadCount);
-        ImGui::Text("Vertices: %d", stats.GetTotalVertexCount());
-        ImGui::Text("Indices: %d", stats.GetTotalIndexCount());
+    UI::AddWindow("Left",
+        leftInterfaceLayout.Position,
+        rightInterfaceLayout.Size,
+        [this] {
+            auto stats = Sennet::Renderer2D::GetStats();
+            ImGui::Text("Renderer2D Stats:");
+            ImGui::Text("Draw Calls: %d", stats.DrawCalls);
+            ImGui::Text("Quads: %d", stats.QuadCount);
+            ImGui::Text("Vertices: %d", stats.GetTotalVertexCount());
+            ImGui::Text("Indices: %d", stats.GetTotalIndexCount());
 
-        ImGui::ColorEdit4("Square Color", ValuePtr(m_QuadColor));
+            ImGui::ColorEdit4("Square Color", ValuePtr(m_QuadColor));
 
-        static bool flipImage = false;
-        static char imagePath[256] = "";
-        ImGui::InputText("Image path", imagePath, IM_ARRAYSIZE(imagePath));
-        if (ImGui::Button("Load image"))
-        {
-            if (Sennet::FileSystem::IsFile(imagePath))
+            static bool flipImage = false;
+            static char imagePath[256] = "";
+            ImGui::InputText("Image path", imagePath, IM_ARRAYSIZE(imagePath));
+            if (ImGui::Button("Load image"))
             {
-                m_Texture = Texture2D::Create(ReadImage(imagePath, flipImage));
-                SENNET_INFO("Loaded image: {}", imagePath);
+                if (Sennet::FileSystem::IsFile(imagePath))
+                {
+                    m_Texture =
+                        Texture2D::Create(ReadImage(imagePath, flipImage));
+                    SENNET_INFO("Loaded image: {}", imagePath);
+                }
             }
-        }
-        ImGui::SameLine();
-        ImGui::Checkbox("Flip image", &flipImage);
-    });
+            ImGui::SameLine();
+            ImGui::Checkbox("Flip image", &flipImage);
+        });
 
-    UI::AddWindow("Right", rightInterfaceLayout.Position, 
-        rightInterfaceLayout.Size, []
-    {
-        // TODO: Add functionality here.
-        ImGui::TextUnformatted("This is a text field.");
-    });
+    UI::AddWindow("Right",
+        rightInterfaceLayout.Position,
+        rightInterfaceLayout.Size,
+        [] {
+            // TODO: Add functionality here.
+            ImGui::TextUnformatted("This is a text field.");
+        });
 
-
-    UI::AddWindow("Bottom", bottomInterfaceLayout.Position,
-        bottomInterfaceLayout.Size, []
-    {
-        // TODO: Add functionality here.
-        ImGui::TextUnformatted("This is a text field.");
-    });
+    UI::AddWindow("Bottom",
+        bottomInterfaceLayout.Position,
+        bottomInterfaceLayout.Size,
+        [] {
+            // TODO: Add functionality here.
+            ImGui::TextUnformatted("This is a text field.");
+        });
 }
 
 void EditorLayer::OnEvent(Event& e) { m_CameraController.OnEvent(e); }

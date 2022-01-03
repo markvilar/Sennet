@@ -32,8 +32,8 @@
 #include "Sennet/Renderer/Texture.hpp"
 #include "Sennet/Renderer/VertexArray.hpp"
 
-#include "Sennet/UI/UI.hpp"
 #include "Sennet/UI/ImGuiLayer.hpp"
+#include "Sennet/UI/UI.hpp"
 
 #include "Sennet/Utils/FileSystem.hpp"
 #include "Sennet/Utils/Math.hpp"
