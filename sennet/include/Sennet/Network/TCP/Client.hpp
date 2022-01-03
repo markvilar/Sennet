@@ -6,11 +6,7 @@
 #include "Sennet/Network/TCP/Message.hpp"
 #include "Sennet/Network/ThreadSafeQueue.hpp"
 
-namespace Sennet
-{
-
-namespace TCP
-{
+namespace Sennet::TCP {
 
 template <typename T> class Client
 {
@@ -98,5 +94,4 @@ private:
     ThreadSafeQueue<OwnedMessage<T>> m_MessagesIn;
 };
 
-} // namespace TCP
-} // namespace Sennet
+} // namespace Sennet::TCP

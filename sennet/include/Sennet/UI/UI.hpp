@@ -10,10 +10,7 @@
 
 #include <string>
 
-namespace Sennet
-{
-
-namespace UI
+namespace Sennet::UI
 {
 
 typedef ImGuiWindowFlags WindowFlags;
@@ -91,5 +88,4 @@ void SetDarkTheme(Style& style);
 
 void ImGuiHelpMarker(const char* desc);
 
-} // namespace UI
-} // namespace Sennet
+} // namespace Sennet::UI

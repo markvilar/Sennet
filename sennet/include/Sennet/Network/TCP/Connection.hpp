@@ -5,10 +5,7 @@
 #include "Sennet/Network/TCP/Message.hpp"
 #include "Sennet/Network/ThreadSafeQueue.hpp"
 
-namespace Sennet
-{
-
-namespace TCP
+namespace Sennet::TCP
 {
 
 template <typename T>
@@ -222,5 +219,4 @@ protected:
     Message<T> m_MessageTemporaryIn;
 };
 
-} // namespace TCP
-} // namespace Sennet
+} // namespace Sennet::TCP

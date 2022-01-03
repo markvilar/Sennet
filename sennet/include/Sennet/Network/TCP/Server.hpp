@@ -6,10 +6,7 @@
 #include "Sennet/Network/TCP/Message.hpp"
 #include "Sennet/Network/ThreadSafeQueue.hpp"
 
-namespace Sennet
-{
-
-namespace TCP
+namespace Sennet::TCP
 {
 
 template <typename T> class Server
@@ -171,5 +168,4 @@ protected:
     std::deque<Ref<Connection<T>>> m_Connections;
 };
 
-} // namespace TCP
-} // namespace Sennet
+} // namespace Sennet::TCP

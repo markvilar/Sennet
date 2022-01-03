@@ -1,9 +1,6 @@
 #pragma once
 
-namespace Sennet
-{
-
-namespace TCP
+namespace Sennet::TCP
 {
 
 template <typename T> struct MessageHeader
@@ -123,5 +120,4 @@ template <typename T> struct OwnedMessage
     }
 };
 
-} // namespace TCP
-} // namespace Sennet
+} // namespace Sennet::TCP
