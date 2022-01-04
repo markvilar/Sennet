@@ -2,7 +2,7 @@
 add_executable(editor-app Editor.cpp)
 target_compile_definitions(editor-app PRIVATE)
 target_compile_features(editor-app PRIVATE cxx_std_17)
-target_link_libraries(editor-app PRIVATE sennet::editor)
+target_link_libraries(editor-app PRIVATE pine::editor)
 
 set_target_properties(
     editor-app

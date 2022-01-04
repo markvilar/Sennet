@@ -1,18 +1,18 @@
-#include "Sennet/Sennet.hpp"
-
-#include "Editor/EditorLayer.hpp"
-
 #include <filesystem>
 #include <string_view>
 
-class Editor : public Sennet::Application
+#include "Pine/Pine.hpp"
+
+#include "Editor/EditorLayer.hpp"
+
+class Editor : public Pine::Application
 {
 public:
-    Editor(const Sennet::Application::Specification& specs,
+    Editor(const Pine::Application::Specification& specs,
         const std::string_view projectPath)
-        : Sennet::Application(specs), m_ProjectPath(projectPath)
+        : Pine::Application(specs), m_ProjectPath(projectPath)
     {
-        PushLayer(new Sennet::EditorLayer());
+        PushLayer(new Pine::EditorLayer());
     }
 
     ~Editor() {}
@@ -20,10 +20,10 @@ public:
 private:
     std::filesystem::path m_ProjectPath;
     std::filesystem::path m_StoragePath;
-    // TODO: Sennet::UserPreferences m_Preferences;
+    // TODO: Pine::UserPreferences m_Preferences;
 };
 
-Sennet::Application* Sennet::CreateApplication(int argc, char** argv)
+Pine::Application* Pine::CreateApplication(int argc, char** argv)
 {
     std::string_view projectPath;
     if (argc > 1)
@@ -31,7 +31,7 @@ Sennet::Application* Sennet::CreateApplication(int argc, char** argv)
         projectPath = argv[1];
     }
 
-    Sennet::Application::Specification specs;
+    Pine::Application::Specification specs;
     specs.WorkingDirectory = ".";
     specs.Name = "Editor";
     specs.WindowWidth = 1280;
@@ -40,16 +40,16 @@ Sennet::Application* Sennet::CreateApplication(int argc, char** argv)
     specs.VSync = true;
     specs.Resizable = true;
     specs.EnableImGui = true;
-    specs.Fullscreen = false;
+    specs.Fullscreen = true;
 
     return new Editor(specs, projectPath);
 }
 
 int main(int argc, char** argv)
 {
-    Sennet::Log::Init();
+    Pine::Log::Init();
 
-    auto app = Sennet::CreateApplication(argc, argv);
+    auto app = Pine::CreateApplication(argc, argv);
     app->Run();
 
     return 0;

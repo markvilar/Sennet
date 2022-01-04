@@ -2,7 +2,7 @@
 #include <functional>
 #include <thread>
 
-#include "Sennet/Sennet.hpp"
+#include "Pine/Pine.hpp"
 
 enum class CustomMessageTypes : uint32_t
 {
@@ -13,34 +13,34 @@ enum class CustomMessageTypes : uint32_t
     ServerMessage,
 };
 
-class CustomServer : public Sennet::TCP::Server<CustomMessageTypes>
+class CustomServer : public Pine::TCP::Server<CustomMessageTypes>
 {
 public:
-    CustomServer(uint16_t port) : Sennet::TCP::Server<CustomMessageTypes>(port)
+    CustomServer(uint16_t port) : Pine::TCP::Server<CustomMessageTypes>(port)
     {
     }
 
 protected:
     virtual bool OnClientConnect(
-        Sennet::Ref<Sennet::TCP::Connection<CustomMessageTypes>> client)
+        Pine::Ref<Pine::TCP::Connection<CustomMessageTypes>> client)
         override
     {
         return true;
     }
 
     virtual void OnClientDisconnect(
-        Sennet::Ref<Sennet::TCP::Connection<CustomMessageTypes>>) override
+        Pine::Ref<Pine::TCP::Connection<CustomMessageTypes>>) override
     {
     }
 
     virtual void OnMessage(
-        Sennet::Ref<Sennet::TCP::Connection<CustomMessageTypes>> client,
-        Sennet::TCP::Message<CustomMessageTypes>& message) override
+        Pine::Ref<Pine::TCP::Connection<CustomMessageTypes>> client,
+        Pine::TCP::Message<CustomMessageTypes>& message) override
     {
         switch (message.Header.ID)
         {
         case CustomMessageTypes::ServerPing:
-            SENNET_INFO("[{0}] Server Ping.", client->GetID());
+            PINE_INFO("[{0}] Server Ping.", client->GetID());
             // Bounce message back to client.
             client->Send(message);
             break;
@@ -52,7 +52,7 @@ protected:
 
 int main(int argc, char** argv)
 {
-    Sennet::Log::Init();
+    Pine::Log::Init();
     CustomServer server(60000);
     server.Start();
 

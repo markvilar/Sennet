@@ -1,1 +1,1 @@
-cppcheck src/ -i src/Sennet/src/ImGui
+cppcheck src/ -i pine/src/Core

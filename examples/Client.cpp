@@ -2,7 +2,7 @@
 #include <functional>
 #include <thread>
 
-#include "Sennet/Sennet.hpp"
+#include "Pine/Pine.hpp"
 
 enum class CustomMessageTypes : uint32_t
 {
@@ -13,12 +13,12 @@ enum class CustomMessageTypes : uint32_t
     ServerMessage,
 };
 
-class CustomClient : public Sennet::TCP::Client<CustomMessageTypes>
+class CustomClient : public Pine::TCP::Client<CustomMessageTypes>
 {
 public:
     void PingServer()
     {
-        Sennet::TCP::Message<CustomMessageTypes> message;
+        Pine::TCP::Message<CustomMessageTypes> message;
         message.Header.ID = CustomMessageTypes::ServerPing;
         std::chrono::system_clock::time_point time =
             std::chrono::system_clock::now();
@@ -30,7 +30,7 @@ public:
 
 int main(int argc, char** argv)
 {
-    Sennet::Log::Init();
+    Pine::Log::Init();
 
     CustomClient client;
     client.Connect("10.42.0.35", 60000);
@@ -44,7 +44,7 @@ int main(int argc, char** argv)
             if (!sent)
             {
                 std::this_thread::sleep_for(std::chrono::seconds(1));
-                SENNET_INFO("Pinging server!");
+                PINE_INFO("Pinging server!");
                 client.PingServer();
                 sent = true;
             }
@@ -61,7 +61,7 @@ int main(int argc, char** argv)
                     t = std::chrono::system_clock::now();
                     message >> z;
                     time = std::chrono::duration<double>(t - z).count();
-                    SENNET_INFO("Ping: {0}", time);
+                    PINE_INFO("Ping: {0}", time);
                     break;
                 default:
                     break;
@@ -70,7 +70,7 @@ int main(int argc, char** argv)
         }
         else
         {
-            SENNET_INFO("Server Down.");
+            PINE_INFO("Server Down.");
             quit = true;
         }
     }

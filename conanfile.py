@@ -1,14 +1,12 @@
 from conans import ConanFile, CMake, tools
 
-class Sennet(ConanFile):
-    name = "sennet"
+class Pine(ConanFile):
+    name = "pine"
     version = "0.1"
     generators = "cmake_find_package"
     settings = "os", "compiler", "build_type", "arch"
     license = "Apache 2.0"
     author = "Martin Kvisvik Larsen"
-
-    _source_dir = ""
 
     def source(self):
         """  Defines the source code origin. """
@@ -30,7 +28,6 @@ class Sennet(ConanFile):
     def requirements(self):
         """ Specifies the requirements of the package. """
         self.requires("asio/1.18.0")
-        self.requires("entt/3.8.1")
         self.requires("glad/0.1.34")
         self.requires("glfw/3.3.4")
         self.requires("glm/0.9.9.8")

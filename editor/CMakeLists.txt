@@ -1,16 +1,16 @@
 add_library(editor STATIC)
-add_library(sennet::editor ALIAS editor)
+add_library(pine::editor ALIAS editor)
 
 target_sources(
     editor
     PUBLIC include/Editor/EditorLayer.hpp
-    PRIVATE src/Editor/EditorLayer.cpp)
+    PRIVATE src/EditorLayer.cpp)
 
 target_include_directories(editor PUBLIC include)
 
 add_subdirectory(app)
 
-target_link_libraries(editor PUBLIC sennet::sennet)
+target_link_libraries(editor PUBLIC pine::pine)
 target_compile_definitions(editor PUBLIC)
 target_compile_features(editor PUBLIC cxx_std_17)
 target_compile_options(editor PRIVATE -std=c++17)

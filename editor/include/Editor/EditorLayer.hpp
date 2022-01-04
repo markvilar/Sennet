@@ -1,8 +1,8 @@
 #pragma once
 
-#include "Sennet/Sennet.hpp"
+#include "Pine/Pine.hpp"
 
-namespace Sennet
+namespace Pine
 {
 
 struct InterfaceLayout
@@ -49,4 +49,4 @@ private:
     float m_QuadRotation = 0.0f;
 };
 
-} // namespace Sennet
+} // namespace Pine
