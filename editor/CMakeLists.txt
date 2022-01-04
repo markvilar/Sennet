@@ -1,0 +1,22 @@
+add_library(editor STATIC)
+add_library(pine::editor ALIAS editor)
+
+target_sources(
+    editor
+    PUBLIC include/Editor/EditorLayer.hpp
+    PRIVATE src/EditorLayer.cpp)
+
+target_include_directories(editor PUBLIC include)
+
+add_subdirectory(app)
+
+target_link_libraries(editor PUBLIC pine::pine)
+target_compile_definitions(editor PUBLIC)
+target_compile_features(editor PUBLIC cxx_std_17)
+target_compile_options(editor PRIVATE -std=c++17)
+
+set_target_properties(
+    editor
+    PROPERTIES ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib"
+               LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib"
+               RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
