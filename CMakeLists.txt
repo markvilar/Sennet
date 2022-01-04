@@ -13,10 +13,10 @@ option(SENNET_BUILD_WARNINGS "Enable compiler warnings." ON)
 include(cmake/ProjectSettings.cmake)
 include(cmake/PreventInSourceBuild.cmake)
 
-add_library(ProjectOptions INTERFACE)
-target_compile_features(ProjectOptions INTERFACE cxx_std_17)
+add_library(pine_options INTERFACE)
+target_compile_features(pine_options INTERFACE cxx_std_17)
 
-add_library(ProjectWarnings INTERFACE)
+add_library(pine_warnings INTERFACE)
 
 # Enable cache system.
 include(cmake/Cache.cmake)
