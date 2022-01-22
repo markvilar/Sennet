@@ -51,13 +51,15 @@ int main(int argc, char** argv)
             if (!client.Incoming().empty())
             {
                 auto message = client.Incoming().pop_front().Msg;
+                std::chrono::system_clock::time_point sent;
+                std::chrono::system_clock::time_point received;
+                double transmitTime = 0.0;
                 switch (message.Header.ID)
                 {
                 case CustomMessageTypes::ServerPing:
-                    std::chrono::system_clock::time_point sent;
-                    auto received = std::chrono::system_clock::now();
+                    received = std::chrono::system_clock::now();
                     message >> sent;
-                    auto transmitTime =
+                    transmitTime =
                         std::chrono::duration<double>(received - sent).count();
                     PINE_INFO("Ping: {0}", transmitTime);
                     break;
