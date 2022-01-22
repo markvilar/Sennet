@@ -1,5 +1,5 @@
-#include "Pine/Pch.hpp"
 #include "Pine/Renderer/GraphicsContext.hpp"
+#include "Pine/Pch.hpp"
 
 #include "Pine/Platform/OpenGL/OpenGLContext.hpp"
 

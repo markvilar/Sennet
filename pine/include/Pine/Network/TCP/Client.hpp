@@ -6,7 +6,7 @@
 #include "Pine/Network/TCP/Message.hpp"
 #include "Pine/Network/ThreadSafeQueue.hpp"
 
-namespace Pine::TCP 
+namespace Pine::TCP
 {
 
 template <typename T> class Client
@@ -16,7 +16,7 @@ public:
 
     virtual ~Client() { Disconnect(); }
 
-    bool Connect(const std::string& host, const uint16_t& port)
+    bool Connect(const std::string& host, const uint16_t port)
     {
         try
         {
@@ -24,11 +24,10 @@ public:
             asio::ip::tcp::resolver::results_type endpoints =
                 resolver.resolve(host, std::to_string(port));
 
-            // Create socket. TODO: Add socket options.
             asio::ip::tcp::socket socket(m_Context);
 
             m_Connection =
-                CreateScope<Connection<T>>(Connection<T>::Owner::Client,
+                std::make_unique<Connection<T>>(Connection<T>::Owner::Client,
                     m_Context,
                     std::move(socket),
                     m_MessagesIn);
@@ -84,12 +83,10 @@ public:
     ThreadSafeQueue<OwnedMessage<T>>& Incoming() { return m_MessagesIn; }
 
 protected:
-    // TODO: Temporary.
     asio::io_context m_Context;
-
     std::thread m_ContextThread;
 
-    Scope<Connection<T>> m_Connection;
+    std::unique_ptr<Connection<T>> m_Connection;
 
 private:
     ThreadSafeQueue<OwnedMessage<T>> m_MessagesIn;

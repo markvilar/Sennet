@@ -1,6 +1,6 @@
 #if defined(PINE_PLATFORM_WINDOWS)
-#include "Pine/Pch.hpp"
 #include "Pine/Core/Input.hpp"
+#include "Pine/Pch.hpp"
 
 #include "GLFW/glfw3.h"
 

@@ -13,7 +13,7 @@ template <typename T> class Server
 {
     // Server class interface.
 public:
-    Server(uint16_t port)
+    Server(const uint16_t port)
         : m_Acceptor(
             m_Context, asio::ip::tcp::endpoint(asio::ip::tcp::v4(), port))
     {
@@ -61,15 +61,15 @@ public:
                     PINE_CORE_INFO("[Server] New Connection: {0}",
                         socket.remote_endpoint());
 
-                    auto newConn =
-                        CreateRef<Connection<T>>(Connection<T>::Owner::Server,
-                            m_Context,
-                            std::move(socket),
-                            m_MessagesIn);
+                    auto newConnection = std::make_shared<Connection<T>>(
+                        Connection<T>::Owner::Server,
+                        m_Context,
+                        std::move(socket),
+                        m_MessagesIn);
 
-                    if (OnClientConnect(newConn))
+                    if (OnClientConnect(newConnection))
                     {
-                        m_Connections.push_back(newConn);
+                        m_Connections.push_back(newConnection);
                         m_Connections.back()->ConnectToClient(m_IDCounter++);
                         PINE_CORE_INFO("[Server] Connection {0} approved.",
                             m_Connections.back()->GetID());
@@ -89,7 +89,8 @@ public:
             });
     }
 
-    void MessageClient(Ref<Connection<T>> client, const Message<T>& message)
+    void MessageClient(
+        std::shared_ptr<Connection<T>> client, const Message<T>& message)
     {
         if (client && client->IsConnected())
         {
@@ -105,8 +106,8 @@ public:
         }
     }
 
-    void MessageAllClients(
-        const Message<T>& message, Ref<Connection<T>> ignoreClient = nullptr)
+    void MessageAllClients(const Message<T>& message,
+        std::shared_ptr<Connection<T>> ignoreClient = nullptr)
     {
         bool invalidClientExists = false;
         for (auto& client : m_Connections)
@@ -148,24 +149,28 @@ public:
     }
 
 protected:
-    virtual bool OnClientConnect(Ref<Connection<T>> client) { return false; }
+    virtual bool OnClientConnect(std::shared_ptr<Connection<T>> client)
+    {
+        return false;
+    }
 
-    virtual void OnClientDisconnect(Ref<Connection<T>> client) {}
+    virtual void OnClientDisconnect(std::shared_ptr<Connection<T>> client) {}
 
-    virtual void OnMessage(Ref<Connection<T>> client, Message<T>& message) {}
+    virtual void OnMessage(
+        std::shared_ptr<Connection<T>> client, Message<T>& message)
+    {
+    }
 
 protected:
     ThreadSafeQueue<OwnedMessage<T>> m_MessagesIn;
 
-    // Temporary.
     asio::io_context m_Context;
     std::thread m_ContextThread;
 
-    // Temporary.
     asio::ip::tcp::acceptor m_Acceptor;
 
     uint32_t m_IDCounter = 10000;
-    std::deque<Ref<Connection<T>>> m_Connections;
+    std::deque<std::shared_ptr<Connection<T>>> m_Connections;
 };
 
 } // namespace Pine::TCP

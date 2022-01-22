@@ -44,8 +44,8 @@ public:
             if (Log::GetCoreLogger())
             {
                 PINE_CORE_ERROR("Instrumentor::BeginSession("
-                                  "'{0}') when session '{1}' already "
-                                  "open.",
+                                "'{0}') when session '{1}' already "
+                                "open.",
                     name,
                     m_CurrentSession->Name);
             }
@@ -63,7 +63,7 @@ public:
             if (Log::GetCoreLogger())
             {
                 PINE_CORE_ERROR("Instrumentor could not open "
-                                  "results file '{0}'",
+                                "results file '{0}'",
                     filepath);
             }
         }
@@ -236,10 +236,10 @@ class InstrumentationUtils
 #else
 #define PINE_FUNC_SIG "PINE_FUNC_SIG unknown!"
 #endif
-#define PINE_PROFILE_BEGIN_SESSION(name, filepath)                           \
+#define PINE_PROFILE_BEGIN_SESSION(name, filepath)                             \
     ::Pine::Instrumentor::Get().BeginSession(name, filepath);
 #define PINE_PROFILE_END_SESSION() ::Pine::Instrumentor::Get().EndSession();
-#define PINE_PROFILE_SCOPE(name)                                             \
+#define PINE_PROFILE_SCOPE(name)                                               \
     ::Pine::InstrumentationTimer timer##__LINE__(name);
 #define PINE_PROFILE_FUNCTION() PINE_PROFILE_SCOPE(PINE_FUNC_SIG);
 #else

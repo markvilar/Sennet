@@ -76,8 +76,7 @@ void LinuxSocket::Accept(const std::string_view host, const uint16_t port)
 
     auto remote =
         accept(m_ID, (struct sockaddr*)&address, (socklen_t*)&addressLength);
-    PINE_CORE_ASSERT(remote >= 0,
-        "Error occured while accepting connections.");
+    PINE_CORE_ASSERT(remote >= 0, "Error occured while accepting connections.");
 }
 
 // ----------------------------------------------------------------------------
@@ -93,8 +92,7 @@ void LinuxSocket::Connect(const std::string_view host, const uint16_t port)
 
     auto remote =
         connect(m_ID, (struct sockaddr*)&serverAddress, sizeof(serverAddress));
-    PINE_CORE_ASSERT(remote >= 0,
-        "Error occured while connecting to server.");
+    PINE_CORE_ASSERT(remote >= 0, "Error occured while connecting to server.");
 }
 
 void LinuxSocket::Disconnect()

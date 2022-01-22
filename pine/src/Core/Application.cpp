@@ -1,5 +1,5 @@
-#include "Pine/Pch.hpp"
 #include "Pine/Core/Application.hpp"
+#include "Pine/Pch.hpp"
 
 #include "GLFW/glfw3.h"
 

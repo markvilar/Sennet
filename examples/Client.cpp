@@ -3,7 +3,6 @@
 #include <thread>
 
 #include "Pine/Pine.hpp"
-
 enum class CustomMessageTypes : uint32_t
 {
     ServerAccept,
@@ -33,35 +32,34 @@ int main(int argc, char** argv)
     Pine::Log::Init();
 
     CustomClient client;
-    client.Connect("10.42.0.35", 60000);
+    client.Connect("127.0.0.1", 60000);
 
     bool quit = false;
-    bool sent = false;
+    uint32_t pingCount = 0;
+    const uint32_t totalPings = 10;
     while (!quit)
     {
         if (client.IsConnected())
         {
-            if (!sent)
+            if (pingCount < totalPings)
             {
-                std::this_thread::sleep_for(std::chrono::seconds(1));
                 PINE_INFO("Pinging server!");
                 client.PingServer();
-                sent = true;
+                pingCount++;
             }
+
             if (!client.Incoming().empty())
             {
                 auto message = client.Incoming().pop_front().Msg;
-                std::chrono::system_clock::time_point t;
-                std::chrono::system_clock::time_point z;
-                double time;
-
                 switch (message.Header.ID)
                 {
                 case CustomMessageTypes::ServerPing:
-                    t = std::chrono::system_clock::now();
-                    message >> z;
-                    time = std::chrono::duration<double>(t - z).count();
-                    PINE_INFO("Ping: {0}", time);
+                    std::chrono::system_clock::time_point sent;
+                    auto received = std::chrono::system_clock::now();
+                    message >> sent;
+                    auto transmitTime =
+                        std::chrono::duration<double>(received - sent).count();
+                    PINE_INFO("Ping: {0}", transmitTime);
                     break;
                 default:
                     break;

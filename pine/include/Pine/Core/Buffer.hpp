@@ -6,7 +6,9 @@ class Buffer
 {
 public:
     Buffer() = default;
-    Buffer(const void* data, const uint32_t size) : m_Data(data), m_Size(size) {}
+    Buffer(const void* data, const uint32_t size) : m_Data(data), m_Size(size)
+    {
+    }
     ~Buffer() = default;
 
     inline uint32_t GetSize() const { return m_Size; }

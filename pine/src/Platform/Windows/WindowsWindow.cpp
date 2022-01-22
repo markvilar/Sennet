@@ -1,6 +1,6 @@
 #if defined(PINE_PLATFORM_WINDOWS)
-#include "Pine/Pch.hpp"
 #include "Pine/Platform/Windows/WindowsWindow.hpp"
+#include "Pine/Pch.hpp"
 
 #include "Pine/Core/Input.hpp"
 #include "Pine/Events/ApplicationEvent.hpp"

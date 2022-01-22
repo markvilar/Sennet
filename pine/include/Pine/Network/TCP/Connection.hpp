@@ -18,20 +18,19 @@ public:
         Client
     };
 
-    Connection(Owner parent, asio::io_context& context,
+    Connection(Owner owner, asio::io_context& context,
         asio::ip::tcp::socket socket,
         ThreadSafeQueue<OwnedMessage<T>>& messagesIn)
-        : m_Context(context), m_Socket(std::move(socket)),
+        : m_Owner(owner), m_Context(context), m_Socket(std::move(socket)),
           m_MessagesIn(messagesIn)
     {
-        m_Owner = parent;
     }
 
-    virtual ~Connection() {}
+    virtual ~Connection() = default;
 
     uint32_t GetID() const { return m_ID; }
 
-    void ConnectToClient(const uint32_t& id = 0)
+    void ConnectToClient(const uint32_t id = 0)
     {
         if (m_Owner == Owner::Server)
         {
@@ -83,61 +82,57 @@ public:
     }
 
 private:
-    // ASYNC.
     void ReadHeader()
     {
+        auto message = std::make_shared<Message<T>>();
+
         asio::async_read(m_Socket,
-            asio::buffer(&m_MessageTemporaryIn.Header,
-                sizeof(MessageHeader<T>)),
-            [this](std::error_code ec, uint64_t length) {
+            asio::buffer(&message->Header, sizeof(MessageHeader<T>)),
+            [this, message](const std::error_code ec, const uint64_t length) {
                 if (!ec)
                 {
-                    // If the message has a body.
-                    if (m_MessageTemporaryIn.Header.Size > 0)
+                    if (message->Header.Size > 0)
                     {
-                        m_MessageTemporaryIn.Body.resize(
-                            m_MessageTemporaryIn.Header.Size);
-                        ReadBody();
+                        message->Body.resize(message->Header.Size);
+                        ReadBody(message);
                     }
                     else
                     {
-                        AddToIncomingMessageQueue();
+                        AddToIncomingMessageQueue(message);
                     }
                 }
                 else
                 {
-                    PINE_CORE_ERROR("[{0}] Read Header Failed.", m_ID);
+                    PINE_CORE_ERROR("[{0}] Reading message header failed.",
+                        m_ID);
                     m_Socket.close();
                 }
             });
     }
 
-    // ASYNC.
-    void ReadBody()
+    void ReadBody(std::shared_ptr<Message<T>> message)
     {
         asio::async_read(m_Socket,
-            asio::buffer(m_MessageTemporaryIn.Body.data(),
-                m_MessageTemporaryIn.Body.size()),
-            [this](std::error_code ec, uint64_t length) {
+            asio::buffer(message->Body.data(), message->Body.size()),
+            [this, message](const std::error_code ec, const uint64_t length) {
                 if (!ec)
                 {
-                    AddToIncomingMessageQueue();
+                    AddToIncomingMessageQueue(message);
                 }
                 else
                 {
-                    PINE_CORE_ERROR("[{0}] ReadBody() failed.", m_ID);
+                    PINE_CORE_ERROR("[{0}] Reading message body failed.", m_ID);
                     m_Socket.close();
                 }
             });
     }
 
-    // ASYNC.
     void WriteHeader()
     {
         asio::async_write(m_Socket,
             asio::buffer(&m_MessagesOut.front().Header,
                 sizeof(MessageHeader<T>)),
-            [this](std::error_code ec, uint64_t length) {
+            [this](const std::error_code ec, const uint64_t length) {
                 if (!ec)
                 {
                     if (m_MessagesOut.front().Body.size() > 0)
@@ -162,13 +157,12 @@ private:
             });
     }
 
-    // ASYNC.
     void WriteBody()
     {
         asio::async_write(m_Socket,
             asio::buffer(m_MessagesOut.front().Body.data(),
                 m_MessagesOut.front().Body.size()),
-            [this](std::error_code ec, uint64_t length) {
+            [this](const std::error_code ec, const uint64_t length) {
                 if (!ec)
                 {
                     m_MessagesOut.pop_front();
@@ -186,37 +180,29 @@ private:
             });
     }
 
-    void AddToIncomingMessageQueue()
+    void AddToIncomingMessageQueue(const std::shared_ptr<Message<T>> message)
     {
-        if (m_Owner == Owner::Server)
+        if (m_Owner == Owner::Server && message)
         {
-            m_MessagesIn.push_back(
-                {this->shared_from_this(), m_MessageTemporaryIn});
+            m_MessagesIn.push_back({this->shared_from_this(), *message});
         }
-        else
+        else if (message)
         {
-            m_MessagesIn.push_back({nullptr, m_MessageTemporaryIn});
+            m_MessagesIn.push_back({nullptr, *message});
         }
 
         ReadHeader();
     }
 
 protected:
-    // Temporary.
     asio::ip::tcp::socket m_Socket;
     asio::io_context& m_Context;
 
     Owner m_Owner = Owner::Server;
     uint32_t m_ID = 0;
 
-    // Outgoing message queue owned by connection.
     ThreadSafeQueue<Message<T>> m_MessagesOut;
-
-    // Incoming message queue provided by client/server.
     ThreadSafeQueue<OwnedMessage<T>>& m_MessagesIn;
-
-    // Message used to temporarily store incoming messages.
-    Message<T> m_MessageTemporaryIn;
 };
 
 } // namespace Pine::TCP

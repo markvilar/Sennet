@@ -16,25 +16,26 @@ enum class CustomMessageTypes : uint32_t
 class CustomServer : public Pine::TCP::Server<CustomMessageTypes>
 {
 public:
-    CustomServer(uint16_t port) : Pine::TCP::Server<CustomMessageTypes>(port)
+    CustomServer(const uint16_t port)
+        : Pine::TCP::Server<CustomMessageTypes>(port)
     {
     }
 
 protected:
     virtual bool OnClientConnect(
-        Pine::Ref<Pine::TCP::Connection<CustomMessageTypes>> client)
+        std::shared_ptr<Pine::TCP::Connection<CustomMessageTypes>> client)
         override
     {
         return true;
     }
 
     virtual void OnClientDisconnect(
-        Pine::Ref<Pine::TCP::Connection<CustomMessageTypes>>) override
+        std::shared_ptr<Pine::TCP::Connection<CustomMessageTypes>>) override
     {
     }
 
     virtual void OnMessage(
-        Pine::Ref<Pine::TCP::Connection<CustomMessageTypes>> client,
+        std::shared_ptr<Pine::TCP::Connection<CustomMessageTypes>> client,
         Pine::TCP::Message<CustomMessageTypes>& message) override
     {
         switch (message.Header.ID)

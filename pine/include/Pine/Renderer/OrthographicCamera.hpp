@@ -9,10 +9,10 @@ class OrthographicCamera
 {
 public:
     OrthographicCamera(const float left, const float right, const float bottom,
-    const float top);
+        const float top);
 
-    void SetProjection(const float left, const float right, const float bottom, 
-    const float top);
+    void SetProjection(const float left, const float right, const float bottom,
+        const float top);
 
     const Vec3& GetPosition() const { return m_Position; }
     void SetPosition(const Vec3& position)

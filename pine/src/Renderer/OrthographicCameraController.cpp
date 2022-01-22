@@ -1,5 +1,5 @@
-#include "Pine/Pch.hpp"
 #include "Pine/Renderer/OrthographicCameraController.hpp"
+#include "Pine/Pch.hpp"
 
 #include "Pine/Core/Input.hpp"
 #include "Pine/Core/KeyCodes.hpp"
@@ -51,7 +51,8 @@ void OrthographicCameraController::OnEvent(Event& e)
         PINE_BIND_EVENT_FN(OrthographicCameraController::OnWindowResized));
 }
 
-void OrthographicCameraController::OnResize(const float width, const float height)
+void OrthographicCameraController::OnResize(
+    const float width, const float height)
 {
     m_AspectRatio = width / height;
     m_Camera.SetProjection(-m_AspectRatio * m_ZoomLevel,
