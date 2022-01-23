@@ -1,6 +1,6 @@
 #pragma once
 
-namespace Pine::TCP
+namespace Pine
 {
 
 template <typename T> struct MessageHeader
@@ -99,4 +99,4 @@ template <typename T> struct OwnedMessage
     }
 };
 
-} // namespace Pine::TCP
+} // namespace Pine

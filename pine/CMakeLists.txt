@@ -21,13 +21,11 @@ target_sources(
            include/Pine/Events/Event.hpp
            include/Pine/Events/KeyEvent.hpp
            include/Pine/Events/MouseEvent.hpp
-           include/Pine/Network/Base.hpp
-           include/Pine/Network/Socket.hpp
+           include/Pine/Network/Connection.hpp
+           include/Pine/Network/Message.hpp
+           include/Pine/Network/TCPClient.hpp
+           include/Pine/Network/TCPServer.hpp
            include/Pine/Network/ThreadSafeQueue.hpp
-           include/Pine/Network/TCP/Message.hpp
-           include/Pine/Network/TCP/Client.hpp
-           include/Pine/Network/TCP/Connection.hpp
-           include/Pine/Network/TCP/Server.hpp
            include/Pine/Platform/OpenGL/OpenGLBuffer.hpp
            include/Pine/Platform/OpenGL/OpenGLFramebuffer.hpp
            include/Pine/Platform/OpenGL/OpenGLContext.hpp
@@ -36,7 +34,6 @@ target_sources(
            include/Pine/Platform/OpenGL/OpenGLTexture.hpp
            include/Pine/Platform/OpenGL/OpenGLVertexArray.hpp
            include/Pine/Platform/Windows/WindowsWindow.hpp
-           include/Pine/Platform/Linux/LinuxSocket.hpp
            include/Pine/Platform/Linux/LinuxWindow.hpp
            include/Pine/Renderer/Buffer.hpp
            include/Pine/Renderer/Framebuffer.hpp
@@ -62,7 +59,6 @@ target_sources(
             src/Core/Layer.cpp
             src/Core/LayerStack.cpp
             src/Core/Log.cpp
-            src/Network/Socket.cpp
             src/Platform/OpenGL/OpenGLBuffer.cpp
             src/Platform/OpenGL/OpenGLFramebuffer.cpp
             src/Platform/OpenGL/OpenGLContext.cpp
@@ -73,7 +69,6 @@ target_sources(
             src/Platform/Windows/WindowsInput.cpp
             src/Platform/Windows/WindowsWindow.cpp
             src/Platform/Linux/LinuxInput.cpp
-            src/Platform/Linux/LinuxSocket.cpp
             src/Platform/Linux/LinuxWindow.cpp
             src/Renderer/Buffer.cpp
             src/Renderer/Framebuffer.cpp

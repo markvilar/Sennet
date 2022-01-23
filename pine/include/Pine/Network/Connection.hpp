@@ -2,15 +2,17 @@
 
 #include <asio.hpp>
 
-#include "Pine/Network/TCP/Message.hpp"
+#include "Pine/Network/Message.hpp"
 #include "Pine/Network/ThreadSafeQueue.hpp"
 
-namespace Pine::TCP
+namespace Pine
 {
 
 template <typename T>
 class Connection : public std::enable_shared_from_this<Connection<T>>
 {
+    using tcp = asio::ip::tcp;
+
 public:
     enum class Owner
     {
@@ -184,11 +186,12 @@ private:
     {
         if (m_Owner == Owner::Server && message)
         {
-            m_MessagesIn.push_back({this->shared_from_this(), *message});
+            m_MessagesIn.push_back(
+                {this->shared_from_this(), std::move(*message)});
         }
         else if (message)
         {
-            m_MessagesIn.push_back({nullptr, *message});
+            m_MessagesIn.push_back({nullptr, std::move(*message)});
         }
 
         ReadHeader();
@@ -205,4 +208,4 @@ protected:
     ThreadSafeQueue<OwnedMessage<T>>& m_MessagesIn;
 };
 
-} // namespace Pine::TCP
+} // namespace Pine

@@ -3,6 +3,7 @@
 #include <thread>
 
 #include "Pine/Pine.hpp"
+
 enum class CustomMessageTypes : uint32_t
 {
     ServerAccept,
@@ -12,12 +13,12 @@ enum class CustomMessageTypes : uint32_t
     ServerMessage,
 };
 
-class CustomClient : public Pine::TCP::Client<CustomMessageTypes>
+class CustomClient : public Pine::TCPClient<CustomMessageTypes>
 {
 public:
     void PingServer()
     {
-        Pine::TCP::Message<CustomMessageTypes> message;
+        Pine::Message<CustomMessageTypes> message;
         message.Header.ID = CustomMessageTypes::ServerPing;
         std::chrono::system_clock::time_point time =
             std::chrono::system_clock::now();

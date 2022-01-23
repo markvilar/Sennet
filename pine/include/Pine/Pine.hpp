@@ -12,12 +12,10 @@
 
 #include "Pine/Debug/Instrumentor.hpp"
 
-#include "Pine/Network/TCP/Client.hpp"
-#include "Pine/Network/TCP/Connection.hpp"
-#include "Pine/Network/TCP/Message.hpp"
-#include "Pine/Network/TCP/Server.hpp"
-
-#include "Pine/Network/Socket.hpp"
+#include "Pine/Network/Connection.hpp"
+#include "Pine/Network/Message.hpp"
+#include "Pine/Network/TCPClient.hpp"
+#include "Pine/Network/TCPServer.hpp"
 #include "Pine/Network/ThreadSafeQueue.hpp"
 
 #include "Pine/Renderer/Buffer.hpp"

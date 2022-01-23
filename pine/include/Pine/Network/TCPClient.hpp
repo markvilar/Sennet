@@ -2,29 +2,31 @@
 
 #include <asio.hpp>
 
-#include "Pine/Network/TCP/Connection.hpp"
-#include "Pine/Network/TCP/Message.hpp"
+#include "Pine/Network/Connection.hpp"
+#include "Pine/Network/Message.hpp"
 #include "Pine/Network/ThreadSafeQueue.hpp"
 
-namespace Pine::TCP
+namespace Pine
 {
 
-template <typename T> class Client
+template <typename T> class TCPClient
 {
+    using tcp = asio::ip::tcp;
+
 public:
-    Client() {}
+    TCPClient() {}
 
-    virtual ~Client() { Disconnect(); }
+    virtual ~TCPClient() { Disconnect(); }
 
     bool Connect(const std::string& host, const uint16_t port)
     {
         try
         {
-            asio::ip::tcp::resolver resolver(m_Context);
-            asio::ip::tcp::resolver::results_type endpoints =
+            tcp::resolver resolver(m_Context);
+            tcp::resolver::results_type endpoints =
                 resolver.resolve(host, std::to_string(port));
 
-            asio::ip::tcp::socket socket(m_Context);
+            tcp::socket socket(m_Context);
 
             m_Connection =
                 std::make_unique<Connection<T>>(Connection<T>::Owner::Client,
@@ -62,14 +64,7 @@ public:
 
     bool IsConnected()
     {
-        if (m_Connection)
-        {
-            return m_Connection->IsConnected();
-        }
-        else
-        {
-            return false;
-        }
+        return m_Connection ? m_Connection->IsConnected() : false;
     }
 
     void Send(const Message<T>& message)
@@ -85,11 +80,10 @@ public:
 protected:
     asio::io_context m_Context;
     std::thread m_ContextThread;
-
     std::unique_ptr<Connection<T>> m_Connection;
 
 private:
     ThreadSafeQueue<OwnedMessage<T>> m_MessagesIn;
 };
 
-} // namespace Pine::TCP
+} // namespace Pine

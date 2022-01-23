@@ -13,36 +13,34 @@ enum class CustomMessageTypes : uint32_t
     ServerMessage,
 };
 
-class CustomServer : public Pine::TCP::Server<CustomMessageTypes>
+class CustomServer : public Pine::TCPServer<CustomMessageTypes>
 {
 public:
     CustomServer(const uint16_t port)
-        : Pine::TCP::Server<CustomMessageTypes>(port)
+        : Pine::TCPServer<CustomMessageTypes>(port)
     {
     }
 
 protected:
     virtual bool OnClientConnect(
-        std::shared_ptr<Pine::TCP::Connection<CustomMessageTypes>> client)
-        override
+        std::shared_ptr<Pine::Connection<CustomMessageTypes>> client) override
     {
         return true;
     }
 
     virtual void OnClientDisconnect(
-        std::shared_ptr<Pine::TCP::Connection<CustomMessageTypes>>) override
+        std::shared_ptr<Pine::Connection<CustomMessageTypes>>) override
     {
     }
 
     virtual void OnMessage(
-        std::shared_ptr<Pine::TCP::Connection<CustomMessageTypes>> client,
-        Pine::TCP::Message<CustomMessageTypes>& message) override
+        std::shared_ptr<Pine::Connection<CustomMessageTypes>> client,
+        Pine::Message<CustomMessageTypes>& message) override
     {
         switch (message.Header.ID)
         {
         case CustomMessageTypes::ServerPing:
             PINE_INFO("[{0}] Server Ping.", client->GetID());
-            // Bounce message back to client.
             client->Send(message);
             break;
         default:
