@@ -27,7 +27,7 @@ class Pine(ConanFile):
 
     def requirements(self):
         """ Specifies the requirements of the package. """
-        self.requires("asio/1.18.0")
+        self.requires("asio/1.21.0")
         self.requires("glad/0.1.34")
         self.requires("glfw/3.3.4")
         self.requires("glm/0.9.9.8")

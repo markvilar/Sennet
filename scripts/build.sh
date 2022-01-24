@@ -5,24 +5,18 @@ BUILD_DIR="${SOURCE_DIR}/build/"
 CONAN_DIR="${SOURCE_DIR}/packages/"
 
 GENERATOR="Ninja"
-BUILD_TYPE="Debug"
+BUILD_TYPE="Release"
 CXX_COMPILER="clang++-12"
 
-if [ ! -d ${BUILD_DIR} ]; then
-    mkdir -p ${BUILD_DIR}
+mkdir -p ${BUILD_DIR}
+mkdir -p ${CONAN_DIR}
 
-    export CMAKE_GENERATOR="${GENERATOR}"
-    export CMAKE_BUILD_TYPE="${BUILD_TYPE}"
-    export CMAKE_CXX_COMPILER="${CXX_COMPILER}"
+export CMAKE_GENERATOR="${GENERATOR}"
+export CMAKE_BUILD_TYPE="${BUILD_TYPE}"
+export CMAKE_CXX_COMPILER="${CXX_COMPILER}"
 
-    conan install "${SOURCE_DIR}" \
-        --install-folder "${CONAN_DIR}" \
-        --settings build_type="${BUILD_TYPE}" \
-        --profile=default \
-        --build missing
+conan install "${SOURCE_DIR}" --install-folder "${CONAN_DIR}" \
+    --settings build_type="${BUILD_TYPE}" --build missing
 
-    cmake -S "${SOURCE_DIR}" -B "${BUILD_DIR}" \
-        -D CMAKE_MODULE_PATH="${CONAN_DIR}"
-fi
-
+cmake -S "${SOURCE_DIR}" -B "${BUILD_DIR}" -D CMAKE_MODULE_PATH="${CONAN_DIR}"
 cmake --build ${BUILD_DIR}

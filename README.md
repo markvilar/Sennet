@@ -17,7 +17,7 @@ The requirements are:
 
 | **Library** | **Version**  | **Library purpose.**                |
 |-------------|--------------|-------------------------------------|
-| asio        | 1.18.0       | Network and asynchronicity.         |
+| asio        | 1.21.0       | Network and asynchronicity.         |
 | glad        | 0.1.34       | Bindings and loaders of OpenGL 4.6. |
 | glfw        | 3.3.4        | Window and input handling.          |
 | glm         | 0.9.9.8      | Vectorized mathematical operations. |
@@ -28,12 +28,12 @@ The requirements are:
 By default, Pine utilizes CMake for build generation and Conan for package
 management. However, all the native features of CMake are preserved by Pine.
 This means that the user can utilize another package manager by simply 
-providing ```FindXXX.cmake```-files for each of the dependencies in the 
+providing ```FindXXX.cmake``` files for each of the dependencies in the 
 ```CMAKE_MODULE_PATH``` variable.
 
 ### Linux Workflow
 
-```
+```shell
 git clone https://github.com/markvilar/pine.git
 cd pine
 
@@ -41,11 +41,8 @@ export CMAKE_GENERATOR="${GENERATOR}"
 export CMAKE_BUILD_TYPE="${BUILD_TYPE}"
 export CMAKE_CXX_COMPILER="${CXX_COMPILER}"
 
-conan install . \
-    --install-folder "${PACKAGE_DIR}" \
-    --settings build_type="${BUILD_TYPE}" \
-    --profile="${CONAN_PROFILE}" \
-    --build missing
+conan install . --install-folder "${PACKAGE_DIR}" \
+    --settings build_type="${BUILD_TYPE}" --build missing
 
 cmake -S . -B "${BUILD_DIR}" -D CMAKE_MODULE_PATH="${PACKAGE_DIR}"
 cmake --build "${BUILD_DIR}"
