@@ -53,42 +53,43 @@ public:
 
     void WaitForClientConnection()
     {
-        m_Acceptor.async_accept([this](std::error_code ec, tcp::socket socket) {
-            if (!ec)
-            {
-                PINE_CORE_INFO("[Server] New connection: {0}",
-                    socket.remote_endpoint());
-
-                auto newConnection = std::make_shared<Connection<T>>(
-                    Connection<T>::Owner::Server,
-                    m_Context,
-                    std::move(socket),
-                    m_MessagesIn);
-
-                if (OnClientConnect(newConnection))
+        m_Acceptor.async_accept(
+            [this](const std::error_code ec, tcp::socket socket) {
+                if (!ec)
                 {
-                    m_Connections.push_back(newConnection);
-                    m_Connections.back()->ConnectToClient(m_IDCounter++);
-                    PINE_CORE_INFO("[Server] Connection {0} approved.",
-                        m_Connections.back()->GetID());
+                    PINE_CORE_INFO("[Server] New connection: {0}",
+                        socket.remote_endpoint());
+
+                    auto newConnection = std::make_shared<Connection<T>>(
+                        Connection<T>::Owner::Server,
+                        m_Context,
+                        std::move(socket),
+                        m_MessagesIn);
+
+                    if (OnClientConnect(newConnection))
+                    {
+                        m_Connections.push_back(newConnection);
+                        m_Connections.back()->ConnectToClient(m_IDCounter++);
+                        PINE_CORE_INFO("[Server] Approved connection: {0}",
+                            m_Connections.back()->GetID());
+                    }
+                    else
+                    {
+                        PINE_CORE_INFO("[Server] Connection denied.");
+                    }
                 }
                 else
                 {
-                    PINE_CORE_INFO("[Server] Connection denied.");
+                    PINE_CORE_ERROR("[Server] New connection error: {0}",
+                        ec.message());
                 }
-            }
-            else
-            {
-                PINE_CORE_ERROR("[Server] New connection error: {0}",
-                    ec.message());
-            }
 
-            WaitForClientConnection();
-        });
+                WaitForClientConnection();
+            });
     }
 
     void MessageClient(
-        std::shared_ptr<Connection<T>> client, const Message<T>& message)
+        const std::shared_ptr<Connection<T>> client, const Message<T>& message)
     {
         if (client && client->IsConnected())
         {
@@ -105,7 +106,7 @@ public:
     }
 
     void MessageAllClients(const Message<T>& message,
-        std::shared_ptr<Connection<T>> ignoreClient = nullptr)
+        const std::shared_ptr<Connection<T>> ignoreClient = nullptr)
     {
         bool invalidClientExists = false;
         for (auto& client : m_Connections)
@@ -134,14 +135,13 @@ public:
         }
     }
 
-    void Update(uint64_t maxMessages = -1)
+    void Update(const uint64_t maxMessages = -1)
     {
         uint64_t messageCount = 0;
         while (messageCount < maxMessages && !m_MessagesIn.empty())
         {
             auto message = m_MessagesIn.pop_front();
             OnMessage(message.Remote, message.Msg);
-
             messageCount++;
         }
     }

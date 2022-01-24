@@ -20,8 +20,7 @@ public:
         Client
     };
 
-    Connection(Owner owner, asio::io_context& context,
-        asio::ip::tcp::socket socket,
+    Connection(Owner owner, asio::io_context& context, tcp::socket socket,
         ThreadSafeQueue<OwnedMessage<T>>& messagesIn)
         : m_Owner(owner), m_Context(context), m_Socket(std::move(socket)),
           m_MessagesIn(messagesIn)
@@ -44,18 +43,24 @@ public:
         }
     }
 
-    void ConnectToServer(const asio::ip::tcp::resolver::results_type& endpoints)
+    void ConnectToServer(const tcp::resolver::results_type& endpoints)
     {
         if (m_Owner == Owner::Client)
         {
             // TODO: Set up timeout.
             asio::async_connect(m_Socket,
                 endpoints,
-                [this](std::error_code ec, asio::ip::tcp::endpoint endpoint) {
-                    if (!ec)
+                [this](const std::error_code error,
+                    const tcp::endpoint endpoint) {
+                    if (error)
                     {
-                        ReadHeader();
+                        PINE_CORE_ERROR("[{0}] Connect to server failed: {1}",
+                            m_ID,
+                            error.message());
+                        return;
                     }
+
+                    ReadHeader();
                 });
         }
     }
@@ -74,7 +79,7 @@ public:
     void Send(const Message<T>& message)
     {
         asio::post(m_Context, [this, message]() {
-            bool writingMessages = !m_MessagesOut.empty();
+            const auto writingMessages = !m_MessagesOut.empty();
             m_MessagesOut.push_back(message);
             if (!writingMessages)
             {
@@ -90,24 +95,25 @@ private:
 
         asio::async_read(m_Socket,
             asio::buffer(&message->Header, sizeof(MessageHeader<T>)),
-            [this, message](const std::error_code ec, const uint64_t length) {
-                if (!ec)
+            [this, message](const std::error_code error,
+                const uint64_t length) {
+                if (error)
                 {
-                    if (message->Header.Size > 0)
-                    {
-                        message->Body.resize(message->Header.Size);
-                        ReadBody(message);
-                    }
-                    else
-                    {
-                        AddToIncomingMessageQueue(message);
-                    }
+                    PINE_CORE_ERROR("[{0}] Reading message header failed: {1}",
+                        m_ID,
+                        error.message());
+                    m_Socket.close();
+                    return;
+                }
+
+                if (message->Header.Size > 0)
+                {
+                    message->Body.resize(message->Header.Size);
+                    ReadBody(message);
                 }
                 else
                 {
-                    PINE_CORE_ERROR("[{0}] Reading message header failed.",
-                        m_ID);
-                    m_Socket.close();
+                    AddToIncomingMessageQueue(message);
                 }
             });
     }
@@ -116,16 +122,18 @@ private:
     {
         asio::async_read(m_Socket,
             asio::buffer(message->Body.data(), message->Body.size()),
-            [this, message](const std::error_code ec, const uint64_t length) {
-                if (!ec)
+            [this, message](const std::error_code error,
+                const uint64_t length) {
+                if (error)
                 {
-                    AddToIncomingMessageQueue(message);
-                }
-                else
-                {
-                    PINE_CORE_ERROR("[{0}] Reading message body failed.", m_ID);
+                    PINE_CORE_ERROR("[{0}] Reading message body failed: {1}",
+                        m_ID,
+                        error.message());
                     m_Socket.close();
+                    return;
                 }
+
+                AddToIncomingMessageQueue(message);
             });
     }
 
@@ -134,27 +142,28 @@ private:
         asio::async_write(m_Socket,
             asio::buffer(&m_MessagesOut.front().Header,
                 sizeof(MessageHeader<T>)),
-            [this](const std::error_code ec, const uint64_t length) {
-                if (!ec)
+            [this](const std::error_code error, const uint64_t length) {
+                if (error)
                 {
-                    if (m_MessagesOut.front().Body.size() > 0)
-                    {
-                        WriteBody();
-                    }
-                    else
-                    {
-                        m_MessagesOut.pop_front();
-                        if (!m_MessagesOut.empty())
-                        {
-                            WriteHeader();
-                        }
-                    }
+                    PINE_CORE_ERROR("[{0}] Writing message header failed: {1}",
+                        m_ID,
+                        error.message());
+                    m_Socket.close();
+                    return;
+                }
+
+                const auto hasBody = m_MessagesOut.front().Body.size() > 0;
+                if (hasBody)
+                {
+                    WriteBody();
                 }
                 else
                 {
-                    PINE_CORE_ERROR("[{0}] WriteHeader() failed.",
-                        ec.message());
-                    m_Socket.close();
+                    m_MessagesOut.pop_front();
+                    if (!m_MessagesOut.empty())
+                    {
+                        WriteHeader();
+                    }
                 }
             });
     }
@@ -164,20 +173,20 @@ private:
         asio::async_write(m_Socket,
             asio::buffer(m_MessagesOut.front().Body.data(),
                 m_MessagesOut.front().Body.size()),
-            [this](const std::error_code ec, const uint64_t length) {
-                if (!ec)
+            [this](const std::error_code error, const uint64_t length) {
+                if (error)
                 {
-                    m_MessagesOut.pop_front();
-
-                    if (!m_MessagesOut.empty())
-                    {
-                        WriteHeader();
-                    }
-                }
-                else
-                {
-                    PINE_CORE_ERROR("[{0}] WriteBody() failed.", m_ID);
+                    PINE_CORE_ERROR("[{0}] Writing message body failed: {1}",
+                        m_ID,
+                        error.message());
                     m_Socket.close();
+                    return;
+                }
+
+                m_MessagesOut.pop_front();
+                if (!m_MessagesOut.empty())
+                {
+                    WriteHeader();
                 }
             });
     }
@@ -198,7 +207,7 @@ private:
     }
 
 protected:
-    asio::ip::tcp::socket m_Socket;
+    tcp::socket m_Socket;
     asio::io_context& m_Context;
 
     Owner m_Owner = Owner::Server;

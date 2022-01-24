@@ -23,19 +23,15 @@ public:
         try
         {
             tcp::resolver resolver(m_Context);
-            tcp::resolver::results_type endpoints =
-                resolver.resolve(host, std::to_string(port));
-
             tcp::socket socket(m_Context);
+            auto endpoints = resolver.resolve(host, std::to_string(port));
 
             m_Connection =
                 std::make_unique<Connection<T>>(Connection<T>::Owner::Client,
                     m_Context,
                     std::move(socket),
                     m_MessagesIn);
-
             m_Connection->ConnectToServer(endpoints);
-
             m_ContextThread = std::thread([this]() { m_Context.run(); });
         }
         catch (std::exception& e)
@@ -54,6 +50,7 @@ public:
         }
 
         m_Context.stop();
+
         if (m_ContextThread.joinable())
         {
             m_ContextThread.join();
