@@ -273,20 +273,59 @@ void EditorLayer::OnImGuiRender()
 
             ImGui::ColorEdit4("Square Color", ValuePtr(m_QuadColor));
 
+            UI::AddEmptySpace(0.0f, 10.0f);
+            ImGui::Separator();
+
             static bool flipImage = false;
             static char imagePath[256] = "";
+            static auto imageFormat = ImageFormat::BGRA;
+
+            const std::array<std::pair<std::string, ImageFormat>, 6>
+                imageFormatOptions = {std::make_pair("Gray", ImageFormat::GRAY),
+                    std::make_pair("Gray-alpha", ImageFormat::GRAY_ALPHA),
+                    std::make_pair("RGB", ImageFormat::RGB),
+                    std::make_pair("BGR", ImageFormat::BGR),
+                    std::make_pair("RGBA", ImageFormat::RGBA),
+                    std::make_pair("BGRA", ImageFormat::BGRA)};
+
             ImGui::InputText("Image path", imagePath, IM_ARRAYSIZE(imagePath));
+            UI::AddCombo("Image format", &imageFormat, imageFormatOptions);
+            ImGui::Checkbox("Flip image", &flipImage);
+            ImGui::SameLine();
             if (ImGui::Button("Load image"))
             {
                 if (Pine::FileSystem::IsFile(imagePath))
                 {
-                    m_Texture =
-                        Texture2D::Create(ReadImage(imagePath, flipImage));
-                    PINE_INFO("Loaded image: {}", imagePath);
+                    m_Texture = Texture2D::Create(
+                        ReadImage(imagePath, imageFormat, flipImage));
+                    PINE_INFO("Loaded image: {0}, {1}", imagePath, imageFormat);
                 }
             }
-            ImGui::SameLine();
-            ImGui::Checkbox("Flip image", &flipImage);
+
+            UI::AddEmptySpace(0.0f, 20.0f);
+            ImGui::Separator();
+
+            static int8_t valueInt8 = 0;
+            static int16_t valueInt16 = 0;
+            static int32_t valueInt32 = 0;
+            static int64_t valueInt64 = 0;
+            static uint8_t valueUint8 = 0;
+            static uint16_t valueUint16 = 0;
+            static uint32_t valueUint32 = 0;
+            static uint64_t valueUint64 = 0;
+            static float valueFloat = 0.0;
+            static double valueDouble = 0.0;
+
+            UI::SliderScalar("Slider uint8", &valueInt8, -10, 10);
+            UI::SliderScalar("Slider int16", &valueInt16, -10, 10);
+            UI::SliderScalar("Slider int32", &valueInt32, -10, 10);
+            UI::SliderScalar("Slider int64", &valueInt64, -10, 10);
+            UI::SliderScalar("Slider uint8", &valueUint8, 0, 10);
+            UI::SliderScalar("Slider uint16", &valueUint16, 0, 10);
+            UI::SliderScalar("Slider uint32", &valueUint32, 0, 10);
+            UI::SliderScalar("Slider uint64", &valueUint64, 0, 10);
+            UI::SliderScalar("Slider float", &valueFloat, -1.0, 1.0);
+            UI::SliderScalar("Slider double", &valueDouble, -1.0, 1.0);
         });
 
     UI::AddWindow("Right",

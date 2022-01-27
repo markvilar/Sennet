@@ -9,7 +9,8 @@
 namespace Pine
 {
 
-template <typename T> class TCPServer
+template <typename T>
+class TCPServer
 {
     using tcp = asio::ip::tcp;
 

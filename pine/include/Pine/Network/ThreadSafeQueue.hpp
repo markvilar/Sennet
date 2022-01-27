@@ -3,7 +3,8 @@
 namespace Pine
 {
 
-template <typename T> class ThreadSafeQueue
+template <typename T>
+class ThreadSafeQueue
 {
 public:
     ThreadSafeQueue() = default;
