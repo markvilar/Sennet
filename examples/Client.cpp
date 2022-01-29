@@ -13,12 +13,12 @@ enum class CustomMessageTypes : uint32_t
     ServerMessage,
 };
 
-class CustomClient : public Pine::TCP::Client<CustomMessageTypes>
+class CustomClient : public Pine::TCPClient<CustomMessageTypes>
 {
 public:
     void PingServer()
     {
-        Pine::TCP::Message<CustomMessageTypes> message;
+        Pine::Message<CustomMessageTypes> message;
         message.Header.ID = CustomMessageTypes::ServerPing;
         std::chrono::system_clock::time_point time =
             std::chrono::system_clock::now();
@@ -33,35 +33,36 @@ int main(int argc, char** argv)
     Pine::Log::Init();
 
     CustomClient client;
-    client.Connect("10.42.0.35", 60000);
+    client.Connect("127.0.0.1", 60000);
 
     bool quit = false;
-    bool sent = false;
+    uint32_t pingCount = 0;
+    const uint32_t totalPings = 10;
     while (!quit)
     {
         if (client.IsConnected())
         {
-            if (!sent)
+            if (pingCount < totalPings)
             {
-                std::this_thread::sleep_for(std::chrono::seconds(1));
                 PINE_INFO("Pinging server!");
                 client.PingServer();
-                sent = true;
+                pingCount++;
             }
+
             if (!client.Incoming().empty())
             {
                 auto message = client.Incoming().pop_front().Msg;
-                std::chrono::system_clock::time_point t;
-                std::chrono::system_clock::time_point z;
-                double time;
-
+                std::chrono::system_clock::time_point sent;
+                std::chrono::system_clock::time_point received;
+                double transmitTime = 0.0;
                 switch (message.Header.ID)
                 {
                 case CustomMessageTypes::ServerPing:
-                    t = std::chrono::system_clock::now();
-                    message >> z;
-                    time = std::chrono::duration<double>(t - z).count();
-                    PINE_INFO("Ping: {0}", time);
+                    received = std::chrono::system_clock::now();
+                    message >> sent;
+                    transmitTime =
+                        std::chrono::duration<double>(received - sent).count();
+                    PINE_INFO("Ping: {0}", transmitTime);
                     break;
                 default:
                     break;

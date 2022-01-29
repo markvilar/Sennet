@@ -1,8 +1,12 @@
 #!/usr/bin/bash
 
-find . -type d \( -path ./lib/external -o -path ./os -o -path ./lib/libc \
-    -o -path ./lib/libmemory \) -prune -o -iname *.h -o -iname *.c \
-    -o -iname *.cpp -o -iname *.hpp \
+find ./editor -iname *.hpp -o -iname *.cpp \
+    | xargs clang-format -style=file -i -fallback-style=none
+
+find ./examples -iname *.hpp -o -iname *.cpp \
+    | xargs clang-format -style=file -i -fallback-style=none
+
+find ./pine -iname *.hpp -o -iname *.cpp \
     | xargs clang-format -style=file -i -fallback-style=none
 
 exit 0

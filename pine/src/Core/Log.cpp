@@ -1,5 +1,5 @@
-#include "Pine/Pch.hpp"
 #include "Pine/Core/Log.hpp"
+#include "Pine/Pch.hpp"
 
 #include "spdlog/sinks/basic_file_sink.h"
 #include "spdlog/sinks/stdout_color_sinks.h"
@@ -15,8 +15,7 @@ void Log::Init()
     std::vector<spdlog::sink_ptr> sinks;
     sinks.emplace_back(std::make_shared<spdlog::sinks::stdout_color_sink_mt>());
     sinks.emplace_back(
-        std::make_shared<spdlog::sinks::basic_file_sink_mt>("Pine.log",
-            true));
+        std::make_shared<spdlog::sinks::basic_file_sink_mt>("Pine.log", true));
 
     sinks[0]->set_pattern("%^[%T] %n: %v%$");
     sinks[1]->set_pattern("[%T] [%l] %n: %v");

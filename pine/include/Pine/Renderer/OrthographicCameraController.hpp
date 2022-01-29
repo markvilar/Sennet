@@ -13,8 +13,8 @@ namespace Pine
 class OrthographicCameraController
 {
 public:
-    OrthographicCameraController(const float aspectRatio, 
-        const bool rotation = false);
+    OrthographicCameraController(
+        const float aspectRatio, const bool rotation = false);
 
     void OnUpdate(const Timestep& ts);
     void OnEvent(Event& e);

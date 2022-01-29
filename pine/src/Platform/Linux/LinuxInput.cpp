@@ -1,6 +1,6 @@
 #if defined(PINE_PLATFORM_LINUX)
-#include "Pine/Pch.hpp"
 #include "Pine/Core/Input.hpp"
+#include "Pine/Pch.hpp"
 
 #include "Pine/Core/Application.hpp"
 

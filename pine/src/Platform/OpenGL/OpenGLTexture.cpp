@@ -1,5 +1,5 @@
-#include "Pine/Pch.hpp"
 #include "Pine/Platform/OpenGL/OpenGLTexture.hpp"
+#include "Pine/Pch.hpp"
 
 #include <filesystem>
 #include <fstream>

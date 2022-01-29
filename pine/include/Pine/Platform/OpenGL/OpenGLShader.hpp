@@ -24,15 +24,12 @@ public:
     virtual void Unbind() const override;
 
     virtual void SetInt(const std::string& name, const int value) override;
-    virtual void SetIntArray(
-        const std::string& name, const int* values, const uint32_t count) override;
+    virtual void SetIntArray(const std::string& name, const int* values,
+        const uint32_t count) override;
     virtual void SetFloat(const std::string& name, const float value) override;
-    virtual void SetFloat3(
-        const std::string& name, const Vec3& value) override;
-    virtual void SetFloat4(
-        const std::string& name, const Vec4& value) override;
-    virtual void SetMat4(
-        const std::string& name, const Mat4& value) override;
+    virtual void SetFloat3(const std::string& name, const Vec3& value) override;
+    virtual void SetFloat4(const std::string& name, const Vec4& value) override;
+    virtual void SetMat4(const std::string& name, const Mat4& value) override;
 
     virtual const std::string& GetName() const override { return m_Name; }
 

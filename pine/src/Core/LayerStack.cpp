@@ -1,5 +1,5 @@
-#include "Pine/Pch.hpp"
 #include "Pine/Core/LayerStack.hpp"
+#include "Pine/Pch.hpp"
 
 namespace Pine
 {
@@ -19,10 +19,7 @@ void LayerStack::PushLayer(Layer* layer)
     m_LayerInsertIndex++;
 }
 
-void LayerStack::PushOverlay(Layer* overlay)
-{
-    m_Layers.emplace_back(overlay);
-}
+void LayerStack::PushOverlay(Layer* overlay) { m_Layers.emplace_back(overlay); }
 
 void LayerStack::PopLayer(Layer* layer)
 {
@@ -43,7 +40,7 @@ void LayerStack::PopOverlay(Layer* overlay)
     auto it = std::find(m_Layers.begin() + m_LayerInsertIndex,
         m_Layers.end(),
         overlay);
-    
+
     if (it != m_Layers.end())
     {
         overlay->OnDetach();

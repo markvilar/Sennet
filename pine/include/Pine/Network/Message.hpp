@@ -1,6 +1,6 @@
 #pragma once
 
-namespace Pine::TCP
+namespace Pine
 {
 
 template <typename T> struct MessageHeader
@@ -29,15 +29,10 @@ template <typename T> struct Message
     {
         static_assert(std::is_standard_layout<D>::value,
             "Data is too complex to be pushed into vector.");
-        uint64_t i = message.Body.size();
 
-        // Resize body.
+        const auto i = message.Body.size();
         message.Body.resize(message.Body.size() + sizeof(D));
-
-        // Copy data into vector.
         std::memcpy(message.Body.data() + i, &data, sizeof(D));
-
-        // Update header size.
         message.Header.Size = message.Size();
 
         return message;
@@ -49,16 +44,11 @@ template <typename T> struct Message
     {
         static_assert(std::is_standard_layout<D>::value,
             "Data is too complex to be pushed into vector.");
-        uint64_t i = message.Body.size();
-        uint64_t vectorSize = data.size();
 
-        // Resize body.
+        const auto vectorSize = data.size();
+        const auto i = message.Body.size();
         message.Body.resize(message.Body.size() + vectorSize);
-
-        // Copy data into vector.
         std::memcpy(message.Body.data() + i, data.data(), vectorSize);
-
-        // Update header size.
         message.Header.Size = message.Size();
 
         return message;
@@ -70,15 +60,9 @@ template <typename T> struct Message
         static_assert(std::is_standard_layout<D>::value,
             "Data is too complex to be pushed into vector.");
 
-        uint64_t i = message.Body.size() - sizeof(D);
-
-        // Copy data from vector.
+        const auto i = message.Body.size() - sizeof(D);
         std::memcpy(&data, message.Body.data() + i, sizeof(D));
-
-        // Resize body.
         message.Body.resize(i);
-
-        // Update header size.
         message.Header.Size = message.Size();
 
         return message;
@@ -89,16 +73,11 @@ template <typename T> struct Message
     {
         static_assert(std::is_standard_layout<D>::value,
             "Data is too complex to be pushed into vector.");
-        uint64_t vecSize = data.size();
-        uint64_t i = message.Body.size() - vecSize;
 
-        // Copy data from vector.
-        std::memcpy(data.data(), message.Body.data() + i, vecSize);
-
-        // Resize body.
+        const auto vectorSize = data.size();
+        const auto i = message.Body.size() - vectorSize;
+        std::memcpy(data.data(), message.Body.data() + i, vectorSize);
         message.Body.resize(i);
-
-        // Update header size.
         message.Header.Size = message.Size();
 
         return message;
@@ -109,7 +88,7 @@ template <typename T> class Connection;
 
 template <typename T> struct OwnedMessage
 {
-    Ref<Connection<T>> Remote = nullptr;
+    std::shared_ptr<Connection<T>> Remote = nullptr;
     Message<T> Msg;
 
     friend std::ostream& operator<<(
@@ -120,4 +99,4 @@ template <typename T> struct OwnedMessage
     }
 };
 
-} // namespace Pine::TCP
+} // namespace Pine
