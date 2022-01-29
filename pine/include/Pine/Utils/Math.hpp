@@ -18,39 +18,50 @@ typedef glm::mat4 Mat4;
 
 typedef glm::quat Quat;
 
-template <typename T> float Radians(const T& t) { return glm::radians(t); }
+template <typename T>
+float Radians(const T& t)
+{
+    return glm::radians(t);
+}
 
-template <typename... Args> Mat4 Translate(Args... args)
+template <typename... Args>
+Mat4 Translate(Args... args)
 {
     return glm::translate(args...);
 }
 
-template <typename... Args> Mat4 Rotate(Args... args)
+template <typename... Args>
+Mat4 Rotate(Args... args)
 {
     return glm::rotate(args...);
 }
 
-template <typename... Args> Mat4 Scale(Args... args)
+template <typename... Args>
+Mat4 Scale(Args... args)
 {
     return glm::scale(args...);
 }
 
-template <typename... Args> Mat4 Ortho(Args... args)
+template <typename... Args>
+Mat4 Ortho(Args... args)
 {
     return glm::ortho(args...);
 }
 
-template <typename... Args> Mat4 Inverse(Args... args)
+template <typename... Args>
+Mat4 Inverse(Args... args)
 {
     return glm::inverse(args...);
 }
 
-template <typename T> typename T::value_type* ValuePtr(T& t)
+template <typename T>
+typename T::value_type* ValuePtr(T& t)
 {
     return glm::value_ptr(t);
 }
 
-template <typename T> const typename T::value_type* ValuePtr(const T& t)
+template <typename T>
+const typename T::value_type* ValuePtr(const T& t)
 {
     return glm::value_ptr(t);
 }

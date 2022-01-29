@@ -1,8 +1,6 @@
 #pragma once
 #include "Pine/Pch.hpp"
 
-#include <string>
-
 #include "imgui.h"
 
 #include "Pine/Renderer/Framebuffer.hpp"
@@ -63,7 +61,8 @@ auto AddViewport(const std::string& name, const Vec2& position,
     ImGui::End();
 }
 
-template <typename Function> auto AddMainMenuBar(const Function func)
+template <typename Function>
+auto AddMainMenuBar(const Function func)
 {
     if (ImGui::BeginMainMenuBar())
     {
@@ -72,8 +71,8 @@ template <typename Function> auto AddMainMenuBar(const Function func)
     }
 }
 
-// TODO: Needs to be tested.
-template <typename Function> auto AddMenuBar(const Function func)
+template <typename Function>
+auto AddMenuBar(const Function func)
 {
     if (ImGui::BeginMenuBar())
     {
@@ -82,10 +81,66 @@ template <typename Function> auto AddMenuBar(const Function func)
     }
 }
 
+template <typename T, size_t size>
+void AddCombo(const std::string& name, T* value,
+    const std::array<std::pair<std::string, T>, size>& options)
+{
+    static uint32_t labelIndex = 0;
+    const auto label = options[labelIndex].first;
+    if (ImGui::BeginCombo(name.c_str(), label.c_str(), 0))
+    {
+        for (auto index = 0; index < size; index++)
+        {
+            const auto isSelected = (labelIndex == index);
+            if (ImGui::Selectable(options[index].first.c_str(), isSelected))
+            {
+                labelIndex = index;
+            }
+
+            if (isSelected)
+            {
+                *value = options[index].second;
+                ImGui::SetItemDefaultFocus();
+            }
+        }
+        ImGui::EndCombo();
+    }
+}
+
 WindowFlags ConfigureWindowFlags(const bool fullscreen);
-
 void SetDarkTheme(Style& style);
-
 void ImGuiHelpMarker(const char* desc);
+
+void AddEmptySpace(const float width, const float height);
+
+bool SliderScalar(const std::string& name, int8_t* value, const int8_t minValue,
+    const int8_t maxValue);
+
+bool SliderScalar(const std::string& name, uint8_t* value,
+    const uint8_t minValue, const uint8_t maxValue);
+
+bool SliderScalar(const std::string& name, int16_t* value,
+    const int16_t minValue, const int16_t maxValue);
+
+bool SliderScalar(const std::string& name, uint16_t* value,
+    const uint16_t minValue, const uint16_t maxValue);
+
+bool SliderScalar(const std::string& name, int32_t* value,
+    const int32_t minValue, const int32_t maxValue);
+
+bool SliderScalar(const std::string& name, uint32_t* value,
+    const uint32_t minValue, const uint32_t maxValue);
+
+bool SliderScalar(const std::string& name, int64_t* value,
+    const int64_t minValue, const int64_t maxValue);
+
+bool SliderScalar(const std::string& name, uint64_t* value,
+    const uint64_t minValue, const uint64_t maxValue);
+
+bool SliderScalar(const std::string& name, float* value, const float minValue,
+    const float maxValue);
+
+bool SliderScalar(const std::string& name, double* value, const double minValue,
+    const double maxValue);
 
 } // namespace Pine::UI

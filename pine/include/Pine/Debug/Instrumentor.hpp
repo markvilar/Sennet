@@ -181,7 +181,8 @@ private:
 
 class InstrumentationUtils
 {
-    template <size_t N> struct ChangeResult
+    template <size_t N>
+    struct ChangeResult
     {
         char Data[N];
     };

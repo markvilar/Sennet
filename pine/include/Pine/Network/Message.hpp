@@ -3,13 +3,15 @@
 namespace Pine
 {
 
-template <typename T> struct MessageHeader
+template <typename T>
+struct MessageHeader
 {
     T ID{};
     uint32_t Size = 0;
 };
 
-template <typename T> struct Message
+template <typename T>
+struct Message
 {
     MessageHeader<T> Header{};
     std::vector<uint8_t> Body;
@@ -84,9 +86,11 @@ template <typename T> struct Message
     }
 };
 
-template <typename T> class Connection;
+template <typename T>
+class Connection;
 
-template <typename T> struct OwnedMessage
+template <typename T>
+struct OwnedMessage
 {
     std::shared_ptr<Connection<T>> Remote = nullptr;
     Message<T> Msg;
