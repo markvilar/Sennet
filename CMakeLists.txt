@@ -5,9 +5,9 @@ project(
     VERSION 0.1
     LANGUAGES CXX)
 
-option(PINE_BUILD_EDITOR "Build editor." ON)
 option(PINE_BUILD_SHARED "Build shared library." ON)
-option(PINE_BUILD_EXAMPLES "Build examples." ON)
+option(PINE_BUILD_EDITOR "Build editor." OFF)
+option(PINE_BUILD_EXAMPLES "Build examples." OFF)
 option(PINE_BUILD_WARNINGS "Enable compiler warnings." ON)
 
 include(cmake/ProjectSettings.cmake)

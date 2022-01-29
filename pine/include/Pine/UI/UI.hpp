@@ -89,17 +89,17 @@ void AddCombo(const std::string& name, T* value,
     const auto label = options[labelIndex].first;
     if (ImGui::BeginCombo(name.c_str(), label.c_str(), 0))
     {
-        for (auto index = 0; index < size; index++)
+        for (auto index = 0; index < options.size(); index++)
         {
             const auto isSelected = (labelIndex == index);
             if (ImGui::Selectable(options[index].first.c_str(), isSelected))
             {
                 labelIndex = index;
+                *value = options[index].second;
             }
 
             if (isSelected)
             {
-                *value = options[index].second;
                 ImGui::SetItemDefaultFocus();
             }
         }

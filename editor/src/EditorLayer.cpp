@@ -209,9 +209,9 @@ void EditorLayer::OnImGuiRender()
             {
                 showFileSystemPopup = true;
             }
-            if (ImGui::MenuItem("Asset directory"))
+            if (ImGui::MenuItem("Resource directory"))
             {
-                // TODO: Render asset directory panel.
+                // TODO: Render resources directory panel.
             }
             ImGui::EndMenu();
         }
@@ -316,7 +316,7 @@ void EditorLayer::OnImGuiRender()
             static float valueFloat = 0.0;
             static double valueDouble = 0.0;
 
-            UI::SliderScalar("Slider uint8", &valueInt8, -10, 10);
+            UI::SliderScalar("Slider int8", &valueInt8, -10, 10);
             UI::SliderScalar("Slider int16", &valueInt16, -10, 10);
             UI::SliderScalar("Slider int32", &valueInt32, -10, 10);
             UI::SliderScalar("Slider int64", &valueInt64, -10, 10);
