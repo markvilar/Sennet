@@ -1,11 +1,11 @@
 #include "Pine/Core/Application.hpp"
-#include "Pine/Pch.hpp"
 
-#include "GLFW/glfw3.h"
+#include <GLFW/glfw3.h>
 
 #include "Pine/Core/Input.hpp"
 #include "Pine/Core/Log.hpp"
 #include "Pine/Core/Timestep.hpp"
+#include "Pine/Pch.hpp"
 #include "Pine/Renderer/Renderer.hpp"
 
 namespace Pine

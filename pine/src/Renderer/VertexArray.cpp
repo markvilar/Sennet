@@ -1,6 +1,6 @@
 #include "Pine/Renderer/VertexArray.hpp"
-#include "Pine/Pch.hpp"
 
+#include "Pine/Pch.hpp"
 #include "Pine/Platform/OpenGL/OpenGLVertexArray.hpp"
 #include "Pine/Renderer/Renderer.hpp"
 

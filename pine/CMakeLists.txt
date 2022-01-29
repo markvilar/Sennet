@@ -110,9 +110,7 @@ target_link_libraries(
            glm::glm
            imgui::imgui
            spdlog::spdlog
-    PRIVATE glad::glad
-            glfw::glfw
-            stb::stb)
+    PRIVATE glad::glad glfw::glfw stb::stb)
 
 if(MSVC)
     target_compile_definitions(pine PUBLIC PINE_PLATFORM_WINDOWS)
@@ -138,3 +136,9 @@ set_target_properties(
     PROPERTIES ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib"
                LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib"
                RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
+
+add_custom_command(
+    TARGET pine
+    POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_SOURCE_DIR}/resources/"
+            "${CMAKE_BINARY_DIR}/bin/resources/")

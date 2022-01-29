@@ -1,7 +1,8 @@
 #include "Pine/Platform/OpenGL/OpenGLBuffer.hpp"
-#include "Pine/Pch.hpp"
 
-#include "glad/glad.h"
+#include <glad/glad.h>
+
+#include "Pine/Pch.hpp"
 
 namespace Pine
 {
