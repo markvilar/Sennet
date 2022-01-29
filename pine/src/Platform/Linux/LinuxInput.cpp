@@ -1,10 +1,10 @@
 #if defined(PINE_PLATFORM_LINUX)
 #include "Pine/Core/Input.hpp"
-#include "Pine/Pch.hpp"
-
-#include "Pine/Core/Application.hpp"
 
 #include <GLFW/glfw3.h>
+
+#include "Pine/Core/Application.hpp"
+#include "Pine/Pch.hpp"
 
 namespace Pine
 {

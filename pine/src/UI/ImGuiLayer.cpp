@@ -1,12 +1,12 @@
 #include "Pine/UI/ImGuiLayer.hpp"
-#include "Pine/Pch.hpp"
-
-#include "Pine/Core/Application.hpp"
-#include "Pine/UI/UI.hpp"
 
 // TODO: TEMPORARY
-#include "GLFW/glfw3.h"
-#include "glad/glad.h"
+#include <GLFW/glfw3.h>
+#include <glad/glad.h>
+
+#include "Pine/Core/Application.hpp"
+#include "Pine/Pch.hpp"
+#include "Pine/UI/UI.hpp"
 
 namespace Pine
 {

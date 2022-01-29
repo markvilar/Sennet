@@ -1,11 +1,10 @@
 #include "Pine/Platform/OpenGL/OpenGLShader.hpp"
-#include "Pine/Pch.hpp"
 
 #include <fstream>
 
-#include "glad/glad.h"
+#include <glad/glad.h>
 
-//#include "glm/gtc/type_ptr.hpp"
+#include "Pine/Pch.hpp"
 #include "Pine/Utils/Math.hpp"
 
 namespace Pine

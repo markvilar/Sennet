@@ -1,10 +1,10 @@
 #include "Pine/Platform/OpenGL/OpenGLContext.hpp"
-#include "Pine/Pch.hpp"
+
+#include <glad/glad.h>
 
 #include "Pine/Core/Base.hpp"
 #include "Pine/Core/Log.hpp"
-
-#include "glad/glad.h"
+#include "Pine/Pch.hpp"
 
 namespace Pine
 {

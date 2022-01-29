@@ -4,7 +4,7 @@
 #include <filesystem>
 #include <fstream>
 
-#include "glad/glad.h"
+#include <glad/glad.h>
 
 namespace Pine
 {

@@ -1,11 +1,11 @@
 #if defined(PINE_PLATFORM_LINUX)
 #include "Pine/Platform/Linux/LinuxWindow.hpp"
-#include "Pine/Pch.hpp"
 
 #include "Pine/Core/Input.hpp"
 #include "Pine/Events/ApplicationEvent.hpp"
 #include "Pine/Events/KeyEvent.hpp"
 #include "Pine/Events/MouseEvent.hpp"
+#include "Pine/Pch.hpp"
 #include "Pine/Platform/OpenGL/OpenGLContext.hpp"
 
 namespace Pine

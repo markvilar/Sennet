@@ -1,9 +1,9 @@
 #pragma once
 
-#include "Pine/Core/Base.hpp"
+#include <spdlog/fmt/ostr.h>
+#include <spdlog/spdlog.h>
 
-#include "spdlog/fmt/ostr.h"
-#include "spdlog/spdlog.h"
+#include "Pine/Core/Base.hpp"
 
 namespace Pine
 {

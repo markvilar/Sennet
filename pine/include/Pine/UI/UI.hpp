@@ -1,8 +1,8 @@
 #pragma once
+
+#include <imgui.h>
+
 #include "Pine/Pch.hpp"
-
-#include "imgui.h"
-
 #include "Pine/Renderer/Framebuffer.hpp"
 #include "Pine/UI/ImGuiImplGLFW.hpp"
 #include "Pine/UI/ImGuiImplOpenGL3.hpp"
