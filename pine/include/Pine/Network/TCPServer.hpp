@@ -1,5 +1,7 @@
 #pragma once
 
+#include <memory>
+
 #include <asio.hpp>
 
 #include "Pine/Network/Connection.hpp"
@@ -90,7 +92,7 @@ public:
     }
 
     void MessageClient(
-        const std::shared_ptr<Connection<T>> client, const Message<T>& message)
+        const std::shared_ptr<Connection<T>>& client, const Message<T>& message)
     {
         if (client && client->IsConnected())
         {
@@ -107,7 +109,7 @@ public:
     }
 
     void MessageAllClients(const Message<T>& message,
-        const std::shared_ptr<Connection<T>> ignoreClient = nullptr)
+        const std::shared_ptr<Connection<T>>& ignoreClient = nullptr)
     {
         bool invalidClientExists = false;
         for (auto& client : m_Connections)
@@ -148,15 +150,18 @@ public:
     }
 
 protected:
-    virtual bool OnClientConnect(std::shared_ptr<Connection<T>> client)
+    virtual bool OnClientConnect(const std::shared_ptr<Connection<T>>& client)
     {
         return false;
     }
 
-    virtual void OnClientDisconnect(std::shared_ptr<Connection<T>> client) {}
+    virtual void OnClientDisconnect(
+        const std::shared_ptr<Connection<T>>& client)
+    {
+    }
 
     virtual void OnMessage(
-        std::shared_ptr<Connection<T>> client, Message<T>& message)
+        const std::shared_ptr<Connection<T>>& client, const Message<T>& message)
     {
     }
 

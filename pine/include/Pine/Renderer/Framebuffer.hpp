@@ -11,12 +11,13 @@ class Framebuffer
 public:
     struct Specification
     {
-        uint32_t Width;
-        uint32_t Height;
-        // TODO: FramebufferFormat
+        uint32_t Width = 0;
+        uint32_t Height = 0;
         uint32_t Samples = 1;
 
         bool SwapChainTarget = false;
+
+        // TODO: FramebufferFormat
     };
 
 public:
@@ -30,7 +31,7 @@ public:
     virtual RendererID GetColorAttachmentRendererID() const = 0;
 
     virtual const Specification& GetSpecification() const = 0;
-    static Ref<Framebuffer> Create(const Specification& specs);
+    static Framebuffer* Create(const Specification& specs);
 };
 
 } // namespace Pine

@@ -56,7 +56,7 @@ void EditorLayer::OnAttach()
     Framebuffer::Specification specs;
     specs.Width = viewport.Size.x;
     specs.Height = viewport.Size.y;
-    m_ViewportFramebuffer = Framebuffer::Create(specs);
+    m_ViewportFramebuffer.reset(Framebuffer::Create(specs));
 
     m_CameraController.OnResize(static_cast<uint32_t>(viewport.Size.x),
         static_cast<uint32_t>(viewport.Size.y));
@@ -331,18 +331,12 @@ void EditorLayer::OnImGuiRender()
     UI::AddWindow("Right",
         rightInterfaceLayout.Position,
         rightInterfaceLayout.Size,
-        [] {
-            // TODO: Add functionality here.
-            ImGui::TextUnformatted("This is a text field.");
-        });
+        []() {});
 
     UI::AddWindow("Bottom",
         bottomInterfaceLayout.Position,
         bottomInterfaceLayout.Size,
-        [] {
-            // TODO: Add functionality here.
-            ImGui::TextUnformatted("This is a text field.");
-        });
+        []() {});
 }
 
 void EditorLayer::OnEvent(Event& e) { m_CameraController.OnEvent(e); }

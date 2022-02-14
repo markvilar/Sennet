@@ -5,6 +5,7 @@
 namespace Pine
 {
 
-Scope<RendererAPI> RenderCommand::s_RendererAPI = RendererAPI::Create();
+std::unique_ptr<RendererAPI> RenderCommand::s_RendererAPI =
+    RendererAPI::Create();
 
 }

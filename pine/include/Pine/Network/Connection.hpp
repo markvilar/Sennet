@@ -118,7 +118,7 @@ private:
             });
     }
 
-    void ReadBody(std::shared_ptr<Message<T>> message)
+    void ReadBody(const std::shared_ptr<Message<T>>& message)
     {
         asio::async_read(m_Socket,
             asio::buffer(message->Body.data(), message->Body.size()),
@@ -191,7 +191,7 @@ private:
             });
     }
 
-    void AddToIncomingMessageQueue(const std::shared_ptr<Message<T>> message)
+    void AddToIncomingMessageQueue(const std::shared_ptr<Message<T>>& message)
     {
         if (m_Owner == Owner::Server && message)
         {

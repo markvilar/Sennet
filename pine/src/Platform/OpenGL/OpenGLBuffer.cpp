@@ -11,14 +11,14 @@ namespace Pine
 //// Vertex Buffer ////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
 
-OpenGLVertexBuffer::OpenGLVertexBuffer(uint32_t size)
+OpenGLVertexBuffer::OpenGLVertexBuffer(const uint32_t size)
 {
     glCreateBuffers(1, &m_RendererID);
     glBindBuffer(GL_ARRAY_BUFFER, m_RendererID);
     glBufferData(GL_ARRAY_BUFFER, size, nullptr, GL_DYNAMIC_DRAW);
 }
 
-OpenGLVertexBuffer::OpenGLVertexBuffer(float* vertices, uint32_t size)
+OpenGLVertexBuffer::OpenGLVertexBuffer(const float* vertices, uint32_t size)
 {
     glCreateBuffers(1, &m_RendererID);
     glBindBuffer(GL_ARRAY_BUFFER, m_RendererID);
@@ -34,7 +34,7 @@ void OpenGLVertexBuffer::Bind() const
 
 void OpenGLVertexBuffer::Unbind() const { glBindBuffer(GL_ARRAY_BUFFER, 0); }
 
-void OpenGLVertexBuffer::SetData(const void* data, uint32_t size)
+void OpenGLVertexBuffer::SetData(const void* data, const uint32_t size)
 {
     glBindBuffer(GL_ARRAY_BUFFER, m_RendererID);
     glBufferSubData(GL_ARRAY_BUFFER, 0, size, data);
@@ -44,7 +44,8 @@ void OpenGLVertexBuffer::SetData(const void* data, uint32_t size)
 //// Index Buffer /////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
 
-OpenGLIndexBuffer::OpenGLIndexBuffer(uint32_t* indices, uint32_t count)
+OpenGLIndexBuffer::OpenGLIndexBuffer(
+    const uint32_t* indices, const uint32_t count)
     : m_Count(count)
 {
     glCreateBuffers(1, &m_RendererID);

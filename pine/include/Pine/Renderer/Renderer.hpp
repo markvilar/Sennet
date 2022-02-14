@@ -1,5 +1,7 @@
 #pragma once
 
+#include <memory>
+
 #include "Pine/Core/Base.hpp"
 #include "Pine/Renderer/OrthographicCamera.hpp"
 #include "Pine/Renderer/RendererAPI.hpp"
@@ -18,16 +20,16 @@ public:
     static void Init();
     static void OnWindowResize(const uint32_t width, const uint32_t height);
 
-    static Ref<ShaderLibrary> GetShaderLibrary();
+    static std::shared_ptr<ShaderLibrary> GetShaderLibrary();
 
-    static Ref<Texture2D> GetBlackTexture();
-    static Ref<Texture2D> GetWhiteTexture();
+    static std::shared_ptr<Texture2D> GetBlackTexture();
+    static std::shared_ptr<Texture2D> GetWhiteTexture();
 
     static void BeginScene(const OrthographicCamera& camera);
     static void EndScene();
 
-    static void Submit(const Ref<Shader>& shader,
-        const Ref<VertexArray>& vertexArray,
+    static void Submit(const std::shared_ptr<Shader>& shader,
+        const std::shared_ptr<VertexArray>& vertexArray,
         const Mat4& transform = Mat4(1.0f));
 
     inline static RendererAPI::API GetAPI() { return RendererAPI::GetAPI(); }
@@ -38,7 +40,7 @@ private:
         Mat4 ViewProjectionMatrix;
     };
 
-    static Scope<SceneData> s_SceneData;
+    static std::unique_ptr<SceneData> s_SceneData;
 };
 
 } // namespace Pine

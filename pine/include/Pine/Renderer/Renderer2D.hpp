@@ -1,5 +1,7 @@
 #pragma once
 
+#include <memory>
+
 #include "Pine/Renderer/OrthographicCamera.hpp"
 #include "Pine/Renderer/Texture.hpp"
 #include "Pine/Utils/Math.hpp"
@@ -22,25 +24,26 @@ public:
     static void DrawQuad(
         const Vec3& position, const Vec2& size, const Vec4& color);
     static void DrawQuad(const Vec2& position, const Vec2& size,
-        const Ref<Texture2D>& texture, const float tilingFactor = 1.0f,
-        const Vec4& tintColor = Vec4(1.0f));
+        const std::shared_ptr<Texture2D>& texture,
+        const float tilingFactor = 1.0f, const Vec4& tintColor = Vec4(1.0f));
     static void DrawQuad(const Vec3& position, const Vec2& size,
-        const Ref<Texture2D>& texture, const float tilingFactor = 1.0f,
-        const Vec4& tintColor = Vec4(1.0f));
+        const std::shared_ptr<Texture2D>& texture,
+        const float tilingFactor = 1.0f, const Vec4& tintColor = Vec4(1.0f));
 
     static void DrawRotatedQuad(const Vec2& position, const Vec2& size,
         const float rotation, const Vec4& color);
     static void DrawRotatedQuad(const Vec3& position, const Vec2& size,
         const float rotation, const Vec4& color);
     static void DrawRotatedQuad(const Vec2& position, const Vec2& size,
-        const float rotation, const Ref<Texture2D>& texture,
+        const float rotation, const std::shared_ptr<Texture2D>& texture,
         const float tilingFactor = 1.0f, const Vec4& tintColor = Vec4(1.0f));
     static void DrawRotatedQuad(const Vec3& position, const Vec2& size,
-        const float rotation, const Ref<Texture2D>& texture,
+        const float rotation, const std::shared_ptr<Texture2D>& texture,
         const float tilingFactor = 1.0f, const Vec4& tintColor = Vec4(1.0f));
 
     static void DrawQuad(const Mat4& transform, const Vec4& color);
-    static void DrawQuad(const Mat4& transform, const Ref<Texture2D>& texture,
+    static void DrawQuad(const Mat4& transform,
+        const std::shared_ptr<Texture2D>& texture,
         const float tilingFactor = 1.0f, const Vec4& tintColor = Vec4(1.0f));
 
     struct QuadData

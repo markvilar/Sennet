@@ -21,21 +21,21 @@ struct QuadVertex
 
 struct Renderer2DData
 {
-    static const uint32_t MaxQuads = 20000;
-    static const uint32_t MaxVertices =
+    static constexpr uint32_t MaxQuads = 20000;
+    static constexpr uint32_t MaxVertices =
         MaxQuads * Renderer2D::QuadData::VerticesPerQuad;
-    static const uint32_t MaxIndices =
+    static constexpr uint32_t MaxIndices =
         MaxQuads * Renderer2D::QuadData::IndicesPerQuad;
-    static const uint32_t MaxTextureSlots = 32; // TODO: RenderCaps
+    static constexpr uint32_t MaxTextureSlots = 32; // TODO: RenderCaps
 
-    Ref<VertexArray> QuadVertexArray;
-    Ref<VertexBuffer> QuadVertexBuffer;
+    std::shared_ptr<VertexArray> QuadVertexArray;
+    std::shared_ptr<VertexBuffer> QuadVertexBuffer;
 
     uint32_t QuadIndexCount = 0;
     QuadVertex* QuadVertexBufferBase = nullptr;
     QuadVertex* QuadVertexBufferPtr = nullptr;
 
-    std::array<Ref<Texture2D>, MaxTextureSlots> TextureSlots;
+    std::array<std::shared_ptr<Texture2D>, MaxTextureSlots> TextureSlots;
     uint32_t TextureSlotIndex = 1; // 0 = white texture
 
     Vec4 QuadVertexPositions[Renderer2D::QuadData::VerticesPerQuad];
@@ -81,7 +81,7 @@ void Renderer2D::Init()
         offset += QuadData::VerticesPerQuad;
     }
 
-    Ref<IndexBuffer> quadIB =
+    std::shared_ptr<IndexBuffer> quadIB =
         IndexBuffer::Create(quadIndices, s_Data.MaxIndices);
     s_Data.QuadVertexArray->SetIndexBuffer(quadIB);
     delete[] quadIndices;
@@ -177,7 +177,7 @@ void Renderer2D::DrawQuad(
 }
 
 void Renderer2D::DrawQuad(const Vec2& position, const Vec2& size,
-    const Ref<Texture2D>& texture, const float tilingFactor,
+    const std::shared_ptr<Texture2D>& texture, const float tilingFactor,
     const Vec4& tintColor)
 {
     DrawQuad({position.x, position.y, 0.0f},
@@ -188,7 +188,7 @@ void Renderer2D::DrawQuad(const Vec2& position, const Vec2& size,
 }
 
 void Renderer2D::DrawQuad(const Vec3& position, const Vec2& size,
-    const Ref<Texture2D>& texture, const float tilingFactor,
+    const std::shared_ptr<Texture2D>& texture, const float tilingFactor,
     const Vec4& tintColor)
 {
     Mat4 transform = Translate(Mat4(1.0f), position)
@@ -214,7 +214,7 @@ void Renderer2D::DrawRotatedQuad(const Vec3& position, const Vec2& size,
 }
 
 void Renderer2D::DrawRotatedQuad(const Vec2& position, const Vec2& size,
-    const float rotation, const Ref<Texture2D>& texture,
+    const float rotation, const std::shared_ptr<Texture2D>& texture,
     const float tilingFactor, const Vec4& tintColor)
 {
     DrawRotatedQuad({position.x, position.y, 0.0f},
@@ -226,7 +226,7 @@ void Renderer2D::DrawRotatedQuad(const Vec2& position, const Vec2& size,
 }
 
 void Renderer2D::DrawRotatedQuad(const Vec3& position, const Vec2& size,
-    const float rotation, const Ref<Texture2D>& texture,
+    const float rotation, const std::shared_ptr<Texture2D>& texture,
     const float tilingFactor, const Vec4& tintColor)
 {
 
@@ -260,8 +260,9 @@ void Renderer2D::DrawQuad(const Mat4& transform, const Vec4& color)
     s_Data.Stats.QuadCount++;
 }
 
-void Renderer2D::DrawQuad(const Mat4& transform, const Ref<Texture2D>& texture,
-    const float tilingFactor, const Vec4& tintColor)
+void Renderer2D::DrawQuad(const Mat4& transform,
+    const std::shared_ptr<Texture2D>& texture, const float tilingFactor,
+    const Vec4& tintColor)
 {
     if (s_Data.QuadIndexCount >= Renderer2DData::MaxIndices)
         FlushAndReset();
