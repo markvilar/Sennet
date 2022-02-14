@@ -1,5 +1,7 @@
 #pragma once
 
+#include <memory>
+
 #include <asio.hpp>
 
 #include "Pine/Network/Connection.hpp"

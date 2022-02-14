@@ -1,6 +1,7 @@
 #pragma once
 
 #include <filesystem>
+#include <memory>
 
 #include "Pine/Core/Base.hpp"
 #include "Pine/Renderer/Image.hpp"
@@ -28,8 +29,9 @@ public:
 class Texture2D : public Texture
 {
 public:
-    static Ref<Texture2D> Create(const std::filesystem::path& filePath);
-    static Ref<Texture2D> Create(const Image& image);
+    static std::shared_ptr<Texture2D> Create(
+        const std::filesystem::path& filePath);
+    static std::shared_ptr<Texture2D> Create(const Image& image);
 };
 
 } // namespace Pine

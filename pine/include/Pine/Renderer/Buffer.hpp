@@ -1,5 +1,9 @@
 #pragma once
 
+#include <memory>
+
+#include "Pine/Core/Base.hpp"
+
 namespace Pine
 {
 
@@ -19,7 +23,7 @@ enum class ShaderDataType
     Bool
 };
 
-static uint32_t ShaderDataTypeSize(ShaderDataType type)
+static uint32_t ShaderDataTypeSize(const ShaderDataType type)
 {
     switch (type)
     {
@@ -53,15 +57,53 @@ static uint32_t ShaderDataTypeSize(ShaderDataType type)
     return 0;
 }
 
+static uint32_t ShaderDataTypeComponentCount(const ShaderDataType type)
+{
+    switch (type)
+    {
+    case ShaderDataType::Float:
+        return 1;
+    case ShaderDataType::Float2:
+        return 2;
+    case ShaderDataType::Float3:
+        return 3;
+    case ShaderDataType::Float4:
+        return 4;
+    case ShaderDataType::Mat3:
+        return 3 * 3;
+    case ShaderDataType::Mat4:
+        return 4 * 4;
+    case ShaderDataType::Int:
+        return 1;
+    case ShaderDataType::Int2:
+        return 2;
+    case ShaderDataType::Int3:
+        return 3;
+    case ShaderDataType::Int4:
+        return 4;
+    case ShaderDataType::Bool:
+        return 1;
+    case ShaderDataType::None:
+        return 0;
+    }
+
+    PINE_CORE_ASSERT(false, "Unknown ShaderDataType!");
+    return 0;
+}
+
 struct BufferElement
 {
-    std::string Name;
-    ShaderDataType Type;
-    uint32_t Offset;
-    uint32_t Size;
-    bool Normalized;
+    std::string Name = "";
+    ShaderDataType Type = ShaderDataType::None;
+    uint32_t Offset = 0;
+    uint32_t Size = 0;
+    bool Normalized = false;
 
-    BufferElement() {}
+    BufferElement() = default;
+    BufferElement(const BufferElement&) = default;
+    BufferElement(BufferElement&&) = default;
+    ~BufferElement() = default;
+
     BufferElement(const ShaderDataType type, const std::string& name,
         const bool normalized = false)
         : Type(type), Name(name), Size(ShaderDataTypeSize(type)), Offset(0),
@@ -69,50 +111,31 @@ struct BufferElement
     {
     }
 
+    BufferElement& operator=(const BufferElement&) = default;
+    BufferElement& operator=(BufferElement&&) = default;
+
     uint32_t GetComponentCount() const
     {
-        switch (Type)
-        {
-        case ShaderDataType::Float:
-            return 1;
-        case ShaderDataType::Float2:
-            return 2;
-        case ShaderDataType::Float3:
-            return 3;
-        case ShaderDataType::Float4:
-            return 4;
-        case ShaderDataType::Mat3:
-            return 3 * 3;
-        case ShaderDataType::Mat4:
-            return 4 * 4;
-        case ShaderDataType::Int:
-            return 1;
-        case ShaderDataType::Int2:
-            return 2;
-        case ShaderDataType::Int3:
-            return 3;
-        case ShaderDataType::Int4:
-            return 4;
-        case ShaderDataType::Bool:
-            return 1;
-        case ShaderDataType::None:
-            return 0;
-        }
-
-        PINE_CORE_ASSERT(false, "Unknown ShaderDataType!");
-        return 0;
+        return ShaderDataTypeComponentCount(Type);
     }
 };
 
 class BufferLayout
 {
 public:
-    BufferLayout() {}
+    BufferLayout() = default;
+    BufferLayout(const BufferLayout&) = default;
+    BufferLayout(BufferLayout&&) = default;
+    ~BufferLayout() = default;
+
     BufferLayout(const std::initializer_list<BufferElement>& elements)
         : m_Elements(elements)
     {
         CalculateOffsetAndStride();
     }
+
+    BufferLayout& operator=(const BufferLayout&) = default;
+    BufferLayout& operator=(BufferLayout&&) = default;
 
     inline uint32_t GetStride() const { return m_Stride; }
     inline const std::vector<BufferElement>& GetElements() const
@@ -147,13 +170,14 @@ public:
     virtual void Bind() const = 0;
     virtual void Unbind() const = 0;
 
-    virtual void SetData(const void* data, uint32_t size) = 0;
+    virtual void SetData(const void* data, const uint32_t size) = 0;
 
     virtual const BufferLayout& GetLayout() const = 0;
     virtual void SetLayout(const BufferLayout& layout) = 0;
 
-    static Ref<VertexBuffer> Create(uint32_t size);
-    static Ref<VertexBuffer> Create(float* vertices, uint32_t size);
+    static std::shared_ptr<VertexBuffer> Create(const uint32_t size);
+    static std::shared_ptr<VertexBuffer> Create(
+        const float* vertices, const uint32_t size);
 };
 
 class IndexBuffer
@@ -166,7 +190,8 @@ public:
 
     virtual uint32_t GetCount() const = 0;
 
-    static Ref<IndexBuffer> Create(uint32_t* indices, uint32_t count);
+    static std::shared_ptr<IndexBuffer> Create(
+        const uint32_t* indices, const uint32_t count);
 };
 
 } // namespace Pine

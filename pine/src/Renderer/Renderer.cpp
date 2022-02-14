@@ -8,14 +8,14 @@
 namespace Pine
 {
 
-Scope<Renderer::SceneData> Renderer::s_SceneData =
-    CreateScope<Renderer::SceneData>();
+std::unique_ptr<Renderer::SceneData> Renderer::s_SceneData =
+    std::make_unique<Renderer::SceneData>();
 
 struct Data
 {
-    Ref<ShaderLibrary> Library;
-    Ref<Texture2D> BlackTexture;
-    Ref<Texture2D> WhiteTexture;
+    std::shared_ptr<ShaderLibrary> Library;
+    std::shared_ptr<Texture2D> BlackTexture;
+    std::shared_ptr<Texture2D> WhiteTexture;
 };
 
 static Data* s_Data = nullptr;
@@ -25,9 +25,8 @@ void Renderer::Init()
     s_Data = new Data();
 
     // Initialize shader library and load shaders.
-    s_Data->Library = CreateRef<ShaderLibrary>();
+    s_Data->Library = std::make_shared<ShaderLibrary>();
 
-    // TODO: Fix working directory and shader paths.
     Renderer::GetShaderLibrary()->Load("resources/shaders/Renderer2D.glsl");
 
     constexpr uint32_t width = 1;
@@ -50,19 +49,19 @@ void Renderer::OnWindowResize(const uint32_t width, const uint32_t height)
     RenderCommand::SetViewport(0, 0, width, height);
 }
 
-Ref<ShaderLibrary> Renderer::GetShaderLibrary()
+std::shared_ptr<ShaderLibrary> Renderer::GetShaderLibrary()
 {
     PINE_CORE_ASSERT(s_Data != nullptr, "Renderer un-initialized.");
     return s_Data->Library;
 }
 
-Ref<Texture2D> Renderer::GetBlackTexture()
+std::shared_ptr<Texture2D> Renderer::GetBlackTexture()
 {
     PINE_CORE_ASSERT(s_Data != nullptr, "Renderer un-initialized.");
     return s_Data->BlackTexture;
 }
 
-Ref<Texture2D> Renderer::GetWhiteTexture()
+std::shared_ptr<Texture2D> Renderer::GetWhiteTexture()
 {
     PINE_CORE_ASSERT(s_Data != nullptr, "Renderer un-initialized.");
     return s_Data->WhiteTexture;
@@ -75,8 +74,8 @@ void Renderer::BeginScene(const OrthographicCamera& camera)
 
 void Renderer::EndScene() {}
 
-void Renderer::Submit(const Ref<Shader>& shader,
-    const Ref<VertexArray>& vertexArray, const Mat4& transform)
+void Renderer::Submit(const std::shared_ptr<Shader>& shader,
+    const std::shared_ptr<VertexArray>& vertexArray, const Mat4& transform)
 {
     shader->Bind();
     shader->SetMat4("u_ViewProjection", s_SceneData->ViewProjectionMatrix);

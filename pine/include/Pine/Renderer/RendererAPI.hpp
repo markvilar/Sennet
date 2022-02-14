@@ -1,5 +1,7 @@
 #pragma once
 
+#include <memory>
+
 #include "Pine/Core/Base.hpp"
 #include "Pine/Renderer/VertexArray.hpp"
 #include "Pine/Utils/Math.hpp"
@@ -27,11 +29,11 @@ public:
     virtual void SetClearColor(const Vec4& color) = 0;
     virtual void Clear() = 0;
 
-    virtual void DrawIndexed(
-        const Ref<VertexArray>& vertexArray, const uint32_t indexCount = 0) = 0;
+    virtual void DrawIndexed(const std::shared_ptr<VertexArray>& vertexArray,
+        const uint32_t indexCount = 0) = 0;
 
     inline static API GetAPI() { return s_API; }
-    static Scope<RendererAPI> Create();
+    static std::unique_ptr<RendererAPI> Create();
 
 private:
     static API s_API;

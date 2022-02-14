@@ -36,14 +36,12 @@ include(cmake/StaticAnalyzers.cmake)
 include(cmake/Doxygen.cmake)
 enable_doxygen()
 
-# Add library.
 add_subdirectory(pine)
 
 if(PINE_BUILD_EDITOR)
     add_subdirectory(editor)
 endif()
 
-# Add examples.
 if(PINE_BUILD_EXAMPLES)
     add_subdirectory(examples)
 endif()

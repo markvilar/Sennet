@@ -20,7 +20,7 @@ void OpenGLRendererAPI::SetViewport(const uint32_t x, const uint32_t y,
     glViewport(x, y, width, height);
 }
 
-void OpenGLRendererAPI::SetClearColor(const glm::vec4& color)
+void OpenGLRendererAPI::SetClearColor(const Vec4& color)
 {
     glClearColor(color.r, color.g, color.b, color.a);
 }
@@ -31,11 +31,10 @@ void OpenGLRendererAPI::Clear()
 }
 
 void OpenGLRendererAPI::DrawIndexed(
-    const Ref<VertexArray>& vertexArray, const uint32_t indexCount)
+    const std::shared_ptr<VertexArray>& vertexArray, const uint32_t indexCount)
 {
     const uint32_t count =
         indexCount ? vertexArray->GetIndexBuffer()->GetCount() : indexCount;
-
     vertexArray->Bind();
     glDrawElements(GL_TRIANGLES, count, GL_UNSIGNED_INT, nullptr);
 }
