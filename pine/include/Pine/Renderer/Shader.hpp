@@ -1,5 +1,6 @@
 #pragma once
 
+#include <filesystem>
 #include <memory>
 #include <string>
 #include <unordered_map>
@@ -12,7 +13,13 @@ namespace Pine
 class Shader
 {
 public:
+    Shader() = default;
     virtual ~Shader() = default;
+
+    Shader(const Shader&) = delete;
+    Shader(Shader&&) = delete;
+    Shader& operator=(const Shader&) = delete;
+    Shader& operator=(Shader &&) = delete;
 
     virtual void Bind() const = 0;
     virtual void Unbind() const = 0;
@@ -29,7 +36,8 @@ public:
 
     virtual const std::string& GetName() const = 0;
 
-    static std::unique_ptr<Shader> Create(const std::string& filepath);
+    static std::unique_ptr<Shader> Create(
+        const std::filesystem::path& filepath);
     static std::unique_ptr<Shader> Create(const std::string& name,
         const std::string& vertexSrc, const std::string& fragmentSrc);
 };
@@ -37,9 +45,6 @@ public:
 class ShaderLibrary
 {
 public:
-    ShaderLibrary() = default;
-    ~ShaderLibrary() = default;
-
     void Add(const std::string& name, const std::shared_ptr<Shader>& shader);
     void Add(const std::shared_ptr<Shader>& shader);
 

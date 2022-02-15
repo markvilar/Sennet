@@ -7,7 +7,7 @@
 namespace Pine
 {
 
-std::unique_ptr<Shader> Shader::Create(const std::string& filepath)
+std::unique_ptr<Shader> Shader::Create(const std::filesystem::path& filepath)
 {
     switch (Renderer::GetAPI())
     {
