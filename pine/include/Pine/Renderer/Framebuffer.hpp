@@ -1,5 +1,7 @@
 #pragma once
 
+#include <memory>
+
 #include "Pine/Core/Base.hpp"
 #include "Pine/Renderer/RendererAPI.hpp"
 
@@ -31,7 +33,7 @@ public:
     virtual RendererID GetColorAttachmentRendererID() const = 0;
 
     virtual const Specification& GetSpecification() const = 0;
-    static Framebuffer* Create(const Specification& specs);
+    static std::unique_ptr<Framebuffer> Create(const Specification& specs);
 };
 
 } // namespace Pine

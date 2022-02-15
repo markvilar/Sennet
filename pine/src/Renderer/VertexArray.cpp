@@ -7,7 +7,7 @@
 namespace Pine
 {
 
-std::shared_ptr<VertexArray> VertexArray::Create()
+std::unique_ptr<VertexArray> VertexArray::Create()
 {
     switch (Renderer::GetAPI())
     {
@@ -15,7 +15,7 @@ std::shared_ptr<VertexArray> VertexArray::Create()
         PINE_CORE_ASSERT(false, "Renderer API None is currently not \
 				supported!");
     case RendererAPI::API::OpenGL:
-        return std::make_shared<OpenGLVertexArray>();
+        return std::make_unique<OpenGLVertexArray>();
     }
 
     PINE_CORE_ASSERT(false, "Unknown Renderer API.");

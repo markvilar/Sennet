@@ -1,5 +1,6 @@
 #include <filesystem>
-#include <string_view>
+#include <memory>
+#include <string>
 
 #include "Pine/Pine.hpp"
 
@@ -9,7 +10,7 @@ class Editor : public Pine::Application
 {
 public:
     Editor(const Pine::Application::Specification& specs,
-        const std::string_view projectPath)
+        const std::string& projectPath)
         : Pine::Application(specs), m_ProjectPath(projectPath)
     {
         PushLayer(new Pine::EditorLayer());
@@ -20,16 +21,21 @@ public:
 private:
     std::filesystem::path m_ProjectPath;
     std::filesystem::path m_StoragePath;
-    // TODO: Pine::UserPreferences m_Preferences;
 };
 
-Pine::Application* Pine::CreateApplication(int argc, char** argv)
+std::unique_ptr<Pine::Application> Pine::CreateApplication(
+    int argc, char** argv)
 {
-    std::string_view projectPath;
-    if (argc > 1)
-    {
-        projectPath = argv[1];
-    }
+    const auto projectPath = [argc, argv]() {
+        if (argc > 1)
+        {
+            return std::string(argv[1]);
+        }
+        else
+        {
+            return std::string(".");
+        }
+    }();
 
     Pine::Application::Specification specs;
     specs.WorkingDirectory = ".";
@@ -42,7 +48,7 @@ Pine::Application* Pine::CreateApplication(int argc, char** argv)
     specs.EnableImGui = true;
     specs.Fullscreen = true;
 
-    return new Editor(specs, projectPath);
+    return std::make_unique<Editor>(specs, projectPath);
 }
 
 int main(int argc, char** argv)

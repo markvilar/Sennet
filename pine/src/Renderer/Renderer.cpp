@@ -23,9 +23,7 @@ static Data* s_Data = nullptr;
 void Renderer::Init()
 {
     s_Data = new Data();
-
-    // Initialize shader library and load shaders.
-    s_Data->Library = std::make_shared<ShaderLibrary>();
+    s_Data->Library = std::make_unique<ShaderLibrary>();
 
     Renderer::GetShaderLibrary()->Load("resources/shaders/Renderer2D.glsl");
 
@@ -34,11 +32,10 @@ void Renderer::Init()
     constexpr std::array<uint8_t, 4> whiteColor = {255, 255, 255, 255};
     constexpr std::array<uint8_t, 4> blackColor = {0, 0, 0, 255};
 
-    Image whiteImage(whiteColor.data(), width, height, ImageFormat::RGBA);
-    Image blackImage(blackColor.data(), width, height, ImageFormat::RGBA);
-
-    s_Data->WhiteTexture = Texture2D::Create(whiteImage);
-    s_Data->BlackTexture = Texture2D::Create(blackImage);
+    s_Data->WhiteTexture = Texture2D::Create(
+        Image(whiteColor.data(), width, height, ImageFormat::RGBA));
+    s_Data->BlackTexture = Texture2D::Create(
+        Image(blackColor.data(), width, height, ImageFormat::RGBA));
 
     RenderCommand::Init();
     Renderer2D::Init();
@@ -49,19 +46,19 @@ void Renderer::OnWindowResize(const uint32_t width, const uint32_t height)
     RenderCommand::SetViewport(0, 0, width, height);
 }
 
-std::shared_ptr<ShaderLibrary> Renderer::GetShaderLibrary()
+std::shared_ptr<ShaderLibrary>& Renderer::GetShaderLibrary()
 {
     PINE_CORE_ASSERT(s_Data != nullptr, "Renderer un-initialized.");
     return s_Data->Library;
 }
 
-std::shared_ptr<Texture2D> Renderer::GetBlackTexture()
+std::shared_ptr<Texture2D>& Renderer::GetBlackTexture()
 {
     PINE_CORE_ASSERT(s_Data != nullptr, "Renderer un-initialized.");
     return s_Data->BlackTexture;
 }
 
-std::shared_ptr<Texture2D> Renderer::GetWhiteTexture()
+std::shared_ptr<Texture2D>& Renderer::GetWhiteTexture()
 {
     PINE_CORE_ASSERT(s_Data != nullptr, "Renderer un-initialized.");
     return s_Data->WhiteTexture;
@@ -74,14 +71,14 @@ void Renderer::BeginScene(const OrthographicCamera& camera)
 
 void Renderer::EndScene() {}
 
-void Renderer::Submit(const std::shared_ptr<Shader>& shader,
-    const std::shared_ptr<VertexArray>& vertexArray, const Mat4& transform)
+void Renderer::Submit(
+    const Shader& shader, const VertexArray& vertexArray, const Mat4& transform)
 {
-    shader->Bind();
-    shader->SetMat4("u_ViewProjection", s_SceneData->ViewProjectionMatrix);
-    shader->SetMat4("u_Transform", transform);
+    shader.Bind();
+    shader.SetMat4("u_ViewProjection", s_SceneData->ViewProjectionMatrix);
+    shader.SetMat4("u_Transform", transform);
 
-    vertexArray->Bind();
+    vertexArray.Bind();
     RenderCommand::DrawIndexed(vertexArray);
 }
 

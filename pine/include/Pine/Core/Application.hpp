@@ -81,6 +81,6 @@ private:
 };
 
 // To be defined in client.
-Application* CreateApplication(int argc, char** argv);
+std::unique_ptr<Application> CreateApplication(int argc, char** argv);
 
 } // namespace Pine

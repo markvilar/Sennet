@@ -7,7 +7,8 @@
 namespace Pine
 {
 
-Framebuffer* Framebuffer::Create(const Framebuffer::Specification& specs)
+std::unique_ptr<Framebuffer> Framebuffer::Create(
+    const Framebuffer::Specification& specs)
 {
     switch (Renderer::GetAPI())
     {
@@ -16,7 +17,7 @@ Framebuffer* Framebuffer::Create(const Framebuffer::Specification& specs)
 				supported!");
         return nullptr;
     case RendererAPI::API::OpenGL:
-        return new OpenGLFramebuffer(specs);
+        return std::make_unique<OpenGLFramebuffer>(specs);
     }
 
     PINE_CORE_ASSERT(false, "Unknown RendererAPI!");

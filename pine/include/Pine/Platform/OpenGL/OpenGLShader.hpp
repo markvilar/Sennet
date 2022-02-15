@@ -23,26 +23,32 @@ public:
     virtual void Bind() const override;
     virtual void Unbind() const override;
 
-    virtual void SetInt(const std::string& name, const int value) override;
+    virtual void SetInt(
+        const std::string& name, const int value) const override;
     virtual void SetIntArray(const std::string& name, const int* values,
-        const uint32_t count) override;
-    virtual void SetFloat(const std::string& name, const float value) override;
-    virtual void SetFloat3(const std::string& name, const Vec3& value) override;
-    virtual void SetFloat4(const std::string& name, const Vec4& value) override;
-    virtual void SetMat4(const std::string& name, const Mat4& value) override;
+        const uint32_t count) const override;
+    virtual void SetFloat(
+        const std::string& name, const float value) const override;
+    virtual void SetFloat3(
+        const std::string& name, const Vec3& value) const override;
+    virtual void SetFloat4(
+        const std::string& name, const Vec4& value) const override;
+    virtual void SetMat4(
+        const std::string& name, const Mat4& value) const override;
 
     virtual const std::string& GetName() const override { return m_Name; }
 
-    void UploadUniformInt(const std::string& name, int value);
+    void UploadUniformInt(const std::string& name, const int value) const;
     void UploadUniformIntArray(
-        const std::string& name, int* values, uint32_t count);
-    void UploadUniformFloat(const std::string& name, float value);
-    void UploadUniformFloat2(const std::string& name, const Vec2& values);
-    void UploadUniformFloat3(const std::string& name, const Vec3& values);
-    void UploadUniformFloat4(const std::string& name, const Vec4& values);
+        const std::string& name, const int* values, const uint32_t count) const;
 
-    void UploadUniformMat3(const std::string& name, const Mat3& matrix);
-    void UploadUniformMat4(const std::string& name, const Mat4& matrix);
+    void UploadUniformFloat(const std::string& name, const float value) const;
+    void UploadUniformFloat2(const std::string& name, const Vec2& values) const;
+    void UploadUniformFloat3(const std::string& name, const Vec3& values) const;
+    void UploadUniformFloat4(const std::string& name, const Vec4& values) const;
+
+    void UploadUniformMat3(const std::string& name, const Mat3& matrix) const;
+    void UploadUniformMat4(const std::string& name, const Mat4& matrix) const;
 
 private:
     std::string ReadFile(const std::string& filepath);

@@ -48,8 +48,8 @@ public:
 
     struct QuadData
     {
-        static const uint32_t VerticesPerQuad = 4;
-        static const uint32_t IndicesPerQuad = 6;
+        static constexpr uint32_t VerticesPerQuad = 4;
+        static constexpr uint32_t IndicesPerQuad = 6;
     };
 
     struct Statistics

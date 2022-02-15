@@ -31,11 +31,11 @@ void OpenGLRendererAPI::Clear()
 }
 
 void OpenGLRendererAPI::DrawIndexed(
-    const std::shared_ptr<VertexArray>& vertexArray, const uint32_t indexCount)
+    const VertexArray& vertexArray, const uint32_t indexCount)
 {
     const uint32_t count =
-        indexCount ? vertexArray->GetIndexBuffer()->GetCount() : indexCount;
-    vertexArray->Bind();
+        indexCount ? vertexArray.GetIndexBuffer()->GetCount() : indexCount;
+    vertexArray.Bind();
     glDrawElements(GL_TRIANGLES, count, GL_UNSIGNED_INT, nullptr);
 }
 

@@ -45,7 +45,7 @@ public:
 
     virtual void* GetNativeWindow() const = 0;
 
-    static Window* Create(const Specification& specs);
+    static std::unique_ptr<Window> Create(const Specification& specs);
 };
 
 } // namespace Pine
