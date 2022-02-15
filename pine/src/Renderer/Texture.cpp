@@ -7,7 +7,7 @@
 namespace Pine
 {
 
-std::shared_ptr<Texture2D> Texture2D::Create(
+std::unique_ptr<Texture2D> Texture2D::Create(
     const std::filesystem::path& filePath)
 {
     switch (Renderer::GetAPI())
@@ -16,14 +16,14 @@ std::shared_ptr<Texture2D> Texture2D::Create(
         PINE_CORE_ASSERT(false, "Renderer API None is currently not \
 			supported!");
     case RendererAPI::API::OpenGL:
-        return std::make_shared<OpenGLTexture2D>(filePath);
+        return std::make_unique<OpenGLTexture2D>(filePath);
     }
 
     PINE_CORE_ASSERT(false, "Unknown Renderer API.");
     return nullptr;
 }
 
-std::shared_ptr<Texture2D> Texture2D::Create(const Image& image)
+std::unique_ptr<Texture2D> Texture2D::Create(const Image& image)
 {
     switch (Renderer::GetAPI())
     {
@@ -31,7 +31,7 @@ std::shared_ptr<Texture2D> Texture2D::Create(const Image& image)
         PINE_CORE_ASSERT(false, "Renderer API None is currently not \
             supported!");
     case RendererAPI::API::OpenGL:
-        return std::make_shared<OpenGLTexture2D>(image);
+        return std::make_unique<OpenGLTexture2D>(image);
     }
 
     PINE_CORE_ASSERT(false, "Unknown Renderer API.");

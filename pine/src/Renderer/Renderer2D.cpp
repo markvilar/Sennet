@@ -26,10 +26,11 @@ struct Renderer2DData
         MaxQuads * Renderer2D::QuadData::VerticesPerQuad;
     static constexpr uint32_t MaxIndices =
         MaxQuads * Renderer2D::QuadData::IndicesPerQuad;
-    static constexpr uint32_t MaxTextureSlots = 32; // TODO: RenderCaps
+    static constexpr uint32_t MaxTextureSlots = 32;
 
-    std::shared_ptr<VertexArray> QuadVertexArray;
-    std::shared_ptr<VertexBuffer> QuadVertexBuffer;
+    // TODO: Segmentation fault on destruction.
+    std::shared_ptr<VertexArray> QuadVertexArray = nullptr;
+    std::shared_ptr<VertexBuffer> QuadVertexBuffer = nullptr;
 
     uint32_t QuadIndexCount = 0;
     QuadVertex* QuadVertexBufferBase = nullptr;
@@ -38,8 +39,21 @@ struct Renderer2DData
     std::array<std::shared_ptr<Texture2D>, MaxTextureSlots> TextureSlots;
     uint32_t TextureSlotIndex = 1; // 0 = white texture
 
-    Vec4 QuadVertexPositions[Renderer2D::QuadData::VerticesPerQuad];
-    Vec2 QuadTextureCoords[Renderer2D::QuadData::VerticesPerQuad];
+    static constexpr Vec4
+        QuadVertexPositions[Renderer2D::QuadData::VerticesPerQuad] = {
+            {-0.5f, -0.5f, 0.0f, 1.0f},
+            {0.5f, -0.5f, 0.0f, 1.0f},
+            {0.5f, 0.5f, 0.0f, 1.0f},
+            {-0.5f, 0.5f, 0.0f, 1.0f},
+    };
+
+    static constexpr Vec2
+        QuadTextureCoords[Renderer2D::QuadData::VerticesPerQuad] = {
+            {0.0f, 0.0f},
+            {1.0f, 0.0f},
+            {1.0f, 1.0f},
+            {0.0f, 1.0f},
+    };
 
     Renderer2D::Statistics Stats;
 };
@@ -50,7 +64,6 @@ void Renderer2D::Init()
 {
     s_Data.QuadVertexArray = VertexArray::Create();
 
-    // Vertex buffer.
     s_Data.QuadVertexBuffer =
         VertexBuffer::Create(s_Data.MaxVertices * sizeof(QuadVertex));
 
@@ -81,33 +94,22 @@ void Renderer2D::Init()
         offset += QuadData::VerticesPerQuad;
     }
 
-    std::shared_ptr<IndexBuffer> quadIB =
-        IndexBuffer::Create(quadIndices, s_Data.MaxIndices);
-    s_Data.QuadVertexArray->SetIndexBuffer(quadIB);
+    s_Data.QuadVertexArray->SetIndexBuffer(
+        IndexBuffer::Create(quadIndices, s_Data.MaxIndices));
     delete[] quadIndices;
 
     int32_t samplers[s_Data.MaxTextureSlots];
     for (uint32_t i = 0; i < s_Data.MaxTextureSlots; i++)
         samplers[i] = i;
 
-    auto shader = Renderer::GetShaderLibrary()->Get("Renderer2D");
+    const auto& shader = Renderer::GetShaderLibrary()->Get("Renderer2D");
     shader->Bind();
     shader->SetIntArray("u_Textures", samplers, s_Data.MaxTextureSlots);
 
     // Add white texture to slot zero.
     s_Data.TextureSlots[0] = Renderer::GetWhiteTexture();
 
-    // Vertex positions.
-    s_Data.QuadVertexPositions[0] = {-0.5f, -0.5f, 0.0f, 1.0f};
-    s_Data.QuadVertexPositions[1] = {0.5f, -0.5f, 0.0f, 1.0f};
-    s_Data.QuadVertexPositions[2] = {0.5f, 0.5f, 0.0f, 1.0f};
-    s_Data.QuadVertexPositions[3] = {-0.5f, 0.5f, 0.0f, 1.0f};
-
     // Texture coordinates.
-    s_Data.QuadTextureCoords[0] = {0.0f, 0.0f};
-    s_Data.QuadTextureCoords[1] = {1.0f, 0.0f};
-    s_Data.QuadTextureCoords[2] = {1.0f, 1.0f};
-    s_Data.QuadTextureCoords[3] = {0.0f, 1.0f};
 }
 
 void Renderer2D::Shutdown()
@@ -147,7 +149,8 @@ void Renderer2D::Flush()
         s_Data.TextureSlots[i]->Bind(i);
 
     // Draw call.
-    RenderCommand::DrawIndexed(s_Data.QuadVertexArray, s_Data.QuadIndexCount);
+    RenderCommand::DrawIndexed(*s_Data.QuadVertexArray.get(),
+        s_Data.QuadIndexCount);
 
     s_Data.Stats.DrawCalls++;
 }
@@ -268,20 +271,20 @@ void Renderer2D::DrawQuad(const Mat4& transform,
         FlushAndReset();
 
     // Check if texture has already been submitted.
-    float textureIndex = 0.0f;
+    uint32_t textureIndex = 0;
     for (uint32_t i = 1; i < s_Data.TextureSlotIndex; i++)
     {
         if (*s_Data.TextureSlots[i].get() == *texture.get())
         {
-            textureIndex = (float)i;
+            textureIndex = i;
             break;
         }
     }
 
     // If not found, assign texture to new texture slot.
-    if (textureIndex == 0.0f)
+    if (textureIndex == 0)
     {
-        textureIndex = (float)s_Data.TextureSlotIndex;
+        textureIndex = s_Data.TextureSlotIndex;
         s_Data.TextureSlots[s_Data.TextureSlotIndex] = texture;
         s_Data.TextureSlotIndex++;
     }

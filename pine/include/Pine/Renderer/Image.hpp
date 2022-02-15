@@ -48,8 +48,10 @@ public:
     Image() = default;
     Image(const Image& image) = default;
     Image(Image&& image) = default;
+
     Image(const uint8_t* data, const uint32_t width, const uint32_t height,
         const ImageFormat format);
+
     ~Image() = default;
 
     Image& operator=(const Image& image) = default;

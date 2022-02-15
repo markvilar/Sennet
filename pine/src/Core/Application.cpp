@@ -54,12 +54,6 @@ Application::Application(const Application::Specification& specs)
 Application::~Application()
 {
     m_Window->SetEventCallback([](Event& e) {});
-
-    for (Layer* layer : m_LayerStack)
-    {
-        layer->OnDetach();
-        delete layer;
-    }
 }
 
 void Application::Run()

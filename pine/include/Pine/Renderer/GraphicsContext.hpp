@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Pine/Core/Base.hpp"
+#include <memory>
 
 namespace Pine
 {
@@ -13,7 +13,7 @@ public:
     virtual void Init() = 0;
     virtual void SwapBuffers() = 0;
 
-    static GraphicsContext* Create(void* window);
+    static std::unique_ptr<GraphicsContext> Create(void* window);
 };
 
 } // namespace Pine

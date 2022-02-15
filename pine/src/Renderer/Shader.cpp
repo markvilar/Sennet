@@ -7,7 +7,7 @@
 namespace Pine
 {
 
-std::shared_ptr<Shader> Shader::Create(const std::string& filepath)
+std::unique_ptr<Shader> Shader::Create(const std::string& filepath)
 {
     switch (Renderer::GetAPI())
     {
@@ -15,14 +15,14 @@ std::shared_ptr<Shader> Shader::Create(const std::string& filepath)
         PINE_CORE_ASSERT(false, "Renderer API None is currently not \
 		    supported!");
     case RendererAPI::API::OpenGL:
-        return std::make_shared<OpenGLShader>(filepath);
+        return std::make_unique<OpenGLShader>(filepath);
     }
 
     PINE_CORE_ASSERT(false, "Unknown Renderer API.");
     return nullptr;
 }
 
-std::shared_ptr<Shader> Shader::Create(const std::string& name,
+std::unique_ptr<Shader> Shader::Create(const std::string& name,
     const std::string& vertexSrc, const std::string& fragmentSrc)
 {
     switch (Renderer::GetAPI())
@@ -31,7 +31,7 @@ std::shared_ptr<Shader> Shader::Create(const std::string& name,
         PINE_CORE_ASSERT(false, "Renderer API None is currently not \
 			supported!");
     case RendererAPI::API::OpenGL:
-        return std::make_shared<OpenGLShader>(name, vertexSrc, fragmentSrc);
+        return std::make_unique<OpenGLShader>(name, vertexSrc, fragmentSrc);
     }
 
     PINE_CORE_ASSERT(false, "Unknown Renderer API.");
@@ -51,20 +51,20 @@ void ShaderLibrary::Add(const std::shared_ptr<Shader>& shader)
     Add(name, shader);
 }
 
-std::shared_ptr<Shader> ShaderLibrary::Load(
-    const std::string& name, const std::string filepath)
+bool ShaderLibrary::Load(const std::string& name, const std::string filepath)
 {
-    auto shader = Shader::Create(filepath);
+    const std::shared_ptr<Shader> shader = Shader::Create(filepath);
     PINE_CORE_ASSERT(shader, "Shader is null.");
     Add(name, shader);
-    return shader;
+    return shader ? true : false;
 }
 
-std::shared_ptr<Shader> ShaderLibrary::Load(const std::string& filepath)
+bool ShaderLibrary::Load(const std::string& filepath)
 {
-    auto shader = Shader::Create(filepath);
+    const std::shared_ptr<Shader> shader = Shader::Create(filepath);
+    PINE_CORE_ASSERT(shader, "Shader is null.");
     Add(shader);
-    return shader;
+    return shader ? true : false;
 }
 
 const std::shared_ptr<Shader>& ShaderLibrary::Get(const std::string& name) const

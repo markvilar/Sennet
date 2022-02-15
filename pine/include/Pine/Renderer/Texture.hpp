@@ -29,9 +29,9 @@ public:
 class Texture2D : public Texture
 {
 public:
-    static std::shared_ptr<Texture2D> Create(
+    static std::unique_ptr<Texture2D> Create(
         const std::filesystem::path& filePath);
-    static std::shared_ptr<Texture2D> Create(const Image& image);
+    static std::unique_ptr<Texture2D> Create(const Image& image);
 };
 
 } // namespace Pine

@@ -6,10 +6,9 @@
 namespace Pine
 {
 
-GraphicsContext* GraphicsContext::Create(void* window)
+std::unique_ptr<GraphicsContext> GraphicsContext::Create(void* window)
 {
-    // TODO: Add support for different renderer APIs later?
-    return new OpenGLContext(static_cast<GLFWwindow*>(window));
+    return std::make_unique<OpenGLContext>(static_cast<GLFWwindow*>(window));
 }
 
 } // namespace Pine

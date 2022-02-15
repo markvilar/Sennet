@@ -56,7 +56,7 @@ void EditorLayer::OnAttach()
     Framebuffer::Specification specs;
     specs.Width = viewport.Size.x;
     specs.Height = viewport.Size.y;
-    m_ViewportFramebuffer.reset(Framebuffer::Create(specs));
+    m_ViewportFramebuffer = Framebuffer::Create(specs);
 
     m_CameraController.OnResize(static_cast<uint32_t>(viewport.Size.x),
         static_cast<uint32_t>(viewport.Size.y));

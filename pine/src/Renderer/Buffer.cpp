@@ -23,7 +23,7 @@ void BufferLayout::CalculateOffsetAndStride()
     }();
 }
 
-std::shared_ptr<VertexBuffer> VertexBuffer::Create(const uint32_t size)
+std::unique_ptr<VertexBuffer> VertexBuffer::Create(const uint32_t size)
 {
     switch (Renderer::GetAPI())
     {
@@ -31,14 +31,14 @@ std::shared_ptr<VertexBuffer> VertexBuffer::Create(const uint32_t size)
         PINE_CORE_ASSERT(false, "RendererAPI::API::None is currently not \
 				supported!");
     case RendererAPI::API::OpenGL:
-        return std::make_shared<OpenGLVertexBuffer>(size);
+        return std::make_unique<OpenGLVertexBuffer>(size);
     }
 
     PINE_CORE_ASSERT(false, "Unknown renderer API.");
     return nullptr;
 }
 
-std::shared_ptr<VertexBuffer> VertexBuffer::Create(
+std::unique_ptr<VertexBuffer> VertexBuffer::Create(
     const float* vertices, const uint32_t size)
 {
     switch (Renderer::GetAPI())
@@ -47,14 +47,14 @@ std::shared_ptr<VertexBuffer> VertexBuffer::Create(
         PINE_CORE_ASSERT(false, "RendererAPI::API::None is currently not \
 				supported!");
     case RendererAPI::API::OpenGL:
-        return std::make_shared<OpenGLVertexBuffer>(vertices, size);
+        return std::make_unique<OpenGLVertexBuffer>(vertices, size);
     }
 
     PINE_CORE_ASSERT(false, "Unknown renderer API.");
     return nullptr;
 }
 
-std::shared_ptr<IndexBuffer> IndexBuffer::Create(
+std::unique_ptr<IndexBuffer> IndexBuffer::Create(
     const uint32_t* indices, const uint32_t count)
 {
     switch (Renderer::GetAPI())
@@ -63,7 +63,7 @@ std::shared_ptr<IndexBuffer> IndexBuffer::Create(
         PINE_CORE_ASSERT(false, "RendererAPI::API::None is currently not \
 				supported!");
     case RendererAPI::API::OpenGL:
-        return std::make_shared<OpenGLIndexBuffer>(indices, count);
+        return std::make_unique<OpenGLIndexBuffer>(indices, count);
     }
 
     PINE_CORE_ASSERT(false, "Unknown renderer API.");
