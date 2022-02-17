@@ -7,6 +7,47 @@
 namespace Pine
 {
 
+constexpr bool IsIntegerType(const ShaderDataType type)
+{
+    switch (type)
+    {
+    case ShaderDataType::Float:
+        return false;
+    case ShaderDataType::Float2:
+        return false;
+    case ShaderDataType::Float3:
+        return false;
+    case ShaderDataType::Float4:
+        return false;
+    case ShaderDataType::Mat3:
+        return false;
+    case ShaderDataType::Mat4:
+        return false;
+    case ShaderDataType::Int:
+        return true;
+    case ShaderDataType::Int2:
+        return true;
+    case ShaderDataType::Int3:
+        return true;
+    case ShaderDataType::Int4:
+        return true;
+    case ShaderDataType::Uint:
+        return true;
+    case ShaderDataType::Uint2:
+        return true;
+    case ShaderDataType::Uint3:
+        return true;
+    case ShaderDataType::Uint4:
+        return true;
+    case ShaderDataType::Bool:
+        return false;
+    case ShaderDataType::None:
+        return false;
+    default:
+        return false;
+    }
+}
+
 static GLenum ShaderDataTypeToOpenGLBaseType(const ShaderDataType type)
 {
     switch (type)
@@ -76,12 +117,24 @@ void OpenGLVertexArray::SetVertexBuffer(std::unique_ptr<VertexBuffer> buffer)
     for (const auto& element : layout)
     {
         glEnableVertexAttribArray(index);
-        glVertexAttribPointer(index,
-            element.GetComponentCount(),
-            ShaderDataTypeToOpenGLBaseType(element.Type),
-            element.Normalized ? GL_TRUE : GL_FALSE,
-            layout.GetStride(),
-            reinterpret_cast<const void*>(element.Offset));
+        if (IsIntegerType(element.Type))
+        {
+            glVertexAttribIPointer(index,
+                element.GetComponentCount(),
+                ShaderDataTypeToOpenGLBaseType(element.Type),
+                layout.GetStride(),
+                reinterpret_cast<const void*>(element.Offset));
+        }
+        else
+        {
+            glVertexAttribPointer(index,
+                element.GetComponentCount(),
+                ShaderDataTypeToOpenGLBaseType(element.Type),
+                element.Normalized ? GL_TRUE : GL_FALSE,
+                layout.GetStride(),
+                reinterpret_cast<const void*>(element.Offset));
+        }
+
         index++;
     }
 

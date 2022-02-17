@@ -36,7 +36,7 @@ struct QuadVertex
     Vec3 Position = {};
     Vec4 Color = {};
     Vec2 TextureCoord = {};
-    float TextureIndex = {};
+    uint32_t TextureIndex = {};
     float TilingFactor = {};
 };
 

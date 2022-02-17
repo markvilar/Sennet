@@ -17,7 +17,7 @@ RendererData Init()
         {ShaderDataType::Float3, "a_Position"},
         {ShaderDataType::Float4, "a_Color"},
         {ShaderDataType::Float2, "a_TexCoord"},
-        {ShaderDataType::Float, "a_TexIndex"},
+        {ShaderDataType::Uint, "a_TexIndex"},
         {ShaderDataType::Float, "a_TilingFactor"},
     });
 
@@ -197,7 +197,7 @@ void DrawRotatedQuad(RendererData& data, const Vec3& position, const Vec2& size,
 }
 
 void UpdateQuadVertices(Renderer2D::RendererData& data, const Mat4& transform,
-    const Vec4& color, const float textureIndex, const float tilingFactor)
+    const Vec4& color, const uint32_t textureIndex, const float tilingFactor)
 {
     for (uint32_t i = 0; i < Renderer2D::VerticesPerQuad; i++)
     {
@@ -223,7 +223,7 @@ void DrawQuad(RendererData& data, const Mat4& transform, const Vec4& color)
         FlushAndReset(data);
     }
 
-    constexpr float textureIndex = 0.0f; // White texture.
+    constexpr uint32_t textureIndex = 0; // White texture.
     constexpr float tilingFactor = 1.0f;
 
     UpdateQuadVertices(data, transform, color, textureIndex, tilingFactor);
@@ -239,7 +239,7 @@ void DrawQuad(RendererData& data, const Mat4& transform,
         FlushAndReset(data);
     }
 
-    float textureIndex = 0.0f;
+    uint32_t textureIndex = 0;
     for (uint32_t i = 1; i < data.TextureSlotIndex; i++)
     {
         if (*data.TextureSlots[i].get() == *texture.get())
