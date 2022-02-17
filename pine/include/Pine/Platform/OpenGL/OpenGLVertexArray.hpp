@@ -17,26 +17,23 @@ public:
     virtual void Bind() const override;
     virtual void Unbind() const override;
 
-    virtual void AddVertexBuffer(
-        const std::shared_ptr<VertexBuffer>& buffer) override;
-    virtual void SetIndexBuffer(
-        const std::shared_ptr<IndexBuffer>& buffer) override;
+    virtual void SetVertexBuffer(std::unique_ptr<VertexBuffer> buffer) override;
+    virtual void SetIndexBuffer(std::unique_ptr<IndexBuffer> buffer) override;
 
-    virtual const std::vector<std::shared_ptr<VertexBuffer>>&
-    GetVertexBuffers() const override
+    virtual VertexBuffer& GetVertexBuffer() const override
     {
-        return m_VertexBuffers;
+        return *m_VertexBuffer.get();
     }
 
-    virtual const std::shared_ptr<IndexBuffer>& GetIndexBuffer() const override
+    virtual IndexBuffer& GetIndexBuffer() const override
     {
-        return m_IndexBuffer;
+        return *m_IndexBuffer.get();
     }
 
 private:
-    RendererID m_RendererID;
-    std::vector<std::shared_ptr<VertexBuffer>> m_VertexBuffers;
-    std::shared_ptr<IndexBuffer> m_IndexBuffer;
+    RendererID m_RendererID = {};
+    std::unique_ptr<VertexBuffer> m_VertexBuffer = {};
+    std::unique_ptr<IndexBuffer> m_IndexBuffer = {};
 };
 
 } // namespace Pine

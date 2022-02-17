@@ -82,7 +82,7 @@ void OpenGLFramebuffer::Bind()
 
 void OpenGLFramebuffer::Unbind() { glBindFramebuffer(GL_FRAMEBUFFER, 0); }
 
-void OpenGLFramebuffer::Resize(uint32_t width, uint32_t height)
+void OpenGLFramebuffer::Resize(const uint32_t width, const uint32_t height)
 {
     if (width == 0 || height == 0 || width > s_MaxFramebufferSize
         || height > s_MaxFramebufferSize)

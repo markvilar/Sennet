@@ -9,16 +9,8 @@ namespace Pine
 
 struct InterfaceLayout
 {
-    Vec2 Position;
-    Vec2 Size;
-
-public:
-    InterfaceLayout(const Vec2& position, const Vec2& size)
-        : Position(position), Size(size)
-    {
-    }
-
-    ~InterfaceLayout() = default;
+    Vec2 Position = {0.0f, 0.0f};
+    Vec2 Size = {0.0f, 0.0f};
 };
 
 class EditorLayer : public Layer
@@ -37,6 +29,7 @@ public:
 
 private:
     OrthographicCameraController m_CameraController;
+    ShaderLibrary m_ShaderLibrary = {};
 
     Image m_Image;
 
@@ -46,9 +39,14 @@ private:
     bool m_ViewportFocused = false;
     bool m_ViewportHovered = false;
 
-    Vec4 m_QuadColor = {0.2f, 0.3f, 0.8f, 1.0f};
+    Renderer2D::RendererData m_RendererData2D = {};
 
+    Vec4 m_QuadColor = {0.2f, 0.3f, 0.8f, 1.0f};
     float m_QuadRotation = 0.0f;
+
+    // TODO: Debug, remove.
+    std::array<Vec3, 5> m_QuadTranslations{};
+    std::array<Vec4, 5> m_QuadColors{};
 };
 
 } // namespace Pine

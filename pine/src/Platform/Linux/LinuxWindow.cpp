@@ -221,7 +221,7 @@ void LinuxWindow::SetTitle(const std::string& title)
 
 void LinuxWindow::Shutdown()
 {
-    PINE_CORE_INFO("Deleting window {0}, ({1}, {2})",
+    PINE_CORE_INFO("Deleting window: {0} - ({1}, {2})",
         m_Data.Title,
         m_Data.Width,
         m_Data.Height);

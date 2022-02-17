@@ -20,10 +20,14 @@ enum class ShaderDataType
     Int2,
     Int3,
     Int4,
+    Uint,
+    Uint2,
+    Uint3,
+    Uint4,
     Bool
 };
 
-static uint32_t ShaderDataTypeSize(const ShaderDataType type)
+static constexpr uint32_t ShaderDataTypeSize(const ShaderDataType type)
 {
     switch (type)
     {
@@ -47,6 +51,14 @@ static uint32_t ShaderDataTypeSize(const ShaderDataType type)
         return 4 * 3;
     case ShaderDataType::Int4:
         return 4 * 4;
+    case ShaderDataType::Uint:
+        return 4;
+    case ShaderDataType::Uint2:
+        return 4 * 2;
+    case ShaderDataType::Uint3:
+        return 4 * 3;
+    case ShaderDataType::Uint4:
+        return 4 * 4;
     case ShaderDataType::Bool:
         return 1;
     case ShaderDataType::None:
@@ -57,7 +69,8 @@ static uint32_t ShaderDataTypeSize(const ShaderDataType type)
     return 0;
 }
 
-static uint32_t ShaderDataTypeComponentCount(const ShaderDataType type)
+static constexpr uint32_t ShaderDataTypeComponentCount(
+    const ShaderDataType type)
 {
     switch (type)
     {
@@ -80,6 +93,14 @@ static uint32_t ShaderDataTypeComponentCount(const ShaderDataType type)
     case ShaderDataType::Int3:
         return 3;
     case ShaderDataType::Int4:
+        return 4;
+    case ShaderDataType::Uint:
+        return 1;
+    case ShaderDataType::Uint2:
+        return 2;
+    case ShaderDataType::Uint3:
+        return 3;
+    case ShaderDataType::Uint4:
         return 4;
     case ShaderDataType::Bool:
         return 1;

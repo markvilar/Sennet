@@ -19,7 +19,7 @@ public:
     Shader(const Shader&) = delete;
     Shader(Shader&&) = delete;
     Shader& operator=(const Shader&) = delete;
-    Shader& operator=(Shader &&) = delete;
+    Shader& operator=(Shader&&) = delete;
 
     virtual void Bind() const = 0;
     virtual void Unbind() const = 0;
@@ -44,6 +44,8 @@ public:
 
 class ShaderLibrary
 {
+    using ShaderMap = std::unordered_map<std::string, std::shared_ptr<Shader>>;
+
 public:
     void Add(const std::string& name, const std::shared_ptr<Shader>& shader);
     void Add(const std::shared_ptr<Shader>& shader);
@@ -52,11 +54,12 @@ public:
     bool Load(const std::string& filepath);
 
     const std::shared_ptr<Shader>& Get(const std::string& name) const;
+    const ShaderMap& GetShaders() const { return m_Shaders; }
 
     bool Exists(const std::string& name) const;
 
 private:
-    std::unordered_map<std::string, std::shared_ptr<Shader>> m_Shaders;
+    ShaderMap m_Shaders;
 };
 
 } // namespace Pine
