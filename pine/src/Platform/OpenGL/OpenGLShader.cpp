@@ -22,21 +22,12 @@ static auto ShaderTypeFromString(const std::string& type)
     return 0;
 }
 
-OpenGLShader::OpenGLShader(const std::string& filepath)
+OpenGLShader::OpenGLShader(const std::filesystem::path& filepath)
 {
     const auto source = ReadFile(filepath);
     const auto shaderSources = PreProcess(source);
     Compile(shaderSources);
-
-    // Extract name from filepath.
-    const auto lastSlash = filepath.find_last_of("/\\");
-    const auto lastSlashIndex =
-        lastSlash == std::string::npos ? 0 : lastSlash + 1;
-    const auto lastDot = filepath.rfind(".");
-    const auto count = lastDot == std::string::npos
-        ? filepath.size() - lastSlashIndex
-        : lastDot - lastSlashIndex;
-    m_Name = filepath.substr(lastSlashIndex, count);
+    m_Name = filepath.stem();
 }
 
 OpenGLShader::OpenGLShader(const std::string& name,
@@ -51,7 +42,7 @@ OpenGLShader::OpenGLShader(const std::string& name,
 
 OpenGLShader::~OpenGLShader() { glDeleteProgram(m_RendererID); }
 
-std::string OpenGLShader::ReadFile(const std::string& filepath)
+std::string OpenGLShader::ReadFile(const std::filesystem::path& filepath)
 {
     std::string result;
     std::ifstream in(filepath, std::ios::in | std::ios::binary);
@@ -105,26 +96,25 @@ std::unordered_map<GLenum, std::string> OpenGLShader::PreProcess(
 void OpenGLShader::Compile(
     const std::unordered_map<GLenum, std::string>& shaderSources)
 {
-    GLuint program = glCreateProgram();
+    const auto program = glCreateProgram();
     PINE_CORE_ASSERT(shaderSources.size() <= 2,
         "Pine only supports 2 shaders for now.");
     std::array<GLenum, 2> glShaderIDs;
     auto glShaderIDIndex = 0;
-    for (auto& kv : shaderSources)
+    for (auto& source : shaderSources)
     {
-        const auto& type = kv.first;
-        const auto& source = kv.second;
-        const auto shader = glCreateShader(type);
-        const auto sourceCStr = source.c_str();
+        const auto& sourceType = source.first;
+        const auto sourceString = source.second.c_str();
+        const auto shader = glCreateShader(sourceType);
 
-        glShaderSource(shader, 1, &sourceCStr, 0);
+        glShaderSource(shader, 1, &sourceString, 0);
         glCompileShader(shader);
 
         auto isCompiled = 0;
         glGetShaderiv(shader, GL_COMPILE_STATUS, &isCompiled);
         if (isCompiled == GL_FALSE)
         {
-            GLint maxLength = 0;
+            auto maxLength = 0;
             glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &maxLength);
 
             std::vector<GLchar> infoLog(maxLength);

@@ -1,5 +1,6 @@
 #pragma once
 
+#include <filesystem>
 #include <string>
 
 #include "Pine/Renderer/RendererAPI.hpp"
@@ -15,7 +16,7 @@ namespace Pine
 class OpenGLShader : public Shader
 {
 public:
-    OpenGLShader(const std::string& filepath);
+    OpenGLShader(const std::filesystem::path& filepath);
     OpenGLShader(const std::string& name, const std::string& vertexSrc,
         const std::string& fragmentSrc);
     virtual ~OpenGLShader();
@@ -51,7 +52,7 @@ public:
     void UploadUniformMat4(const std::string& name, const Mat4& matrix) const;
 
 private:
-    std::string ReadFile(const std::string& filepath);
+    std::string ReadFile(const std::filesystem::path& filepath);
     std::unordered_map<GLenum, std::string> PreProcess(
         const std::string& source);
     void Compile(const std::unordered_map<GLenum, std::string>& shaderSources);
