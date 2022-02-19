@@ -27,9 +27,8 @@ GLenum OpenGLInternalFormat(const ImageFormat& imageFormat)
             return GL_RGBA8;
         case TextureFormat::BGRA:
             return GL_RGBA8;
-        default:
-            return 0;
         }
+        return GL_INVALID_ENUM;
     }();
 
     PINE_CORE_ASSERT(internalFormat, "Invalid OpenGL data format.");
@@ -54,9 +53,8 @@ GLenum OpenGLDataFormat(const ImageFormat& imageFormat)
             return GL_RGBA;
         case TextureFormat::BGRA:
             return GL_BGRA;
-        default:
-            return 0;
         }
+        return GL_INVALID_ENUM;
     }();
 
     PINE_CORE_ASSERT(internalFormat, "Invalid OpenGL data format.");

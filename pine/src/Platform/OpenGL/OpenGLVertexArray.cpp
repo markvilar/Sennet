@@ -43,9 +43,9 @@ constexpr bool IsIntegerType(const ShaderDataType type)
         return false;
     case ShaderDataType::None:
         return false;
-    default:
-        return false;
     }
+    PINE_CORE_ASSERT(false, "Unknown shader data type.");
+    return 0;
 }
 
 static GLenum ShaderDataTypeToOpenGLBaseType(const ShaderDataType type)
@@ -85,8 +85,7 @@ static GLenum ShaderDataTypeToOpenGLBaseType(const ShaderDataType type)
     case ShaderDataType::None:
         return 0;
     }
-
-    PINE_CORE_ASSERT(false, "Unknown ShaderDataType!");
+    PINE_CORE_ASSERT(false, "Unknown shader data type.");
     return 0;
 }
 

@@ -19,7 +19,6 @@ enum class TextureFormat : uint8_t
 
 enum class ImageFileFormat : uint8_t
 {
-    UNKNOWN,
     JPG,
     PNG,
     BMP,
