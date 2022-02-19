@@ -21,6 +21,12 @@ public:
         const std::string& fragmentSrc);
     virtual ~OpenGLShader();
 
+    OpenGLShader(const OpenGLShader&) = delete;
+    OpenGLShader(OpenGLShader&&) = default;
+
+    OpenGLShader& operator=(const OpenGLShader&) = delete;
+    OpenGLShader& operator=(OpenGLShader&&) = default;
+
     virtual void Bind() const override;
     virtual void Unbind() const override;
 

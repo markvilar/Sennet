@@ -8,41 +8,45 @@ namespace Pine
 InterfaceLayout CalculateMainMenuLayout(
     const uint32_t windowWidth, const uint32_t windowHeight)
 {
-    const Vec2 position = {0.0f, 0.0f};
-    const Vec2 size = {0.0f, 0.0f};
-    return InterfaceLayout(position, size);
+    InterfaceLayout layout;
+    layout.Position = {0.0f, 0.0f};
+    layout.Size = {0.0f, 0.0f};
+    return layout;
 }
-
 InterfaceLayout CalculateViewportLayout(
     const uint32_t windowWidth, const uint32_t windowHeight)
 {
-    const Vec2 position = {0.2 * windowWidth, 0.0f};
-    const Vec2 size = {0.6 * windowWidth, 0.8 * windowHeight};
-    return InterfaceLayout(position, size);
+    InterfaceLayout layout;
+    layout.Position = {0.2 * windowWidth, 0.0f};
+    layout.Size = {0.6 * windowWidth, 0.8 * windowHeight};
+    return layout;
 }
 
 InterfaceLayout CalculateLeftPanelLayout(
     const uint32_t windowWidth, const uint32_t windowHeight)
 {
-    const Vec2 position = {0.0f, 0.0f};
-    const Vec2 size = {0.2 * windowWidth, windowHeight};
-    return InterfaceLayout(position, size);
+    InterfaceLayout layout;
+    layout.Position = {0.0f, 0.0f};
+    layout.Size = {0.2 * windowWidth, windowHeight};
+    return layout;
 }
 
 InterfaceLayout CalculateRightPanelLayout(
     const uint32_t windowWidth, const uint32_t windowHeight)
 {
-    const Vec2 position = {0.8 * windowWidth, 0.0f};
-    const Vec2 size = {0.2 * windowWidth, windowHeight};
-    return InterfaceLayout(position, size);
+    InterfaceLayout layout;
+    layout.Position = {0.8 * windowWidth, 0.0f};
+    layout.Size = {0.2 * windowWidth, windowHeight};
+    return layout;
 }
 
 InterfaceLayout CalculateBottomPanelLayout(
     const uint32_t windowWidth, const uint32_t windowHeight)
 {
-    const Vec2 position = {0.2 * windowWidth, 0.8 * windowHeight};
-    const Vec2 size = {0.6 * windowWidth, 0.2 * windowHeight};
-    return InterfaceLayout(position, size);
+    InterfaceLayout layout;
+    layout.Position = {0.2 * windowWidth, 0.8 * windowHeight};
+    layout.Size = {0.6 * windowWidth, 0.2 * windowHeight};
+    return layout;
 }
 
 EditorLayer::EditorLayer() : Layer("EditorLayer"), m_CameraController(1.0f) {}
@@ -53,6 +57,17 @@ void EditorLayer::OnAttach()
     const auto viewport =
         CalculateViewportLayout(windowSize.first, windowSize.second);
 
+    auto& io = ImGui::GetIO();
+    io.Fonts->AddFontFromFileTTF("resources/fonts/OpenSans-Regular.ttf",
+        15.0f,
+        nullptr,
+        io.Fonts->GetGlyphRangesCyrillic());
+
+    if (!m_ShaderLibrary.Load("resources/shaders/Renderer2D.glsl"))
+    {
+        PINE_ERROR("Failed to load shader.");
+    }
+
     Framebuffer::Specification specs;
     specs.Width = viewport.Size.x;
     specs.Height = viewport.Size.y;
@@ -61,6 +76,8 @@ void EditorLayer::OnAttach()
     m_CameraController.OnResize(static_cast<uint32_t>(viewport.Size.x),
         static_cast<uint32_t>(viewport.Size.y));
 
+    m_RendererData2D = Renderer2D::Init();
+
     UI::SetDarkTheme(ImGui::GetStyle());
 }
 
@@ -68,7 +85,6 @@ void EditorLayer::OnDetach() {}
 
 void EditorLayer::OnUpdate(Timestep ts)
 {
-    // Resize framebuffer and update camera settings.
     auto specs = m_ViewportFramebuffer->GetSpecification();
     const auto windowSize = Pine::Application::Get().GetWindow().GetSize();
     const auto viewport =
@@ -81,78 +97,45 @@ void EditorLayer::OnUpdate(Timestep ts)
         m_CameraController.OnResize(viewport.Size.x, viewport.Size.y);
     }
 
-    // Update camera.
     if (m_ViewportFocused)
         m_CameraController.OnUpdate(ts);
 
-    // Render.
-    Renderer2D::ResetStats();
-
-    // Set background color.
-    RenderCommand::SetClearColor({0.1f, 0.1f, 0.1f, 1.0f});
-    RenderCommand::Clear();
-
-    // Set viewport background color.
-    m_ViewportFramebuffer->Bind();
-    RenderCommand::SetClearColor({0.1f, 0.1f, 0.1f, 1.0f});
-    RenderCommand::Clear();
-
     m_QuadRotation += ts * 50.0f;
 
-    Renderer2D::BeginScene(m_CameraController.GetCamera());
+    RenderCommand::SetClearColor({0.1f, 0.1f, 0.1f, 1.0f});
+    RenderCommand::Clear();
 
-    // Draw flat colored quads.
-    Renderer2D::DrawRotatedQuad({0.0f, 0.0f},
+    m_ViewportFramebuffer->Bind();
+    RenderCommand::SetClearColor({0.05f, 0.05f, 0.05f, 1.0f});
+    RenderCommand::Clear();
+
+    Renderer2D::BeginScene(m_RendererData2D, m_CameraController.GetCamera());
+    
+    Renderer2D::DrawRotatedQuad(m_RendererData2D,
+        {0.0f, 0.0f},
         {0.8f, 0.8f},
         Radians(m_QuadRotation),
         {0.9f, 0.1f, 0.2f, 1.0f});
-    Renderer2D::DrawQuad({2.0f, -2.0f}, {0.8f, 0.8f}, {0.8f, 0.2f, 0.3f, 1.0f});
-    Renderer2D::DrawQuad({2.0f, 2.0f}, {0.5f, 0.75f}, m_QuadColor);
-
-    // Draw grid of quads.
-    constexpr auto ys = []() {
-        std::array<float, 20> arr = {0.0f};
-        auto value = -5.0f;
-        auto increment = 0.5f;
-        for (auto& entry : arr)
-        {
-            entry = value;
-            value += increment;
-        }
-        return arr;
-    }();
-
-    constexpr auto xs = []() {
-        std::array<float, 20> arr = {0.0f};
-        auto value = -5.0f;
-        auto increment = 0.5f;
-        for (auto& entry : arr)
-        {
-            entry = value;
-            value += increment;
-        }
-        return arr;
-    }();
-
-    for (auto y : ys)
-    {
-        for (auto x : xs)
-        {
-            Vec4 color = {(x + 5.0f) / 10.0f, 0.4f, (y + 5.0f) / 10.0f, 0.7f};
-            Renderer2D::DrawQuad({x, y, -0.1f}, {0.45f, 0.45f}, color);
-        }
-    }
+    Renderer2D::DrawQuad(m_RendererData2D,
+        {2.0f, -2.0f},
+        {0.8f, 0.8f},
+        {0.8f, 0.2f, 0.3f, 1.0f});
+    Renderer2D::DrawQuad(m_RendererData2D,
+        {2.0f, 2.0f},
+        {0.5f, 0.75f},
+        m_QuadColor);
 
     if (m_Texture)
     {
-        Renderer2D::DrawQuad({-16.0f, 0.0f, -0.2f},
+        Renderer2D::DrawQuad(m_RendererData2D,
+            {-16.0f, 0.0f, -0.2f},
             {16.0f, 9.0f},
             m_Texture,
             1.0f,
             Vec4{1.0f, 1.0f, 1.0f, 1.0f});
     }
 
-    Renderer2D::EndScene();
+    Renderer2D::EndScene(m_RendererData2D);
     m_ViewportFramebuffer->Unbind();
 }
 
@@ -264,7 +247,7 @@ void EditorLayer::OnImGuiRender()
         leftInterfaceLayout.Position,
         rightInterfaceLayout.Size,
         [this] {
-            auto stats = Pine::Renderer2D::GetStats();
+            auto& stats = m_RendererData2D.Stats;
             ImGui::Text("Renderer2D Stats:");
             ImGui::Text("Draw Calls: %d", stats.DrawCalls);
             ImGui::Text("Quads: %d", stats.QuadCount);
@@ -272,6 +255,14 @@ void EditorLayer::OnImGuiRender()
             ImGui::Text("Indices: %d", stats.GetTotalIndexCount());
 
             ImGui::ColorEdit4("Square Color", ValuePtr(m_QuadColor));
+
+            UI::AddEmptySpace(0.0f, 10.0f);
+            ImGui::Separator();
+
+            for (const auto& [name, shader] : m_ShaderLibrary.GetShaders())
+            {
+                ImGui::Text("%s", name.c_str());
+            }
 
             UI::AddEmptySpace(0.0f, 10.0f);
             ImGui::Separator();

@@ -34,7 +34,7 @@ void OpenGLRendererAPI::DrawIndexed(
     const VertexArray& vertexArray, const uint32_t indexCount)
 {
     const uint32_t count =
-        indexCount ? vertexArray.GetIndexBuffer()->GetCount() : indexCount;
+        indexCount ? vertexArray.GetIndexBuffer().GetCount() : indexCount;
     vertexArray.Bind();
     glDrawElements(GL_TRIANGLES, count, GL_UNSIGNED_INT, nullptr);
 }

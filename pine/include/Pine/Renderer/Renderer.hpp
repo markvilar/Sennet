@@ -20,10 +20,6 @@ public:
     static void Init();
     static void OnWindowResize(const uint32_t width, const uint32_t height);
 
-    static std::shared_ptr<ShaderLibrary>& GetShaderLibrary();
-    static std::shared_ptr<Texture2D>& GetBlackTexture();
-    static std::shared_ptr<Texture2D>& GetWhiteTexture();
-
     static void BeginScene(const OrthographicCamera& camera);
     static void EndScene();
 
