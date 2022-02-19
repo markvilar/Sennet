@@ -110,7 +110,7 @@ void EditorLayer::OnUpdate(Timestep ts)
     RenderCommand::Clear();
 
     Renderer2D::BeginScene(m_RendererData2D, m_CameraController.GetCamera());
-    
+
     Renderer2D::DrawRotatedQuad(m_RendererData2D,
         {0.0f, 0.0f},
         {0.8f, 0.8f},

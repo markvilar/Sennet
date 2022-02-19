@@ -8,6 +8,7 @@
 #include <stb_image.h>
 #include <stb_image_write.h>
 
+#include "Pine/Core/Assert.hpp"
 #include "Pine/Pch.hpp"
 
 namespace Pine
@@ -25,9 +26,9 @@ constexpr ImageFormat ParseImageFormat(const uint8_t channels)
         return ImageFormat::RGB;
     case 4:
         return ImageFormat::RGBA;
-    default:
-        return ImageFormat::GRAY;
     }
+    PINE_CORE_ASSERT(false, "Invalid number of image channels.");
+    return ImageFormat::GRAY;
 }
 
 constexpr ImageFileFormat ParseImageFileFormat(
@@ -51,7 +52,8 @@ constexpr ImageFileFormat ParseImageFileFormat(
     }
     else
     {
-        return ImageFileFormat::UNKNOWN;
+        PINE_CORE_ASSERT(false, "Invalid image file format.");
+        return ImageFileFormat::PNG;
     }
 }
 
@@ -73,9 +75,9 @@ constexpr uint32_t NumberOfChannels(const ImageFormat format)
         return 4;
     case ImageFormat::BGRA:
         return 4;
-    default:
-        return 0;
     }
+    PINE_CORE_ASSERT(false, "Invalid image format.");
+    return 0;
 }
 
 Image::Image(const uint8_t* data, const uint32_t width, const uint32_t height,
@@ -125,7 +127,6 @@ bool WriteImage(
     stbi_set_flip_vertically_on_load(flip);
 
     const auto channels = NumberOfChannels(image.Format);
-
     const auto writeResult = [filepath, image, channels, fileFormat]() {
         switch (fileFormat)
         {
@@ -155,9 +156,8 @@ bool WriteImage(
                 image.Height,
                 channels,
                 image.Buffer.data());
-        default:
-            return 0;
         }
+        return 0;
     }();
 
     return writeResult;

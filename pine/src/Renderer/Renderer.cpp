@@ -11,10 +11,7 @@ namespace Pine
 std::unique_ptr<Renderer::SceneData> Renderer::s_SceneData =
     std::make_unique<Renderer::SceneData>();
 
-void Renderer::Init()
-{
-    RenderCommand::Init();
-}
+void Renderer::Init() { RenderCommand::Init(); }
 
 void Renderer::OnWindowResize(const uint32_t width, const uint32_t height)
 {
