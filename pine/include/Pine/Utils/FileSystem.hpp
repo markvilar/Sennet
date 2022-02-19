@@ -4,63 +4,33 @@
 #include <functional>
 #include <string>
 
-namespace Pine
+namespace Pine::FileSystem
 {
 
-class FileSystem
-{
-public:
-    enum class Action
-    {
-        Add,
-        Rename,
-        Modify,
-        Delete
-    };
+bool CreateDirectory(const std::filesystem::path& directory);
+bool CreateDirectory(const std::string& directory);
 
-    struct Event
-    {
-        Action Act;
-        std::filesystem::path Filepath;
-        bool IsDirectory;
+bool Exists(const std::filesystem::path& filepath);
+bool Exists(const std::string& filepath);
 
-        std::string OldName = "";
-    };
+bool Copy(const std::filesystem::path& oldFilepath,
+    const std::filesystem::path& newFilepath);
+bool Move(const std::filesystem::path& oldFilepath,
+    const std::filesystem::path& newFilepath);
 
-public:
-    static bool CreateDirectory(const std::filesystem::path& directory);
-    static bool CreateDirectory(const std::string& directory);
+bool MoveFile(const std::filesystem::path& filepath,
+    const std::filesystem::path& destination);
+bool RenameFile(
+    const std::filesystem::path& oldFilepath, const std::string& newName);
+bool DeleteFile(const std::filesystem::path& filepath);
 
-    static bool Exists(const std::filesystem::path& filepath);
-    static bool Exists(const std::string& filepath);
+bool IsEmpty(const std::filesystem::path& filepath);
+bool IsEqual(
+    const std::filesystem::path& filepath, const std::filesystem::path& other);
+bool IsFile(const std::filesystem::path& filepath);
+bool IsDirectory(const std::filesystem::path& filepath);
 
-    static bool Copy(const std::filesystem::path& oldFilepath,
-        const std::filesystem::path& newFilepath);
-    static bool Move(const std::filesystem::path& oldFilepath,
-        const std::filesystem::path& newFilepath);
+bool SetWorkingDirectory(const std::filesystem::path& filepath);
+std::filesystem::path GetWorkingDirectory();
 
-    static bool MoveFile(const std::filesystem::path& filepath,
-        const std::filesystem::path& destination);
-    static bool RenameFile(
-        const std::filesystem::path& oldFilepath, const std::string& newName);
-    static bool DeleteFile(const std::filesystem::path& filepath);
-
-    static bool IsEmpty(const std::filesystem::path& filepath);
-    static bool IsEqual(const std::filesystem::path& filepath,
-        const std::filesystem::path& other);
-    static bool IsFile(const std::filesystem::path& filepath);
-    static bool IsDirectory(const std::filesystem::path& filepath);
-
-    static bool SetWorkingDirectory(const std::filesystem::path& filepath);
-    static std::filesystem::path GetWorkingDirectory();
-
-public:
-    using EventCallbackFunc = std::function<void(const std::vector<Event>&)>;
-
-    static void SetEventCallback(const EventCallbackFunc& callback);
-
-private:
-    static EventCallbackFunc s_Callback;
-};
-
-} // namespace Pine
+} // namespace Pine::FileSystem
