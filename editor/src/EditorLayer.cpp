@@ -5,57 +5,11 @@
 namespace Pine
 {
 
-InterfaceLayout CalculateMainMenuLayout(
-    const uint32_t windowWidth, const uint32_t windowHeight)
-{
-    InterfaceLayout layout;
-    layout.Position = {0.0f, 0.0f};
-    layout.Size = {0.0f, 0.0f};
-    return layout;
-}
-InterfaceLayout CalculateViewportLayout(
-    const uint32_t windowWidth, const uint32_t windowHeight)
-{
-    InterfaceLayout layout;
-    layout.Position = {0.2 * windowWidth, 0.0f};
-    layout.Size = {0.6 * windowWidth, 0.8 * windowHeight};
-    return layout;
-}
-
-InterfaceLayout CalculateLeftPanelLayout(
-    const uint32_t windowWidth, const uint32_t windowHeight)
-{
-    InterfaceLayout layout;
-    layout.Position = {0.0f, 0.0f};
-    layout.Size = {0.2 * windowWidth, windowHeight};
-    return layout;
-}
-
-InterfaceLayout CalculateRightPanelLayout(
-    const uint32_t windowWidth, const uint32_t windowHeight)
-{
-    InterfaceLayout layout;
-    layout.Position = {0.8 * windowWidth, 0.0f};
-    layout.Size = {0.2 * windowWidth, windowHeight};
-    return layout;
-}
-
-InterfaceLayout CalculateBottomPanelLayout(
-    const uint32_t windowWidth, const uint32_t windowHeight)
-{
-    InterfaceLayout layout;
-    layout.Position = {0.2 * windowWidth, 0.8 * windowHeight};
-    layout.Size = {0.6 * windowWidth, 0.2 * windowHeight};
-    return layout;
-}
-
 EditorLayer::EditorLayer() : Layer("EditorLayer"), m_CameraController(1.0f) {}
 
 void EditorLayer::OnAttach()
 {
-    const auto windowSize = Pine::Application::Get().GetWindow().GetSize();
-    const auto viewport =
-        CalculateViewportLayout(windowSize.first, windowSize.second);
+    UpdateInterfaceLayout();
 
     auto& io = ImGui::GetIO();
     io.Fonts->AddFontFromFileTTF("resources/fonts/OpenSans-Regular.ttf",
@@ -69,26 +23,30 @@ void EditorLayer::OnAttach()
     }
 
     Framebuffer::Specification specs;
-    specs.Width = viewport.Size.x;
-    specs.Height = viewport.Size.y;
+    specs.Width = m_InterfaceLayouts["Viewport"].Size.x;
+    specs.Height = m_InterfaceLayouts["Viewport"].Size.y;
     m_ViewportFramebuffer = Framebuffer::Create(specs);
 
-    m_CameraController.OnResize(static_cast<uint32_t>(viewport.Size.x),
-        static_cast<uint32_t>(viewport.Size.y));
+    m_CameraController.OnResize(
+        static_cast<uint32_t>(m_InterfaceLayouts["Viewport"].Size.x),
+        static_cast<uint32_t>(m_InterfaceLayouts["Viewport"].Size.y));
 
     m_RendererData2D = Renderer2D::Init();
 
     UI::SetDarkTheme(ImGui::GetStyle());
+
+    m_Server.Start();
 }
 
 void EditorLayer::OnDetach() {}
 
 void EditorLayer::OnUpdate(Timestep ts)
 {
+    m_Server.Update();
+
+    UpdateInterfaceLayout();
     auto specs = m_ViewportFramebuffer->GetSpecification();
-    const auto windowSize = Pine::Application::Get().GetWindow().GetSize();
-    const auto viewport =
-        CalculateViewportLayout(windowSize.first, windowSize.second);
+    const auto viewport = m_InterfaceLayouts["Viewport"];
 
     if (viewport.Size.x > 0.0f && viewport.Size.y > 0.0f
         && (specs.Width != viewport.Size.x || specs.Height != viewport.Size.y))
@@ -141,23 +99,11 @@ void EditorLayer::OnUpdate(Timestep ts)
 
 void EditorLayer::OnImGuiRender()
 {
-    const auto windowSize = Application::Get().GetWindow().GetSize();
-
-    const auto mainMenuLayout =
-        CalculateMainMenuLayout(windowSize.first, windowSize.second);
-    const auto viewportLayout =
-        CalculateViewportLayout(windowSize.first, windowSize.second);
-    const auto leftInterfaceLayout =
-        CalculateLeftPanelLayout(windowSize.first, windowSize.second);
-    const auto rightInterfaceLayout =
-        CalculateRightPanelLayout(windowSize.first, windowSize.second);
-    const auto bottomInterfaceLayout =
-        CalculateBottomPanelLayout(windowSize.first, windowSize.second);
-
     UI::AddMainMenuBar([]() {
         static bool showImGuiDemoWindow = false;
         static bool showImGuiMetrics = false;
         static bool showImGuiStackTool = false;
+        static bool showImGuiStyleEditor = false;
         static bool showFileSystemPopup = false;
 
         if (ImGui::BeginMenu("File"))
@@ -221,6 +167,7 @@ void EditorLayer::OnImGuiRender()
             ImGui::Checkbox("Show ImGui demo window", &showImGuiDemoWindow);
             ImGui::Checkbox("Show ImGui metrics", &showImGuiMetrics);
             ImGui::Checkbox("Show ImGui stack tool", &showImGuiStackTool);
+            ImGui::Checkbox("Show ImGui style editor", &showImGuiStyleEditor);
             ImGui::EndMenu();
         }
 
@@ -230,12 +177,18 @@ void EditorLayer::OnImGuiRender()
             ImGui::ShowMetricsWindow();
         if (showImGuiStackTool)
             ImGui::ShowStackToolWindow();
+        if (showImGuiStyleEditor)
+        {
+            ImGui::Begin("Dear ImGui Style Editor", &showImGuiStyleEditor);
+            ImGui::ShowStyleEditor();
+            ImGui::End();
+        }
     });
 
     UI::AddViewport("Viewport",
-        viewportLayout.Position,
-        viewportLayout.Size,
-        m_ViewportFramebuffer,
+        m_InterfaceLayouts["Viewport"].Position,
+        m_InterfaceLayouts["Viewport"].Size,
+        *m_ViewportFramebuffer.get(),
         [this] {
             m_ViewportFocused = ImGui::IsWindowFocused();
             m_ViewportHovered = ImGui::IsWindowHovered();
@@ -243,9 +196,9 @@ void EditorLayer::OnImGuiRender()
                 !m_ViewportFocused || !m_ViewportHovered);
         });
 
-    UI::AddWindow("Left",
-        leftInterfaceLayout.Position,
-        rightInterfaceLayout.Size,
+    UI::AddWindow("LeftPanel",
+        m_InterfaceLayouts["LeftPanel"].Position,
+        m_InterfaceLayouts["LeftPanel"].Size,
         [this] {
             auto& stats = m_RendererData2D.Stats;
             ImGui::Text("Renderer2D Stats:");
@@ -319,17 +272,82 @@ void EditorLayer::OnImGuiRender()
             UI::SliderScalar("Slider double", &valueDouble, -1.0, 1.0);
         });
 
-    UI::AddWindow("Right",
-        rightInterfaceLayout.Position,
-        rightInterfaceLayout.Size,
-        []() {});
+    UI::AddWindow("RightPanel",
+        m_InterfaceLayouts["RightPanel"].Position,
+        m_InterfaceLayouts["RightPanel"].Size,
+        [this]() {
+            static char address[256] = "";
+            static uint16_t port = 0;
+            ImGui::InputText("Address", address, IM_ARRAYSIZE(address));
+            ImGui::InputInt("Port", (int*)&port);
+            ImGui::Text("Client connected: %d", m_Client.IsConnected());
 
-    UI::AddWindow("Bottom",
-        bottomInterfaceLayout.Position,
-        bottomInterfaceLayout.Size,
+            if (ImGui::Button("Connect"))
+            {
+                m_Client.Connect(std::string(address), port);
+            }
+            ImGui::SameLine();
+            if (ImGui::Button("Disconnect"))
+            {
+                m_Client.Disconnect();
+            }
+
+            static constexpr size_t messageSize = 1024 * 16;
+            static char messageText[messageSize] = "";
+            ImGui::InputTextMultiline("Message", 
+                messageText, 
+                IM_ARRAYSIZE(messageText), 
+                ImVec2(-FLT_MIN, ImGui::GetTextLineHeight() * 16), 
+                ImGuiInputTextFlags_AllowTabInput);
+
+            if (ImGui::Button("Send to server"))
+            {
+                if (m_Client.IsConnected())
+                {
+                    Message message;
+                    message.Body = std::vector<uint8_t>(messageText, 
+                        messageText + messageSize);
+                    message.Header.Size = message.Body.size();
+                    m_Client.Send(message);
+                }
+            }
+
+
+            ImGui::Separator();
+        });
+
+    UI::AddWindow("BottomPanel",
+        m_InterfaceLayouts["BottomPanel"].Position,
+        m_InterfaceLayouts["BottomPanel"].Size,
         []() {});
 }
 
 void EditorLayer::OnEvent(Event& e) { m_CameraController.OnEvent(e); }
+
+void EditorLayer::UpdateInterfaceLayout()
+{
+    const auto& [windowWidth, windowHeight] =
+        Pine::Application::Get().GetWindow().GetSize();
+
+    static constexpr auto menuHeight = 20.0f;
+
+    const auto& mainMenuLayout = m_InterfaceLayouts["MainMenu"];
+
+    m_InterfaceLayouts["Viewport"] = InterfaceLayout(
+        Vec2(0.2f * windowWidth, 0.0f * windowHeight + menuHeight),
+        Vec2(0.6f * windowWidth, 0.8f * windowHeight));
+
+    m_InterfaceLayouts["LeftPanel"] = InterfaceLayout(
+        Vec2(0.0f * windowWidth, 0.0f * windowHeight + menuHeight),
+        Vec2(0.2f * windowWidth, 1.0f * windowHeight - menuHeight));
+
+    m_InterfaceLayouts["RightPanel"] = InterfaceLayout(
+        Vec2(0.8f * windowWidth, 0.0f * windowHeight + menuHeight),
+        Vec2(0.2f * windowWidth, 1.0f * windowHeight - menuHeight));
+
+    m_InterfaceLayouts["BottomPanel"] = InterfaceLayout(
+        Vec2(0.2f * windowWidth, 0.8f * windowHeight + menuHeight),
+        Vec2(0.6f * windowWidth, 0.2f * windowHeight - menuHeight));
+}
 
 } // namespace Pine

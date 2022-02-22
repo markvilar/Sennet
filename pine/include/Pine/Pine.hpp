@@ -12,11 +12,8 @@
 
 #include "Pine/Debug/Instrumentor.hpp"
 
-#include "Pine/Network/Connection.hpp"
 #include "Pine/Network/Message.hpp"
-#include "Pine/Network/TCPClient.hpp"
-#include "Pine/Network/TCPServer.hpp"
-#include "Pine/Network/ThreadSafeQueue.hpp"
+#include "Pine/Network/TCP.hpp"
 
 #include "Pine/Renderer/Buffer.hpp"
 #include "Pine/Renderer/Framebuffer.hpp"
@@ -35,3 +32,4 @@
 
 #include "Pine/Utils/FileSystem.hpp"
 #include "Pine/Utils/Math.hpp"
+#include "Pine/Utils/ThreadSafeQueue.hpp"

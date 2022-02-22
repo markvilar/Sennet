@@ -11,13 +11,14 @@ class ThreadSafeQueue
 {
 public:
     ThreadSafeQueue() = default;
-    virtual ~ThreadSafeQueue()
-    {
-        std::scoped_lock lock(m_Mutex);
-        clear();
-    }
 
     ThreadSafeQueue(const ThreadSafeQueue<T>&) = delete;
+    ThreadSafeQueue(ThreadSafeQueue<T>&&) = delete;
+
+    ~ThreadSafeQueue() = default;
+
+    ThreadSafeQueue& operator=(const ThreadSafeQueue<T>&) = delete;
+    ThreadSafeQueue& operator=(ThreadSafeQueue<T>&&) = delete;
 
     const T& front()
     {

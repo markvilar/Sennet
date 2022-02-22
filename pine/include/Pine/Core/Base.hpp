@@ -8,6 +8,7 @@
 #endif
 
 #include "Pine/Core/Assert.hpp"
+#include "Pine/Core/Log.hpp"
 #include "Pine/Core/Platform.hpp"
 
 #include <memory>
