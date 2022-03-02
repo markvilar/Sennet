@@ -27,42 +27,6 @@ struct InterfaceLayout
     InterfaceLayout& operator=(InterfaceLayout&&) = default;
 };
 
-class EditorServer : public TCP::Server
-{
-public:
-    EditorServer(const uint16_t port) : TCP::Server(port) {}
-    ~EditorServer() = default;
-
-protected:
-    bool OnClientConnect(
-        const std::shared_ptr<TCP::Connection>& client) override
-    {
-        PINE_INFO("Client connected.", client);
-        return true;
-    }
-
-    void OnClientDisconnect(
-        const std::shared_ptr<TCP::Connection>& client) override
-
-    {
-        PINE_INFO("Client disconnected.");
-    }
-
-    void OnMessage(const std::shared_ptr<TCP::Connection>& client,
-        const Message& message) override
-    {
-        PINE_INFO("Client {0} sent {1} bytes.", client->GetID(), 
-            message.Header.Size);
-
-        const auto text = [&message](){
-            return std::string(message.Body.data(), 
-                message.Body.data() + message.Body.size());
-            }();
-
-        PINE_INFO("Message: {0}", text.substr(0, 50));
-    }
-};
-
 class EditorLayer : public Layer
 {
 public:
@@ -86,8 +50,8 @@ private:
 
     Image m_Image;
 
-    TCP::Client m_Client{};
-    EditorServer m_Server{60000};
+    ClientState m_Client{};
+    ServerState m_Server{5000};
 
     std::shared_ptr<Framebuffer> m_ViewportFramebuffer;
     std::shared_ptr<Texture2D> m_Texture;

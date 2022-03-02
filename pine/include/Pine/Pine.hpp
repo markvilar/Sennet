@@ -12,8 +12,11 @@
 
 #include "Pine/Debug/Instrumentor.hpp"
 
+#include "Pine/Network/Client.hpp"
+#include "Pine/Network/Connection.hpp"
 #include "Pine/Network/Message.hpp"
-#include "Pine/Network/TCP.hpp"
+#include "Pine/Network/Server.hpp"
+#include "Pine/Network/Types.hpp"
 
 #include "Pine/Renderer/Buffer.hpp"
 #include "Pine/Renderer/Framebuffer.hpp"

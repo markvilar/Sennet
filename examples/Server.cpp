@@ -1,64 +1,37 @@
-#include <chrono>
-#include <functional>
-#include <thread>
+#include <csignal>
 
 #include "Pine/Pine.hpp"
 
-enum class CustomMessageTypes : uint32_t
-{
-    ServerAccept,
-    ServerDeny,
-    ServerPing,
-    MessageAll,
-    ServerMessage,
-};
+static bool exitFlag = false;
 
-class CustomServer : public Pine::TCPServer<CustomMessageTypes>
-{
-public:
-    CustomServer(const uint16_t port)
-        : Pine::TCPServer<CustomMessageTypes>(port)
-    {
-    }
-
-protected:
-    virtual bool OnClientConnect(
-        std::shared_ptr<Pine::Connection<CustomMessageTypes>> client) override
-    {
-        return true;
-    }
-
-    virtual void OnClientDisconnect(
-        std::shared_ptr<Pine::Connection<CustomMessageTypes>>) override
-    {
-    }
-
-    virtual void OnMessage(
-        std::shared_ptr<Pine::Connection<CustomMessageTypes>> client,
-        Pine::Message<CustomMessageTypes>& message) override
-    {
-        switch (message.Header.ID)
-        {
-        case CustomMessageTypes::ServerPing:
-            PINE_INFO("[{0}] Server Ping.", client->GetID());
-            client->Send(message);
-            break;
-        default:
-            break;
-        }
-    }
-};
+void signalHandler(const int signum) { exitFlag = true; }
 
 int main(int argc, char** argv)
 {
-    Pine::Log::Init();
-    CustomServer server(60000);
-    server.Start();
+    signal(SIGINT, signalHandler);
 
-    while (true)
+    Pine::Log::Init();
+
+    Pine::ServerState server(6000);
+
+    Pine::StartServer(server,
+        [&](const Pine::ConnectionState& connection) -> bool {
+            PINE_INFO("Server got connection: {0}",
+                connection.Socket.remote_endpoint());
+            return true;
+        });
+
+    while (!exitFlag)
     {
-        server.Update();
+        Pine::UpdateServer(server, [&](const Pine::Message& message) -> void {
+            PINE_INFO("Server got message: {0} : {1}",
+                message.Header.Size,
+                std::string(message.Body.begin(), message.Body.end()));
+        });
     }
+
+    PINE_INFO("Stopping server.");
+    Pine::StopServer(server);
 
     return 0;
 }
