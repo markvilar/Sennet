@@ -21,8 +21,11 @@ target_sources(
            include/Pine/Events/Event.hpp
            include/Pine/Events/KeyEvent.hpp
            include/Pine/Events/MouseEvent.hpp
+           include/Pine/Network/Client.hpp
+           include/Pine/Network/Connection.hpp
            include/Pine/Network/Message.hpp
-           include/Pine/Network/TCP.hpp
+           include/Pine/Network/Server.hpp
+           include/Pine/Network/Types.hpp
            include/Pine/Platform/OpenGL/OpenGLBuffer.hpp
            include/Pine/Platform/OpenGL/OpenGLFramebuffer.hpp
            include/Pine/Platform/OpenGL/OpenGLContext.hpp
@@ -57,7 +60,9 @@ target_sources(
             src/Core/Layer.cpp
             src/Core/LayerStack.cpp
             src/Core/Log.cpp
-            src/Network/TCP.cpp
+            src/Network/Client.cpp
+            src/Network/Connection.cpp
+            src/Network/Server.cpp
             src/Platform/OpenGL/OpenGLBuffer.cpp
             src/Platform/OpenGL/OpenGLFramebuffer.cpp
             src/Platform/OpenGL/OpenGLContext.cpp

@@ -35,15 +35,17 @@ void EditorLayer::OnAttach()
 
     UI::SetDarkTheme(ImGui::GetStyle());
 
-    m_Server.Start();
+    StartServer(m_Server, [](const ConnectionState& connection) -> bool {
+        PINE_INFO("Editor server: New connection {0}",
+            connection.Socket.remote_endpoint());
+        return true;
+    });
 }
 
 void EditorLayer::OnDetach() {}
 
 void EditorLayer::OnUpdate(Timestep ts)
 {
-    m_Server.Update();
-
     UpdateInterfaceLayout();
     auto specs = m_ViewportFramebuffer->GetSpecification();
     const auto viewport = m_InterfaceLayouts["Viewport"];
@@ -95,6 +97,14 @@ void EditorLayer::OnUpdate(Timestep ts)
 
     Renderer2D::EndScene(m_RendererData2D);
     m_ViewportFramebuffer->Unbind();
+
+    UpdateServer(m_Server, [](const Message& message) -> void {
+        static constexpr auto maxSize = 20;
+        const auto textSize =
+            message.Header.Size > maxSize ? maxSize : message.Header.Size;
+        const auto text = std::string(message.Body.begin(), message.Body.end());
+        PINE_INFO("Editor server: {0}", text.substr(0, textSize));
+    });
 }
 
 void EditorLayer::OnImGuiRender()
@@ -280,40 +290,57 @@ void EditorLayer::OnImGuiRender()
             static uint16_t port = 0;
             ImGui::InputText("Address", address, IM_ARRAYSIZE(address));
             ImGui::InputInt("Port", (int*)&port);
-            ImGui::Text("Client connected: %d", m_Client.IsConnected());
+            ImGui::Text("Client connected: %d", IsConnected(m_Client));
 
             if (ImGui::Button("Connect"))
             {
-                m_Client.Connect(std::string(address), port);
+                Connect(m_Client, std::string(address), port);
             }
             ImGui::SameLine();
             if (ImGui::Button("Disconnect"))
             {
-                m_Client.Disconnect();
+                Disconnect(m_Client);
             }
 
-            static constexpr size_t messageSize = 1024 * 16;
+            static constexpr size_t messageSize = 10 * 5;
             static char messageText[messageSize] = "";
-            ImGui::InputTextMultiline("Message", 
-                messageText, 
-                IM_ARRAYSIZE(messageText), 
-                ImVec2(-FLT_MIN, ImGui::GetTextLineHeight() * 16), 
+            ImGui::InputTextMultiline("Message",
+                messageText,
+                IM_ARRAYSIZE(messageText),
+                ImVec2(-FLT_MIN, ImGui::GetTextLineHeight() * 5),
                 ImGuiInputTextFlags_AllowTabInput);
 
             if (ImGui::Button("Send to server"))
             {
-                if (m_Client.IsConnected())
+                if (IsConnected(m_Client))
                 {
                     Message message;
-                    message.Body = std::vector<uint8_t>(messageText, 
-                        messageText + messageSize);
+                    message.Body = std::vector<uint8_t>(messageText,
+                        messageText + sizeof(messageText));
                     message.Header.Size = message.Body.size();
-                    m_Client.Send(message);
+                    Send(m_Client, message);
                 }
             }
 
-
             ImGui::Separator();
+
+            ImGui::Text("Server");
+
+            for (const auto& connection : m_Server.Connections)
+            {
+                const auto endpoint = connection->Socket.remote_endpoint();
+                ImGui::Text("Connection: %s:%d",
+                    endpoint.address().to_string().c_str(),
+                    endpoint.port());
+            }
+
+            UI::AddEmptySpace(0.0f, 20.0f);
+
+            ImGui::Text("Queued messages:");
+            for (const auto& message : m_Server.MessageQueue)
+            {
+                ImGui::Text("Message: %ld", message.Header.Size);
+            }
         });
 
     UI::AddWindow("BottomPanel",

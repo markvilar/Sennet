@@ -35,13 +35,13 @@ public:
     void push_front(const T& t)
     {
         std::scoped_lock lock(m_Mutex);
-        m_Deque.emplace_front(std::move(t));
+        m_Deque.push_front(t);
     }
 
     void push_back(const T& t)
     {
         std::scoped_lock lock(m_Mutex);
-        m_Deque.emplace_back(std::move(t));
+        m_Deque.push_back(t);
     }
 
     bool empty()
