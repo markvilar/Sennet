@@ -36,14 +36,8 @@ void LinuxWindow::Init()
     m_Data.Width = m_Specification.Width;
     m_Data.Height = m_Specification.Height;
 
-    PINE_CORE_INFO("Creating window {0}, ({1}, {2})",
-        m_Data.Title,
-        m_Data.Width,
-        m_Data.Height);
-
     if (s_GLFWWindowCount == 0)
     {
-        PINE_CORE_INFO("Initializing GLFW.");
         int success = glfwInit();
         PINE_CORE_ASSERT(success, "Could not initialize GLFW!");
         glfwSetErrorCallback(GLFWErrorCallback);
@@ -74,7 +68,6 @@ void LinuxWindow::Init()
             data.Width = width;
             data.Height = height;
             WindowResizeEvent event(width, height);
-            PINE_CORE_WARN("Window Resize: {0}, {1}", width, height);
             data.EventCallback(event);
         });
 
@@ -221,17 +214,11 @@ void LinuxWindow::SetTitle(const std::string& title)
 
 void LinuxWindow::Shutdown()
 {
-    PINE_CORE_INFO("Deleting window: {0} - ({1}, {2})",
-        m_Data.Title,
-        m_Data.Width,
-        m_Data.Height);
-
     glfwDestroyWindow(m_Window);
     --s_GLFWWindowCount;
 
     if (s_GLFWWindowCount == 0)
     {
-        PINE_CORE_INFO("Terminating GLFW");
         glfwTerminate();
     }
 }
