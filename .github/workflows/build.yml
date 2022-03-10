@@ -120,7 +120,9 @@ jobs:
         export CMAKE_C_COMPILER="${{matrix.compiler.c}}"
         export CMAKE_CXX_COMPILER="${{matrix.compiler.cpp}}"
         cmake -S ${{env.source_dir}} -B ${{env.build_dir}} \
-          -D CMAKE_MODULE_PATH=${{env.package_dir}}
+          -D CMAKE_MODULE_PATH=${{env.package_dir}} \
+          -D PINE_BUILD_EDITOR=ON \
+          -D PINE_BUILD_EXAMPLES=ON
 
     - name: Build
       run: cmake --build ${{env.build_dir}}
