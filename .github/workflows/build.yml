@@ -93,6 +93,7 @@ jobs:
       if: runner.os == 'linux'
       run: |
         sudo apt update -y
+        sudo apt install -y libgl-dev
         sudo apt install -y libx11-dev
         sudo apt install -y ninja-build
         pip3 install wheel setuptools
