@@ -33,7 +33,8 @@ auto AddWindow(const std::string& name, const Vec2& position, const Vec2& size,
 // TODO: Make template able to return value from func.
 template <typename Function>
 auto AddViewport(const std::string& name, const Vec2& position,
-    const Vec2& size, const std::shared_ptr<Framebuffer>& framebuffer,
+    const Vec2& size, 
+    const Framebuffer& framebuffer,
     const Function func)
 {
     ImGui::SetNextWindowPos(ImVec2(position.x, position.y), ImGuiCond_Always);
@@ -49,14 +50,11 @@ auto AddViewport(const std::string& name, const Vec2& position,
 
     func();
 
-    if (framebuffer)
-    {
-        auto textureID = framebuffer->GetColorAttachmentRendererID();
-        ImGui::Image(reinterpret_cast<void*>(textureID),
-            ImVec2{size.x, size.y},
-            ImVec2{0, 1},
-            ImVec2{1, 0});
-    }
+    auto textureID = framebuffer.GetColorAttachmentRendererID();
+    ImGui::Image(reinterpret_cast<void*>(textureID),
+        ImVec2{size.x, size.y},
+        ImVec2{0, 1},
+        ImVec2{1, 0});
 
     ImGui::End();
 }

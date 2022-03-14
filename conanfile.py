@@ -32,6 +32,7 @@ class Pine(ConanFile):
         self.requires("glfw/3.3.4")
         self.requires("glm/0.9.9.8")
         self.requires("imgui/1.85")
+        self.requires("opengl/system")
         self.requires("spdlog/1.9.2")
         self.requires("stb/cci.20210713")
 
