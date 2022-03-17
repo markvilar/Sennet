@@ -1,0 +1,129 @@
+name: Build
+
+on: 
+  push:
+  pull_request:
+    branches: [master]
+
+defaults:
+  run:
+    shell: bash
+
+env:
+  source_dir: "${{github.workspace}}"
+  build_dir: "${{github.workspace}}/build"
+  package_dir: "${{github.workspace}}/packages"
+
+jobs:
+  build:
+    name: "${{matrix.os}}-${{matrix.compiler.c}}-${{matrix.build_type}}"
+    runs-on: "${{matrix.os}}"
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            compiler: { c: gcc-10, cpp: g++-10 }
+            generator: Ninja
+            build_type: Release
+            platform: x64
+
+          - os: ubuntu-latest
+            compiler: { c: gcc-10, cpp: g++-10 }
+            generator: Ninja
+            build_type: Debug
+            platform: x64
+
+          - os: ubuntu-latest
+            compiler: { c: clang-11, cpp: clang++-11 }
+            generator: Ninja
+            build_type: Release
+            platform: x64
+
+          - os: ubuntu-latest
+            compiler: { c: clang-11, cpp: clang++-11 }
+            generator: Ninja
+            build_type: Debug
+            platform: x64
+
+          - os: ubuntu-latest
+            compiler: { c: clang-12, cpp: clang++-12 }
+            generator: Ninja
+            build_type: Release
+            platform: x64
+
+          - os: ubuntu-latest
+            compiler: { c: clang-12, cpp: clang++-12 }
+            generator: Ninja
+            build_type: Debug
+            platform: x64
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Echo build configuration
+      run: |
+        echo "OS:           ${{matrix.os}}"
+        echo "Generator:    ${{matrix.generator}}"
+        echo "C Compiler:   ${{matrix.compiler.c}}"
+        echo "C++ Compiler: ${{matrix.compiler.cpp}}"
+        echo "Build type:   ${{matrix.build_type}}"
+
+    - name: Set up Clang
+      uses: egor-tensin/setup-clang@v1
+      with:
+        version: latest
+        platform: ${{matrix.platform}}
+
+    - name: Set up GCC
+      if: runner.os == 'linux'
+      uses: egor-tensin/setup-gcc@v1
+      with:
+        version: latest
+        platform: ${{matrix.platform}}
+
+    - name: Set up MinGW
+      if: runner.os == 'windows'      
+      uses: egor-tensin/setup-mingw@v2
+      with:
+        platform: ${{matrix.platform}}
+
+    - name: Install Linux dependencies
+      if: runner.os == 'linux'
+      run: |
+        sudo apt update -y
+        sudo apt install -y libgl-dev
+        sudo apt install -y libx11-dev
+        sudo apt install -y ninja-build
+        pip3 install wheel setuptools
+        pip3 install conan
+        export PATH=$PATH:~/.local/bin
+
+    - name: Install Windows dependencies
+      if: runner.os == 'windows'
+      run: |
+        choco install -y ninja
+        pip3 install wheel setuptools
+        pip3 install conan
+
+    - name: Install packages
+      run: >
+        conan install    ${{env.source_dir}}
+        --install-folder ${{env.package_dir}} 
+        --settings       build_type=${{matrix.build_type}}
+        --build          missing
+
+    - name: Generate build
+      run: |
+        export CMAKE_GENERATOR="${{matrix.generator}}"
+        export CMAKE_BUILD_TYPE="${{matrix.build_type}}"
+        export CMAKE_C_COMPILER="${{matrix.compiler.c}}"
+        export CMAKE_CXX_COMPILER="${{matrix.compiler.cpp}}"
+        cmake -S ${{env.source_dir}} -B ${{env.build_dir}} \
+          -D CMAKE_MODULE_PATH=${{env.package_dir}} \
+          -D PINE_BUILD_EDITOR=ON \
+          -D PINE_BUILD_EXAMPLES=ON
+
+    - name: Build
+      run: cmake --build ${{env.build_dir}}

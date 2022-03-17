@@ -1,9 +1,12 @@
-# Custom directories
-/build*
+# Ignore some common directories
+bin/
+build/
+packages/
 
 # Vim files
 *.swp
 *.swo
+*.swa
 
 # Visual C++ cache files
 out/

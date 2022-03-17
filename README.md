@@ -1,74 +1,58 @@
-# Sennet 
-[![Build Status](https://travis-ci.com/markvilar/Sennet.svg?branch=master)](https://travis-ci.com/markvilar/Sennet)
+# Pine
+
+[![Build](https://github.com/markvilar/pine/actions/workflows/build.yml/badge.svg)](https://github.com/markvilar/pine/actions/workflows/build.yml)
+[![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
 ## Description
-Sennet is a static, cross-platform library for creating C++ applications 
-with graphics and networking functionality, that is developed with focus on 
-geometric data visualization and sensor networking.
+Pine is a lightweight, static, cross-platform library for creating C++ 
+applications with graphics and networking functionality. Pine has been developed
+with focus on data visualization, lean dependencies, and sensor networking.
 
 ## Requirements
 The requirements are:
 - C++17 compiler
 - CMake 3.16 (or higher)
 
-## GLFW dependencies on Linux distributions
+## Dependencies
 
-Sennet currently uses GLFW for its window and input system. Depending on the
-windowing system of the OS, GLFW requires installation of additional libraries
-on Linux. For example, Linux distributions using the X11 windowing system
-requires installation of the following dependencies: `libxrandr-dev` 
-`libxinerama-dev` `libxcursor-dev` `libxi-dev` `libxext-dev`
+| **Library** | **Version**  | **Library purpose.**                |
+|-------------|--------------|-------------------------------------|
+| asio        | 1.21.0       | Network and asynchronicity.         |
+| glad        | 0.1.34       | Bindings and loaders of OpenGL 4.6. |
+| glfw        | 3.3.4        | Window and input handling.          |
+| glm         | 0.9.9.8      | Vectorized mathematical operations. |
+| imgui       | 1.85         | Graphical user interface.           |
+| spdlog      | 1.9.2        | Console and file logging.           |
 
-To install via `apt`:
-```
-apt install libxrandr-dev libxinerama-dev libxcursor-dev libxi-dev libxext-dev
-```
+## Workflow
+By default, Pine utilizes CMake for build generation and Conan for package
+management. However, all the native features of CMake are preserved by Pine.
+This means that the user can utilize another package manager by simply 
+providing ```FindXXX.cmake``` files for each of the dependencies in the 
+```CMAKE_MODULE_PATH``` variable.
 
-## Building with CMake - Single configuration generators (Unix Makefiles)
+### Linux Workflow
 
-Debug mode:
-```
-git clone https://gitub.com/markvilar/Sennet.git
-cd Sennet
-cmake -S . -B build/ -G "Unix Makefiles" "-DCMAKE_BUILD_TYPE=Debug"
-cmake --build build/
-```
+```shell
+git clone https://github.com/markvilar/pine.git
+cd pine
 
-Realese mode:
-```
-git clone https://gitub.com/markvilar/Sennet.git
-cd Sennet
-cmake -S . -B build/ -G "Unix Makefiles" "-DCMAKE_BUILD_TYPE=Realese"
-cmake --build build/
-```
+export CMAKE_GENERATOR="${GENERATOR}"
+export CMAKE_BUILD_TYPE="${BUILD_TYPE}"
+export CMAKE_CXX_COMPILER="${CXX_COMPILER}"
 
-## Building with CMake - Multiple configuration generators (Visual Studio)
+conan install . --install-folder "${PACKAGE_DIR}" \
+    --settings build_type="${BUILD_TYPE}" --build missing
 
-Debug mode:
-```
-git clone https://gitub.com/markvilar/Sennet.git
-cd Sennet
-cmake -S . -B build/ -G "Visual Studio 16 2019" -A x64
-cmake --build build/ --config Debug
-```
-
-Realese mode:
-```
-git clone https://gitub.com/markvilar/Sennet.git
-cd Sennet
-cmake -S . -B build/ -G "Visual Studio 16 2019" -A x64
-cmake --build build/ --config Realese
+cmake -S . -B "${BUILD_DIR}" -D CMAKE_MODULE_PATH="${PACKAGE_DIR}"
+cmake --build "${BUILD_DIR}"
 ```
 
 ## Development Plan
 
-[Trello board](https://trello.com/b/iZZPB2t0/sennet)
+[Trello board](https://trello.com/b/iZZPB2t0/pine)
 
 ## Acknowledgements
 I would like to acknowledge the following projects for inspiring this one:
 - [Hazel](https://github.com/TheCherno/Hazel)
-- [FlexEngine](https://github.com/ajweeks/FlexEngine)
 - [olcPixelGameEngine](https://github.com/OneLoneCoder/olcPixelGameEngine)
-- [anki-3d-engine](https://github.com/godlikepanos/anki-3d-engine)
-- [cilantro](https://github.com/kzampog/cilantro)
-- [tinyply](https://github.com/ddiakopoulos/tinyply)
