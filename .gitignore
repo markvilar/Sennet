@@ -1,6 +1,7 @@
 # Ignore some common directories
 bin/
 build/
+install/
 packages/
 
 # Vim files
@@ -24,3 +25,10 @@ ipch/
 *.vsp
 *.vspx
 *.sap
+
+# Conan files
+*/conanbuildinfo.cmake
+*/conanbuildinfo.txt
+*/conaninfo.txt
+*/conan.lock
+*/graph_info.json
