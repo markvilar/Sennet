@@ -93,8 +93,6 @@ jobs:
       if: runner.os == 'linux'
       run: |
         sudo apt update -y
-        sudo apt install -y libgl-dev
-        sudo apt install -y libx11-dev
         sudo apt install -y ninja-build
         pip3 install wheel setuptools
         pip3 install conan
@@ -107,12 +105,13 @@ jobs:
         pip3 install wheel setuptools
         pip3 install conan
 
-    - name: Install packages
-      run: >
-        conan install    ${{env.source_dir}}
-        --install-folder ${{env.package_dir}} 
-        --settings       build_type=${{matrix.build_type}}
-        --build          missing
+    - name: Install Conan packages
+      run: |
+        export CONAN_SYSREQUIRES_MODE=enabled
+        conan install    ${{env.source_dir}} \
+          --install-folder ${{env.package_dir}} \
+          --settings       build_type=${{matrix.build_type}} \
+          --build          missing
 
     - name: Generate build
       run: |
@@ -120,10 +119,22 @@ jobs:
         export CMAKE_BUILD_TYPE="${{matrix.build_type}}"
         export CMAKE_C_COMPILER="${{matrix.compiler.c}}"
         export CMAKE_CXX_COMPILER="${{matrix.compiler.cpp}}"
-        cmake -S ${{env.source_dir}} -B ${{env.build_dir}} \
+        cmake -S ${{env.source_dir}} \
+          -B ${{env.build_dir}} \
           -D CMAKE_MODULE_PATH=${{env.package_dir}} \
           -D PINE_BUILD_EDITOR=ON \
           -D PINE_BUILD_EXAMPLES=ON
 
     - name: Build
       run: cmake --build ${{env.build_dir}}
+
+    - name: Install
+      run: |
+        cmake --install ${{env.build_dir}} \
+          --prefix ${{env.source_dir}}/install/ \
+          --config ${{matrix.build_type}}
+
+    - name: Create Conan package
+      run: |
+        conan create ${{env.source_dir}} \
+          --build missing
