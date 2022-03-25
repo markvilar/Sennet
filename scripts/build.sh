@@ -18,6 +18,9 @@ export CMAKE_CXX_COMPILER="${CXX_COMPILER}"
 conan install "${SOURCE_DIR}" --install-folder "${CONAN_DIR}" \
     --settings build_type="${BUILD_TYPE}" --build missing
 
-cmake -S "${SOURCE_DIR}" -B "${BUILD_DIR}" -D CMAKE_MODULE_PATH="${CONAN_DIR}" \
-    -D PINE_BUILD_EDITOR=ON -D PINE_BUILD_EXAMPLES=ON
+cmake -S "${SOURCE_DIR}" -B "${BUILD_DIR}" \
+    -D CMAKE_MODULE_PATH="${CONAN_DIR}" \
+    -D PINE_BUILD_EDITOR=ON \
+    -D PINE_BUILD_EXAMPLES=ON
+
 cmake --build ${BUILD_DIR}
