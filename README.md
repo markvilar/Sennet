@@ -46,7 +46,7 @@ export CMAKE_GENERATOR="Unix Makefiles"
 export CMAKE_BUILD_TYPE="Release"
 export CMAKE_CXX_COMPILER="gcc"
 
-# Allow conan to install OS requirements
+# Allow Conan to install OS requirements
 export CONAN_SYSREQUIRES_MODE=enabled
 
 # Install packages with Conan
@@ -70,7 +70,7 @@ cmake --install build --prefix install --config Release
 
 #### Packaging
 ```shell
-# Allow conan to install OS requirements
+# Allow Conan to install OS requirements
 export CONAN_SYSREQUIRES_MODE=enabled
 
 # Create a local Conan package for Pine
