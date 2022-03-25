@@ -55,7 +55,6 @@ target_sources(pine
         include/Pine/Utils/FileSystem.hpp
         include/Pine/Utils/Math.hpp
         include/Pine/Utils/ThreadSafeQueue.hpp
-        include/Pine/Experimental.hpp
     PRIVATE 
         src/Core/Application.cpp
         src/Core/Layer.cpp

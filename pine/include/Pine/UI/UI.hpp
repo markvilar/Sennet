@@ -33,9 +33,7 @@ auto AddWindow(const std::string& name, const Vec2& position, const Vec2& size,
 // TODO: Make template able to return value from func.
 template <typename Function>
 auto AddViewport(const std::string& name, const Vec2& position,
-    const Vec2& size, 
-    const Framebuffer& framebuffer,
-    const Function func)
+    const Vec2& size, const Framebuffer& framebuffer, const Function func)
 {
     ImGui::SetNextWindowPos(ImVec2(position.x, position.y), ImGuiCond_Always);
     ImGui::SetNextWindowSize(ImVec2(size.x, size.y), ImGuiCond_Always);
