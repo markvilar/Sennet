@@ -109,6 +109,7 @@ class Pine(ConanFile):
     def package_info(self):
         """ Configures the package information. """
         self.cpp_info.libs = tools.collect_libs(self)
+        self.cpp_info.resdirs = ['resources']
 
         if self.settings.os == "Windows":
             self.cpp_info.defines.append("PINE_PLATFORM_WINDOWS")

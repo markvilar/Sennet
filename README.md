@@ -4,14 +4,16 @@
 [![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
 ## Description
-Pine is a lightweight, static, cross-platform library for creating C++ 
-applications with graphics and networking functionality. Pine has been developed
-with focus on data visualization, lean dependencies, and sensor networking.
+Pine is a lightweight, cross-platform library for creating C++ applications 
+with graphics and networking functionality. Pine has been developed with focus 
+on maintaining a lean dependency structure, and leveraging modern C++
+development tools.
 
 ## Requirements
-The requirements are:
-- C++17 compiler
-- CMake 3.16 (or higher)
+Pine requires the follow tools to be built:
+- C++17
+- CMake 3.16+
+- Conan 1.39+ (optional)
 
 ## Dependencies
 
@@ -24,7 +26,7 @@ The requirements are:
 | imgui       | 1.85         | Graphical user interface.           |
 | spdlog      | 1.9.2        | Console and file logging.           |
 
-## Workflow
+## Workflows
 By default, Pine utilizes CMake for build generation and Conan for package
 management. However, all the native features of CMake are preserved by Pine.
 This means that the user can utilize another package manager by simply 
@@ -33,19 +35,46 @@ providing ```FindXXX.cmake``` files for each of the dependencies in the
 
 ### Linux Workflow
 
+#### Building
+
 ```shell
 git clone https://github.com/markvilar/pine.git
 cd pine
 
-export CMAKE_GENERATOR="${GENERATOR}"
-export CMAKE_BUILD_TYPE="${BUILD_TYPE}"
-export CMAKE_CXX_COMPILER="${CXX_COMPILER}"
+# Configure CMake
+export CMAKE_GENERATOR="Unix Makefiles"
+export CMAKE_BUILD_TYPE="Release"
+export CMAKE_CXX_COMPILER="gcc"
 
-conan install . --install-folder "${PACKAGE_DIR}" \
-    --settings build_type="${BUILD_TYPE}" --build missing
+# Allow conan to install OS requirements
+export CONAN_SYSREQUIRES_MODE=enabled
 
-cmake -S . -B "${BUILD_DIR}" -D CMAKE_MODULE_PATH="${PACKAGE_DIR}"
-cmake --build "${BUILD_DIR}"
+# Install packages with Conan
+conan install .                   \
+    --install-folder ./packages   \
+    --settings build_type=Release \
+    --build missing
+
+# Generate build with CMake
+cmake -S . -B build -D CMAKE_MODULE_PATH="${PWD}/packages"
+
+# Build
+cmake --build build
+```
+
+#### Installing
+```shell
+# Install Pine with CMake
+cmake --install build --prefix install --config Release
+```
+
+#### Packaging
+```shell
+# Allow conan to install OS requirements
+export CONAN_SYSREQUIRES_MODE=enabled
+
+# Create a local Conan package for Pine
+conan create . --build missing
 ```
 
 ## Development Plan
