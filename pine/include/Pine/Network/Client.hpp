@@ -4,7 +4,6 @@
 #include <thread>
 
 #include "Pine/Network/Connection.hpp"
-#include "Pine/Network/Message.hpp"
 #include "Pine/Network/Types.hpp"
 
 namespace Pine
@@ -12,11 +11,11 @@ namespace Pine
 
 struct ClientState
 {
-    NetworkContext Context{};
-    std::thread ContextThread{};
+    NetworkContext context{};
+    std::thread context_thread{};
 
-    std::unique_ptr<ConnectionState> Connection{};
-    ThreadSafeQueue<Message> MessageQueue{};
+    std::unique_ptr<ConnectionState> connection{};
+    LockedQueue<std::vector<uint8_t>> message_queue{};
 
 public:
     ClientState() = default;
@@ -29,10 +28,10 @@ public:
 
     ~ClientState()
     {
-        Context.stop();
-        if (ContextThread.joinable())
+        context.stop();
+        if (context_thread.joinable())
         {
-            ContextThread.join();
+            context_thread.join();
         }
     }
 };
@@ -41,6 +40,6 @@ bool IsConnected(const ClientState& client);
 bool Connect(ClientState& client, const std::string& host, const uint16_t port);
 void Disconnect(ClientState& client);
 
-void Send(const ClientState& client, const Message& message);
+void Send(const ClientState& client, const uint8_t* data, const uint64_t size);
 
 }; // namespace Pine

@@ -2,6 +2,8 @@ cmake_minimum_required(VERSION 3.16)
 
 project(pine VERSION 0.1.1 LANGUAGES CXX)
 
+option(PINE_USE_CONAN "Use Conan for package management." ON)
+
 option(PINE_BUILD_SHARED "Build shared library." ON)
 option(PINE_BUILD_WARNINGS "Enable compiler warnings." ON)
 option(PINE_BUILD_EDITOR "Build editor." OFF)
@@ -15,6 +17,20 @@ add_library(pine_options INTERFACE)
 target_compile_features(pine_options INTERFACE cxx_std_17)
 
 add_library(pine_warnings INTERFACE)
+
+if(PINE_USE_CONAN)
+    if(CONAN_EXPORTED)
+        include(conanbuildinfo.cmake)
+        conan_basic_setup()
+    else()
+        include("${CMAKE_CURRENT_SOURCE_DIR}/cmake/conan.cmake")
+        conan_cmake_run(CONANFILE "${CMAKE_CURRENT_SOURCE_DIR}/conanfile.py"
+            BASIC_SETUP 
+            CMAKE_TARGETS 
+            BUILD missing)
+        list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_BINARY_DIR}")
+    endif()
+endif()
 
 # Enable cache system.
 include(cmake/Cache.cmake)

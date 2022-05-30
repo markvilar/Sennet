@@ -22,7 +22,6 @@ target_sources(pine
         include/Pine/Events/MouseEvent.hpp
         include/Pine/Network/Client.hpp
         include/Pine/Network/Connection.hpp
-        include/Pine/Network/Message.hpp
         include/Pine/Network/Server.hpp
         include/Pine/Network/Types.hpp
         include/Pine/Platform/OpenGL/OpenGLBuffer.hpp
@@ -54,7 +53,7 @@ target_sources(pine
         include/Pine/UI/ImGuiLayer.hpp
         include/Pine/Utils/FileSystem.hpp
         include/Pine/Utils/Math.hpp
-        include/Pine/Utils/ThreadSafeQueue.hpp
+        include/Pine/Utils/locked_queue.hpp
     PRIVATE 
         src/Core/Application.cpp
         src/Core/Layer.cpp

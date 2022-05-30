@@ -67,8 +67,8 @@ void OpenGLFramebuffer::Invalidate()
         m_DepthAttachment,
         0);
 
-    PINE_CORE_ASSERT(
-        glCheckFramebufferStatus(GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE,
+    PINE_CORE_ASSERT(glCheckFramebufferStatus(GL_FRAMEBUFFER)
+            == GL_FRAMEBUFFER_COMPLETE,
         "Framebuffer is incomplete!");
 
     glBindFramebuffer(GL_FRAMEBUFFER, 0);

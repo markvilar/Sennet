@@ -4,8 +4,8 @@
 
 #include "Pine/Core/Base.hpp"
 #include "Pine/Network/Connection.hpp"
-#include "Pine/Network/Message.hpp"
 #include "Pine/Network/Types.hpp"
+#include "Pine/Utils/locked_queue.hpp"
 
 namespace Pine
 {
@@ -16,12 +16,12 @@ struct ServerState
     using Connection = ConnectionState;
     using ConnectionPtr = std::shared_ptr<ConnectionState>;
 
-    NetworkContext Context{};
-    std::thread ContextThread{};
-    AcceptorType Acceptor;
+    NetworkContext context{};
+    std::thread context_thread{};
+    AcceptorType acceptor;
 
-    std::deque<ConnectionPtr> Connections{};
-    ThreadSafeQueue<Message> MessageQueue{};
+    std::deque<ConnectionPtr> connections{};
+    LockedQueue<std::vector<uint8_t>> message_queue{};
 
 public:
     ServerState(const uint16_t port);
@@ -37,22 +37,24 @@ public:
 
 void StopServer(ServerState& server);
 void SendToClient(ServerState& server,
-    const std::shared_ptr<ConnectionState>& client, const Message& message);
+    const std::shared_ptr<ConnectionState>& client, const uint8_t* data,
+    const uint64_t size);
 
 template <typename ConnectHandler>
 void ListenForClients(ServerState& server, ConnectHandler& handler)
 {
-    server.Acceptor.async_accept(
-        [&server, &handler](const std::error_code ec, SocketType socket) {
+    server.acceptor.async_accept(
+        [&server, &handler](const std::error_code ec, SocketType socket)
+        {
             if (!ec)
             {
-                auto client = std::make_shared<ConnectionState>(server.Context,
+                auto client = std::make_shared<ConnectionState>(server.context,
                     std::move(socket),
-                    server.MessageQueue);
+                    server.message_queue);
 
                 if (handler(*client.get()))
                 {
-                    server.Connections.push_back(client);
+                    server.connections.push_back(client);
                     ConnectToClient(*client.get());
                 }
             }
@@ -71,8 +73,8 @@ bool StartServer(ServerState& server, ConnectHandler handler)
     try
     {
         ListenForClients(server, handler);
-        server.ContextThread =
-            std::thread([&server]() { server.Context.run(); });
+        server.context_thread =
+            std::thread([&server]() { server.context.run(); });
     }
     catch (const std::exception& error)
     {
@@ -84,14 +86,14 @@ bool StartServer(ServerState& server, ConnectHandler handler)
 
 template <typename MessageCallback>
 void UpdateServer(ServerState& server, MessageCallback callback,
-    const uint64_t maxMessages = -1)
+    const uint64_t max_messages = -1)
 {
-    uint64_t messageCount = 0;
-    while (messageCount < maxMessages && !server.MessageQueue.empty())
+    uint64_t message_count = 0;
+    while (message_count < max_messages && !server.message_queue.empty())
     {
-        const auto message = server.MessageQueue.pop_front();
+        const auto message = server.message_queue.pop_front();
         callback(message);
-        messageCount++;
+        message_count++;
     }
 }
 

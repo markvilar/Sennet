@@ -197,8 +197,8 @@ public:
     virtual void SetLayout(const BufferLayout& layout) = 0;
 
     static std::unique_ptr<VertexBuffer> Create(const uint32_t size);
-    static std::unique_ptr<VertexBuffer> Create(
-        const float* vertices, const uint32_t size);
+    static std::unique_ptr<VertexBuffer> Create(const float* vertices,
+        const uint32_t size);
 };
 
 class IndexBuffer
@@ -211,8 +211,8 @@ public:
 
     virtual uint32_t GetCount() const = 0;
 
-    static std::unique_ptr<IndexBuffer> Create(
-        const uint32_t* indices, const uint32_t count);
+    static std::unique_ptr<IndexBuffer> Create(const uint32_t* indices,
+        const uint32_t count);
 };
 
 } // namespace Pine

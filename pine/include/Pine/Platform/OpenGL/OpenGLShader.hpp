@@ -30,24 +30,24 @@ public:
     virtual void Bind() const override;
     virtual void Unbind() const override;
 
-    virtual void SetInt(
-        const std::string& name, const int value) const override;
+    virtual void SetInt(const std::string& name,
+        const int value) const override;
     virtual void SetIntArray(const std::string& name, const int* values,
         const uint32_t count) const override;
-    virtual void SetFloat(
-        const std::string& name, const float value) const override;
-    virtual void SetFloat3(
-        const std::string& name, const Vec3& value) const override;
-    virtual void SetFloat4(
-        const std::string& name, const Vec4& value) const override;
-    virtual void SetMat4(
-        const std::string& name, const Mat4& value) const override;
+    virtual void SetFloat(const std::string& name,
+        const float value) const override;
+    virtual void SetFloat3(const std::string& name,
+        const Vec3& value) const override;
+    virtual void SetFloat4(const std::string& name,
+        const Vec4& value) const override;
+    virtual void SetMat4(const std::string& name,
+        const Mat4& value) const override;
 
     virtual const std::string& GetName() const override { return m_Name; }
 
     void UploadUniformInt(const std::string& name, const int value) const;
-    void UploadUniformIntArray(
-        const std::string& name, const int* values, const uint32_t count) const;
+    void UploadUniformIntArray(const std::string& name, const int* values,
+        const uint32_t count) const;
 
     void UploadUniformFloat(const std::string& name, const float value) const;
     void UploadUniformFloat2(const std::string& name, const Vec2& values) const;

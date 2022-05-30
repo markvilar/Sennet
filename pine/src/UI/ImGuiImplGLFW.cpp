@@ -162,8 +162,8 @@ static void ImGui_ImplGlfw_SetClipboardText(void* user_data, const char* text)
     glfwSetClipboardString((GLFWwindow*)user_data, text);
 }
 
-void ImGui_ImplGlfw_MouseButtonCallback(
-    GLFWwindow* window, int button, int action, int mods)
+void ImGui_ImplGlfw_MouseButtonCallback(GLFWwindow* window, int button,
+    int action, int mods)
 {
     ImGui_ImplGlfw_Data* bd = ImGui_ImplGlfw_GetBackendData();
     if (bd->PrevUserCallbackMousebutton != NULL && window == bd->Window)
@@ -174,8 +174,8 @@ void ImGui_ImplGlfw_MouseButtonCallback(
         bd->MouseJustPressed[button] = true;
 }
 
-void ImGui_ImplGlfw_ScrollCallback(
-    GLFWwindow* window, double xoffset, double yoffset)
+void ImGui_ImplGlfw_ScrollCallback(GLFWwindow* window, double xoffset,
+    double yoffset)
 {
     ImGui_ImplGlfw_Data* bd = ImGui_ImplGlfw_GetBackendData();
     if (bd->PrevUserCallbackScroll != NULL && window == bd->Window)
@@ -186,8 +186,8 @@ void ImGui_ImplGlfw_ScrollCallback(
     io.MouseWheel += (float)yoffset;
 }
 
-void ImGui_ImplGlfw_KeyCallback(
-    GLFWwindow* window, int key, int scancode, int action, int mods)
+void ImGui_ImplGlfw_KeyCallback(GLFWwindow* window, int key, int scancode,
+    int action, int mods)
 {
     ImGui_ImplGlfw_Data* bd = ImGui_ImplGlfw_GetBackendData();
     if (bd->PrevUserCallbackKey != NULL && window == bd->Window)
@@ -256,8 +256,8 @@ void ImGui_ImplGlfw_MonitorCallback(GLFWmonitor*, int)
     // install this one too.
 }
 
-static bool ImGui_ImplGlfw_Init(
-    GLFWwindow* window, bool install_callbacks, GlfwClientApi client_api)
+static bool ImGui_ImplGlfw_Init(GLFWwindow* window, bool install_callbacks,
+    GlfwClientApi client_api)
 {
     ImGuiIO& io = ImGui::GetIO();
     IM_ASSERT(io.BackendPlatformUserData == NULL

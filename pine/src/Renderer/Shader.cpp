@@ -38,8 +38,8 @@ std::unique_ptr<Shader> Shader::Create(const std::string& name,
     return nullptr;
 }
 
-void ShaderLibrary::Add(
-    const std::string& name, const std::shared_ptr<Shader>& shader)
+void ShaderLibrary::Add(const std::string& name,
+    const std::shared_ptr<Shader>& shader)
 {
     PINE_CORE_ASSERT(!Exists(name), "Shader {0} already exists.", name);
     m_Shaders[name] = shader;

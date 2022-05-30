@@ -24,7 +24,8 @@ RendererData Init()
     data.QuadVertexArray = VertexArray::Create();
     data.QuadVertexArray->SetVertexBuffer(std::move(vertexBuffer));
 
-    constexpr auto quadIndices = []() {
+    constexpr auto quadIndices = []()
+    {
         std::array<uint32_t, MaxIndices> indices{};
         uint32_t offset = 0;
         for (uint32_t i = 0; i < indices.size(); i += IndicesPerQuad)
@@ -45,7 +46,8 @@ RendererData Init()
     data.QuadVertexArray->SetIndexBuffer(
         IndexBuffer::Create(quadIndices.data(), quadIndices.size()));
 
-    constexpr auto samplers = []() {
+    constexpr auto samplers = []()
+    {
         std::array<int32_t, MaxTextureSlots> samplers = {};
         for (uint32_t i = 0; i < samplers.size(); i++)
             samplers[i] = i;
