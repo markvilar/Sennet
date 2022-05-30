@@ -20,13 +20,13 @@ bool Move(const std::filesystem::path& oldFilepath,
 
 bool MoveFile(const std::filesystem::path& filepath,
     const std::filesystem::path& destination);
-bool RenameFile(
-    const std::filesystem::path& oldFilepath, const std::string& newName);
+bool RenameFile(const std::filesystem::path& oldFilepath,
+    const std::string& newName);
 bool DeleteFile(const std::filesystem::path& filepath);
 
 bool IsEmpty(const std::filesystem::path& filepath);
-bool IsEqual(
-    const std::filesystem::path& filepath, const std::filesystem::path& other);
+bool IsEqual(const std::filesystem::path& filepath,
+    const std::filesystem::path& other);
 bool IsFile(const std::filesystem::path& filepath);
 bool IsDirectory(const std::filesystem::path& filepath);
 

@@ -9,25 +9,25 @@ namespace Pine
 
 bool IsConnected(const ClientState& client)
 {
-    return client.Connection ? IsConnected(*client.Connection.get()) : false;
+    return client.connection ? IsConnected(*client.connection.get()) : false;
 }
 
 bool Connect(ClientState& client, const std::string& host, const uint16_t port)
 {
-    if (client.ContextThread.joinable())
+    if (client.context_thread.joinable())
     {
         return false;
     }
 
-    Resolver resolver(client.Context);
-    SocketType socket(client.Context);
+    Resolver resolver(client.context);
+    SocketType socket(client.context);
     const auto endpoints = resolver.resolve(host, std::to_string(port));
 
-    client.Connection = std::make_unique<ConnectionState>(client.Context,
+    client.connection = std::make_unique<ConnectionState>(client.context,
         std::move(socket),
-        client.MessageQueue);
-    ConnectToServer(*client.Connection.get(), endpoints);
-    client.ContextThread = std::thread([&client]() { client.Context.run(); });
+        client.message_queue);
+    ConnectToServer(*client.connection.get(), endpoints);
+    client.context_thread = std::thread([&client]() { client.context.run(); });
     return true;
 }
 
@@ -35,24 +35,24 @@ void Disconnect(ClientState& client)
 {
     if (IsConnected(client))
     {
-        Disconnect(*client.Connection.get());
+        Disconnect(*client.connection.get());
     }
 
-    client.Context.stop();
+    client.context.stop();
 
-    if (client.ContextThread.joinable())
+    if (client.context_thread.joinable())
     {
-        client.ContextThread.join();
+        client.context_thread.join();
     }
 
-    client.Connection.release();
+    client.connection.release();
 }
 
-void Send(const ClientState& client, const Message& message)
+void Send(const ClientState& client, const uint8_t* data, const uint64_t size)
 {
     if (IsConnected(client))
     {
-        Send(*client.Connection.get(), message);
+        Send(*client.connection.get(), data, size);
     }
 }
 

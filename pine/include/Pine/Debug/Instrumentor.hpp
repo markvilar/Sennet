@@ -35,8 +35,8 @@ public:
     Instrumentor(const Instrumentor&) = delete;
     Instrumentor(Instrumentor&&) = delete;
 
-    void BeginSession(
-        const std::string& name, const std::string& filepath = "results.json")
+    void BeginSession(const std::string& name,
+        const std::string& filepath = "results.json")
     {
         std::lock_guard lock(m_Mutex);
         if (m_CurrentSession)
@@ -188,8 +188,8 @@ class InstrumentationUtils
     };
 
     template <size_t N, size_t K>
-    constexpr auto CleanupOutputString(
-        const char (&expr)[N], const char (&remove)[K])
+    constexpr auto CleanupOutputString(const char (&expr)[N],
+        const char (&remove)[K])
     {
         ChangeResult<N> result = {};
 

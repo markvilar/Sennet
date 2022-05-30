@@ -118,8 +118,8 @@ Image ReadImage(const std::filesystem::path& filepath, const ImageFormat format,
     return Image(data, width, height, format);
 }
 
-bool WriteImage(
-    const std::filesystem::path& filepath, const Image& image, const bool flip)
+bool WriteImage(const std::filesystem::path& filepath, const Image& image,
+    const bool flip)
 {
     const auto fileExtension = filepath.extension();
     const auto fileFormat = ParseImageFileFormat(fileExtension.c_str());
@@ -127,7 +127,8 @@ bool WriteImage(
     stbi_set_flip_vertically_on_load(flip);
 
     const auto channels = NumberOfChannels(image.Format);
-    const auto writeResult = [filepath, image, channels, fileFormat]() {
+    const auto writeResult = [filepath, image, channels, fileFormat]()
+    {
         switch (fileFormat)
         {
         case ImageFileFormat::JPG:

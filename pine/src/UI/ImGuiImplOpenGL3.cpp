@@ -599,8 +599,8 @@ void ImGui_ImplOpenGL3_RenderDrawData(ImDrawData* draw_data)
                             (GLsizei)pcmd->ElemCount,
                             sizeof(ImDrawIdx) == 2 ? GL_UNSIGNED_SHORT
                                                    : GL_UNSIGNED_INT,
-                            (void*)(intptr_t)(
-                                pcmd->IdxOffset * sizeof(ImDrawIdx)),
+                            (void*)(intptr_t)(pcmd->IdxOffset
+                                * sizeof(ImDrawIdx)),
                             (GLint)pcmd->VtxOffset);
                     else
 #endif
@@ -608,8 +608,8 @@ void ImGui_ImplOpenGL3_RenderDrawData(ImDrawData* draw_data)
                             (GLsizei)pcmd->ElemCount,
                             sizeof(ImDrawIdx) == 2 ? GL_UNSIGNED_SHORT
                                                    : GL_UNSIGNED_INT,
-                            (void*)(intptr_t)(
-                                pcmd->IdxOffset * sizeof(ImDrawIdx)));
+                            (void*)(intptr_t)(pcmd->IdxOffset
+                                * sizeof(ImDrawIdx)));
                 }
             }
         }

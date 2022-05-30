@@ -25,8 +25,8 @@ void Renderer::BeginScene(const OrthographicCamera& camera)
 
 void Renderer::EndScene() {}
 
-void Renderer::Submit(
-    const Shader& shader, const VertexArray& vertexArray, const Mat4& transform)
+void Renderer::Submit(const Shader& shader, const VertexArray& vertexArray,
+    const Mat4& transform)
 {
     shader.Bind();
     shader.SetMat4("u_ViewProjection", s_SceneData->ViewProjectionMatrix);

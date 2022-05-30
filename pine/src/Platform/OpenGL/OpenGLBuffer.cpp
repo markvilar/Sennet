@@ -44,8 +44,8 @@ void OpenGLVertexBuffer::SetData(const void* data, const uint32_t size)
 //// Index Buffer /////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
 
-OpenGLIndexBuffer::OpenGLIndexBuffer(
-    const uint32_t* indices, const uint32_t count)
+OpenGLIndexBuffer::OpenGLIndexBuffer(const uint32_t* indices,
+    const uint32_t count)
     : m_Count(count)
 {
     glCreateBuffers(1, &m_RendererID);

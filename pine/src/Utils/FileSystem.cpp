@@ -47,8 +47,8 @@ bool FileSystem::MoveFile(const std::filesystem::path& filepath,
     return Move(filepath, destination);
 }
 
-bool FileSystem::RenameFile(
-    const std::filesystem::path& oldFilepath, const std::string& newName)
+bool FileSystem::RenameFile(const std::filesystem::path& oldFilepath,
+    const std::string& newName)
 {
     auto newFilepath =
         oldFilepath.parent_path() / newName / oldFilepath.extension();
@@ -65,8 +65,8 @@ bool FileSystem::IsEmpty(const std::filesystem::path& filepath)
     return std::filesystem::is_empty(filepath);
 }
 
-bool FileSystem::IsEqual(
-    const std::filesystem::path& filepath, const std::filesystem::path& other)
+bool FileSystem::IsEqual(const std::filesystem::path& filepath,
+    const std::filesystem::path& other)
 {
     return std::filesystem::equivalent(filepath, other);
 }

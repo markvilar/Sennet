@@ -23,10 +23,11 @@ private:
     std::filesystem::path m_StoragePath;
 };
 
-std::unique_ptr<Pine::Application> Pine::CreateApplication(
-    int argc, char** argv)
+std::unique_ptr<Pine::Application> Pine::CreateApplication(int argc,
+    char** argv)
 {
-    const auto projectPath = [argc, argv]() {
+    const auto projectPath = [argc, argv]()
+    {
         if (argc > 1)
         {
             return std::string(argv[1]);

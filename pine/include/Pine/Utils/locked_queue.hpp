@@ -7,18 +7,18 @@ namespace Pine
 {
 
 template <typename T>
-class ThreadSafeQueue
+class LockedQueue
 {
 public:
-    ThreadSafeQueue() = default;
+    LockedQueue() = default;
 
-    ThreadSafeQueue(const ThreadSafeQueue<T>&) = delete;
-    ThreadSafeQueue(ThreadSafeQueue<T>&&) = delete;
+    LockedQueue(const LockedQueue<T>&) = delete;
+    LockedQueue(LockedQueue<T>&&) = delete;
 
-    ~ThreadSafeQueue() = default;
+    ~LockedQueue() = default;
 
-    ThreadSafeQueue& operator=(const ThreadSafeQueue<T>&) = delete;
-    ThreadSafeQueue& operator=(ThreadSafeQueue<T>&&) = delete;
+    LockedQueue& operator=(const LockedQueue<T>&) = delete;
+    LockedQueue& operator=(LockedQueue<T>&&) = delete;
 
     const T& front()
     {

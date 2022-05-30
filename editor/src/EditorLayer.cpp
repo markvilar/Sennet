@@ -27,19 +27,21 @@ void EditorLayer::OnAttach()
     specs.Height = m_InterfaceLayouts["Viewport"].Size.y;
     m_ViewportFramebuffer = Framebuffer::Create(specs);
 
-    m_CameraController.OnResize(
-        static_cast<uint32_t>(m_InterfaceLayouts["Viewport"].Size.x),
+    m_CameraController.OnResize(static_cast<uint32_t>(
+                                    m_InterfaceLayouts["Viewport"].Size.x),
         static_cast<uint32_t>(m_InterfaceLayouts["Viewport"].Size.y));
 
     m_RendererData2D = Renderer2D::Init();
 
     UI::SetDarkTheme(ImGui::GetStyle());
 
-    StartServer(m_Server, [](const ConnectionState& connection) -> bool {
-        PINE_INFO("Editor server: New connection {0}",
-            connection.Socket.remote_endpoint());
-        return true;
-    });
+    StartServer(m_Server,
+        [](const ConnectionState& connection) -> bool
+        {
+            PINE_INFO("Editor server: New connection {0}",
+                connection.socket.remote_endpoint());
+            return true;
+        });
 }
 
 void EditorLayer::OnDetach() {}
@@ -98,108 +100,108 @@ void EditorLayer::OnUpdate(Timestep ts)
     Renderer2D::EndScene(m_RendererData2D);
     m_ViewportFramebuffer->Unbind();
 
-    UpdateServer(m_Server, [](const Message& message) -> void {
-        static constexpr auto maxSize = 20;
-        const auto textSize =
-            message.Header.Size > maxSize ? maxSize : message.Header.Size;
-        const auto text = std::string(message.Body.begin(), message.Body.end());
-        PINE_INFO("Editor server: {0}", text.substr(0, textSize));
-    });
+    UpdateServer(m_Server,
+        [this](const std::vector<uint8_t>& message) -> void
+        { m_server_history.push_back(message); });
 }
 
 void EditorLayer::OnImGuiRender()
 {
-    UI::AddMainMenuBar([]() {
-        static bool showImGuiDemoWindow = false;
-        static bool showImGuiMetrics = false;
-        static bool showImGuiStackTool = false;
-        static bool showImGuiStyleEditor = false;
-        static bool showFileSystemPopup = false;
-
-        if (ImGui::BeginMenu("File"))
+    UI::AddMainMenuBar(
+        []()
         {
-            if (ImGui::MenuItem("Open", "Ctrl+O"))
-            {
-            }
-            if (ImGui::MenuItem("Save", "Ctrl+S"))
-            {
-            }
-            if (ImGui::MenuItem("Exit", "Ctrl+W"))
-            {
-                Pine::Application::Get().Close();
-            }
-            ImGui::EndMenu();
-        }
+            static bool showImGuiDemoWindow = false;
+            static bool showImGuiMetrics = false;
+            static bool showImGuiStackTool = false;
+            static bool showImGuiStyleEditor = false;
+            static bool showFileSystemPopup = false;
 
-        if (ImGui::BeginMenu("Edit"))
-        {
-            if (ImGui::MenuItem("Undo", "Ctrl+Z"))
+            if (ImGui::BeginMenu("File"))
             {
+                if (ImGui::MenuItem("Open", "Ctrl+O"))
+                {
+                }
+                if (ImGui::MenuItem("Save", "Ctrl+S"))
+                {
+                }
+                if (ImGui::MenuItem("Exit", "Ctrl+W"))
+                {
+                    Pine::Application::Get().Close();
+                }
+                ImGui::EndMenu();
             }
-            if (ImGui::MenuItem("Redo", "Ctrl+Y"))
+
+            if (ImGui::BeginMenu("Edit"))
             {
+                if (ImGui::MenuItem("Undo", "Ctrl+Z"))
+                {
+                }
+                if (ImGui::MenuItem("Redo", "Ctrl+Y"))
+                {
+                }
+                ImGui::EndMenu();
             }
-            ImGui::EndMenu();
-        }
 
-        if (ImGui::BeginMenu("Directory"))
-        {
-            if (ImGui::MenuItem("Working directory"))
+            if (ImGui::BeginMenu("Directory"))
             {
-                showFileSystemPopup = true;
+                if (ImGui::MenuItem("Working directory"))
+                {
+                    showFileSystemPopup = true;
+                }
+                if (ImGui::MenuItem("Resource directory"))
+                {
+                    // TODO: Render resources directory panel.
+                }
+                ImGui::EndMenu();
             }
-            if (ImGui::MenuItem("Resource directory"))
+
+            if (showFileSystemPopup)
+                ImGui::OpenPopup("WorkingDirectory");
+
+            if (ImGui::BeginPopupModal("WorkingDirectory"))
             {
-                // TODO: Render resources directory panel.
+                static char workingDirectoryBuffer[256] = "";
+                strcpy(workingDirectoryBuffer,
+                    Pine::FileSystem::GetWorkingDirectory().c_str());
+                ImGui::Text("Working directory: %s", workingDirectoryBuffer);
+                if (ImGui::Button("Close"))
+                {
+                    showFileSystemPopup = false;
+                    ImGui::CloseCurrentPopup();
+                }
+                ImGui::EndPopup();
             }
-            ImGui::EndMenu();
-        }
 
-        if (showFileSystemPopup)
-            ImGui::OpenPopup("WorkingDirectory");
-
-        if (ImGui::BeginPopupModal("WorkingDirectory"))
-        {
-            static char workingDirectoryBuffer[256] = "";
-            strcpy(workingDirectoryBuffer,
-                Pine::FileSystem::GetWorkingDirectory().c_str());
-            ImGui::Text("Working directory: %s", workingDirectoryBuffer);
-            if (ImGui::Button("Close"))
+            if (ImGui::BeginMenu("ImGui"))
             {
-                showFileSystemPopup = false;
-                ImGui::CloseCurrentPopup();
+                ImGui::Checkbox("Show ImGui demo window", &showImGuiDemoWindow);
+                ImGui::Checkbox("Show ImGui metrics", &showImGuiMetrics);
+                ImGui::Checkbox("Show ImGui stack tool", &showImGuiStackTool);
+                ImGui::Checkbox("Show ImGui style editor",
+                    &showImGuiStyleEditor);
+                ImGui::EndMenu();
             }
-            ImGui::EndPopup();
-        }
 
-        if (ImGui::BeginMenu("ImGui"))
-        {
-            ImGui::Checkbox("Show ImGui demo window", &showImGuiDemoWindow);
-            ImGui::Checkbox("Show ImGui metrics", &showImGuiMetrics);
-            ImGui::Checkbox("Show ImGui stack tool", &showImGuiStackTool);
-            ImGui::Checkbox("Show ImGui style editor", &showImGuiStyleEditor);
-            ImGui::EndMenu();
-        }
-
-        if (showImGuiDemoWindow)
-            ImGui::ShowDemoWindow();
-        if (showImGuiMetrics)
-            ImGui::ShowMetricsWindow();
-        if (showImGuiStackTool)
-            ImGui::ShowStackToolWindow();
-        if (showImGuiStyleEditor)
-        {
-            ImGui::Begin("Dear ImGui Style Editor", &showImGuiStyleEditor);
-            ImGui::ShowStyleEditor();
-            ImGui::End();
-        }
-    });
+            if (showImGuiDemoWindow)
+                ImGui::ShowDemoWindow();
+            if (showImGuiMetrics)
+                ImGui::ShowMetricsWindow();
+            if (showImGuiStackTool)
+                ImGui::ShowStackToolWindow();
+            if (showImGuiStyleEditor)
+            {
+                ImGui::Begin("Dear ImGui Style Editor", &showImGuiStyleEditor);
+                ImGui::ShowStyleEditor();
+                ImGui::End();
+            }
+        });
 
     UI::AddViewport("Viewport",
         m_InterfaceLayouts["Viewport"].Position,
         m_InterfaceLayouts["Viewport"].Size,
         *m_ViewportFramebuffer.get(),
-        [this] {
+        [this]
+        {
             m_ViewportFocused = ImGui::IsWindowFocused();
             m_ViewportHovered = ImGui::IsWindowHovered();
             Application::Get().GetImGuiLayer()->BlockEvents(
@@ -209,7 +211,8 @@ void EditorLayer::OnImGuiRender()
     UI::AddWindow("LeftPanel",
         m_InterfaceLayouts["LeftPanel"].Position,
         m_InterfaceLayouts["LeftPanel"].Size,
-        [this] {
+        [this]
+        {
             auto& stats = m_RendererData2D.Stats;
             ImGui::Text("Renderer2D Stats:");
             ImGui::Text("Draw Calls: %d", stats.DrawCalls);
@@ -285,7 +288,8 @@ void EditorLayer::OnImGuiRender()
     UI::AddWindow("RightPanel",
         m_InterfaceLayouts["RightPanel"].Position,
         m_InterfaceLayouts["RightPanel"].Size,
-        [this]() {
+        [this]()
+        {
             static char address[256] = "";
             static uint16_t port = 0;
             ImGui::InputText("Address", address, IM_ARRAYSIZE(address));
@@ -314,11 +318,9 @@ void EditorLayer::OnImGuiRender()
             {
                 if (IsConnected(m_Client))
                 {
-                    Message message;
-                    message.Body = std::vector<uint8_t>(messageText,
+                    const auto message = std::vector<uint8_t>(messageText,
                         messageText + sizeof(messageText));
-                    message.Header.Size = message.Body.size();
-                    Send(m_Client, message);
+                    Send(m_Client, message.data(), message.size());
                 }
             }
 
@@ -326,9 +328,9 @@ void EditorLayer::OnImGuiRender()
 
             ImGui::Text("Server");
 
-            for (const auto& connection : m_Server.Connections)
+            for (const auto& connection : m_Server.connections)
             {
-                const auto endpoint = connection->Socket.remote_endpoint();
+                const auto endpoint = connection->socket.remote_endpoint();
                 ImGui::Text("Connection: %s:%d",
                     endpoint.address().to_string().c_str(),
                     endpoint.port());
@@ -336,10 +338,11 @@ void EditorLayer::OnImGuiRender()
 
             UI::AddEmptySpace(0.0f, 20.0f);
 
-            ImGui::Text("Queued messages:");
-            for (const auto& message : m_Server.MessageQueue)
+            ImGui::Text("Server messages:");
+            for (const auto& message : m_server_history)
             {
-                ImGui::Text("Message: %ld", message.Header.Size);
+                ImGui::Text("%s",
+                    std::string(message.begin(), message.end()).c_str());
             }
         });
 
@@ -360,21 +363,25 @@ void EditorLayer::UpdateInterfaceLayout()
 
     const auto& mainMenuLayout = m_InterfaceLayouts["MainMenu"];
 
-    m_InterfaceLayouts["Viewport"] = InterfaceLayout(
-        Vec2(0.2f * windowWidth, 0.0f * windowHeight + menuHeight),
-        Vec2(0.6f * windowWidth, 0.8f * windowHeight));
+    m_InterfaceLayouts["Viewport"] =
+        InterfaceLayout(Vec2(0.2f * windowWidth,
+                            0.0f * windowHeight + menuHeight),
+            Vec2(0.6f * windowWidth, 0.8f * windowHeight));
 
-    m_InterfaceLayouts["LeftPanel"] = InterfaceLayout(
-        Vec2(0.0f * windowWidth, 0.0f * windowHeight + menuHeight),
-        Vec2(0.2f * windowWidth, 1.0f * windowHeight - menuHeight));
+    m_InterfaceLayouts["LeftPanel"] =
+        InterfaceLayout(Vec2(0.0f * windowWidth,
+                            0.0f * windowHeight + menuHeight),
+            Vec2(0.2f * windowWidth, 1.0f * windowHeight - menuHeight));
 
-    m_InterfaceLayouts["RightPanel"] = InterfaceLayout(
-        Vec2(0.8f * windowWidth, 0.0f * windowHeight + menuHeight),
-        Vec2(0.2f * windowWidth, 1.0f * windowHeight - menuHeight));
+    m_InterfaceLayouts["RightPanel"] =
+        InterfaceLayout(Vec2(0.8f * windowWidth,
+                            0.0f * windowHeight + menuHeight),
+            Vec2(0.2f * windowWidth, 1.0f * windowHeight - menuHeight));
 
-    m_InterfaceLayouts["BottomPanel"] = InterfaceLayout(
-        Vec2(0.2f * windowWidth, 0.8f * windowHeight + menuHeight),
-        Vec2(0.6f * windowWidth, 0.2f * windowHeight - menuHeight));
+    m_InterfaceLayouts["BottomPanel"] =
+        InterfaceLayout(Vec2(0.2f * windowWidth,
+                            0.8f * windowHeight + menuHeight),
+            Vec2(0.6f * windowWidth, 0.2f * windowHeight - menuHeight));
 }
 
 } // namespace Pine

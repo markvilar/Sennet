@@ -28,10 +28,10 @@ public:
     virtual void SetIntArray(const std::string& name, const int* values,
         const uint32_t count) const = 0;
     virtual void SetFloat(const std::string& name, const float value) const = 0;
-    virtual void SetFloat3(
-        const std::string& name, const Vec3& value) const = 0;
-    virtual void SetFloat4(
-        const std::string& name, const Vec4& value) const = 0;
+    virtual void SetFloat3(const std::string& name,
+        const Vec3& value) const = 0;
+    virtual void SetFloat4(const std::string& name,
+        const Vec4& value) const = 0;
     virtual void SetMat4(const std::string& name, const Mat4& value) const = 0;
 
     virtual const std::string& GetName() const = 0;

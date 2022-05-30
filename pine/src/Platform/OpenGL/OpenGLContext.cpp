@@ -32,8 +32,8 @@ void OpenGLContext::Init()
     glGetIntegerv(GL_MAJOR_VERSION, &version_major);
     glGetIntegerv(GL_MINOR_VERSION, &version_minor);
 
-    PINE_CORE_ASSERT(
-        version_major > 4 || (version_major == 4 && version_minor >= 5),
+    PINE_CORE_ASSERT(version_major > 4
+            || (version_major == 4 && version_minor >= 5),
         "Pine requires at least OpenGL version 4.5!");
 #endif
 }

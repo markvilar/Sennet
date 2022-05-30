@@ -10,7 +10,8 @@ namespace Pine
 
 void BufferLayout::CalculateOffsetAndStride()
 {
-    m_Stride = [this]() {
+    m_Stride = [this]()
+    {
         uint32_t offset = 0;
         uint32_t stride = 0;
         for (auto& element : m_Elements)
@@ -38,8 +39,8 @@ std::unique_ptr<VertexBuffer> VertexBuffer::Create(const uint32_t size)
     return nullptr;
 }
 
-std::unique_ptr<VertexBuffer> VertexBuffer::Create(
-    const float* vertices, const uint32_t size)
+std::unique_ptr<VertexBuffer> VertexBuffer::Create(const float* vertices,
+    const uint32_t size)
 {
     switch (Renderer::GetAPI())
     {
@@ -54,8 +55,8 @@ std::unique_ptr<VertexBuffer> VertexBuffer::Create(
     return nullptr;
 }
 
-std::unique_ptr<IndexBuffer> IndexBuffer::Create(
-    const uint32_t* indices, const uint32_t count)
+std::unique_ptr<IndexBuffer> IndexBuffer::Create(const uint32_t* indices,
+    const uint32_t count)
 {
     switch (Renderer::GetAPI())
     {

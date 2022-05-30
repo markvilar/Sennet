@@ -6,44 +6,45 @@ namespace Pine
 {
 
 ServerState::ServerState(const uint16_t port)
-    : Acceptor(Context, EndpointType(asio::ip::tcp::v4(), port))
+    : acceptor(context, EndpointType(asio::ip::tcp::v4(), port))
 {
 }
 
 ServerState::~ServerState()
 {
-    Context.stop();
-    if (ContextThread.joinable())
+    context.stop();
+    if (context_thread.joinable())
     {
-        ContextThread.join();
+        context_thread.join();
     }
 }
 
 void StopServer(ServerState& server)
 {
-    server.Context.stop();
-    if (server.ContextThread.joinable())
+    server.context.stop();
+    if (server.context_thread.joinable())
     {
-        server.ContextThread.join();
+        server.context_thread.join();
     }
 }
 
 void SendToClient(ServerState& server,
-    const std::shared_ptr<ConnectionState>& client, const Message& message)
+    const std::shared_ptr<ConnectionState>& client, const uint8_t* data,
+    const uint64_t size)
 {
     if (client)
     {
         if (IsConnected(*client.get()))
         {
-            Send(*client.get(), message);
+            Send(*client.get(), data, size);
         }
     }
     else
     {
-        server.Connections.erase(std::remove(server.Connections.begin(),
-                                     server.Connections.end(),
+        server.connections.erase(std::remove(server.connections.begin(),
+                                     server.connections.end(),
                                      client),
-            server.Connections.end());
+            server.connections.end());
     }
 }
 

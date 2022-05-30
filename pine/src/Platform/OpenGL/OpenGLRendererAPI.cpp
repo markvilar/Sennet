@@ -30,8 +30,8 @@ void OpenGLRendererAPI::Clear()
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
-void OpenGLRendererAPI::DrawIndexed(
-    const VertexArray& vertexArray, const uint32_t indexCount)
+void OpenGLRendererAPI::DrawIndexed(const VertexArray& vertexArray,
+    const uint32_t indexCount)
 {
     const uint32_t count =
         indexCount ? vertexArray.GetIndexBuffer().GetCount() : indexCount;
