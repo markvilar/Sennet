@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.16)
 
-project(pine VERSION 0.1.1 LANGUAGES CXX)
+project(pine VERSION 0.1.2 LANGUAGES CXX)
 
 option(PINE_USE_CONAN "Use Conan for package management." ON)
 

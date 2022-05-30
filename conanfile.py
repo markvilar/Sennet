@@ -4,7 +4,7 @@ required_conan_version = ">=1.39.0"
 
 class Pine(ConanFile):
     name = "pine"
-    version = "0.1.1"
+    version = "0.1.2"
     license = "Apache 2.0"
     author = "Martin Kvisvik Larsen"
     description = "Pine - Library for graphics and network"
