@@ -10,12 +10,14 @@ option(PINE_BUILD_EDITOR "Build editor." OFF)
 option(PINE_BUILD_EXAMPLES "Build examples." OFF)
 option(PINE_BUILD_TESTS "Build test." OFF)
 
-include(cmake/ProjectSettings.cmake)
-include(cmake/PreventInSourceBuild.cmake)
+include(cmake/project_settings.cmake)
+include(cmake/prevent_in_source_build.cmake)
 
+# Interface library for options
 add_library(pine_options INTERFACE)
 target_compile_features(pine_options INTERFACE cxx_std_17)
 
+# Interface library for warnings
 add_library(pine_warnings INTERFACE)
 
 if(PINE_USE_CONAN)
@@ -33,21 +35,21 @@ if(PINE_USE_CONAN)
 endif()
 
 # Enable cache system.
-include(cmake/Cache.cmake)
+include(cmake/cache.cmake)
 
 # Standard compiler warnings.
-include(cmake/CompilerWarning.cmake)
+include(cmake/compiler_warning.cmake)
 set_project_warnings(pine_warnings)
 
 # Sanitizer options if supported by compiler.
-include(cmake/Sanitizers.cmake)
+include(cmake/sanitizers.cmake)
 enable_sanitizers(pine_options)
 
 # Allow static analysis options.
-include(cmake/StaticAnalyzers.cmake)
+include(cmake/static_analyzers.cmake)
 
 # Doxygen
-include(cmake/Doxygen.cmake)
+include(cmake/doxygen.cmake)
 enable_doxygen()
 
 add_subdirectory(pine)

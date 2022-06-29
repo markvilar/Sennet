@@ -1,5 +1,5 @@
 # -----------------------------------------------------------------------------
-# Editor library
+# editor library
 # -----------------------------------------------------------------------------
 
 add_library(editor STATIC)
@@ -7,9 +7,9 @@ add_library(pine::editor ALIAS editor)
 
 target_sources(editor
     PUBLIC 
-        include/Editor/EditorLayer.hpp
+        include/editor/editor_layer.hpp
     PRIVATE 
-        src/EditorLayer.cpp)
+        src/editor_layer.cpp)
 
 target_include_directories(editor PUBLIC include)
 
@@ -24,20 +24,20 @@ set_target_properties(editor PROPERTIES
     RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/bin")
 
 # -----------------------------------------------------------------------------
-# Editor application
+# editor application
 # -----------------------------------------------------------------------------
 
-add_executable(editor-app Editor.cpp)
-target_compile_definitions(editor-app PRIVATE)
-target_compile_features(editor-app PRIVATE cxx_std_17)
-target_link_libraries(editor-app PRIVATE pine::editor)
+add_executable(editor_app editor.cpp)
+target_compile_definitions(editor_app PRIVATE)
+target_compile_features(editor_app PRIVATE cxx_std_17)
+target_link_libraries(editor_app PRIVATE pine::editor)
 
-set_target_properties(editor-app PROPERTIES 
+set_target_properties(editor_app PROPERTIES 
     ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib"
     LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib"
     RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
 
-add_custom_command(TARGET editor-app POST_BUILD
+add_custom_command(TARGET editor_app POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_directory
     "${PROJECT_SOURCE_DIR}/resources"
-    "$<TARGET_FILE_DIR:editor-app>/resources")
+    "$<TARGET_FILE_DIR:editor_app>/resources")
