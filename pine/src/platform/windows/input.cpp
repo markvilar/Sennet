@@ -3,41 +3,49 @@
 
 #include <GLFW/glfw3.h>
 
-#include "pine/core/application.hpp"
 #include "pine/pch.hpp"
 
-namespace pine
+namespace pine::input
 {
 
-bool Input::IsKeyPressed(KeyCode keyCode)
+
+bool is_key_pressed(const Window& window, const KeyCode key)
 {
-    auto window = static_cast<GLFWwindow*>(
-        Application::Get().GetWindow().GetNativeWindow());
-    auto state = glfwGetKey(window, static_cast<int32_t>(keyCode));
+    const auto native_window = 
+        static_cast<GLFWwindow*>(window.get_native_window());
+    const auto state = 
+        glfwGetKey(native_window, static_cast<int32_t>(key));
     return state == GLFW_PRESS || state == GLFW_REPEAT;
 }
 
-bool Input::IsMouseButtonPressed(MouseCode button)
+bool is_mouse_button_pressed(const Window& window, const MouseCode button)
 {
-    auto window = static_cast<GLFWwindow*>(
-        Application::Get().GetWindow().GetNativeWindow());
-    auto state = glfwGetMouseButton(window, static_cast<int32_t>(button));
+    const auto native_window = 
+        static_cast<GLFWwindow*>(window.get_native_window());
+    const auto state = 
+        glfwGetMouseButton(native_window, static_cast<int32_t>(button));
     return state == GLFW_PRESS;
 }
 
-std::pair<float, float> Input::GetMousePosition()
+std::pair<float, float> get_mouse_position(const Window& window)
 {
-    auto window = static_cast<GLFWwindow*>(
-        Application::Get().GetWindow().GetNativeWindow());
-    double posX, posY;
-    glfwGetCursorPos(window, &posX, &posY);
-    return {(float)posX, (float)posY};
+    auto native_window = 
+        static_cast<GLFWwindow*>(window.get_native_window());
+    double posx, posy;
+    glfwGetCursorPos(native_window, &posx, &posy);
+    return { (float)posx, (float)posy };
 }
 
-float Input::GetMouseX() { return GetMousePosition().first; }
+float get_mouse_x(const Window& window)
+{ 
+    return get_mouse_position(window).first; 
+}
 
-float Input::GetMouseY() { return GetMousePosition().second; }
+float get_mouse_y(const Window& window);
+{ 
+    return get_mouse_position(window).second; 
+}
 
-} // namespace pine
+} // namespace pine::input
 
 #endif

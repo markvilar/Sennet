@@ -12,10 +12,10 @@ public:
     LayerStack() = default;
     ~LayerStack();
 
-    void PushLayer(Layer* layer);
-    void PushOverlay(Layer* overlay);
-    void PopLayer(Layer* layer);
-    void PopOverlay(Layer* overlay);
+    void push_layer(Layer* layer);
+    void push_overlay(Layer* overlay);
+    void pop_layer(Layer* layer);
+    void pop_overlay(Layer* overlay);
 
     std::vector<Layer*>::iterator begin();
     std::vector<Layer*>::iterator end();
@@ -28,8 +28,8 @@ public:
     std::vector<Layer*>::const_reverse_iterator rend() const;
 
 private:
-    std::vector<Layer*> m_Layers;
-    unsigned int m_LayerInsertIndex = 0;
+    std::vector<Layer*> m_layers;
+    unsigned int m_layer_insert_index = 0;
 };
 
 } // namespace pine

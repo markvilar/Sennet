@@ -13,16 +13,16 @@ public:
     Layer(const std::string& name = "layer");
     virtual ~Layer() = default;
 
-    virtual void OnAttach() {}
-    virtual void OnDetach() {}
-    virtual void OnUpdate(Timestep ts) {}
-    virtual void OnImGuiRender() {}
-    virtual void OnEvent(Event& e) {}
+    virtual void on_attach() {}
+    virtual void on_detach() {}
+    virtual void on_update(Timestep ts) {}
+    virtual void on_imgui_render() {}
+    virtual void on_event(Event& event) {}
 
-    inline const std::string& GetName() const { return m_DebugName; }
+    inline const std::string& get_name() const { return m_debug_name; }
 
 protected:
-    std::string m_DebugName;
+    std::string m_debug_name;
 };
 
 } // namespace pine

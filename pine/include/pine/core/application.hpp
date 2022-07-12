@@ -22,68 +22,69 @@ class Application
 public:
     struct Specification
     {
-        std::string WorkingDirectory;
-        std::string Name = "pine App";
-        uint32_t WindowWidth = 1600;
-        uint32_t WindowHeight = 800;
-        bool StartMaximized = true;
-        bool VSync = true;
-        bool Resizable = true;
-        bool EnableImGui = true;
-        bool Fullscreen = false;
+        std::string working_directory;
+        std::string name = "pine App";
+        uint32_t window_width = 1600;
+        uint32_t window_height = 800;
+        bool start_maximized = true;
+        bool vsync = true;
+        bool resizable = true;
+        bool enable_imgui = true;
+        bool fullscreen = false;
     };
 
 public:
     Application(const Specification& specs);
     virtual ~Application();
 
-    void Run();
-    void Close();
+    void run();
+    void close();
 
-    virtual void OnInit() {}
-    virtual void OnShutdown() {}
-    virtual void OnUpdate() {}
+    virtual void on_init() {}
+    virtual void on_shutdown() {}
+    virtual void on_update() {}
 
-    void OnEvent(Event& e);
+    void on_event(Event& e);
 
-    void PushLayer(Layer* layer);
-    void PushOverlay(Layer* overlay);
-    void PopLayer(Layer* layer);
-    void PopOverlay(Layer* overlay);
-    void RenderImGui();
+    void push_layer(Layer* layer);
+    void push_overlay(Layer* overlay);
+    void pop_layer(Layer* layer);
+    void pop_overlay(Layer* overlay);
 
-    inline Window& GetWindow() { return *m_Window; }
+    void render_imgui();
 
-    inline ImGuiLayer* GetImGuiLayer() { return m_ImGuiLayer; }
+    inline Window& get_window() { return *m_window; }
 
-    static inline Application& Get() { return *s_Instance; }
+    inline ImGuiLayer* get_imgui_layer() { return m_imgui_layer; }
 
-    inline const Specification& GetSpecification() const
+    static inline Application& get() { return *s_instance; }
+
+    inline const Specification& get_specification() const
     {
-        return m_Specification;
+        return m_specification;
     }
 
 private:
-    bool OnWindowClose(WindowCloseEvent& e);
-    bool OnWindowResize(WindowResizeEvent& e);
-    bool OnWindowIconify(WindowIconifyEvent& e);
+    bool on_window_close(WindowCloseEvent& event);
+    bool on_window_resize(WindowResizeEvent& event);
+    bool on_window_iconify(WindowIconifyEvent& event);
 
 private:
-    std::unique_ptr<Window> m_Window;
-    Specification m_Specification;
+    std::unique_ptr<Window> m_window;
+    Specification m_specification;
 
-    ImGuiLayer* m_ImGuiLayer;
-    LayerStack m_LayerStack;
+    ImGuiLayer* m_imgui_layer;
+    LayerStack m_layer_stack;
 
-    bool m_Running = true;
-    bool m_Minimized = false;
-    float m_LastFrameTime = 0.0f;
-    Timestep m_Timestep;
+    bool m_running = true;
+    bool m_minimized = false;
+    float m_last_frame_time = 0.0f;
+    Timestep m_timestep;
 
-    static Application* s_Instance;
+    static Application* s_instance;
 };
 
 // To be defined in client.
-std::unique_ptr<Application> CreateApplication(int argc, char** argv);
+std::unique_ptr<Application> create_application(int argc, char** argv);
 
 } // namespace pine

@@ -10,23 +10,23 @@ class Editor : public pine::Application
 {
 public:
     Editor(const pine::Application::Specification& specs,
-        const std::string& projectPath)
-        : pine::Application(specs), m_ProjectPath(projectPath)
+        const std::string& project_path)
+        : pine::Application(specs), m_project_path(project_path)
     {
-        PushLayer(new pine::EditorLayer());
+        push_layer(new pine::EditorLayer());
     }
 
     ~Editor() {}
 
 private:
-    std::filesystem::path m_ProjectPath;
-    std::filesystem::path m_StoragePath;
+    std::filesystem::path m_project_path;
+    std::filesystem::path m_storage_path;
 };
 
-std::unique_ptr<pine::Application> pine::CreateApplication(int argc,
+std::unique_ptr<pine::Application> pine::create_application(int argc,
     char** argv)
 {
-    const auto projectPath = [argc, argv]()
+    const auto project_path = [argc, argv]()
     {
         if (argc > 1)
         {
@@ -39,25 +39,25 @@ std::unique_ptr<pine::Application> pine::CreateApplication(int argc,
     }();
 
     pine::Application::Specification specs;
-    specs.WorkingDirectory = ".";
-    specs.Name = "Editor";
-    specs.WindowWidth = 1280;
-    specs.WindowHeight = 720;
-    specs.StartMaximized = true;
-    specs.VSync = true;
-    specs.Resizable = true;
-    specs.EnableImGui = true;
-    specs.Fullscreen = true;
+    specs.working_directory = ".";
+    specs.name = "Editor";
+    specs.window_width = 1280;
+    specs.window_height = 720;
+    specs.start_maximized = true;
+    specs.vsync = true;
+    specs.resizable = true;
+    specs.enable_imgui = true;
+    specs.fullscreen = true;
 
-    return std::make_unique<Editor>(specs, projectPath);
+    return std::make_unique<Editor>(specs, project_path);
 }
 
 int main(int argc, char** argv)
 {
-    pine::Log::Init();
+    pine::Log::init();
 
-    auto app = pine::CreateApplication(argc, argv);
-    app->Run();
+    auto app = pine::create_application(argc, argv);
+    app->run();
 
     return 0;
 }

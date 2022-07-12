@@ -15,11 +15,11 @@ class Window
 public:
     struct Specification
     {
-        std::string Title;
-        uint32_t Width;
-        uint32_t Height;
-        bool Fullscreen;
-        bool VSync;
+        std::string title;
+        uint32_t width;
+        uint32_t height;
+        bool fullscreen;
+        bool vsync;
     };
 
 public:
@@ -27,29 +27,29 @@ public:
 
     virtual ~Window() = default;
 
-    virtual void Init() = 0;
-    virtual void PollEvents() = 0;
-    virtual void SwapBuffers() = 0;
+    virtual void init() = 0;
+    virtual void poll_events() = 0;
+    virtual void swap_buffers() = 0;
 
-    virtual uint32_t GetWidth() const = 0;
-    virtual uint32_t GetHeight() const = 0;
-    virtual std::pair<uint32_t, uint32_t> GetSize() const = 0;
-    virtual std::pair<float, float> GetWindowPos() const = 0;
+    virtual uint32_t get_width() const = 0;
+    virtual uint32_t get_height() const = 0;
+    virtual std::pair<uint32_t, uint32_t> get_size() const = 0;
+    virtual std::pair<float, float> get_position() const = 0;
 
-    virtual void Maximize() = 0;
-    virtual void CenterWindow() = 0;
+    virtual void maximize() = 0;
+    virtual void center_window() = 0;
 
-    virtual void SetEventCallback(const EventCallbackFn& callback) = 0;
-    virtual void SetVSync(const bool enabled) = 0;
-    virtual bool IsVSync() const = 0;
-    virtual void SetResizable(const bool resizable) const = 0;
+    virtual void set_event_callback(const EventCallbackFn& callback) = 0;
+    virtual void set_vsync(const bool enabled) = 0;
+    virtual bool is_vsync() const = 0;
+    virtual void set_resizable(const bool resizable) const = 0;
 
-    virtual const std::string& GetTitle() const = 0;
-    virtual void SetTitle(const std::string& title) = 0;
+    virtual const std::string& get_title() const = 0;
+    virtual void set_title(const std::string& title) = 0;
 
-    virtual void* GetNativeWindow() const = 0;
+    virtual void* get_native_window() const = 0;
 
-    static std::unique_ptr<Window> Create(const Specification& specs);
+    static std::unique_ptr<Window> create(const Specification& specs);
 };
 
 } // namespace pine

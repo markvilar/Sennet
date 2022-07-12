@@ -41,14 +41,10 @@ public:
         std::lock_guard lock(m_Mutex);
         if (m_CurrentSession)
         {
-            if (Log::GetCoreLogger())
-            {
-                PINE_CORE_ERROR("Instrumentor::BeginSession("
-                                "'{0}') when session '{1}' already "
-                                "open.",
-                    name,
-                    m_CurrentSession->Name);
-            }
+            PINE_CORE_ERROR("Instrumentor::BeginSession('{0}') when session "
+                "'{1}' already open.",
+                name,
+                m_CurrentSession->Name);
             InternalEndSession();
         }
         m_OutputStream.open(filepath);
@@ -60,12 +56,8 @@ public:
         }
         else
         {
-            if (Log::GetCoreLogger())
-            {
-                PINE_CORE_ERROR("Instrumentor could not open "
-                                "results file '{0}'",
-                    filepath);
-            }
+            PINE_CORE_ERROR("Instrumentor could not open results file '{0}'",
+                filepath);
         }
     }
 

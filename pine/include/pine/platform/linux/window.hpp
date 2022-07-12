@@ -14,47 +14,47 @@ public:
     LinuxWindow(const Window::Specification& specs);
     virtual ~LinuxWindow();
 
-    virtual void Init() override;
-    virtual void PollEvents() override;
-    virtual void SwapBuffers() override;
+    virtual void init() override;
+    virtual void poll_events() override;
+    virtual void swap_buffers() override;
 
-    inline uint32_t GetWidth() const override { return m_Data.Width; }
-    inline uint32_t GetHeight() const override { return m_Data.Height; }
-    virtual std::pair<uint32_t, uint32_t> GetSize() const override;
-    virtual std::pair<float, float> GetWindowPos() const override;
+    inline uint32_t get_width() const override { return m_data.width; }
+    inline uint32_t get_height() const override { return m_data.height; }
+    virtual std::pair<uint32_t, uint32_t> get_size() const override;
+    virtual std::pair<float, float> get_position() const override;
 
-    virtual void Maximize() override;
-    virtual void CenterWindow() override;
+    virtual void maximize() override;
+    virtual void center_window() override;
 
-    virtual void SetEventCallback(const EventCallbackFn& callback) override;
-    virtual void SetVSync(const bool enabled) override;
-    virtual bool IsVSync() const override;
-    virtual void SetResizable(const bool resizable) const override;
+    virtual void set_event_callback(const EventCallbackFn& callback) override;
+    virtual void set_vsync(const bool enabled) override;
+    virtual bool is_vsync() const override;
+    virtual void set_resizable(const bool resizable) const override;
 
-    virtual const std::string& GetTitle() const override;
-    virtual void SetTitle(const std::string& title) override;
+    virtual const std::string& get_title() const override;
+    virtual void set_title(const std::string& title) override;
 
-    virtual void* GetNativeWindow() const override { return m_Window; }
-
-private:
-    virtual void Shutdown();
+    virtual void* get_native_window() const override { return m_window; }
 
 private:
-    GLFWwindow* m_Window;
-    std::unique_ptr<GraphicsContext> m_Context;
-    Window::Specification m_Specification;
+    virtual void shutdown();
+
+private:
+    GLFWwindow* m_window;
+    std::unique_ptr<GraphicsContext> m_context;
+    Window::Specification m_specification;
 
     struct WindowData
     {
-        std::string Title;
-        uint32_t Width;
-        uint32_t Height;
-        bool VSync;
+        std::string title;
+        uint32_t width;
+        uint32_t height;
+        bool vsync;
 
-        EventCallbackFn EventCallback;
+        EventCallbackFn event_callback;
     };
 
-    WindowData m_Data;
+    WindowData m_data;
 };
 
 } // namespace pine

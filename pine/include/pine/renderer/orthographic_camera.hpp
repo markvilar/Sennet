@@ -2,6 +2,7 @@
 
 #include "pine/core/common.hpp"
 #include "pine/core/timestep.hpp"
+#include "pine/core/window.hpp"
 #include "pine/events/application_event.hpp"
 #include "pine/events/mouse_event.hpp"
 #include "pine/utils/math.hpp"
@@ -60,8 +61,8 @@ public:
     OrthographicCameraController(const float aspectRatio,
         const bool rotation = false);
 
-    void OnUpdate(const Timestep& ts);
-    void OnEvent(Event& e);
+    void OnUpdate(const Window& window, const Timestep& ts);
+    void OnEvent(Event& event);
 
     void OnResize(const float width, const float height);
 

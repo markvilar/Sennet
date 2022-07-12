@@ -13,7 +13,7 @@ namespace pine
 
 ImGuiLayer::ImGuiLayer() : Layer("ImGuiLayer"), m_Time(0.0f) {}
 
-void ImGuiLayer::OnAttach()
+void ImGuiLayer::on_attach()
 {
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
@@ -24,28 +24,29 @@ void ImGuiLayer::OnAttach()
 
     ImGui::StyleColorsDark();
 
-    auto& app = Application::Get();
-    auto window = static_cast<GLFWwindow*>(app.GetWindow().GetNativeWindow());
+    auto& app = Application::get();
+    auto window = static_cast<GLFWwindow*>(app.get_window().get_native_window());
 
     ImGui_ImplGlfw_InitForOpenGL(window, true);
     ImGui_ImplOpenGL3_Init("#version 410");
 }
 
-void ImGuiLayer::OnDetach()
+void ImGuiLayer::on_detach()
 {
     ImGui_ImplOpenGL3_Shutdown();
     ImGui_ImplGlfw_Shutdown();
     ImGui::DestroyContext();
 }
 
-void ImGuiLayer::OnEvent(Event& e)
+void ImGuiLayer::on_event(Event& event)
 {
     if (m_BlockEvents)
     {
         auto& io = ImGui::GetIO();
-        e.Handled |= e.IsInCategory(EventCategoryMouse) & io.WantCaptureMouse;
-        e.Handled |=
-            e.IsInCategory(EventCategoryKeyboard) & io.WantCaptureKeyboard;
+        event.Handled |= event.IsInCategory(EventCategoryMouse) 
+            & io.WantCaptureMouse;
+        event.Handled |= event.IsInCategory(EventCategoryKeyboard) 
+            & io.WantCaptureKeyboard;
     }
 }
 
@@ -59,9 +60,9 @@ void ImGuiLayer::Begin()
 void ImGuiLayer::End()
 {
     auto& io = ImGui::GetIO();
-    auto& app = Application::Get();
+    auto& app = Application::get();
     io.DisplaySize =
-        ImVec2(app.GetWindow().GetWidth(), app.GetWindow().GetHeight());
+        ImVec2(app.get_window().get_width(), app.get_window().get_height());
 
     ImGui::Render();
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());

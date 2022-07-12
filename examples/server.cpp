@@ -10,7 +10,7 @@ int main(int argc, char** argv)
 {
     signal(SIGINT, signalHandler);
 
-    pine::Log::Init();
+    pine::Log::init();
 
     pine::ServerState server(6000);
 

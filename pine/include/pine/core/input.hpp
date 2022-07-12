@@ -3,19 +3,16 @@
 #include "pine/core/common.hpp"
 #include "pine/core/key_codes.hpp"
 #include "pine/core/mouse_codes.hpp"
+#include "pine/core/window.hpp"
 
-namespace pine
+namespace pine::input
 {
 
-class Input
-{
-public:
-    static bool IsKeyPressed(KeyCode keyCode);
+bool is_key_pressed(const Window& window, const KeyCode key);
+bool is_mouse_button_pressed(const Window& window, const MouseCode button);
 
-    static bool IsMouseButtonPressed(MouseCode button);
-    static std::pair<float, float> GetMousePosition();
-    static float GetMouseX();
-    static float GetMouseY();
-};
+std::pair<float, float> get_mouse_position(const Window& window);
+float get_mouse_x(const Window& window);
+float get_mouse_y(const Window& window);
 
-} // namespace pine
+} // namespace pine::input

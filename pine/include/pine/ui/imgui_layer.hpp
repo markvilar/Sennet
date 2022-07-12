@@ -14,9 +14,9 @@ public:
     ImGuiLayer();
     ~ImGuiLayer() = default;
 
-    virtual void OnAttach() override;
-    virtual void OnDetach() override;
-    virtual void OnEvent(Event& e) override;
+    virtual void on_attach() override;
+    virtual void on_detach() override;
+    virtual void on_event(Event& event) override;
 
     void Begin();
     void End();

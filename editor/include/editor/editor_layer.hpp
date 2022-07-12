@@ -33,13 +33,13 @@ public:
     EditorLayer();
     ~EditorLayer() = default;
 
-    virtual void OnAttach() override;
-    virtual void OnDetach() override;
-    virtual void OnUpdate(Timestep ts) override;
+    virtual void on_attach() override;
+    virtual void on_detach() override;
+    virtual void on_update(Timestep ts) override;
 
-    virtual void OnImGuiRender() override;
+    virtual void on_imgui_render() override;
 
-    virtual void OnEvent(Event& e) override;
+    virtual void on_event(Event& event) override;
 
 private:
     void UpdateInterfaceLayout();

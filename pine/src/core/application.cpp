@@ -11,153 +11,153 @@
 namespace pine
 {
 
-Application* Application::s_Instance = nullptr;
+Application* Application::s_instance = nullptr;
 
 Application::Application(const Application::Specification& specs)
-    : m_Specification(specs)
+    : m_specification(specs)
 {
-    PINE_CORE_ASSERT(!s_Instance, "Application already exists!");
-    s_Instance = this;
+    PINE_CORE_ASSERT(!s_instance, "Application already exists!");
+    s_instance = this;
 
-    Window::Specification windowSpecs;
-    windowSpecs.Title = m_Specification.Name;
-    windowSpecs.Width = m_Specification.WindowWidth;
-    windowSpecs.Height = m_Specification.WindowHeight;
-    windowSpecs.Fullscreen = m_Specification.Fullscreen;
-    windowSpecs.VSync = m_Specification.VSync;
+    Window::Specification window_specs;
+    window_specs.title = m_specification.name;
+    window_specs.width = m_specification.window_width;
+    window_specs.height = m_specification.window_height;
+    window_specs.fullscreen = m_specification.fullscreen;
+    window_specs.vsync = m_specification.vsync;
 
-    m_Window = std::unique_ptr<Window>(Window::Create(windowSpecs));
-    m_Window->Init();
-    m_Window->SetEventCallback(PINE_BIND_EVENT_FN(Application::OnEvent));
+    m_window = Window::create(window_specs);
+    m_window->init();
+    m_window->set_event_callback(PINE_BIND_EVENT_FN(Application::on_event));
 
-    if (m_Specification.StartMaximized)
+    if (m_specification.start_maximized)
     {
-        m_Window->Maximize();
+        m_window->maximize();
     }
     else
     {
-        m_Window->CenterWindow();
+        m_window->center_window();
     }
 
-    m_Window->SetResizable(m_Specification.Resizable);
-    m_Window->SetVSync(m_Specification.VSync);
+    m_window->set_resizable(m_specification.resizable);
+    m_window->set_vsync(m_specification.vsync);
 
     Renderer::Init();
 
-    if (m_Specification.EnableImGui)
+    if (m_specification.enable_imgui)
     {
-        m_ImGuiLayer = new ImGuiLayer();
-        PushOverlay(m_ImGuiLayer);
+        m_imgui_layer = new ImGuiLayer();
+        push_overlay(m_imgui_layer);
     }
 }
 
 Application::~Application()
 {
-    m_Window->SetEventCallback([](Event& e) {});
+    m_window->set_event_callback([](Event& event) {});
 }
 
-void Application::Run()
+void Application::run()
 {
-    OnInit();
-    while (m_Running)
+    on_init();
+    while (m_running)
     {
         // TODO: Temporary.
         auto time = glfwGetTime(); // Platform::GetTime
-        m_Timestep = time - m_LastFrameTime;
+        m_timestep = time - m_last_frame_time;
 
-        m_Window->PollEvents();
+        m_window->poll_events();
 
         // Update layers.
-        if (!m_Minimized)
+        if (!m_minimized)
         {
-            m_LastFrameTime = time;
-            for (Layer* layer : m_LayerStack)
+            m_last_frame_time = time;
+            for (Layer* layer : m_layer_stack)
             {
-                layer->OnUpdate(m_Timestep);
+                layer->on_update(m_timestep);
             }
 
-            if (m_Specification.EnableImGui)
+            if (m_specification.enable_imgui)
             {
-                RenderImGui();
+                render_imgui();
             }
 
-            m_Window->SwapBuffers();
+            m_window->swap_buffers();
         }
     }
-    OnShutdown();
+    on_shutdown();
 }
 
-void Application::Close() { m_Running = false; }
+void Application::close() { m_running = false; }
 
-void Application::OnEvent(Event& e)
+void Application::on_event(Event& event)
 {
-    EventDispatcher dispatcher(e);
-    dispatcher.Dispatch<WindowCloseEvent>(
-        PINE_BIND_EVENT_FN(Application::OnWindowClose));
-    dispatcher.Dispatch<WindowResizeEvent>(
-        PINE_BIND_EVENT_FN(Application::OnWindowResize));
-    dispatcher.Dispatch<WindowIconifyEvent>(
-        PINE_BIND_EVENT_FN(Application::OnWindowIconify));
+    EventDispatcher dispatcher(event);
+    dispatcher.dispatch<WindowCloseEvent>(
+        PINE_BIND_EVENT_FN(Application::on_window_close));
+    dispatcher.dispatch<WindowResizeEvent>(
+        PINE_BIND_EVENT_FN(Application::on_window_resize));
+    dispatcher.dispatch<WindowIconifyEvent>(
+        PINE_BIND_EVENT_FN(Application::on_window_iconify));
 
-    for (auto it = m_LayerStack.end(); it != m_LayerStack.begin();)
+    for (auto it = m_layer_stack.end(); it != m_layer_stack.begin();)
     {
-        (*--it)->OnEvent(e);
-        if (e.Handled)
+        (*--it)->on_event(event);
+        if (event.Handled)
         {
             break;
         }
     }
 }
 
-void Application::PushLayer(Layer* layer)
+void Application::push_layer(Layer* layer)
 {
-    m_LayerStack.PushLayer(layer);
-    layer->OnAttach();
+    m_layer_stack.push_layer(layer);
+    layer->on_attach();
 }
 
-void Application::PushOverlay(Layer* layer)
+void Application::push_overlay(Layer* layer)
 {
-    m_LayerStack.PushOverlay(layer);
-    layer->OnAttach();
+    m_layer_stack.push_overlay(layer);
+    layer->on_attach();
 }
 
-void Application::PopLayer(Layer* layer)
+void Application::pop_layer(Layer* layer)
 {
-    m_LayerStack.PopLayer(layer);
-    layer->OnDetach();
+    m_layer_stack.pop_layer(layer);
+    layer->on_detach();
 }
 
-void Application::PopOverlay(Layer* layer)
+void Application::pop_overlay(Layer* layer)
 {
-    m_LayerStack.PopOverlay(layer);
-    layer->OnDetach();
+    m_layer_stack.pop_overlay(layer);
+    layer->on_detach();
 }
 
-void Application::RenderImGui()
+void Application::render_imgui()
 {
-    m_ImGuiLayer->Begin();
-    for (Layer* layer : m_LayerStack)
+    m_imgui_layer->Begin();
+    for (Layer* layer : m_layer_stack)
     {
-        layer->OnImGuiRender();
+        layer->on_imgui_render();
     }
-    m_ImGuiLayer->End();
+    m_imgui_layer->End();
 }
 
-bool Application::OnWindowClose(WindowCloseEvent& e)
+bool Application::on_window_close(WindowCloseEvent& event)
 {
-    m_Running = false;
+    m_running = false;
     return true;
 }
 
-bool Application::OnWindowResize(WindowResizeEvent& e)
+bool Application::on_window_resize(WindowResizeEvent& event)
 {
-    Renderer::OnWindowResize(e.GetWidth(), e.GetHeight());
+    Renderer::OnWindowResize(event.GetWidth(), event.GetHeight());
     return false;
 }
 
-bool Application::OnWindowIconify(WindowIconifyEvent& e)
+bool Application::on_window_iconify(WindowIconifyEvent& event)
 {
-    m_Minimized = e.IsMinimized();
+    m_minimized = event.IsMinimized();
     return false;
 }
 

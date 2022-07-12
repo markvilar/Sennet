@@ -8,10 +8,10 @@
 namespace pine
 {
 
-std::shared_ptr<spdlog::logger> Log::s_CoreLogger;
-std::shared_ptr<spdlog::logger> Log::s_ClientLogger;
+std::shared_ptr<spdlog::logger> Log::s_core_logger;
+std::shared_ptr<spdlog::logger> Log::s_client_logger;
 
-void Log::Init()
+void Log::init()
 {
     std::vector<spdlog::sink_ptr> sinks;
     sinks.emplace_back(std::make_shared<spdlog::sinks::stdout_color_sink_mt>());
@@ -22,18 +22,18 @@ void Log::Init()
     sinks[1]->set_pattern("[%T] [%l] %n: %v");
 
     // Core logger.
-    s_CoreLogger =
+    s_core_logger =
         std::make_unique<spdlog::logger>("PINE", begin(sinks), end(sinks));
-    spdlog::register_logger(s_CoreLogger);
-    s_CoreLogger->set_level(spdlog::level::trace);
-    s_CoreLogger->flush_on(spdlog::level::trace);
+    spdlog::register_logger(s_core_logger);
+    s_core_logger->set_level(spdlog::level::trace);
+    s_core_logger->flush_on(spdlog::level::trace);
 
     // Client logger.
-    s_ClientLogger =
+    s_client_logger =
         std::make_unique<spdlog::logger>("APP", begin(sinks), end(sinks));
-    spdlog::register_logger(s_ClientLogger);
-    s_ClientLogger->set_level(spdlog::level::trace);
-    s_ClientLogger->flush_on(spdlog::level::trace);
+    spdlog::register_logger(s_client_logger);
+    s_client_logger->set_level(spdlog::level::trace);
+    s_client_logger->flush_on(spdlog::level::trace);
 }
 
 } // namespace pine

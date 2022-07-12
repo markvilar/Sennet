@@ -67,38 +67,38 @@ public:
     virtual int GetCategoryFlags() const = 0;
     virtual std::string ToString() const { return GetName(); }
 
-    bool IsInCategory(EventCategory category)
+    bool IsInCategory(const EventCategory& category) const
     {
         return GetCategoryFlags() & category;
     }
 
 public:
-    bool Handled = false;
+    mutable bool Handled = false;
 };
 
 class EventDispatcher
 {
 public:
-    EventDispatcher(Event& e) : m_Event(e) {}
+    EventDispatcher(Event& event) : m_event(event) {}
 
     template <typename T, typename F>
-    bool Dispatch(const F& func)
+    bool dispatch(const F& func)
     {
-        if (m_Event.GetEventType() == T::GetStaticType())
+        if (m_event.GetEventType() == T::GetStaticType())
         {
-            m_Event.Handled = func(static_cast<T&>(m_Event));
+            m_event.Handled = func(static_cast<T&>(m_event));
             return true;
         }
         return false;
     }
 
 private:
-    Event& m_Event;
+    Event& m_event;
 };
 
-inline std::ostream& operator<<(std::ostream& os, Event& e)
+inline std::ostream& operator<<(std::ostream& os, Event& event)
 {
-    return os << e.ToString();
+    return os << event.ToString();
 }
 
 }; // namespace pine

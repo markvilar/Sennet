@@ -7,7 +7,7 @@ namespace pine
 
 EditorLayer::EditorLayer() : Layer("EditorLayer"), m_CameraController(1.0f) {}
 
-void EditorLayer::OnAttach()
+void EditorLayer::on_attach()
 {
     UpdateInterfaceLayout();
 
@@ -44,9 +44,9 @@ void EditorLayer::OnAttach()
         });
 }
 
-void EditorLayer::OnDetach() {}
+void EditorLayer::on_detach() {}
 
-void EditorLayer::OnUpdate(Timestep ts)
+void EditorLayer::on_update(Timestep ts)
 {
     UpdateInterfaceLayout();
     auto specs = m_ViewportFramebuffer->GetSpecification();
@@ -60,7 +60,8 @@ void EditorLayer::OnUpdate(Timestep ts)
     }
 
     if (m_ViewportFocused)
-        m_CameraController.OnUpdate(ts);
+        // FIXME: Update to include window handle.
+        // m_CameraController.OnUpdate(ts);
 
     m_QuadRotation += ts * 50.0f;
 
@@ -105,7 +106,7 @@ void EditorLayer::OnUpdate(Timestep ts)
         { m_server_history.push_back(message); });
 }
 
-void EditorLayer::OnImGuiRender()
+void EditorLayer::on_imgui_render()
 {
     ui::AddMainMenuBar(
         []()
@@ -126,7 +127,7 @@ void EditorLayer::OnImGuiRender()
                 }
                 if (ImGui::MenuItem("Exit", "Ctrl+W"))
                 {
-                    pine::Application::Get().Close();
+                    pine::Application::get().close();
                 }
                 ImGui::EndMenu();
             }
@@ -204,7 +205,7 @@ void EditorLayer::OnImGuiRender()
         {
             m_ViewportFocused = ImGui::IsWindowFocused();
             m_ViewportHovered = ImGui::IsWindowHovered();
-            Application::Get().GetImGuiLayer()->BlockEvents(
+            Application::get().get_imgui_layer()->BlockEvents(
                 !m_ViewportFocused || !m_ViewportHovered);
         });
 
@@ -352,12 +353,15 @@ void EditorLayer::OnImGuiRender()
         []() {});
 }
 
-void EditorLayer::OnEvent(Event& e) { m_CameraController.OnEvent(e); }
+void EditorLayer::on_event(Event& event) 
+{ 
+    m_CameraController.OnEvent(event); 
+}
 
 void EditorLayer::UpdateInterfaceLayout()
 {
     const auto& [windowWidth, windowHeight] =
-        pine::Application::Get().GetWindow().GetSize();
+        pine::Application::get().get_window().get_size();
 
     static constexpr auto menuHeight = 20.0f;
 

@@ -11,7 +11,7 @@ int main(int argc, char** argv)
 {
     signal(SIGINT, signalHandler);
 
-    pine::Log::Init();
+    pine::Log::init();
 
     // Sandbox for pines functionality.
 }

@@ -5,6 +5,6 @@
 namespace pine
 {
 
-Layer::Layer(const std::string& name) : m_DebugName(name) {}
+Layer::Layer(const std::string& name) : m_debug_name(name) {}
 
 } // namespace pine

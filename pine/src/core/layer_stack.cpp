@@ -7,80 +7,83 @@ namespace pine
 
 LayerStack::~LayerStack()
 {
-    for (Layer* layer : m_Layers)
+    for (Layer* layer : m_layers)
     {
-        layer->OnDetach();
+        layer->on_detach();
         delete layer;
     }
 }
 
-void LayerStack::PushLayer(Layer* layer)
+void LayerStack::push_layer(Layer* layer)
 {
-    m_Layers.emplace(m_Layers.begin() + m_LayerInsertIndex, layer);
-    m_LayerInsertIndex++;
+    m_layers.emplace(m_layers.begin() + m_layer_insert_index, layer);
+    m_layer_insert_index++;
 }
 
-void LayerStack::PushOverlay(Layer* overlay) { m_Layers.emplace_back(overlay); }
+void LayerStack::push_overlay(Layer* overlay) 
+{ 
+    m_layers.emplace_back(overlay); 
+}
 
-void LayerStack::PopLayer(Layer* layer)
+void LayerStack::pop_layer(Layer* layer)
 {
-    auto it = std::find(m_Layers.begin(),
-        m_Layers.begin() + m_LayerInsertIndex,
+    auto it = std::find(m_layers.begin(),
+        m_layers.begin() + m_layer_insert_index,
         layer);
 
-    if (it != m_Layers.begin() + m_LayerInsertIndex)
+    if (it != m_layers.begin() + m_layer_insert_index)
     {
-        layer->OnDetach();
-        m_Layers.erase(it);
-        m_LayerInsertIndex--;
+        layer->on_detach();
+        m_layers.erase(it);
+        m_layer_insert_index--;
     }
 }
 
-void LayerStack::PopOverlay(Layer* overlay)
+void LayerStack::pop_overlay(Layer* overlay)
 {
-    auto it = std::find(m_Layers.begin() + m_LayerInsertIndex,
-        m_Layers.end(),
+    auto it = std::find(m_layers.begin() + m_layer_insert_index,
+        m_layers.end(),
         overlay);
 
-    if (it != m_Layers.end())
+    if (it != m_layers.end())
     {
-        overlay->OnDetach();
-        m_Layers.erase(it);
+        overlay->on_detach();
+        m_layers.erase(it);
     }
 }
 
-std::vector<Layer*>::iterator LayerStack::begin() { return m_Layers.begin(); }
+std::vector<Layer*>::iterator LayerStack::begin() { return m_layers.begin(); }
 
-std::vector<Layer*>::iterator LayerStack::end() { return m_Layers.end(); }
+std::vector<Layer*>::iterator LayerStack::end() { return m_layers.end(); }
 
 std::vector<Layer*>::reverse_iterator LayerStack::rbegin()
 {
-    return m_Layers.rbegin();
+    return m_layers.rbegin();
 }
 
 std::vector<Layer*>::reverse_iterator LayerStack::rend()
 {
-    return m_Layers.rend();
+    return m_layers.rend();
 }
 
 std::vector<Layer*>::const_iterator LayerStack::begin() const
 {
-    return m_Layers.begin();
+    return m_layers.begin();
 }
 
 std::vector<Layer*>::const_iterator LayerStack::end() const
 {
-    return m_Layers.end();
+    return m_layers.end();
 }
 
 std::vector<Layer*>::const_reverse_iterator LayerStack::rbegin() const
 {
-    return m_Layers.rbegin();
+    return m_layers.rbegin();
 }
 
 std::vector<Layer*>::const_reverse_iterator LayerStack::rend() const
 {
-    return m_Layers.rend();
+    return m_layers.rend();
 }
 
 } // namespace pine
