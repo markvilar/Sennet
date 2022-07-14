@@ -13,13 +13,13 @@ namespace pine
 
 Application* Application::s_instance = nullptr;
 
-Application::Application(const Application::Specification& specs)
+Application::Application(const ApplicationSpecs& specs)
     : m_specification(specs)
 {
     PINE_CORE_ASSERT(!s_instance, "Application already exists!");
     s_instance = this;
 
-    Window::Specification window_specs;
+    WindowSpecs window_specs;
     window_specs.title = m_specification.name;
     window_specs.width = m_specification.window_width;
     window_specs.height = m_specification.window_height;

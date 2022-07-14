@@ -1,7 +1,9 @@
 #pragma once
 
+#include <cstdint>
 #include <memory>
 #include <string>
+#include <utility>
 
 #include <GLFW/glfw3.h>
 
@@ -14,7 +16,7 @@ namespace pine
 class WindowsWindow : public Window
 {
 public:
-    WindowsWindow(const Window::Specification& specs);
+    WindowsWindow(const WindowSpecs& specs);
     virtual ~WindowsWindow();
 
     virtual void init() override;
@@ -43,10 +45,6 @@ private:
     virtual void shutdown();
 
 private:
-    GLFWwindow* m_window;
-    std::unique_ptr<GraphicsContext> m_context;
-    Window::Specification m_specification;
-
     struct WindowData
     {
         std::string title;
@@ -57,6 +55,11 @@ private:
         EventCallbackFn event_callback;
     };
 
+private:
+    GLFWwindow* m_window;
+    std::unique_ptr<GraphicsContext> m_context;
+    
+    WindowSpecs m_specification;
     WindowData m_data;
 };
 

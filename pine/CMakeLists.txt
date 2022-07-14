@@ -9,7 +9,6 @@ target_sources(pine
         include/pine/core/input.hpp
         include/pine/core/key_codes.hpp
         include/pine/core/layer.hpp
-        include/pine/core/layer_stack.hpp
         include/pine/core/log.hpp
         include/pine/core/mouse_codes.hpp
         include/pine/core/platform.hpp
@@ -56,7 +55,6 @@ target_sources(pine
     PRIVATE 
         src/core/application.cpp
         src/core/layer.cpp
-        src/core/layer_stack.cpp
         src/core/log.cpp
         src/network/client.cpp
         src/network/connection.cpp

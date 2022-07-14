@@ -10,17 +10,21 @@
 namespace pine
 {
 
+struct WindowSpecs
+{
+    std::string title;
+    uint32_t width;
+    uint32_t height;
+    bool fullscreen;
+    bool vsync;
+};
+
+
 class Window
 {
-public:
-    struct Specification
-    {
-        std::string title;
-        uint32_t width;
-        uint32_t height;
-        bool fullscreen;
-        bool vsync;
-    };
+    /*
+    Interface class for Pines window implementations.
+    */
 
 public:
     using EventCallbackFn = std::function<void(Event&)>;
@@ -49,7 +53,7 @@ public:
 
     virtual void* get_native_window() const = 0;
 
-    static std::unique_ptr<Window> create(const Specification& specs);
+    static std::unique_ptr<Window> create(const WindowSpecs& specs);
 };
 
 } // namespace pine

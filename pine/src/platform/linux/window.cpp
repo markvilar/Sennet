@@ -18,12 +18,12 @@ static void GLFWErrorCallback(int error, const char* description)
     PINE_CORE_ERROR("GLFW error ({0}): {1}", error, description);
 }
 
-std::unique_ptr<Window> Window::create(const Window::Specification& specs)
+std::unique_ptr<Window> Window::create(const WindowSpecs& specs)
 {
     return std::make_unique<LinuxWindow>(specs);
 }
 
-LinuxWindow::LinuxWindow(const Window::Specification& specs)
+LinuxWindow::LinuxWindow(const WindowSpecs& specs)
     : m_specification(specs)
 {
 }

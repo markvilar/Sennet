@@ -4,12 +4,15 @@
 #include <string>
 
 #include "pine/core/common.hpp"
-#include "pine/core/layer_stack.hpp"
+#include "pine/core/layer.hpp"
 #include "pine/core/timestep.hpp"
 #include "pine/core/window.hpp"
+
 #include "pine/events/application_event.hpp"
 #include "pine/events/event.hpp"
+
 #include "pine/renderer/renderer.hpp"
+
 #include "pine/ui/imgui_layer.hpp"
 
 int main(int argc, char** argv);
@@ -17,24 +20,26 @@ int main(int argc, char** argv);
 namespace pine
 {
 
+struct ApplicationSpecs
+{
+    // TODO: Window::Specification window_specs
+    std::string name = "Default App";
+    uint32_t window_width = 1600;
+    uint32_t window_height = 800;
+    bool fullscreen = false;
+    bool vsync = true;
+
+    std::string working_directory;
+    bool start_maximized = true;
+    bool resizable = true;
+    bool enable_imgui = true;
+};
+
 class Application
 {
-public:
-    struct Specification
-    {
-        std::string working_directory;
-        std::string name = "pine App";
-        uint32_t window_width = 1600;
-        uint32_t window_height = 800;
-        bool start_maximized = true;
-        bool vsync = true;
-        bool resizable = true;
-        bool enable_imgui = true;
-        bool fullscreen = false;
-    };
 
 public:
-    Application(const Specification& specs);
+    Application(const ApplicationSpecs& specs);
     virtual ~Application();
 
     void run();
@@ -53,13 +58,11 @@ public:
 
     void render_imgui();
 
-    inline Window& get_window() { return *m_window; }
-
-    inline ImGuiLayer* get_imgui_layer() { return m_imgui_layer; }
-
+    inline ImGuiLayer* get_imgui_layer() const { return m_imgui_layer; }
+    inline Window& get_window() const { return *m_window; }
     static inline Application& get() { return *s_instance; }
 
-    inline const Specification& get_specification() const
+    inline const ApplicationSpecs& get_specification() const
     {
         return m_specification;
     }
@@ -71,7 +74,7 @@ private:
 
 private:
     std::unique_ptr<Window> m_window;
-    Specification m_specification;
+    ApplicationSpecs m_specification;
 
     ImGuiLayer* m_imgui_layer;
     LayerStack m_layer_stack;
@@ -84,7 +87,16 @@ private:
     static Application* s_instance;
 };
 
-// To be defined in client.
-std::unique_ptr<Application> create_application(int argc, char** argv);
+class ApplicationFactory
+{
+    /*
+    Factory for the application class. To be implemented by the client.
+    */
+
+public:
+    virtual ~ApplicationFactory() = default;
+
+    virtual std::unique_ptr<Application> create_application() = 0;
+};
 
 } // namespace pine

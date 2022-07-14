@@ -24,7 +24,7 @@ void ImGuiLayer::on_attach()
 
     ImGui::StyleColorsDark();
 
-    auto& app = Application::get();
+    const auto& app = Application::get();
     auto window = static_cast<GLFWwindow*>(app.get_window().get_native_window());
 
     ImGui_ImplGlfw_InitForOpenGL(window, true);
@@ -60,7 +60,7 @@ void ImGuiLayer::Begin()
 void ImGuiLayer::End()
 {
     auto& io = ImGui::GetIO();
-    auto& app = Application::get();
+    const auto& app = Application::get();
     io.DisplaySize =
         ImVec2(app.get_window().get_width(), app.get_window().get_height());
 
