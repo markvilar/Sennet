@@ -12,49 +12,49 @@ namespace pine
 class KeyEvent : public Event
 {
 public:
-    KeyCode GetKeyCode() const { return m_KeyCode; }
+    KeyCode GetKeyCode() const { return m_key_code; }
 
     EVENT_CLASS_CATEGORY(EventCategoryKeyboard | EventCategoryInput)
 
 protected:
-    KeyEvent(const KeyCode keyCode) : m_KeyCode(keyCode) {}
+    KeyEvent(const KeyCode key_code) : m_key_code(key_code) {}
 
-    KeyCode m_KeyCode;
+    KeyCode m_key_code;
 };
 
 class KeyPressedEvent : public KeyEvent
 {
 public:
-    KeyPressedEvent(const KeyCode keyCode, const int repeatCount)
-        : KeyEvent(keyCode), m_RepeatCount(repeatCount)
+    KeyPressedEvent(const KeyCode key_code, const int repeat_count)
+        : KeyEvent(key_code), m_repeat_count(repeat_count)
     {
     }
 
-    int GetRepeatCount() const { return m_RepeatCount; }
+    int GetRepeatCount() const { return m_repeat_count; }
 
-    std::string ToString() const override
+    std::string to_string() const override
     {
         std::stringstream ss;
-        ss << "[KeyPressedEvent] " << m_KeyCode << " (" << m_RepeatCount
-           << " repeats)";
+        ss << "[KeyPressedEvent] " << m_key_code 
+            << " (" << m_repeat_count << " repeats)";
         return ss.str();
     }
 
     EVENT_CLASS_TYPE(KeyPressed)
 
 private:
-    int m_RepeatCount;
+    int m_repeat_count;
 };
 
 class KeyReleasedEvent : public KeyEvent
 {
 public:
-    KeyReleasedEvent(const KeyCode keyCode) : KeyEvent(keyCode) {}
+    KeyReleasedEvent(const KeyCode key_code) : KeyEvent(key_code) {}
 
-    std::string ToString() const override
+    std::string to_string() const override
     {
         std::stringstream ss;
-        ss << "[KeyReleasedEvent] " << m_KeyCode;
+        ss << "[KeyReleasedEvent] " << m_key_code;
         return ss.str();
     }
 
@@ -64,12 +64,12 @@ public:
 class KeyTypedEvent : public KeyEvent
 {
 public:
-    KeyTypedEvent(const KeyCode keyCode) : KeyEvent(keyCode) {}
+    KeyTypedEvent(const KeyCode key_code) : KeyEvent(key_code) {}
 
-    std::string ToString() const override
+    std::string to_string() const override
     {
         std::stringstream ss;
-        ss << "[KeyTypedEvent] " << m_KeyCode;
+        ss << "[KeyTypedEvent] " << m_key_code;
         return ss.str();
     }
 

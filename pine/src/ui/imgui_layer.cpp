@@ -43,9 +43,9 @@ void ImGuiLayer::on_event(Event& event)
     if (m_BlockEvents)
     {
         auto& io = ImGui::GetIO();
-        event.Handled |= event.IsInCategory(EventCategoryMouse) 
+        event.handled |= event.is_in_category(EventCategoryMouse) 
             & io.WantCaptureMouse;
-        event.Handled |= event.IsInCategory(EventCategoryKeyboard) 
+        event.handled |= event.is_in_category(EventCategoryKeyboard) 
             & io.WantCaptureKeyboard;
     }
 }

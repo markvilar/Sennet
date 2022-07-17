@@ -1,5 +1,6 @@
 #pragma once
 
+#include <cstdint>
 #include <string>
 
 #include "pine/events/event.hpp"
@@ -11,17 +12,17 @@ class WindowResizeEvent : public Event
 {
 public:
     WindowResizeEvent(unsigned int width, unsigned int height)
-        : m_Width(width), m_Height(height)
+        : m_width(width), m_height(height)
     {
     }
 
-    inline unsigned int GetWidth() const { return m_Width; }
-    inline unsigned int GetHeight() const { return m_Height; }
+    inline uint32_t get_width() const { return m_width; }
+    inline uint32_t get_height() const { return m_height; }
 
-    std::string ToString() const override
+    std::string to_string() const override
     {
         std::stringstream ss;
-        ss << "[WindowResizeEvent] " << m_Width << ", " << m_Height;
+        ss << "[WindowResizeEvent] " << m_width << ", " << m_height;
         return ss.str();
     }
 
@@ -29,20 +30,21 @@ public:
     EVENT_CLASS_CATEGORY(EventCategoryApplication)
 
 private:
-    unsigned int m_Width, m_Height;
+    uint32_t m_width;
+    uint32_t m_height;
 };
 
 class WindowIconifyEvent : public Event
 {
 public:
-    WindowIconifyEvent(bool minimized) : m_Minimized(minimized) {}
+    WindowIconifyEvent(bool minimized) : m_minimized(minimized) {}
 
-    bool IsMinimized() const { return m_Minimized; }
+    bool is_minimized() const { return m_minimized; }
 
     EVENT_CLASS_TYPE(WindowIconify)
     EVENT_CLASS_CATEGORY(EventCategoryApplication)
 private:
-    bool m_Minimized;
+    bool m_minimized;
 };
 
 class WindowCloseEvent : public Event

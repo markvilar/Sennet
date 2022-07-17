@@ -89,7 +89,7 @@ void OrthographicCameraController::OnResize(const float width,
 bool OrthographicCameraController::OnMouseScrolled(
     const MouseScrolledEvent& event)
 {
-    m_ZoomLevel -= event.GetOffsetY() * 0.25f;
+    m_ZoomLevel -= event.get_offset_y() * 0.25f;
     m_ZoomLevel = std::max(m_ZoomLevel, 0.25f);
     m_Camera.SetProjection(-m_AspectRatio * m_ZoomLevel,
         m_AspectRatio * m_ZoomLevel,
@@ -101,7 +101,7 @@ bool OrthographicCameraController::OnMouseScrolled(
 bool OrthographicCameraController::OnWindowResized(
     const WindowResizeEvent& event)
 {
-    OnResize((float)event.GetWidth(), (float)event.GetHeight());
+    OnResize((float)event.get_width(), (float)event.get_height());
     return false;
 }
 

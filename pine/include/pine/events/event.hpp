@@ -38,21 +38,21 @@ enum EventCategory
 };
 
 #define EVENT_CLASS_TYPE(type)                                                 \
-    static EventType GetStaticType()                                           \
+    static EventType get_static_type()                                         \
     {                                                                          \
         return EventType::type;                                                \
     }                                                                          \
-    virtual EventType GetEventType() const override                            \
+    virtual EventType get_event_type() const override                          \
     {                                                                          \
-        return GetStaticType();                                                \
+        return get_static_type();                                              \
     }                                                                          \
-    virtual const char* GetName() const override                               \
+    virtual const char* get_name() const override                              \
     {                                                                          \
         return #type;                                                          \
     }
 
 #define EVENT_CLASS_CATEGORY(category)                                         \
-    virtual int GetCategoryFlags() const override                              \
+    virtual int get_category_flags() const override                            \
     {                                                                          \
         return category;                                                       \
     }
@@ -62,18 +62,29 @@ class Event
 public:
     virtual ~Event() = default;
 
-    virtual EventType GetEventType() const = 0;
-    virtual const char* GetName() const = 0;
-    virtual int GetCategoryFlags() const = 0;
-    virtual std::string ToString() const { return GetName(); }
+    virtual EventType get_event_type() const = 0;
+    virtual const char* get_name() const = 0;
+    virtual int get_category_flags() const = 0;
+    virtual std::string to_string() const { return get_name(); }
 
-    bool IsInCategory(const EventCategory& category) const
+    bool is_in_category(const EventCategory& category) const
     {
-        return GetCategoryFlags() & category;
+        return get_category_flags() & category;
     }
 
 public:
-    mutable bool Handled = false;
+    mutable bool handled = false;
+};
+
+template <typename T, typename Callable>
+bool dispatch_event(const Event& event, const Callable& callable)
+{
+    if (event.get_event_type() == T::get_static_type())
+    {
+        event.handled = callable(static_cast<T&>(event));
+        return true;
+    }
+    return false;
 };
 
 class EventDispatcher
@@ -84,9 +95,9 @@ public:
     template <typename T, typename F>
     bool dispatch(const F& func)
     {
-        if (m_event.GetEventType() == T::GetStaticType())
+        if (m_event.get_event_type() == T::get_static_type())
         {
-            m_event.Handled = func(static_cast<T&>(m_event));
+            m_event.handled = func(static_cast<T&>(m_event));
             return true;
         }
         return false;
@@ -98,7 +109,7 @@ private:
 
 inline std::ostream& operator<<(std::ostream& os, Event& event)
 {
-    return os << event.ToString();
+    return os << event.to_string();
 }
 
 }; // namespace pine

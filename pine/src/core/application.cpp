@@ -102,7 +102,7 @@ void Application::on_event(Event& event)
     for (auto it = m_layer_stack.end(); it != m_layer_stack.begin();)
     {
         (*--it)->on_event(event);
-        if (event.Handled)
+        if (event.handled)
         {
             break;
         }
@@ -151,13 +151,13 @@ bool Application::on_window_close(WindowCloseEvent& event)
 
 bool Application::on_window_resize(WindowResizeEvent& event)
 {
-    Renderer::OnWindowResize(event.GetWidth(), event.GetHeight());
+    Renderer::OnWindowResize(event.get_width(), event.get_height());
     return false;
 }
 
 bool Application::on_window_iconify(WindowIconifyEvent& event)
 {
-    m_minimized = event.IsMinimized();
+    m_minimized = event.is_minimized();
     return false;
 }
 
