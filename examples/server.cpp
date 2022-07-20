@@ -14,7 +14,7 @@ int main(int argc, char** argv)
 
     pine::ServerState server(6000);
 
-    pine::StartServer(server,
+    pine::start_server(server,
         [](const pine::ConnectionState& connection) -> bool
         {
             PINE_INFO("Server got connection: {0}",
@@ -24,7 +24,7 @@ int main(int argc, char** argv)
 
     while (!exitFlag)
     {
-        pine::UpdateServer(server,
+        pine::update_server(server,
             [](const std::vector<uint8_t>& message) -> void
             {
                 PINE_INFO("Server got message: {0} : {1}",
@@ -34,7 +34,7 @@ int main(int argc, char** argv)
     }
 
     PINE_INFO("Stopping server.");
-    pine::StopServer(server);
+    pine::stop_server(server);
 
     return 0;
 }

@@ -7,12 +7,12 @@
 namespace pine
 {
 
-bool IsConnected(const ClientState& client)
+bool is_connected(const ClientState& client)
 {
-    return client.connection ? IsConnected(*client.connection.get()) : false;
+    return client.connection ? is_connected(*client.connection.get()) : false;
 }
 
-bool Connect(ClientState& client, const std::string& host, const uint16_t port)
+bool connect(ClientState& client, const std::string& host, const uint16_t port)
 {
     if (client.context_thread.joinable())
     {
@@ -26,16 +26,16 @@ bool Connect(ClientState& client, const std::string& host, const uint16_t port)
     client.connection = std::make_unique<ConnectionState>(client.context,
         std::move(socket),
         client.message_queue);
-    ConnectToServer(*client.connection.get(), endpoints);
+    connect_to_server(*client.connection.get(), endpoints);
     client.context_thread = std::thread([&client]() { client.context.run(); });
     return true;
 }
 
-void Disconnect(ClientState& client)
+void disconnect(ClientState& client)
 {
-    if (IsConnected(client))
+    if (is_connected(client))
     {
-        Disconnect(*client.connection.get());
+        disconnect(*client.connection.get());
     }
 
     client.context.stop();
@@ -48,11 +48,11 @@ void Disconnect(ClientState& client)
     client.connection.release();
 }
 
-void Send(const ClientState& client, const uint8_t* data, const uint64_t size)
+void send(const ClientState& client, const uint8_t* data, const uint64_t size)
 {
-    if (IsConnected(client))
+    if (is_connected(client))
     {
-        Send(*client.connection.get(), data, size);
+        send(*client.connection.get(), data, size);
     }
 }
 

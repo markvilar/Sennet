@@ -35,7 +35,7 @@ void EditorLayer::on_attach()
 
     ui::SetDarkTheme(ImGui::GetStyle());
 
-    StartServer(m_Server,
+    start_server(m_server,
         [](const ConnectionState& connection) -> bool
         {
             PINE_INFO("Editor server: New connection {0}",
@@ -101,7 +101,7 @@ void EditorLayer::on_update(Timestep ts)
     Renderer2D::EndScene(m_RendererData2D);
     m_ViewportFramebuffer->Unbind();
 
-    UpdateServer(m_Server,
+    update_server(m_server,
         [this](const std::vector<uint8_t>& message) -> void
         { m_server_history.push_back(message); });
 }
@@ -295,16 +295,16 @@ void EditorLayer::on_imgui_render()
             static uint16_t port = 0;
             ImGui::InputText("Address", address, IM_ARRAYSIZE(address));
             ImGui::InputInt("Port", (int*)&port);
-            ImGui::Text("Client connected: %d", IsConnected(m_Client));
+            ImGui::Text("Client connected: %d", is_connected(m_client));
 
             if (ImGui::Button("Connect"))
             {
-                Connect(m_Client, std::string(address), port);
+                connect(m_client, std::string(address), port);
             }
             ImGui::SameLine();
             if (ImGui::Button("Disconnect"))
             {
-                Disconnect(m_Client);
+                disconnect(m_client);
             }
 
             static constexpr size_t messageSize = 10 * 5;
@@ -317,11 +317,11 @@ void EditorLayer::on_imgui_render()
 
             if (ImGui::Button("Send to server"))
             {
-                if (IsConnected(m_Client))
+                if (is_connected(m_client))
                 {
                     const auto message = std::vector<uint8_t>(messageText,
                         messageText + sizeof(messageText));
-                    Send(m_Client, message.data(), message.size());
+                    send(m_client, message.data(), message.size());
                 }
             }
 
@@ -329,7 +329,7 @@ void EditorLayer::on_imgui_render()
 
             ImGui::Text("Server");
 
-            for (const auto& connection : m_Server.connections)
+            for (const auto& connection : m_server.connections)
             {
                 const auto endpoint = connection->socket.remote_endpoint();
                 ImGui::Text("Connection: %s:%d",

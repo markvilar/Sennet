@@ -27,19 +27,20 @@ public:
     }
 };
 
-bool IsConnected(const ConnectionState& connection);
-void Disconnect(ConnectionState& connection);
+bool is_connected(const ConnectionState& connection);
+void disconnect(ConnectionState& connection);
 
-void ConnectToClient(ConnectionState& connection);
-void ConnectToServer(ConnectionState& connection, const ResolveType& endpoints);
+void connect_to_client(ConnectionState& connection);
+void connect_to_server(ConnectionState& connection, 
+    const ResolveType& endpoints);
 
-void ReadMessageSize(ConnectionState& connection);
-void ReadMessage(ConnectionState& connection, const uint64_t size);
+void read_message_size(ConnectionState& connection);
+void read_message(ConnectionState& connection, const uint64_t size);
 
-void Send(ConnectionState& connection, const uint8_t* data,
+void send(ConnectionState& connection, const uint8_t* data,
     const uint64_t size);
 
-void WriteMessageSize(ConnectionState& connection);
-void WriteMessage(ConnectionState& connection);
+void write_message_size(ConnectionState& connection);
+void write_message(ConnectionState& connection);
 
 }; // namespace pine

@@ -19,7 +19,7 @@ ServerState::~ServerState()
     }
 }
 
-void StopServer(ServerState& server)
+void stop_server(ServerState& server)
 {
     server.context.stop();
     if (server.context_thread.joinable())
@@ -28,15 +28,15 @@ void StopServer(ServerState& server)
     }
 }
 
-void SendToClient(ServerState& server,
+void send_to_client(ServerState& server,
     const std::shared_ptr<ConnectionState>& client, const uint8_t* data,
     const uint64_t size)
 {
     if (client)
     {
-        if (IsConnected(*client.get()))
+        if (is_connected(*client.get()))
         {
-            Send(*client.get(), data, size);
+            send(*client.get(), data, size);
         }
     }
     else

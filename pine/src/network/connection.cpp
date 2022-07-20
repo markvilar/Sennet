@@ -7,29 +7,29 @@
 namespace pine
 {
 
-bool IsConnected(const ConnectionState& connection)
+bool is_connected(const ConnectionState& connection)
 {
     return connection.socket.is_open();
 }
 
-void Disconnect(ConnectionState& connection)
+void disconnect(ConnectionState& connection)
 {
-    if (IsConnected(connection))
+    if (is_connected(connection))
     {
         asio::post(connection.context,
             [&connection]() { connection.socket.close(); });
     }
 }
 
-void ConnectToClient(ConnectionState& connection)
+void connect_to_client(ConnectionState& connection)
 {
-    if (IsConnected(connection))
+    if (is_connected(connection))
     {
-        ReadMessageSize(connection);
+        read_message_size(connection);
     }
 }
 
-void ConnectToServer(ConnectionState& connection, const ResolveType& endpoints)
+void connect_to_server(ConnectionState& connection, const ResolveType& endpoints)
 {
     // TODO: Set up timeout.
     asio::async_connect(connection.socket,
@@ -42,13 +42,12 @@ void ConnectToServer(ConnectionState& connection, const ResolveType& endpoints)
                     error.message());
                 return;
             }
-            ReadMessageSize(connection);
+            read_message_size(connection);
         });
 }
 
-void ReadMessageSize(ConnectionState& connection)
+void read_message_size(ConnectionState& connection)
 {
-    // FIXME: Segmentation fault
     auto message_size = std::make_shared<uint64_t>(0);
 
     // TODO: Look into solution for copying message_size into asio, instead
@@ -67,16 +66,16 @@ void ReadMessageSize(ConnectionState& connection)
 
             if (message_size > 0)
             {
-                ReadMessage(connection, *message_size.get());
+                read_message(connection, *message_size.get());
             }
             else
             {
-                ReadMessageSize(connection);
+                read_message_size(connection);
             }
         });
 }
 
-void ReadMessage(ConnectionState& connection, const uint64_t size)
+void read_message(ConnectionState& connection, const uint64_t size)
 {
 
     auto message = std::make_shared<std::vector<uint8_t>>();
@@ -95,11 +94,11 @@ void ReadMessage(ConnectionState& connection, const uint64_t size)
             }
 
             connection.read_queue.push_back(std::move(*message.get()));
-            ReadMessageSize(connection);
+            read_message_size(connection);
         });
 }
 
-void Send(ConnectionState& connection, const uint8_t* data, const uint64_t size)
+void send(ConnectionState& connection, const uint8_t* data, const uint64_t size)
 {
     std::vector<uint8_t> buffer(data, data + size);
 
@@ -110,12 +109,12 @@ void Send(ConnectionState& connection, const uint8_t* data, const uint64_t size)
             connection.write_queue.push_back(std::move(buffer));
             if (!is_writing)
             {
-                WriteMessageSize(connection);
+                write_message_size(connection);
             }
         });
 }
 
-void WriteMessageSize(ConnectionState& connection)
+void write_message_size(ConnectionState& connection)
 {
     auto message_size =
         std::make_shared<uint64_t>(connection.write_queue.front().size());
@@ -136,20 +135,20 @@ void WriteMessageSize(ConnectionState& connection)
 
             if (*message_size.get() > 0)
             {
-                WriteMessage(connection);
+                write_message(connection);
             }
             else
             {
                 connection.write_queue.pop_front();
                 if (!connection.write_queue.empty())
                 {
-                    WriteMessageSize(connection);
+                    write_message_size(connection);
                 }
             }
         });
 }
 
-void WriteMessage(ConnectionState& connection)
+void write_message(ConnectionState& connection)
 {
     asio::async_write(connection.socket,
         asio::const_buffer(connection.write_queue.front().data(),
@@ -167,7 +166,7 @@ void WriteMessage(ConnectionState& connection)
             connection.write_queue.pop_front();
             if (!connection.write_queue.empty())
             {
-                WriteMessageSize(connection);
+                write_message_size(connection);
             }
         });
 }

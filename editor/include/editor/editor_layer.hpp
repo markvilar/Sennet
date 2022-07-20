@@ -50,8 +50,8 @@ private:
 
     Image m_Image;
 
-    ClientState m_Client{};
-    ServerState m_Server{5000};
+    ClientState m_client{};
+    ServerState m_server{5000};
 
     std::vector<std::vector<uint8_t>> m_server_history{};
 

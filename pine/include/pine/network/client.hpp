@@ -37,10 +37,10 @@ public:
     }
 };
 
-bool IsConnected(const ClientState& client);
-bool Connect(ClientState& client, const std::string& host, const uint16_t port);
-void Disconnect(ClientState& client);
+bool is_connected(const ClientState& client);
+bool connect(ClientState& client, const std::string& host, const uint16_t port);
+void disconnect(ClientState& client);
 
-void Send(const ClientState& client, const uint8_t* data, const uint64_t size);
+void send(const ClientState& client, const uint8_t* data, const uint64_t size);
 
 }; // namespace pine

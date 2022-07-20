@@ -35,13 +35,13 @@ public:
     ~ServerState();
 };
 
-void StopServer(ServerState& server);
-void SendToClient(ServerState& server,
+void stop_server(ServerState& server);
+void send_to_client(ServerState& server,
     const std::shared_ptr<ConnectionState>& client, const uint8_t* data,
     const uint64_t size);
 
 template <typename ConnectHandler>
-void ListenForClients(ServerState& server, ConnectHandler& handler)
+void listen_for_clients(ServerState& server, ConnectHandler& handler)
 {
     server.acceptor.async_accept(
         [&server, &handler](const std::error_code ec, SocketType socket)
@@ -55,7 +55,7 @@ void ListenForClients(ServerState& server, ConnectHandler& handler)
                 if (handler(*client.get()))
                 {
                     server.connections.push_back(client);
-                    ConnectToClient(*client.get());
+                    connect_to_client(*client.get());
                 }
             }
             else
@@ -63,16 +63,17 @@ void ListenForClients(ServerState& server, ConnectHandler& handler)
                 PINE_CORE_ERROR("Server error: {0}", ec.message());
             }
 
-            ListenForClients(server, handler);
+            listen_for_clients(server, handler);
         });
 }
 
 template <typename ConnectHandler>
-bool StartServer(ServerState& server, ConnectHandler handler)
+bool start_server(ServerState& server, ConnectHandler handler)
 {
+    // TODO: Add static assert of connect handler signature.
     try
     {
-        ListenForClients(server, handler);
+        listen_for_clients(server, handler);
         server.context_thread =
             std::thread([&server]() { server.context.run(); });
     }
@@ -84,15 +85,16 @@ bool StartServer(ServerState& server, ConnectHandler handler)
     return true;
 }
 
-template <typename MessageCallback>
-void UpdateServer(ServerState& server, MessageCallback callback,
+template <typename MessageHandler>
+void update_server(ServerState& server, MessageHandler handler,
     const uint64_t max_messages = -1)
 {
+    // TODO: Add static assert of message handler signature.
     uint64_t message_count = 0;
     while (message_count < max_messages && !server.message_queue.empty())
     {
         const auto message = server.message_queue.pop_front();
-        callback(message);
+        handler(message);
         message_count++;
     }
 }
