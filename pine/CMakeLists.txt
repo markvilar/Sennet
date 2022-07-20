@@ -32,6 +32,7 @@ target_sources(pine
         include/pine/platform/windows/window.hpp
         include/pine/platform/linux/window.hpp
         include/pine/renderer/buffer.hpp
+        include/pine/renderer/common.hpp
         include/pine/renderer/framebuffer.hpp
         include/pine/renderer/graphics_context.hpp
         include/pine/renderer/image.hpp
