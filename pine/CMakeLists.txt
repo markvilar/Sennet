@@ -29,7 +29,6 @@ target_sources(pine
         include/pine/platform/opengl/renderer_api.hpp
         include/pine/platform/opengl/shader.hpp
         include/pine/platform/opengl/texture.hpp
-        include/pine/platform/opengl/vertex_array.hpp
         include/pine/platform/windows/window.hpp
         include/pine/platform/linux/window.hpp
         include/pine/renderer/buffer.hpp
@@ -43,7 +42,6 @@ target_sources(pine
         include/pine/renderer/renderer_api.hpp
         include/pine/renderer/shader.hpp
         include/pine/renderer/texture.hpp
-        include/pine/renderer/vertex_array.hpp
         include/pine/ui/common.hpp
         include/pine/ui/imgui_impl_glfw.hpp
         include/pine/ui/imgui_impl_opengl3.hpp
@@ -65,7 +63,6 @@ target_sources(pine
         src/platform/opengl/renderer_api.cpp
         src/platform/opengl/shader.cpp
         src/platform/opengl/texture.cpp
-        src/platform/opengl/vertex_array.cpp
         src/platform/windows/input.cpp
         src/platform/windows/window.cpp
         src/platform/linux/input.cpp
@@ -81,7 +78,6 @@ target_sources(pine
         src/renderer/renderer_api.cpp
         src/renderer/shader.cpp
         src/renderer/texture.cpp
-        src/renderer/vertex_array.cpp
         src/ui/common.cpp
         src/ui/imgui_impl_glfw.cpp
         src/ui/imgui_impl_opengl3.cpp

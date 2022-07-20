@@ -60,8 +60,10 @@ void EditorLayer::on_update(Timestep ts)
     }
 
     if (m_ViewportFocused)
+    {
         // FIXME: Update to include window handle.
         // m_CameraController.OnUpdate(ts);
+    }
 
     m_QuadRotation += ts * 50.0f;
 

@@ -26,7 +26,6 @@
 #include "pine/renderer/renderer_2d.hpp"
 #include "pine/renderer/shader.hpp"
 #include "pine/renderer/texture.hpp"
-#include "pine/renderer/vertex_array.hpp"
 
 #include "pine/ui/common.hpp"
 #include "pine/ui/imgui_layer.hpp"

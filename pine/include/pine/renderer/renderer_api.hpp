@@ -3,7 +3,7 @@
 #include <memory>
 
 #include "pine/core/common.hpp"
-#include "pine/renderer/vertex_array.hpp"
+#include "pine/renderer/buffer.hpp"
 #include "pine/utils/math.hpp"
 
 namespace pine

@@ -1,8 +1,8 @@
 #include "pine/renderer/renderer_2d.hpp"
 
+#include "pine/renderer/buffer.hpp"
 #include "pine/renderer/render_command.hpp"
 #include "pine/renderer/renderer.hpp"
-#include "pine/renderer/vertex_array.hpp"
 #include "pine/pch.hpp"
 
 namespace pine::Renderer2D

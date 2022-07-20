@@ -122,20 +122,12 @@ struct BufferElement
     uint32_t Size = 0;
     bool Normalized = false;
 
-    BufferElement() = default;
-    BufferElement(const BufferElement&) = default;
-    BufferElement(BufferElement&&) = default;
-    ~BufferElement() = default;
-
     BufferElement(const ShaderDataType type, const std::string& name,
         const bool normalized = false)
         : Type(type), Name(name), Size(ShaderDataTypeSize(type)), Offset(0),
           Normalized(normalized)
     {
     }
-
-    BufferElement& operator=(const BufferElement&) = default;
-    BufferElement& operator=(BufferElement&&) = default;
 
     uint32_t GetComponentCount() const
     {
@@ -147,8 +139,13 @@ class BufferLayout
 {
 public:
     BufferLayout() = default;
+
     BufferLayout(const BufferLayout&) = default;
     BufferLayout(BufferLayout&&) = default;
+
+    BufferLayout& operator=(const BufferLayout&) = default;
+    BufferLayout& operator=(BufferLayout&&) = default;
+
     ~BufferLayout() = default;
 
     BufferLayout(const std::initializer_list<BufferElement>& elements)
@@ -157,8 +154,6 @@ public:
         CalculateOffsetAndStride();
     }
 
-    BufferLayout& operator=(const BufferLayout&) = default;
-    BufferLayout& operator=(BufferLayout&&) = default;
 
     inline uint32_t GetStride() const { return m_Stride; }
     inline const std::vector<BufferElement>& GetElements() const
@@ -215,6 +210,23 @@ public:
 
     static std::unique_ptr<IndexBuffer> Create(const uint32_t* indices,
         const uint32_t count);
+};
+
+class VertexArray
+{
+public:
+    virtual ~VertexArray() {}
+
+    virtual void Bind() const = 0;
+    virtual void Unbind() const = 0;
+
+    virtual void SetVertexBuffer(std::unique_ptr<VertexBuffer> buffer) = 0;
+    virtual void SetIndexBuffer(std::unique_ptr<IndexBuffer> buffer) = 0;
+
+    virtual VertexBuffer& GetVertexBuffer() const = 0;
+    virtual IndexBuffer& GetIndexBuffer() const = 0;
+
+    static std::unique_ptr<VertexArray> Create();
 };
 
 } // namespace pine
