@@ -70,15 +70,15 @@ OpenGLTexture2D::OpenGLTexture2D(const std::filesystem::path& image_path)
 }
 
 OpenGLTexture2D::OpenGLTexture2D(const Image& image)
-    : m_Source(""), m_Width(image.width), m_Height(image.height)
+    : m_Source(""), m_Width(image.get_width()), m_Height(image.get_height())
 {
     glCreateTextures(GL_TEXTURE_2D, 1, &m_RendererID);
 
     glTextureStorage2D(m_RendererID,
         1,
-        to_opengl_internal_format(image.format),
-        image.width,
-        image.height);
+        to_opengl_internal_format(image.get_format()),
+        image.get_width(),
+        image.get_height());
 
     glTextureParameteri(m_RendererID, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTextureParameteri(m_RendererID, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
@@ -89,11 +89,11 @@ OpenGLTexture2D::OpenGLTexture2D(const Image& image)
         0,
         0,
         0,
-        image.width,
-        image.height,
-        to_opengl_data_format(image.format),
+        image.get_width(),
+        image.get_height(),
+        to_opengl_data_format(image.get_format()),
         GL_UNSIGNED_BYTE,
-        static_cast<const void*>(image.buffer.data()));
+        static_cast<const void*>(image.get_buffer().data()));
 }
 
 OpenGLTexture2D::~OpenGLTexture2D() { glDeleteTextures(1, &m_RendererID); }

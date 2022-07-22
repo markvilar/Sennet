@@ -45,10 +45,8 @@ private:
     void UpdateInterfaceLayout();
 
 private:
-    OrthographicCameraController m_CameraController{1.0f};
-    ShaderLibrary m_ShaderLibrary{};
-
-    Image m_Image;
+    OrthographicCameraController m_camera_controller{1.0f};
+    ShaderLibrary m_shader_library{};
 
     ClientState m_client{};
     ServerState m_server{5000};
@@ -56,17 +54,17 @@ private:
     std::vector<std::vector<uint8_t>> m_server_history{};
 
     std::shared_ptr<Framebuffer> m_viewport_framebuffer;
-    std::shared_ptr<Texture2D> m_Texture;
+    std::shared_ptr<Texture2D> m_texture;
 
-    bool m_ViewportFocused{false};
-    bool m_ViewportHovered{false};
+    bool m_viewport_focused{false};
+    bool m_viewport_hovered{false};
 
-    Renderer2D::RendererData m_RendererData2D{};
+    Renderer2D::RendererData m_renderer_data_2d{};
 
-    Vec4 m_QuadColor{0.2f, 0.3f, 0.8f, 1.0f};
-    float m_QuadRotation{0.0f};
+    Vec4 m_quad_color{0.2f, 0.3f, 0.8f, 1.0f};
+    float m_quad_rotation{0.0f};
 
-    std::unordered_map<std::string, InterfaceLayout> m_InterfaceLayouts{};
+    std::unordered_map<std::string, InterfaceLayout> m_interface_layouts{};
 };
 
 } // namespace pine

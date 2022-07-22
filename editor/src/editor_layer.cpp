@@ -5,7 +5,7 @@
 namespace pine
 {
 
-EditorLayer::EditorLayer() : Layer("EditorLayer"), m_CameraController(1.0f) {}
+EditorLayer::EditorLayer() : Layer("EditorLayer"), m_camera_controller(1.0f) {}
 
 void EditorLayer::on_attach()
 {
@@ -17,21 +17,21 @@ void EditorLayer::on_attach()
         nullptr,
         io.Fonts->GetGlyphRangesCyrillic());
 
-    if (!m_ShaderLibrary.Load("resources/shaders/Renderer2D.glsl"))
+    if (!m_shader_library.Load("resources/shaders/Renderer2D.glsl"))
     {
         PINE_ERROR("Failed to load shader.");
     }
 
     FramebufferSpecification specs;
-    specs.Width = m_InterfaceLayouts["Viewport"].Size.x;
-    specs.Height = m_InterfaceLayouts["Viewport"].Size.y;
+    specs.Width = m_interface_layouts["Viewport"].Size.x;
+    specs.Height = m_interface_layouts["Viewport"].Size.y;
     m_viewport_framebuffer = Framebuffer::create(specs);
 
-    m_CameraController.OnResize(static_cast<uint32_t>(
-                                    m_InterfaceLayouts["Viewport"].Size.x),
-        static_cast<uint32_t>(m_InterfaceLayouts["Viewport"].Size.y));
+    m_camera_controller.OnResize(static_cast<uint32_t>(
+                                    m_interface_layouts["Viewport"].Size.x),
+        static_cast<uint32_t>(m_interface_layouts["Viewport"].Size.y));
 
-    m_RendererData2D = Renderer2D::Init();
+    m_renderer_data_2d = Renderer2D::Init();
 
     ui::SetDarkTheme(ImGui::GetStyle());
 
@@ -50,22 +50,22 @@ void EditorLayer::on_update(Timestep ts)
 {
     UpdateInterfaceLayout();
     auto specs = m_viewport_framebuffer->get_specification();
-    const auto viewport = m_InterfaceLayouts["Viewport"];
+    const auto viewport = m_interface_layouts["Viewport"];
 
     if (viewport.Size.x > 0.0f && viewport.Size.y > 0.0f
         && (specs.Width != viewport.Size.x || specs.Height != viewport.Size.y))
     {
         m_viewport_framebuffer->resize(viewport.Size.x, viewport.Size.y);
-        m_CameraController.OnResize(viewport.Size.x, viewport.Size.y);
+        m_camera_controller.OnResize(viewport.Size.x, viewport.Size.y);
     }
 
-    if (m_ViewportFocused)
+    if (m_viewport_focused)
     {
         // FIXME: Update to include window handle.
-        // m_CameraController.OnUpdate(ts);
+        // m_camera_controller.OnUpdate(ts);
     }
 
-    m_QuadRotation += ts * 50.0f;
+    m_quad_rotation += ts * 50.0f;
 
     RenderCommand::SetClearColor({0.1f, 0.1f, 0.1f, 1.0f});
     RenderCommand::Clear();
@@ -74,33 +74,33 @@ void EditorLayer::on_update(Timestep ts)
     RenderCommand::SetClearColor({0.05f, 0.05f, 0.05f, 1.0f});
     RenderCommand::Clear();
 
-    Renderer2D::BeginScene(m_RendererData2D, m_CameraController.GetCamera());
+    Renderer2D::BeginScene(m_renderer_data_2d, m_camera_controller.GetCamera());
 
-    Renderer2D::DrawRotatedQuad(m_RendererData2D,
+    Renderer2D::DrawRotatedQuad(m_renderer_data_2d,
         {0.0f, 0.0f},
         {0.8f, 0.8f},
-        Radians(m_QuadRotation),
+        Radians(m_quad_rotation),
         {0.9f, 0.1f, 0.2f, 1.0f});
-    Renderer2D::DrawQuad(m_RendererData2D,
+    Renderer2D::DrawQuad(m_renderer_data_2d,
         {2.0f, -2.0f},
         {0.8f, 0.8f},
         {0.8f, 0.2f, 0.3f, 1.0f});
-    Renderer2D::DrawQuad(m_RendererData2D,
+    Renderer2D::DrawQuad(m_renderer_data_2d,
         {2.0f, 2.0f},
         {0.5f, 0.75f},
-        m_QuadColor);
+        m_quad_color);
 
-    if (m_Texture)
+    if (m_texture)
     {
-        Renderer2D::DrawQuad(m_RendererData2D,
+        Renderer2D::DrawQuad(m_renderer_data_2d,
             {-16.0f, 0.0f, -0.2f},
             {16.0f, 9.0f},
-            m_Texture,
+            m_texture,
             1.0f,
             Vec4{1.0f, 1.0f, 1.0f, 1.0f});
     }
 
-    Renderer2D::EndScene(m_RendererData2D);
+    Renderer2D::EndScene(m_renderer_data_2d);
     m_viewport_framebuffer->unbind();
 
     update_server(m_server,
@@ -200,35 +200,35 @@ void EditorLayer::on_imgui_render()
         });
 
     ui::AddViewport("Viewport",
-        m_InterfaceLayouts["Viewport"].Position,
-        m_InterfaceLayouts["Viewport"].Size,
+        m_interface_layouts["Viewport"].Position,
+        m_interface_layouts["Viewport"].Size,
         *m_viewport_framebuffer.get(),
         [this]
         {
-            m_ViewportFocused = ImGui::IsWindowFocused();
-            m_ViewportHovered = ImGui::IsWindowHovered();
+            m_viewport_focused = ImGui::IsWindowFocused();
+            m_viewport_hovered = ImGui::IsWindowHovered();
             Application::get().get_imgui_layer()->BlockEvents(
-                !m_ViewportFocused || !m_ViewportHovered);
+                !m_viewport_focused || !m_viewport_hovered);
         });
 
     ui::AddWindow("LeftPanel",
-        m_InterfaceLayouts["LeftPanel"].Position,
-        m_InterfaceLayouts["LeftPanel"].Size,
+        m_interface_layouts["LeftPanel"].Position,
+        m_interface_layouts["LeftPanel"].Size,
         [this]
         {
-            auto& stats = m_RendererData2D.Stats;
+            auto& stats = m_renderer_data_2d.Stats;
             ImGui::Text("Renderer2D Stats:");
             ImGui::Text("Draw Calls: %d", stats.DrawCalls);
             ImGui::Text("Quads: %d", stats.QuadCount);
             ImGui::Text("Vertices: %d", stats.GetTotalVertexCount());
             ImGui::Text("Indices: %d", stats.GetTotalIndexCount());
 
-            ImGui::ColorEdit4("Square Color", ValuePtr(m_QuadColor));
+            ImGui::ColorEdit4("Square Color", ValuePtr(m_quad_color));
 
             ui::AddEmptySpace(0.0f, 10.0f);
             ImGui::Separator();
 
-            for (const auto& [name, shader] : m_ShaderLibrary.GetShaders())
+            for (const auto& [name, shader] : m_shader_library.GetShaders())
             {
                 ImGui::Text("%s", name.c_str());
             }
@@ -258,7 +258,7 @@ void EditorLayer::on_imgui_render()
             {
                 if (pine::filesystem::IsFile(image_path))
                 {
-                    m_Texture = Texture2D::Create(
+                    m_texture = Texture2D::Create(
                         read_image(image_path, image_format, flip_image));
                     PINE_INFO("Loaded image: {0}, {1}", image_path, 
                         image_format);
@@ -292,8 +292,8 @@ void EditorLayer::on_imgui_render()
         });
 
     ui::AddWindow("RightPanel",
-        m_InterfaceLayouts["RightPanel"].Position,
-        m_InterfaceLayouts["RightPanel"].Size,
+        m_interface_layouts["RightPanel"].Position,
+        m_interface_layouts["RightPanel"].Size,
         [this]()
         {
             static char address[256] = "";
@@ -353,14 +353,14 @@ void EditorLayer::on_imgui_render()
         });
 
     ui::AddWindow("BottomPanel",
-        m_InterfaceLayouts["BottomPanel"].Position,
-        m_InterfaceLayouts["BottomPanel"].Size,
+        m_interface_layouts["BottomPanel"].Position,
+        m_interface_layouts["BottomPanel"].Size,
         []() {});
 }
 
 void EditorLayer::on_event(Event& event) 
 { 
-    m_CameraController.OnEvent(event); 
+    m_camera_controller.OnEvent(event); 
 }
 
 void EditorLayer::UpdateInterfaceLayout()
@@ -370,24 +370,24 @@ void EditorLayer::UpdateInterfaceLayout()
 
     static constexpr auto menuHeight = 20.0f;
 
-    const auto& mainMenuLayout = m_InterfaceLayouts["MainMenu"];
+    const auto& mainMenuLayout = m_interface_layouts["MainMenu"];
 
-    m_InterfaceLayouts["Viewport"] =
+    m_interface_layouts["Viewport"] =
         InterfaceLayout(Vec2(0.2f * windowWidth,
                             0.0f * windowHeight + menuHeight),
             Vec2(0.6f * windowWidth, 0.8f * windowHeight));
 
-    m_InterfaceLayouts["LeftPanel"] =
+    m_interface_layouts["LeftPanel"] =
         InterfaceLayout(Vec2(0.0f * windowWidth,
                             0.0f * windowHeight + menuHeight),
             Vec2(0.2f * windowWidth, 1.0f * windowHeight - menuHeight));
 
-    m_InterfaceLayouts["RightPanel"] =
+    m_interface_layouts["RightPanel"] =
         InterfaceLayout(Vec2(0.8f * windowWidth,
                             0.0f * windowHeight + menuHeight),
             Vec2(0.2f * windowWidth, 1.0f * windowHeight - menuHeight));
 
-    m_InterfaceLayouts["BottomPanel"] =
+    m_interface_layouts["BottomPanel"] =
         InterfaceLayout(Vec2(0.2f * windowWidth,
                             0.8f * windowHeight + menuHeight),
             Vec2(0.6f * windowWidth, 0.2f * windowHeight - menuHeight));

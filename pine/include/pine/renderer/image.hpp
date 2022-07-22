@@ -38,10 +38,7 @@ enum class ImageFormat : uint8_t
 
 struct Image
 {
-    uint32_t width = 0;
-    uint32_t height = 0;
-    ImageFormat format = ImageFormat::UNKNOWN;
-    std::vector<uint8_t> buffer = {};
+    using BufferType = std::vector<uint8_t>;
 
 public:
     Image() = default;
@@ -55,6 +52,17 @@ public:
 
     Image& operator=(const Image& image) = default;
     Image& operator=(Image&& image) = default;
+
+    uint32_t get_width() const { return width; }
+    uint32_t get_height() const { return height; }
+    ImageFormat get_format() const { return format; }
+    const BufferType get_buffer() const { return buffer; }
+
+private:
+    uint32_t width = 0;
+    uint32_t height = 0;
+    ImageFormat format = ImageFormat::UNKNOWN;
+    BufferType buffer = {};
 };
 
 // TODO: Return std::optional<Image>

@@ -126,37 +126,37 @@ bool write_image(const std::filesystem::path& filepath, const Image& image,
 
     stbi_set_flip_vertically_on_load(flip);
 
-    const auto channels = get_format_channel_count(image.format);
+    const auto channels = get_format_channel_count(image.get_format());
     const auto write_result = [filepath, image, channels, file_format]()
     {
         switch (file_format)
         {
         case ImageFileFormat::JPG:
             return stbi_write_jpg(filepath.c_str(),
-                image.width,
-                image.height,
+                image.get_width(),
+                image.get_height(),
                 channels,
-                image.buffer.data(),
+                image.get_buffer().data(),
                 100);
         case ImageFileFormat::PNG:
             return stbi_write_png(filepath.c_str(),
-                image.width,
-                image.height,
+                image.get_width(),
+                image.get_height(),
                 channels,
-                image.buffer.data(),
-                image.width * channels);
+                image.get_buffer().data(),
+                image.get_width() * channels);
         case ImageFileFormat::BMP:
             return stbi_write_bmp(filepath.c_str(),
-                image.width,
-                image.height,
+                image.get_width(),
+                image.get_height(),
                 channels,
-                image.buffer.data());
+                image.get_buffer().data());
         case ImageFileFormat::TGA:
             return stbi_write_tga(filepath.c_str(),
-                image.width,
-                image.height,
+                image.get_width(),
+                image.get_height(),
                 channels,
-                image.buffer.data());
+                image.get_buffer().data());
         }
         return 0;
     }();
