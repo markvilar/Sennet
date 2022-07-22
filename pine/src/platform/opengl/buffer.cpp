@@ -3,6 +3,9 @@
 #include <glad/glad.h>
 
 #include "pine/pch.hpp"
+#include "pine/renderer/common.hpp"
+
+#include "pine/platform/opengl/common.hpp"
 
 namespace pine
 {
@@ -13,30 +16,30 @@ namespace pine
 
 OpenGLVertexBuffer::OpenGLVertexBuffer(const uint32_t size)
 {
-    glCreateBuffers(1, &m_RendererID);
-    glBindBuffer(GL_ARRAY_BUFFER, m_RendererID);
+    glCreateBuffers(1, &m_renderer_id);
+    glBindBuffer(GL_ARRAY_BUFFER, m_renderer_id);
     glBufferData(GL_ARRAY_BUFFER, size, nullptr, GL_DYNAMIC_DRAW);
 }
 
 OpenGLVertexBuffer::OpenGLVertexBuffer(const float* vertices, uint32_t size)
 {
-    glCreateBuffers(1, &m_RendererID);
-    glBindBuffer(GL_ARRAY_BUFFER, m_RendererID);
+    glCreateBuffers(1, &m_renderer_id);
+    glBindBuffer(GL_ARRAY_BUFFER, m_renderer_id);
     glBufferData(GL_ARRAY_BUFFER, size, vertices, GL_STATIC_DRAW);
 }
 
-OpenGLVertexBuffer::~OpenGLVertexBuffer() { glDeleteBuffers(1, &m_RendererID); }
+OpenGLVertexBuffer::~OpenGLVertexBuffer() { glDeleteBuffers(1, &m_renderer_id); }
 
-void OpenGLVertexBuffer::Bind() const
+void OpenGLVertexBuffer::bind() const
 {
-    glBindBuffer(GL_ARRAY_BUFFER, m_RendererID);
+    glBindBuffer(GL_ARRAY_BUFFER, m_renderer_id);
 }
 
-void OpenGLVertexBuffer::Unbind() const { glBindBuffer(GL_ARRAY_BUFFER, 0); }
+void OpenGLVertexBuffer::unbind() const { glBindBuffer(GL_ARRAY_BUFFER, 0); }
 
-void OpenGLVertexBuffer::SetData(const void* data, const uint32_t size)
+void OpenGLVertexBuffer::set_data(const void* data, const uint32_t size)
 {
-    glBindBuffer(GL_ARRAY_BUFFER, m_RendererID);
+    glBindBuffer(GL_ARRAY_BUFFER, m_renderer_id);
     glBufferSubData(GL_ARRAY_BUFFER, 0, size, data);
 }
 
@@ -46,24 +49,24 @@ void OpenGLVertexBuffer::SetData(const void* data, const uint32_t size)
 
 OpenGLIndexBuffer::OpenGLIndexBuffer(const uint32_t* indices,
     const uint32_t count)
-    : m_Count(count)
+    : m_count(count)
 {
-    glCreateBuffers(1, &m_RendererID);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_RendererID);
+    glCreateBuffers(1, &m_renderer_id);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_renderer_id);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER,
         count * sizeof(uint32_t),
         indices,
         GL_STATIC_DRAW);
 }
 
-OpenGLIndexBuffer::~OpenGLIndexBuffer() { glDeleteBuffers(1, &m_RendererID); }
+OpenGLIndexBuffer::~OpenGLIndexBuffer() { glDeleteBuffers(1, &m_renderer_id); }
 
-void OpenGLIndexBuffer::Bind() const
+void OpenGLIndexBuffer::bind() const
 {
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_RendererID);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_renderer_id);
 }
 
-void OpenGLIndexBuffer::Unbind() const
+void OpenGLIndexBuffer::unbind() const
 {
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 }
@@ -72,144 +75,62 @@ void OpenGLIndexBuffer::Unbind() const
 // ---- Vertex array ----------------------------------------------------------
 // ----------------------------------------------------------------------------
 
-constexpr bool IsIntegerType(const ShaderDataType type)
-{
-    switch (type)
-    {
-    case ShaderDataType::Float:
-        return false;
-    case ShaderDataType::Float2:
-        return false;
-    case ShaderDataType::Float3:
-        return false;
-    case ShaderDataType::Float4:
-        return false;
-    case ShaderDataType::Mat3:
-        return false;
-    case ShaderDataType::Mat4:
-        return false;
-    case ShaderDataType::Int:
-        return true;
-    case ShaderDataType::Int2:
-        return true;
-    case ShaderDataType::Int3:
-        return true;
-    case ShaderDataType::Int4:
-        return true;
-    case ShaderDataType::Uint:
-        return true;
-    case ShaderDataType::Uint2:
-        return true;
-    case ShaderDataType::Uint3:
-        return true;
-    case ShaderDataType::Uint4:
-        return true;
-    case ShaderDataType::Bool:
-        return false;
-    case ShaderDataType::None:
-        return false;
-    }
-    PINE_CORE_ASSERT(false, "Unknown shader data type.");
-    return 0;
-}
-
-static GLenum ShaderDataTypeToOpenGLBaseType(const ShaderDataType type)
-{
-    switch (type)
-    {
-    case ShaderDataType::Float:
-        return GL_FLOAT;
-    case ShaderDataType::Float2:
-        return GL_FLOAT;
-    case ShaderDataType::Float3:
-        return GL_FLOAT;
-    case ShaderDataType::Float4:
-        return GL_FLOAT;
-    case ShaderDataType::Mat3:
-        return GL_FLOAT;
-    case ShaderDataType::Mat4:
-        return GL_FLOAT;
-    case ShaderDataType::Int:
-        return GL_INT;
-    case ShaderDataType::Int2:
-        return GL_INT;
-    case ShaderDataType::Int3:
-        return GL_INT;
-    case ShaderDataType::Int4:
-        return GL_INT;
-    case ShaderDataType::Uint:
-        return GL_UNSIGNED_INT;
-    case ShaderDataType::Uint2:
-        return GL_UNSIGNED_INT;
-    case ShaderDataType::Uint3:
-        return GL_UNSIGNED_INT;
-    case ShaderDataType::Uint4:
-        return GL_UNSIGNED_INT;
-    case ShaderDataType::Bool:
-        return GL_BOOL;
-    case ShaderDataType::None:
-        return 0;
-    }
-    PINE_CORE_ASSERT(false, "Unknown shader data type.");
-    return 0;
-}
-
 OpenGLVertexArray::OpenGLVertexArray()
 {
-    glCreateVertexArrays(1, &m_RendererID);
+    glCreateVertexArrays(1, &m_renderer_id);
 }
 
 OpenGLVertexArray::~OpenGLVertexArray()
 {
-    glDeleteVertexArrays(1, &m_RendererID);
+    glDeleteVertexArrays(1, &m_renderer_id);
 }
 
-void OpenGLVertexArray::Bind() const { glBindVertexArray(m_RendererID); }
+void OpenGLVertexArray::bind() const { glBindVertexArray(m_renderer_id); }
 
-void OpenGLVertexArray::Unbind() const { glBindVertexArray(0); }
+void OpenGLVertexArray::unbind() const { glBindVertexArray(0); }
 
-void OpenGLVertexArray::SetVertexBuffer(std::unique_ptr<VertexBuffer> buffer)
+void OpenGLVertexArray::set_vertex_buffer(std::unique_ptr<VertexBuffer> buffer)
 {
-    glBindVertexArray(m_RendererID);
-    buffer->Bind();
+    glBindVertexArray(m_renderer_id);
+    buffer->bind();
 
-    PINE_CORE_ASSERT(buffer->GetLayout().GetElements().size(),
+    PINE_CORE_ASSERT(buffer->get_layout().get_elements().size(),
         "Vertex Buffer has no layout!")
 
     uint32_t index = 0;
-    const auto& layout = buffer->GetLayout();
+    const auto& layout = buffer->get_layout();
     for (const auto& element : layout)
     {
         glEnableVertexAttribArray(index);
-        if (IsIntegerType(element.Type))
+        if (is_integer_type(element.type))
         {
             glVertexAttribIPointer(index,
-                element.GetComponentCount(),
-                ShaderDataTypeToOpenGLBaseType(element.Type),
-                layout.GetStride(),
-                reinterpret_cast<const void*>(element.Offset));
+                element.component_count,
+                to_opengl(element.type),
+                layout.get_stride(),
+                reinterpret_cast<const void*>(element.offset));
         }
         else
         {
             glVertexAttribPointer(index,
-                element.GetComponentCount(),
-                ShaderDataTypeToOpenGLBaseType(element.Type),
-                element.Normalized ? GL_TRUE : GL_FALSE,
-                layout.GetStride(),
-                reinterpret_cast<const void*>(element.Offset));
+                element.component_count,
+                to_opengl(element.type),
+                element.normalized ? GL_TRUE : GL_FALSE,
+                layout.get_stride(),
+                reinterpret_cast<const void*>(element.offset));
         }
 
         index++;
     }
 
-    m_VertexBuffer.reset(buffer.release());
+    m_vertex_buffer.reset(buffer.release());
 }
 
-void OpenGLVertexArray::SetIndexBuffer(std::unique_ptr<IndexBuffer> buffer)
+void OpenGLVertexArray::set_index_buffer(std::unique_ptr<IndexBuffer> buffer)
 {
-    glBindVertexArray(m_RendererID);
-    buffer->Bind();
-    m_IndexBuffer.reset(buffer.release());
+    glBindVertexArray(m_renderer_id);
+    buffer->bind();
+    m_index_buffer.reset(buffer.release());
 }
 
 } // namespace pine

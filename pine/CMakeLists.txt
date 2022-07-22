@@ -24,6 +24,7 @@ target_sources(pine
         include/pine/network/server.hpp
         include/pine/network/types.hpp
         include/pine/platform/opengl/buffer.hpp
+        include/pine/platform/opengl/common.hpp
         include/pine/platform/opengl/framebuffer.hpp
         include/pine/platform/opengl/context.hpp
         include/pine/platform/opengl/renderer_api.hpp

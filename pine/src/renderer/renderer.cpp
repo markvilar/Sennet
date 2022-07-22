@@ -25,15 +25,15 @@ void Renderer::BeginScene(const OrthographicCamera& camera)
 
 void Renderer::EndScene() {}
 
-void Renderer::Submit(const Shader& shader, const VertexArray& vertexArray,
+void Renderer::Submit(const Shader& shader, const VertexArray& vertex_array,
     const Mat4& transform)
 {
     shader.Bind();
     shader.SetMat4("u_ViewProjection", s_SceneData->ViewProjectionMatrix);
     shader.SetMat4("u_Transform", transform);
 
-    vertexArray.Bind();
-    RenderCommand::DrawIndexed(vertexArray);
+    vertex_array.bind();
+    RenderCommand::DrawIndexed(vertex_array);
 }
 
 } // namespace pine

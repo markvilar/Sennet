@@ -10,70 +10,70 @@
 namespace pine
 {
 
-struct BufferElement
+struct VertexBufferElement
 {
-    std::string Name = "";
-    ShaderDataType Type = ShaderDataType::None;
-    uint32_t Offset = 0;
-    uint32_t Size = 0;
-    bool Normalized = false;
+    std::string name = "";
+    ShaderDataType type = ShaderDataType::None;
+    uint32_t size = 0;
+    uint32_t component_count = 0;
+    uint32_t offset = 0;
+    bool normalized = false;
 
-    BufferElement(const ShaderDataType type, const std::string& name,
+    VertexBufferElement(const std::string& name, const ShaderDataType type,
         const bool normalized = false)
-        : Type(type), Name(name), Size(get_size(type)), Offset(0),
-          Normalized(normalized)
+        : name(name), type(type), size(get_size(type)), 
+        component_count(get_count(type)), offset(0), normalized(normalized)
     {
-    }
-
-    uint32_t GetComponentCount() const
-    {
-        return get_count(Type);
     }
 };
 
-class BufferLayout
+class VertexBufferLayout
 {
 public:
-    BufferLayout() = default;
+    VertexBufferLayout() = default;
 
-    BufferLayout(const BufferLayout&) = default;
-    BufferLayout(BufferLayout&&) = default;
+    VertexBufferLayout(const VertexBufferLayout&) = default;
+    VertexBufferLayout(VertexBufferLayout&&) = default;
 
-    BufferLayout& operator=(const BufferLayout&) = default;
-    BufferLayout& operator=(BufferLayout&&) = default;
+    VertexBufferLayout& operator=(const VertexBufferLayout&) = default;
+    VertexBufferLayout& operator=(VertexBufferLayout&&) = default;
 
-    ~BufferLayout() = default;
+    ~VertexBufferLayout() = default;
 
-    BufferLayout(const std::initializer_list<BufferElement>& elements)
-        : m_Elements(elements)
+    VertexBufferLayout(
+        const std::initializer_list<VertexBufferElement>& elements)
+        : m_elements(elements)
     {
-        CalculateOffsetAndStride();
+        calculate_offset_and_stride();
     }
 
-
-    inline uint32_t GetStride() const { return m_Stride; }
-    inline const std::vector<BufferElement>& GetElements() const
+    inline uint32_t get_stride() const { return m_stride; }
+    inline const std::vector<VertexBufferElement>& get_elements() const
     {
-        return m_Elements;
+        return m_elements;
     }
 
-    std::vector<BufferElement>::iterator begin() { return m_Elements.begin(); }
-    std::vector<BufferElement>::iterator end() { return m_Elements.end(); }
-    std::vector<BufferElement>::const_iterator begin() const
-    {
-        return m_Elements.begin();
+    std::vector<VertexBufferElement>::iterator begin() 
+    { 
+        return m_elements.begin(); 
     }
-    std::vector<BufferElement>::const_iterator end() const
+    std::vector<VertexBufferElement>::iterator end() { return m_elements.end(); }
+    std::vector<VertexBufferElement>::const_iterator begin() const
     {
-        return m_Elements.end();
+        return m_elements.begin();
+    }
+    std::vector<VertexBufferElement>::const_iterator end() const
+    {
+        return m_elements.end();
     }
 
 private:
-    void CalculateOffsetAndStride();
+    // TODO: Improvement - move calculations to factory.
+    void calculate_offset_and_stride();
 
 private:
-    std::vector<BufferElement> m_Elements;
-    uint32_t m_Stride = 0;
+    std::vector<VertexBufferElement> m_elements;
+    uint32_t m_stride = 0;
 };
 
 class VertexBuffer
@@ -81,16 +81,16 @@ class VertexBuffer
 public:
     virtual ~VertexBuffer() = default;
 
-    virtual void Bind() const = 0;
-    virtual void Unbind() const = 0;
+    virtual void bind() const = 0;
+    virtual void unbind() const = 0;
 
-    virtual void SetData(const void* data, const uint32_t size) = 0;
+    virtual void set_data(const void* data, const uint32_t size) = 0;
 
-    virtual const BufferLayout& GetLayout() const = 0;
-    virtual void SetLayout(const BufferLayout& layout) = 0;
+    virtual const VertexBufferLayout& get_layout() const = 0;
+    virtual void set_layout(const VertexBufferLayout& layout) = 0;
 
-    static std::unique_ptr<VertexBuffer> Create(const uint32_t size);
-    static std::unique_ptr<VertexBuffer> Create(const float* vertices,
+    static std::unique_ptr<VertexBuffer> create(const uint32_t size);
+    static std::unique_ptr<VertexBuffer> create(const float* vertices,
         const uint32_t size);
 };
 
@@ -99,12 +99,12 @@ class IndexBuffer
 public:
     virtual ~IndexBuffer() = default;
 
-    virtual void Bind() const = 0;
-    virtual void Unbind() const = 0;
+    virtual void bind() const = 0;
+    virtual void unbind() const = 0;
 
-    virtual uint32_t GetCount() const = 0;
+    virtual uint32_t get_count() const = 0;
 
-    static std::unique_ptr<IndexBuffer> Create(const uint32_t* indices,
+    static std::unique_ptr<IndexBuffer> create(const uint32_t* indices,
         const uint32_t count);
 };
 
@@ -113,16 +113,16 @@ class VertexArray
 public:
     virtual ~VertexArray() {}
 
-    virtual void Bind() const = 0;
-    virtual void Unbind() const = 0;
+    virtual void bind() const = 0;
+    virtual void unbind() const = 0;
 
-    virtual void SetVertexBuffer(std::unique_ptr<VertexBuffer> buffer) = 0;
-    virtual void SetIndexBuffer(std::unique_ptr<IndexBuffer> buffer) = 0;
+    virtual void set_vertex_buffer(std::unique_ptr<VertexBuffer> buffer) = 0;
+    virtual void set_index_buffer(std::unique_ptr<IndexBuffer> buffer) = 0;
 
-    virtual VertexBuffer& GetVertexBuffer() const = 0;
-    virtual IndexBuffer& GetIndexBuffer() const = 0;
+    virtual VertexBuffer& get_vertex_buffer() const = 0;
+    virtual IndexBuffer& get_index_buffer() const = 0;
 
-    static std::unique_ptr<VertexArray> Create();
+    static std::unique_ptr<VertexArray> create();
 };
 
 } // namespace pine

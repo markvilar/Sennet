@@ -18,8 +18,8 @@ public:
     virtual void SetClearColor(const Vec4& color) override;
     virtual void Clear() override;
 
-    virtual void DrawIndexed(const VertexArray& vertexArray,
-        const uint32_t indexCount = 0) override;
+    virtual void DrawIndexed(const VertexArray& vertex_array,
+        const uint32_t index_count = 0) override;
 };
 
 } // namespace pine

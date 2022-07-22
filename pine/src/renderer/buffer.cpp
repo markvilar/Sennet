@@ -8,23 +8,23 @@
 namespace pine
 {
 
-void BufferLayout::CalculateOffsetAndStride()
+void VertexBufferLayout::calculate_offset_and_stride()
 {
-    m_Stride = [this]()
+    m_stride = [this]()
     {
         uint32_t offset = 0;
         uint32_t stride = 0;
-        for (auto& element : m_Elements)
+        for (auto& element : m_elements)
         {
-            element.Offset = offset;
-            offset += element.Size;
-            stride += element.Size;
+            element.offset = offset;
+            offset += element.size;
+            stride += element.size;
         }
         return stride;
     }();
 }
 
-std::unique_ptr<VertexBuffer> VertexBuffer::Create(const uint32_t size)
+std::unique_ptr<VertexBuffer> VertexBuffer::create(const uint32_t size)
 {
     switch (Renderer::GetAPI())
     {
@@ -39,7 +39,7 @@ std::unique_ptr<VertexBuffer> VertexBuffer::Create(const uint32_t size)
     return nullptr;
 }
 
-std::unique_ptr<VertexBuffer> VertexBuffer::Create(const float* vertices,
+std::unique_ptr<VertexBuffer> VertexBuffer::create(const float* vertices,
     const uint32_t size)
 {
     switch (Renderer::GetAPI())
@@ -55,7 +55,7 @@ std::unique_ptr<VertexBuffer> VertexBuffer::Create(const float* vertices,
     return nullptr;
 }
 
-std::unique_ptr<IndexBuffer> IndexBuffer::Create(const uint32_t* indices,
+std::unique_ptr<IndexBuffer> IndexBuffer::create(const uint32_t* indices,
     const uint32_t count)
 {
     switch (Renderer::GetAPI())
@@ -71,7 +71,7 @@ std::unique_ptr<IndexBuffer> IndexBuffer::Create(const uint32_t* indices,
     return nullptr;
 }
 
-std::unique_ptr<VertexArray> VertexArray::Create()
+std::unique_ptr<VertexArray> VertexArray::create()
 {
     switch (Renderer::GetAPI())
     {

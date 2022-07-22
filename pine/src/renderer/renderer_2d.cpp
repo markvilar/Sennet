@@ -12,17 +12,17 @@ RendererData Init()
 {
     RendererData data;
 
-    auto vertexBuffer = VertexBuffer::Create(MaxVertices * sizeof(QuadVertex));
-    vertexBuffer->SetLayout({
-        {ShaderDataType::Float3, "a_Position"},
-        {ShaderDataType::Float4, "a_Color"},
-        {ShaderDataType::Float2, "a_TexCoord"},
-        {ShaderDataType::Uint, "a_TexIndex"},
-        {ShaderDataType::Float, "a_TilingFactor"},
+    auto vertex_buffer = VertexBuffer::create(MaxVertices * sizeof(QuadVertex));
+    vertex_buffer->set_layout({
+        { "a_Position",     ShaderDataType::Float3 },
+        { "a_Color",        ShaderDataType::Float4 },
+        { "a_TexCoord",     ShaderDataType::Float2 },
+        { "a_TexIndex",     ShaderDataType::Uint   },
+        { "a_TilingFactor", ShaderDataType::Float  },
     });
 
-    data.QuadVertexArray = VertexArray::Create();
-    data.QuadVertexArray->SetVertexBuffer(std::move(vertexBuffer));
+    data.QuadVertexArray = VertexArray::create();
+    data.QuadVertexArray->set_vertex_buffer(std::move(vertex_buffer));
 
     constexpr auto quadIndices = []()
     {
@@ -43,8 +43,8 @@ RendererData Init()
         return indices;
     }();
 
-    data.QuadVertexArray->SetIndexBuffer(
-        IndexBuffer::Create(quadIndices.data(), quadIndices.size()));
+    data.QuadVertexArray->set_index_buffer(
+        IndexBuffer::create(quadIndices.data(), quadIndices.size()));
 
     constexpr auto samplers = []()
     {
@@ -91,8 +91,8 @@ void BeginScene(RendererData& data, const OrthographicCamera& camera)
 }
 void EndScene(RendererData& data)
 {
-    auto& vertexBuffer = data.QuadVertexArray->GetVertexBuffer();
-    vertexBuffer.SetData(data.QuadVertices.data(),
+    auto& vertex_buffer = data.QuadVertexArray->get_vertex_buffer();
+    vertex_buffer.set_data(data.QuadVertices.data(),
         data.QuadVertexCount * sizeof(QuadVertex));
     Flush(data);
 }

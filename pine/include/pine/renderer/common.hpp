@@ -114,4 +114,45 @@ static constexpr uint32_t get_count(const ShaderDataType type)
     return 0;
 }
 
+static constexpr bool is_integer_type(const ShaderDataType type)
+{
+    switch (type)
+    {
+    case ShaderDataType::Float:
+        return false;
+    case ShaderDataType::Float2:
+        return false;
+    case ShaderDataType::Float3:
+        return false;
+    case ShaderDataType::Float4:
+        return false;
+    case ShaderDataType::Mat3:
+        return false;
+    case ShaderDataType::Mat4:
+        return false;
+    case ShaderDataType::Int:
+        return true;
+    case ShaderDataType::Int2:
+        return true;
+    case ShaderDataType::Int3:
+        return true;
+    case ShaderDataType::Int4:
+        return true;
+    case ShaderDataType::Uint:
+        return true;
+    case ShaderDataType::Uint2:
+        return true;
+    case ShaderDataType::Uint3:
+        return true;
+    case ShaderDataType::Uint4:
+        return true;
+    case ShaderDataType::Bool:
+        return false;
+    case ShaderDataType::None:
+        return false;
+    }
+    PINE_CORE_ASSERT(false, "Unknown shader data type.");
+    return 0;
+}
+
 };
