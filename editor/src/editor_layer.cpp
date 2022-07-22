@@ -22,10 +22,10 @@ void EditorLayer::on_attach()
         PINE_ERROR("Failed to load shader.");
     }
 
-    Framebuffer::Specification specs;
+    FramebufferSpecification specs;
     specs.Width = m_InterfaceLayouts["Viewport"].Size.x;
     specs.Height = m_InterfaceLayouts["Viewport"].Size.y;
-    m_ViewportFramebuffer = Framebuffer::Create(specs);
+    m_viewport_framebuffer = Framebuffer::create(specs);
 
     m_CameraController.OnResize(static_cast<uint32_t>(
                                     m_InterfaceLayouts["Viewport"].Size.x),
@@ -49,13 +49,13 @@ void EditorLayer::on_detach() {}
 void EditorLayer::on_update(Timestep ts)
 {
     UpdateInterfaceLayout();
-    auto specs = m_ViewportFramebuffer->GetSpecification();
+    auto specs = m_viewport_framebuffer->get_specification();
     const auto viewport = m_InterfaceLayouts["Viewport"];
 
     if (viewport.Size.x > 0.0f && viewport.Size.y > 0.0f
         && (specs.Width != viewport.Size.x || specs.Height != viewport.Size.y))
     {
-        m_ViewportFramebuffer->Resize(viewport.Size.x, viewport.Size.y);
+        m_viewport_framebuffer->resize(viewport.Size.x, viewport.Size.y);
         m_CameraController.OnResize(viewport.Size.x, viewport.Size.y);
     }
 
@@ -70,7 +70,7 @@ void EditorLayer::on_update(Timestep ts)
     RenderCommand::SetClearColor({0.1f, 0.1f, 0.1f, 1.0f});
     RenderCommand::Clear();
 
-    m_ViewportFramebuffer->Bind();
+    m_viewport_framebuffer->bind();
     RenderCommand::SetClearColor({0.05f, 0.05f, 0.05f, 1.0f});
     RenderCommand::Clear();
 
@@ -101,7 +101,7 @@ void EditorLayer::on_update(Timestep ts)
     }
 
     Renderer2D::EndScene(m_RendererData2D);
-    m_ViewportFramebuffer->Unbind();
+    m_viewport_framebuffer->unbind();
 
     update_server(m_server,
         [this](const std::vector<uint8_t>& message) -> void
@@ -202,7 +202,7 @@ void EditorLayer::on_imgui_render()
     ui::AddViewport("Viewport",
         m_InterfaceLayouts["Viewport"].Position,
         m_InterfaceLayouts["Viewport"].Size,
-        *m_ViewportFramebuffer.get(),
+        *m_viewport_framebuffer.get(),
         [this]
         {
             m_ViewportFocused = ImGui::IsWindowFocused();
@@ -236,29 +236,32 @@ void EditorLayer::on_imgui_render()
             ui::AddEmptySpace(0.0f, 10.0f);
             ImGui::Separator();
 
-            static bool flipImage = false;
-            static char imagePath[256] = "";
-            static auto imageFormat = ImageFormat::BGRA;
+            static bool flip_image = false;
+            static char image_path[256] = "";
+            static auto image_format = ImageFormat::BGRA;
 
             const std::array<std::pair<std::string, ImageFormat>, 6>
-                imageFormatOptions = {std::make_pair("Gray", ImageFormat::GRAY),
+                image_format_options = { 
+                    std::make_pair("Gray", ImageFormat::GRAY),
                     std::make_pair("Gray-alpha", ImageFormat::GRAY_ALPHA),
                     std::make_pair("RGB", ImageFormat::RGB),
                     std::make_pair("BGR", ImageFormat::BGR),
                     std::make_pair("RGBA", ImageFormat::RGBA),
-                    std::make_pair("BGRA", ImageFormat::BGRA)};
+                    std::make_pair("BGRA", ImageFormat::BGRA)
+                };
 
-            ImGui::InputText("Image path", imagePath, IM_ARRAYSIZE(imagePath));
-            ui::AddCombo("Image format", &imageFormat, imageFormatOptions);
-            ImGui::Checkbox("Flip image", &flipImage);
+            ImGui::InputText("Image path", image_path, IM_ARRAYSIZE(image_path));
+            ui::AddCombo("Image format", &image_format, image_format_options);
+            ImGui::Checkbox("Flip image", &flip_image);
             ImGui::SameLine();
             if (ImGui::Button("Load image"))
             {
-                if (pine::filesystem::IsFile(imagePath))
+                if (pine::filesystem::IsFile(image_path))
                 {
                     m_Texture = Texture2D::Create(
-                        ReadImage(imagePath, imageFormat, flipImage));
-                    PINE_INFO("Loaded image: {0}, {1}", imagePath, imageFormat);
+                        read_image(image_path, image_format, flip_image));
+                    PINE_INFO("Loaded image: {0}, {1}", image_path, 
+                        image_format);
                 }
             }
 

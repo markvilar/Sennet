@@ -14,7 +14,7 @@
 namespace pine
 {
 
-constexpr ImageFormat ParseImageFormat(const uint8_t channels)
+constexpr ImageFormat parse_image_format(const uint8_t channels)
 {
     switch (channels)
     {
@@ -31,22 +31,22 @@ constexpr ImageFormat ParseImageFormat(const uint8_t channels)
     return ImageFormat::GRAY;
 }
 
-constexpr ImageFileFormat ParseImageFileFormat(
-    const std::string_view fileExtension)
+constexpr ImageFileFormat parse_image_file_format(
+    const std::string_view file_extension)
 {
-    if (fileExtension == ".png")
+    if (file_extension == ".png")
     {
         return ImageFileFormat::PNG;
     }
-    else if (fileExtension == ".bmp")
+    else if (file_extension == ".bmp")
     {
         return ImageFileFormat::BMP;
     }
-    else if (fileExtension == ".tga")
+    else if (file_extension == ".tga")
     {
         return ImageFileFormat::TGA;
     }
-    else if (fileExtension == ".jpg")
+    else if (file_extension == ".jpg")
     {
         return ImageFileFormat::JPG;
     }
@@ -57,7 +57,7 @@ constexpr ImageFileFormat ParseImageFileFormat(
     }
 }
 
-constexpr uint32_t NumberOfChannels(const ImageFormat format)
+constexpr uint32_t get_format_channel_count(const ImageFormat format)
 {
     switch (format)
     {
@@ -82,13 +82,13 @@ constexpr uint32_t NumberOfChannels(const ImageFormat format)
 
 Image::Image(const uint8_t* data, const uint32_t width, const uint32_t height,
     const ImageFormat format)
-    : Width(width), Height(height), Format(format)
+    : width(width), height(height), format(format)
 {
-    const auto channels = NumberOfChannels(format);
-    Buffer = std::vector<uint8_t>(data, data + width * height * channels);
+    const auto channels = get_format_channel_count(format);
+    buffer = std::vector<uint8_t>(data, data + width * height * channels);
 }
 
-Image ReadImage(const std::filesystem::path& filepath, const bool flip)
+Image read_image(const std::filesystem::path& filepath, const bool flip)
 {
     int width, height, channels = 0;
 
@@ -96,16 +96,16 @@ Image ReadImage(const std::filesystem::path& filepath, const bool flip)
 
     const auto data =
         stbi_load(filepath.c_str(), &width, &height, &channels, 0);
-    const auto format = ParseImageFormat(channels);
+    const auto format = parse_image_format(channels);
 
     return Image(data, width, height, format);
 }
 
-Image ReadImage(const std::filesystem::path& filepath, const ImageFormat format,
-    const bool flip)
+Image read_image(const std::filesystem::path& filepath, 
+    const ImageFormat format, const bool flip)
 {
     int width, height, channels = 0;
-    auto desiredChannels = NumberOfChannels(format);
+    auto desiredChannels = get_format_channel_count(format);
 
     stbi_set_flip_vertically_on_load(flip);
 
@@ -118,50 +118,50 @@ Image ReadImage(const std::filesystem::path& filepath, const ImageFormat format,
     return Image(data, width, height, format);
 }
 
-bool WriteImage(const std::filesystem::path& filepath, const Image& image,
+bool write_image(const std::filesystem::path& filepath, const Image& image,
     const bool flip)
 {
-    const auto fileExtension = filepath.extension();
-    const auto fileFormat = ParseImageFileFormat(fileExtension.c_str());
+    const auto file_extension = filepath.extension();
+    const auto file_format = parse_image_file_format(file_extension.c_str());
 
     stbi_set_flip_vertically_on_load(flip);
 
-    const auto channels = NumberOfChannels(image.Format);
-    const auto writeResult = [filepath, image, channels, fileFormat]()
+    const auto channels = get_format_channel_count(image.format);
+    const auto write_result = [filepath, image, channels, file_format]()
     {
-        switch (fileFormat)
+        switch (file_format)
         {
         case ImageFileFormat::JPG:
             return stbi_write_jpg(filepath.c_str(),
-                image.Width,
-                image.Height,
+                image.width,
+                image.height,
                 channels,
-                image.Buffer.data(),
+                image.buffer.data(),
                 100);
         case ImageFileFormat::PNG:
             return stbi_write_png(filepath.c_str(),
-                image.Width,
-                image.Height,
+                image.width,
+                image.height,
                 channels,
-                image.Buffer.data(),
-                image.Width * channels);
+                image.buffer.data(),
+                image.width * channels);
         case ImageFileFormat::BMP:
             return stbi_write_bmp(filepath.c_str(),
-                image.Width,
-                image.Height,
+                image.width,
+                image.height,
                 channels,
-                image.Buffer.data());
+                image.buffer.data());
         case ImageFileFormat::TGA:
             return stbi_write_tga(filepath.c_str(),
-                image.Width,
-                image.Height,
+                image.width,
+                image.height,
                 channels,
-                image.Buffer.data());
+                image.buffer.data());
         }
         return 0;
     }();
 
-    return writeResult;
+    return write_result;
 }
 
 } // namespace pine

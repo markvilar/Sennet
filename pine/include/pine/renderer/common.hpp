@@ -6,6 +6,7 @@ namespace pine
 enum class RendererPrimitives
 {
     None,
+    Points,
     Triangles,
     Lines,
 };

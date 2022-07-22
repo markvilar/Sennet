@@ -48,7 +48,7 @@ auto AddViewport(const std::string& name, const Vec2& position,
 
     func();
 
-    auto textureID = framebuffer.GetColorAttachmentRendererID();
+    auto textureID = framebuffer.get_color_attachment_renderer_id();
     ImGui::Image(reinterpret_cast<void*>(textureID),
         ImVec2{size.x, size.y},
         ImVec2{0, 1},

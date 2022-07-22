@@ -38,10 +38,10 @@ enum class ImageFormat : uint8_t
 
 struct Image
 {
-    uint32_t Width = 0;
-    uint32_t Height = 0;
-    ImageFormat Format = ImageFormat::UNKNOWN;
-    std::vector<uint8_t> Buffer = {};
+    uint32_t width = 0;
+    uint32_t height = 0;
+    ImageFormat format = ImageFormat::UNKNOWN;
+    std::vector<uint8_t> buffer = {};
 
 public:
     Image() = default;
@@ -57,11 +57,13 @@ public:
     Image& operator=(Image&& image) = default;
 };
 
-Image ReadImage(const std::filesystem::path& filepath, const bool flip = false);
-Image ReadImage(const std::filesystem::path& filepath, const ImageFormat format,
+// TODO: Return std::optional<Image>
+Image read_image(const std::filesystem::path& filepath, 
     const bool flip = false);
+Image read_image(const std::filesystem::path& filepath, 
+    const ImageFormat format, const bool flip = false);
 
-bool WriteImage(const std::filesystem::path& filepath, const Image& image,
+bool write_image(const std::filesystem::path& filepath, const Image& image,
     const bool flip = false);
 
 } // namespace pine

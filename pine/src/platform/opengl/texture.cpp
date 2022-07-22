@@ -9,12 +9,12 @@
 namespace pine
 {
 
-GLenum OpenGLInternalFormat(const ImageFormat& imageFormat)
+GLenum to_opengl_internal_format(const ImageFormat& image_format)
 {
-    const auto textureFormat = static_cast<TextureFormat>(imageFormat);
-    const auto internalFormat = [textureFormat]()
+    const auto texture_format = static_cast<TextureFormat>(image_format);
+    const auto internal_format = [texture_format]()
     {
-        switch (textureFormat)
+        switch (texture_format)
         {
         case TextureFormat::RED:
             return GL_R8;
@@ -32,16 +32,16 @@ GLenum OpenGLInternalFormat(const ImageFormat& imageFormat)
         return GL_INVALID_ENUM;
     }();
 
-    PINE_CORE_ASSERT(internalFormat, "Invalid OpenGL data format.");
-    return internalFormat;
+    PINE_CORE_ASSERT(internal_format, "Invalid OpenGL data format.");
+    return internal_format;
 }
 
-GLenum OpenGLDataFormat(const ImageFormat& imageFormat)
+GLenum to_opengl_data_format(const ImageFormat& image_format)
 {
-    const auto textureFormat = static_cast<TextureFormat>(imageFormat);
-    const auto internalFormat = [textureFormat]()
+    const auto texture_format = static_cast<TextureFormat>(image_format);
+    const auto internal_format = [texture_format]()
     {
-        switch (textureFormat)
+        switch (texture_format)
         {
         case TextureFormat::RED:
             return GL_RED;
@@ -59,26 +59,26 @@ GLenum OpenGLDataFormat(const ImageFormat& imageFormat)
         return GL_INVALID_ENUM;
     }();
 
-    PINE_CORE_ASSERT(internalFormat, "Invalid OpenGL data format.");
-    return internalFormat;
+    PINE_CORE_ASSERT(internal_format, "Invalid OpenGL data format.");
+    return internal_format;
 }
 
-OpenGLTexture2D::OpenGLTexture2D(const std::filesystem::path& imagePath)
-    : OpenGLTexture2D(ReadImage(imagePath))
+OpenGLTexture2D::OpenGLTexture2D(const std::filesystem::path& image_path)
+    : OpenGLTexture2D(read_image(image_path))
 {
-    m_Source = imagePath;
+    m_Source = image_path;
 }
 
 OpenGLTexture2D::OpenGLTexture2D(const Image& image)
-    : m_Source(""), m_Width(image.Width), m_Height(image.Height)
+    : m_Source(""), m_Width(image.width), m_Height(image.height)
 {
     glCreateTextures(GL_TEXTURE_2D, 1, &m_RendererID);
 
     glTextureStorage2D(m_RendererID,
         1,
-        OpenGLInternalFormat(image.Format),
-        image.Width,
-        image.Height);
+        to_opengl_internal_format(image.format),
+        image.width,
+        image.height);
 
     glTextureParameteri(m_RendererID, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTextureParameteri(m_RendererID, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
@@ -89,11 +89,11 @@ OpenGLTexture2D::OpenGLTexture2D(const Image& image)
         0,
         0,
         0,
-        image.Width,
-        image.Height,
-        OpenGLDataFormat(image.Format),
+        image.width,
+        image.height,
+        to_opengl_data_format(image.format),
         GL_UNSIGNED_BYTE,
-        static_cast<const void*>(image.Buffer.data()));
+        static_cast<const void*>(image.buffer.data()));
 }
 
 OpenGLTexture2D::~OpenGLTexture2D() { glDeleteTextures(1, &m_RendererID); }

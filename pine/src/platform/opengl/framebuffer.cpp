@@ -7,40 +7,40 @@
 namespace pine
 {
 
-static const uint32_t s_MaxFramebufferSize = 8192;
+static constexpr uint32_t s_max_framebuffer_size = 8192;
 
-OpenGLFramebuffer::OpenGLFramebuffer(const Framebuffer::Specification& specs)
-    : m_Specification(specs)
+OpenGLFramebuffer::OpenGLFramebuffer(const FramebufferSpecification& specs)
+    : m_specification(specs)
 {
-    Invalidate();
+    invalidate();
 }
 
 OpenGLFramebuffer::~OpenGLFramebuffer()
 {
-    glDeleteFramebuffers(1, &m_RendererID);
-    glDeleteTextures(1, &m_ColorAttachment);
-    glDeleteTextures(1, &m_DepthAttachment);
+    glDeleteFramebuffers(1, &m_renderer_id);
+    glDeleteTextures(1, &m_color_attachment);
+    glDeleteTextures(1, &m_depth_attachment);
 }
 
-void OpenGLFramebuffer::Invalidate()
+void OpenGLFramebuffer::invalidate()
 {
-    if (m_RendererID)
+    if (m_renderer_id)
     {
-        glDeleteFramebuffers(1, &m_RendererID);
-        glDeleteTextures(1, &m_ColorAttachment);
-        glDeleteTextures(1, &m_DepthAttachment);
+        glDeleteFramebuffers(1, &m_renderer_id);
+        glDeleteTextures(1, &m_color_attachment);
+        glDeleteTextures(1, &m_depth_attachment);
     }
-    glCreateFramebuffers(1, &m_RendererID);
-    glBindFramebuffer(GL_FRAMEBUFFER, m_RendererID);
+    glCreateFramebuffers(1, &m_renderer_id);
+    glBindFramebuffer(GL_FRAMEBUFFER, m_renderer_id);
 
     // Color attachment.
-    glCreateTextures(GL_TEXTURE_2D, 1, &m_ColorAttachment);
-    glBindTexture(GL_TEXTURE_2D, m_ColorAttachment);
+    glCreateTextures(GL_TEXTURE_2D, 1, &m_color_attachment);
+    glBindTexture(GL_TEXTURE_2D, m_color_attachment);
     glTexImage2D(GL_TEXTURE_2D,
         0,
         GL_RGBA8,
-        m_Specification.Width,
-        m_Specification.Height,
+        m_specification.Width,
+        m_specification.Height,
         0,
         GL_RGBA,
         GL_UNSIGNED_BYTE,
@@ -50,21 +50,21 @@ void OpenGLFramebuffer::Invalidate()
     glFramebufferTexture2D(GL_FRAMEBUFFER,
         GL_COLOR_ATTACHMENT0,
         GL_TEXTURE_2D,
-        m_ColorAttachment,
+        m_color_attachment,
         0);
 
     // Depth attachment.
-    glCreateTextures(GL_TEXTURE_2D, 1, &m_DepthAttachment);
-    glBindTexture(GL_TEXTURE_2D, m_DepthAttachment);
+    glCreateTextures(GL_TEXTURE_2D, 1, &m_depth_attachment);
+    glBindTexture(GL_TEXTURE_2D, m_depth_attachment);
     glTexStorage2D(GL_TEXTURE_2D,
         1,
         GL_DEPTH24_STENCIL8,
-        m_Specification.Width,
-        m_Specification.Height);
+        m_specification.Width,
+        m_specification.Height);
     glFramebufferTexture2D(GL_FRAMEBUFFER,
         GL_DEPTH_STENCIL_ATTACHMENT,
         GL_TEXTURE_2D,
-        m_DepthAttachment,
+        m_depth_attachment,
         0);
 
     PINE_CORE_ASSERT(glCheckFramebufferStatus(GL_FRAMEBUFFER)
@@ -74,18 +74,18 @@ void OpenGLFramebuffer::Invalidate()
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
-void OpenGLFramebuffer::Bind()
+void OpenGLFramebuffer::bind()
 {
-    glBindFramebuffer(GL_FRAMEBUFFER, m_RendererID);
-    glViewport(0, 0, m_Specification.Width, m_Specification.Height);
+    glBindFramebuffer(GL_FRAMEBUFFER, m_renderer_id);
+    glViewport(0, 0, m_specification.Width, m_specification.Height);
 }
 
-void OpenGLFramebuffer::Unbind() { glBindFramebuffer(GL_FRAMEBUFFER, 0); }
+void OpenGLFramebuffer::unbind() { glBindFramebuffer(GL_FRAMEBUFFER, 0); }
 
-void OpenGLFramebuffer::Resize(const uint32_t width, const uint32_t height)
+void OpenGLFramebuffer::resize(const uint32_t width, const uint32_t height)
 {
-    if (width == 0 || height == 0 || width > s_MaxFramebufferSize
-        || height > s_MaxFramebufferSize)
+    if (width == 0 || height == 0 || width > s_max_framebuffer_size
+        || height > s_max_framebuffer_size)
     {
         PINE_CORE_WARN("Attempted to resize framebuffer to {0}, {1}",
             width,
@@ -93,10 +93,10 @@ void OpenGLFramebuffer::Resize(const uint32_t width, const uint32_t height)
         return;
     }
 
-    m_Specification.Width = width;
-    m_Specification.Height = height;
+    m_specification.Width = width;
+    m_specification.Height = height;
 
-    Invalidate();
+    invalidate();
 }
 
 } // namespace pine

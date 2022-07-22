@@ -9,15 +9,15 @@
 namespace pine
 {
 
-OpenGLContext::OpenGLContext(GLFWwindow* windowHandle)
-    : m_WindowHandle(windowHandle)
+OpenGLContext::OpenGLContext(GLFWwindow* window_handle)
+    : m_window_handle(window_handle)
 {
-    PINE_CORE_ASSERT(windowHandle, "Window handle is null!")
+    PINE_CORE_ASSERT(window_handle, "Window handle is null!")
 }
 
-void OpenGLContext::Init()
+void OpenGLContext::init()
 {
-    glfwMakeContextCurrent(m_WindowHandle);
+    glfwMakeContextCurrent(m_window_handle);
     int status = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
     PINE_CORE_ASSERT(status, "Failed to initialize Glad!")
 
@@ -38,6 +38,6 @@ void OpenGLContext::Init()
 #endif
 }
 
-void OpenGLContext::SwapBuffers() { glfwSwapBuffers(m_WindowHandle); }
+void OpenGLContext::swap_buffers() { glfwSwapBuffers(m_window_handle); }
 
 } // namespace pine

@@ -9,32 +9,32 @@
 namespace pine
 {
 
+struct FramebufferSpecification
+{
+    uint32_t Width = 0;
+    uint32_t Height = 0;
+    uint32_t Samples = 1;
+
+    bool SwapChainTarget = false;
+
+    // TODO: FramebufferFormat
+};
+
 class Framebuffer
 {
 public:
-    struct Specification
-    {
-        uint32_t Width = 0;
-        uint32_t Height = 0;
-        uint32_t Samples = 1;
-
-        bool SwapChainTarget = false;
-
-        // TODO: FramebufferFormat
-    };
-
-public:
     virtual ~Framebuffer() = default;
 
-    virtual void Bind() = 0;
-    virtual void Unbind() = 0;
+    virtual void bind() = 0;
+    virtual void unbind() = 0;
 
-    virtual void Resize(const uint32_t width, const uint32_t height) = 0;
+    virtual void resize(const uint32_t width, const uint32_t height) = 0;
 
-    virtual RendererID GetColorAttachmentRendererID() const = 0;
+    virtual RendererID get_color_attachment_renderer_id() const = 0;
 
-    virtual const Specification& GetSpecification() const = 0;
-    static std::unique_ptr<Framebuffer> Create(const Specification& specs);
+    virtual const FramebufferSpecification& get_specification() const = 0;
+    static std::unique_ptr<Framebuffer> create(
+        const FramebufferSpecification& specs);
 };
 
 } // namespace pine

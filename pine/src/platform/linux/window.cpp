@@ -56,8 +56,8 @@ void LinuxWindow::init()
     }
 
     m_context =
-        std::unique_ptr<GraphicsContext>(GraphicsContext::Create(m_window));
-    m_context->Init();
+        std::unique_ptr<GraphicsContext>(GraphicsContext::create(m_window));
+    m_context->init();
 
     glfwSetWindowUserPointer(m_window, &m_data);
     set_vsync(true);
@@ -163,7 +163,7 @@ void LinuxWindow::init()
 
 void LinuxWindow::poll_events() { glfwPollEvents(); }
 
-void LinuxWindow::swap_buffers() { m_context->SwapBuffers(); }
+void LinuxWindow::swap_buffers() { m_context->swap_buffers(); }
 
 std::pair<uint32_t, uint32_t> LinuxWindow::get_size() const
 {

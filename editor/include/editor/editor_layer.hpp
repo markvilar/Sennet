@@ -55,7 +55,7 @@ private:
 
     std::vector<std::vector<uint8_t>> m_server_history{};
 
-    std::shared_ptr<Framebuffer> m_ViewportFramebuffer;
+    std::shared_ptr<Framebuffer> m_viewport_framebuffer;
     std::shared_ptr<Texture2D> m_Texture;
 
     bool m_ViewportFocused{false};
