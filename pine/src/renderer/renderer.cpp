@@ -1,9 +1,11 @@
 #include "pine/renderer/renderer.hpp"
 
-#include "pine/platform/opengl/shader.hpp"
-#include "pine/renderer/render_command.hpp"
-#include "pine/renderer/renderer_2d.hpp"
 #include "pine/pch.hpp"
+
+#include "pine/renderer/render_command.hpp"
+#include "pine/renderer/quad_renderer.hpp"
+
+#include "pine/platform/opengl/shader.hpp"
 
 namespace pine
 {
@@ -20,7 +22,8 @@ void Renderer::OnWindowResize(const uint32_t width, const uint32_t height)
 
 void Renderer::BeginScene(const OrthographicCamera& camera)
 {
-    s_SceneData->ViewProjectionMatrix = camera.GetViewProjectionMatrix();
+    s_SceneData->ViewProjectionMatrix = 
+        camera.calculate_view_projection_matrix();
 }
 
 void Renderer::EndScene() {}

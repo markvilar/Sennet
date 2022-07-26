@@ -33,14 +33,14 @@ target_sources(pine
         include/pine/platform/windows/window.hpp
         include/pine/platform/linux/window.hpp
         include/pine/renderer/buffer.hpp
+        include/pine/renderer/camera.hpp
         include/pine/renderer/common.hpp
         include/pine/renderer/framebuffer.hpp
         include/pine/renderer/graphics_context.hpp
         include/pine/renderer/image.hpp
-        include/pine/renderer/orthographic_camera.hpp
+        include/pine/renderer/quad_renderer.hpp
         include/pine/renderer/render_command.hpp
         include/pine/renderer/renderer.hpp
-        include/pine/renderer/renderer_2d.hpp
         include/pine/renderer/renderer_api.hpp
         include/pine/renderer/shader.hpp
         include/pine/renderer/texture.hpp
@@ -70,13 +70,13 @@ target_sources(pine
         src/platform/linux/input.cpp
         src/platform/linux/window.cpp
         src/renderer/buffer.cpp
+        src/renderer/camera.cpp
         src/renderer/framebuffer.cpp
         src/renderer/graphics_context.cpp
         src/renderer/image.cpp
-        src/renderer/orthographic_camera.cpp
+        src/renderer/quad_renderer.cpp
         src/renderer/render_command.cpp
         src/renderer/renderer.cpp
-        src/renderer/renderer_2d.cpp
         src/renderer/renderer_api.cpp
         src/renderer/shader.cpp
         src/renderer/texture.cpp

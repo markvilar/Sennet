@@ -17,7 +17,7 @@ void EditorLayer::on_attach()
         nullptr,
         io.Fonts->GetGlyphRangesCyrillic());
 
-    if (!m_shader_library.Load("resources/shaders/Renderer2D.glsl"))
+    if (!m_shader_library.Load("resources/shaders/quad_shader.glsl"))
     {
         PINE_ERROR("Failed to load shader.");
     }
@@ -27,11 +27,11 @@ void EditorLayer::on_attach()
     specs.Height = m_interface_layouts["Viewport"].Size.y;
     m_viewport_framebuffer = Framebuffer::create(specs);
 
-    m_camera_controller.OnResize(static_cast<uint32_t>(
-                                    m_interface_layouts["Viewport"].Size.x),
+    m_camera_controller.on_resize(
+        static_cast<uint32_t>(m_interface_layouts["Viewport"].Size.x),
         static_cast<uint32_t>(m_interface_layouts["Viewport"].Size.y));
 
-    m_renderer_data_2d = Renderer2D::Init();
+    m_quad_render_data = QuadRenderer::Init();
 
     ui::SetDarkTheme(ImGui::GetStyle());
 
@@ -56,7 +56,7 @@ void EditorLayer::on_update(Timestep ts)
         && (specs.Width != viewport.Size.x || specs.Height != viewport.Size.y))
     {
         m_viewport_framebuffer->resize(viewport.Size.x, viewport.Size.y);
-        m_camera_controller.OnResize(viewport.Size.x, viewport.Size.y);
+        m_camera_controller.on_resize(viewport.Size.x, viewport.Size.y);
     }
 
     if (m_viewport_focused)
@@ -74,25 +74,26 @@ void EditorLayer::on_update(Timestep ts)
     RenderCommand::SetClearColor({0.05f, 0.05f, 0.05f, 1.0f});
     RenderCommand::Clear();
 
-    Renderer2D::BeginScene(m_renderer_data_2d, m_camera_controller.GetCamera());
+    QuadRenderer::BeginScene(m_quad_render_data, 
+        m_camera_controller.get_camera());
 
-    Renderer2D::DrawRotatedQuad(m_renderer_data_2d,
+    QuadRenderer::DrawRotatedQuad(m_quad_render_data,
         {0.0f, 0.0f},
         {0.8f, 0.8f},
         Radians(m_quad_rotation),
         {0.9f, 0.1f, 0.2f, 1.0f});
-    Renderer2D::DrawQuad(m_renderer_data_2d,
+    QuadRenderer::DrawQuad(m_quad_render_data,
         {2.0f, -2.0f},
         {0.8f, 0.8f},
         {0.8f, 0.2f, 0.3f, 1.0f});
-    Renderer2D::DrawQuad(m_renderer_data_2d,
+    QuadRenderer::DrawQuad(m_quad_render_data,
         {2.0f, 2.0f},
         {0.5f, 0.75f},
         m_quad_color);
 
     if (m_texture)
     {
-        Renderer2D::DrawQuad(m_renderer_data_2d,
+        QuadRenderer::DrawQuad(m_quad_render_data,
             {-16.0f, 0.0f, -0.2f},
             {16.0f, 9.0f},
             m_texture,
@@ -100,7 +101,7 @@ void EditorLayer::on_update(Timestep ts)
             Vec4{1.0f, 1.0f, 1.0f, 1.0f});
     }
 
-    Renderer2D::EndScene(m_renderer_data_2d);
+    QuadRenderer::EndScene(m_quad_render_data);
     m_viewport_framebuffer->unbind();
 
     update_server(m_server,
@@ -216,8 +217,8 @@ void EditorLayer::on_imgui_render()
         m_interface_layouts["LeftPanel"].Size,
         [this]
         {
-            auto& stats = m_renderer_data_2d.Stats;
-            ImGui::Text("Renderer2D Stats:");
+            auto& stats = m_quad_render_data.Stats;
+            ImGui::Text("QuadRenderer Stats:");
             ImGui::Text("Draw Calls: %d", stats.DrawCalls);
             ImGui::Text("Quads: %d", stats.QuadCount);
             ImGui::Text("Vertices: %d", stats.GetTotalVertexCount());
@@ -360,7 +361,7 @@ void EditorLayer::on_imgui_render()
 
 void EditorLayer::on_event(Event& event) 
 { 
-    m_camera_controller.OnEvent(event); 
+    m_camera_controller.on_event(event); 
 }
 
 void EditorLayer::UpdateInterfaceLayout()
@@ -368,29 +369,29 @@ void EditorLayer::UpdateInterfaceLayout()
     const auto& [windowWidth, windowHeight] =
         pine::Application::get().get_window().get_size();
 
-    static constexpr auto menuHeight = 20.0f;
+    static constexpr auto menu_height = 20.0f;
 
-    const auto& mainMenuLayout = m_interface_layouts["MainMenu"];
+    const auto& main_menu_layout = m_interface_layouts["MainMenu"];
 
     m_interface_layouts["Viewport"] =
         InterfaceLayout(Vec2(0.2f * windowWidth,
-                            0.0f * windowHeight + menuHeight),
+                            0.0f * windowHeight + menu_height),
             Vec2(0.6f * windowWidth, 0.8f * windowHeight));
 
     m_interface_layouts["LeftPanel"] =
         InterfaceLayout(Vec2(0.0f * windowWidth,
-                            0.0f * windowHeight + menuHeight),
-            Vec2(0.2f * windowWidth, 1.0f * windowHeight - menuHeight));
+                            0.0f * windowHeight + menu_height),
+            Vec2(0.2f * windowWidth, 1.0f * windowHeight - menu_height));
 
     m_interface_layouts["RightPanel"] =
         InterfaceLayout(Vec2(0.8f * windowWidth,
-                            0.0f * windowHeight + menuHeight),
-            Vec2(0.2f * windowWidth, 1.0f * windowHeight - menuHeight));
+                            0.0f * windowHeight + menu_height),
+            Vec2(0.2f * windowWidth, 1.0f * windowHeight - menu_height));
 
     m_interface_layouts["BottomPanel"] =
         InterfaceLayout(Vec2(0.2f * windowWidth,
-                            0.8f * windowHeight + menuHeight),
-            Vec2(0.6f * windowWidth, 0.2f * windowHeight - menuHeight));
+                            0.8f * windowHeight + menu_height),
+            Vec2(0.6f * windowWidth, 0.2f * windowHeight - menu_height));
 }
 
 } // namespace pine

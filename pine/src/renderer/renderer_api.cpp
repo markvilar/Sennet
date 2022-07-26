@@ -1,7 +1,8 @@
 #include "pine/renderer/renderer_api.hpp"
 
-#include "pine/platform/opengl/renderer_api.hpp"
 #include "pine/pch.hpp"
+
+#include "pine/platform/opengl/renderer_api.hpp"
 
 namespace pine
 {

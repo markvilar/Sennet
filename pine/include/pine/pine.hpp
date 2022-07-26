@@ -18,12 +18,13 @@
 #include "pine/network/types.hpp"
 
 #include "pine/renderer/buffer.hpp"
+#include "pine/renderer/camera.hpp"
+#include "pine/renderer/common.hpp"
 #include "pine/renderer/framebuffer.hpp"
 #include "pine/renderer/image.hpp"
-#include "pine/renderer/orthographic_camera.hpp"
+#include "pine/renderer/quad_renderer.hpp"
 #include "pine/renderer/render_command.hpp"
 #include "pine/renderer/renderer.hpp"
-#include "pine/renderer/renderer_2d.hpp"
 #include "pine/renderer/shader.hpp"
 #include "pine/renderer/texture.hpp"
 

@@ -1,8 +1,8 @@
 #include "pine/renderer/shader.hpp"
 
 #include "pine/pch.hpp"
-#include "pine/platform/opengl/shader.hpp"
 #include "pine/renderer/renderer.hpp"
+#include "pine/platform/opengl/shader.hpp"
 
 namespace pine
 {

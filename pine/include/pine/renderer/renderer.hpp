@@ -3,7 +3,7 @@
 #include <memory>
 
 #include "pine/core/common.hpp"
-#include "pine/renderer/orthographic_camera.hpp"
+#include "pine/renderer/camera.hpp"
 #include "pine/renderer/renderer_api.hpp"
 #include "pine/renderer/shader.hpp"
 #include "pine/renderer/texture.hpp"

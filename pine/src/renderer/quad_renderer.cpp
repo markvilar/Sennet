@@ -1,16 +1,16 @@
-#include "pine/renderer/renderer_2d.hpp"
+#include "pine/renderer/quad_renderer.hpp"
 
 #include "pine/renderer/buffer.hpp"
 #include "pine/renderer/render_command.hpp"
 #include "pine/renderer/renderer.hpp"
 #include "pine/pch.hpp"
 
-namespace pine::Renderer2D
+namespace pine::QuadRenderer
 {
 
-RendererData Init()
+QuadRenderData Init()
 {
-    RendererData data;
+    QuadRenderData data;
 
     auto vertex_buffer = VertexBuffer::create(MaxVertices * sizeof(QuadVertex));
     vertex_buffer->set_layout({
@@ -54,7 +54,7 @@ RendererData Init()
         return samplers;
     }();
 
-    data.QuadShader = Shader::Create("resources/shaders/Renderer2D.glsl");
+    data.QuadShader = Shader::Create("resources/shaders/quad_shader.glsl");
     data.QuadShader->Bind();
     data.QuadShader->SetIntArray("u_Textures",
         samplers.data(),
@@ -69,18 +69,18 @@ RendererData Init()
     return data;
 }
 
-void Shutdown(RendererData& data)
+void Shutdown(QuadRenderData& data)
 {
     data.QuadVertexCount = 0;
     data.QuadIndexCount = 0;
     data.TextureSlotIndex = 1;
 }
 
-void BeginScene(RendererData& data, const OrthographicCamera& camera)
+void BeginScene(QuadRenderData& data, const OrthographicCamera& camera)
 {
     data.QuadShader->Bind();
     data.QuadShader->SetMat4("u_ViewProjection",
-        camera.GetViewProjectionMatrix());
+        camera.calculate_view_projection_matrix());
 
     data.QuadVertexCount = 0;
     data.QuadIndexCount = 0;
@@ -89,7 +89,7 @@ void BeginScene(RendererData& data, const OrthographicCamera& camera)
     data.Stats.DrawCalls = 0;
     data.Stats.QuadCount = 0;
 }
-void EndScene(RendererData& data)
+void EndScene(QuadRenderData& data)
 {
     auto& vertex_buffer = data.QuadVertexArray->get_vertex_buffer();
     vertex_buffer.set_data(data.QuadVertices.data(),
@@ -97,7 +97,7 @@ void EndScene(RendererData& data)
     Flush(data);
 }
 
-void Flush(RendererData& data)
+void Flush(QuadRenderData& data)
 {
     for (uint32_t i = 0; i < data.TextureSlotIndex; i++)
         data.TextureSlots[i]->Bind(i);
@@ -108,7 +108,7 @@ void Flush(RendererData& data)
     data.Stats.DrawCalls++;
 }
 
-void FlushAndReset(RendererData& data)
+void FlushAndReset(QuadRenderData& data)
 {
     EndScene(data);
     data.QuadVertexCount = 0;
@@ -116,13 +116,13 @@ void FlushAndReset(RendererData& data)
     data.TextureSlotIndex = 1;
 }
 
-void DrawQuad(RendererData& data, const Vec2& position, const Vec2& size,
+void DrawQuad(QuadRenderData& data, const Vec2& position, const Vec2& size,
     const Vec4& color)
 {
     DrawQuad(data, {position.x, position.y, 0.0f}, size, color);
 }
 
-void DrawQuad(RendererData& data, const Vec3& position, const Vec2& size,
+void DrawQuad(QuadRenderData& data, const Vec3& position, const Vec2& size,
     const Vec4& color)
 {
     Mat4 transform = Translate(Mat4(1.0f), position)
@@ -131,7 +131,7 @@ void DrawQuad(RendererData& data, const Vec3& position, const Vec2& size,
     DrawQuad(data, transform, color);
 }
 
-void DrawQuad(RendererData& data, const Vec2& position, const Vec2& size,
+void DrawQuad(QuadRenderData& data, const Vec2& position, const Vec2& size,
     const std::shared_ptr<Texture2D>& texture, const float tilingFactor,
     const Vec4& tintColor)
 {
@@ -143,7 +143,7 @@ void DrawQuad(RendererData& data, const Vec2& position, const Vec2& size,
         tintColor);
 }
 
-void DrawQuad(RendererData& data, const Vec3& position, const Vec2& size,
+void DrawQuad(QuadRenderData& data, const Vec3& position, const Vec2& size,
     const std::shared_ptr<Texture2D>& texture, const float tilingFactor,
     const Vec4& tintColor)
 {
@@ -153,7 +153,7 @@ void DrawQuad(RendererData& data, const Vec3& position, const Vec2& size,
     DrawQuad(data, transform, texture, tilingFactor, tintColor);
 }
 
-void DrawRotatedQuad(RendererData& data, const Vec2& position, const Vec2& size,
+void DrawRotatedQuad(QuadRenderData& data, const Vec2& position, const Vec2& size,
     const float rotation, const Vec4& color)
 {
     DrawRotatedQuad(data,
@@ -163,7 +163,7 @@ void DrawRotatedQuad(RendererData& data, const Vec2& position, const Vec2& size,
         color);
 }
 
-void DrawRotatedQuad(RendererData& data, const Vec3& position, const Vec2& size,
+void DrawRotatedQuad(QuadRenderData& data, const Vec3& position, const Vec2& size,
     const float rotation, const Vec4& color)
 {
     Mat4 transform = Translate(Mat4(1.0f), position)
@@ -173,7 +173,7 @@ void DrawRotatedQuad(RendererData& data, const Vec3& position, const Vec2& size,
     DrawQuad(data, transform, color);
 }
 
-void DrawRotatedQuad(RendererData& data, const Vec2& position, const Vec2& size,
+void DrawRotatedQuad(QuadRenderData& data, const Vec2& position, const Vec2& size,
     const float rotation, const std::shared_ptr<Texture2D>& texture,
     const float tilingFactor, const Vec4& tintColor)
 {
@@ -186,7 +186,7 @@ void DrawRotatedQuad(RendererData& data, const Vec2& position, const Vec2& size,
         tintColor);
 }
 
-void DrawRotatedQuad(RendererData& data, const Vec3& position, const Vec2& size,
+void DrawRotatedQuad(QuadRenderData& data, const Vec3& position, const Vec2& size,
     const float rotation, const std::shared_ptr<Texture2D>& texture,
     const float tilingFactor, const Vec4& tintColor)
 {
@@ -198,16 +198,16 @@ void DrawRotatedQuad(RendererData& data, const Vec3& position, const Vec2& size,
     DrawQuad(data, transform, texture, tilingFactor, tintColor);
 }
 
-void UpdateQuadVertices(Renderer2D::RendererData& data, const Mat4& transform,
+void UpdateQuadVertices(QuadRenderer::QuadRenderData& data, const Mat4& transform,
     const Vec4& color, const uint32_t textureIndex, const float tilingFactor)
 {
-    for (uint32_t i = 0; i < Renderer2D::VerticesPerQuad; i++)
+    for (uint32_t i = 0; i < QuadRenderer::VerticesPerQuad; i++)
     {
         data.QuadVertices[data.QuadVertexCount].Position =
-            transform * Renderer2D::QuadVertexPositions[i];
+            transform * QuadRenderer::QuadVertexPositions[i];
         data.QuadVertices[data.QuadVertexCount].Color = color;
         data.QuadVertices[data.QuadVertexCount].TextureCoord =
-            Renderer2D::QuadTextureCoords[i];
+            QuadRenderer::QuadTextureCoords[i];
         data.QuadVertices[data.QuadVertexCount].TextureIndex = textureIndex;
         data.QuadVertices[data.QuadVertexCount].TilingFactor = tilingFactor;
         data.QuadVertexCount++;
@@ -217,7 +217,7 @@ void UpdateQuadVertices(Renderer2D::RendererData& data, const Mat4& transform,
     data.Stats.QuadCount++;
 }
 
-void DrawQuad(RendererData& data, const Mat4& transform, const Vec4& color)
+void DrawQuad(QuadRenderData& data, const Mat4& transform, const Vec4& color)
 {
     if (data.QuadIndexCount >= MaxIndices - IndicesPerQuad
         || data.QuadVertexCount >= MaxVertices - VerticesPerQuad)
@@ -231,7 +231,7 @@ void DrawQuad(RendererData& data, const Mat4& transform, const Vec4& color)
     UpdateQuadVertices(data, transform, color, textureIndex, tilingFactor);
 }
 
-void DrawQuad(RendererData& data, const Mat4& transform,
+void DrawQuad(QuadRenderData& data, const Mat4& transform,
     const std::shared_ptr<Texture2D>& texture, const float tilingFactor,
     const Vec4& tintColor)
 {
