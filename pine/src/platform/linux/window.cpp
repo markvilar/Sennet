@@ -23,10 +23,7 @@ std::unique_ptr<Window> Window::create(const WindowSpecs& specs)
     return std::make_unique<LinuxWindow>(specs);
 }
 
-LinuxWindow::LinuxWindow(const WindowSpecs& specs)
-    : m_specification(specs)
-{
-}
+LinuxWindow::LinuxWindow(const WindowSpecs& specs) : m_specification(specs) {}
 
 LinuxWindow::~LinuxWindow() { shutdown(); }
 
@@ -47,16 +44,15 @@ void LinuxWindow::init()
 #if defined(PINE_DEBUG)
         glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GLFW_TRUE);
 #endif
-        m_window = glfwCreateWindow((int)m_data.width,
-            (int)m_data.height,
+        m_window = glfwCreateWindow(static_cast<int>(m_data.width),
+            static_cast<int>(m_data.height),
             m_data.title.c_str(),
             nullptr,
             nullptr);
         ++s_glfw_window_count;
     }
 
-    m_context =
-        std::unique_ptr<GraphicsContext>(GraphicsContext::create(m_window));
+    m_context = GraphicsContext::create(m_window);
     m_context->init();
 
     glfwSetWindowUserPointer(m_window, &m_data);
@@ -65,17 +61,20 @@ void LinuxWindow::init()
     glfwSetWindowSizeCallback(m_window,
         [](GLFWwindow* window, int width, int height)
         {
-            WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
-            data.width = width;
-            data.height = height;
-            WindowResizeEvent event(width, height);
+            WindowData& data =
+                *static_cast<WindowData*>(glfwGetWindowUserPointer(window));
+            data.width = static_cast<uint32_t>(width);
+            data.height = static_cast<uint32_t>(height);
+            WindowResizeEvent event(static_cast<uint32_t>(width),
+                static_cast<uint32_t>(height));
             data.event_callback(event);
         });
 
     glfwSetWindowIconifyCallback(m_window,
         [](GLFWwindow* window, int iconified)
         {
-            WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
+            WindowData& data =
+                *static_cast<WindowData*>(glfwGetWindowUserPointer(window));
             WindowIconifyEvent event(iconified == 1);
             data.event_callback(event);
         });
@@ -83,15 +82,21 @@ void LinuxWindow::init()
     glfwSetWindowCloseCallback(m_window,
         [](GLFWwindow* window)
         {
-            WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
+            WindowData& data =
+                *static_cast<WindowData*>(glfwGetWindowUserPointer(window));
             WindowCloseEvent event;
             data.event_callback(event);
         });
 
     glfwSetKeyCallback(m_window,
-        [](GLFWwindow* window, int key, int scancode, int action, int mods)
+        [](GLFWwindow* window,
+            int key,
+            [[maybe_unused]] int scancode,
+            int action,
+            [[maybe_unused]] int mods)
         {
-            WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
+            WindowData& data =
+                *static_cast<WindowData*>(glfwGetWindowUserPointer(window));
             switch (action)
             {
             case GLFW_PRESS:
@@ -118,15 +123,20 @@ void LinuxWindow::init()
     glfwSetCharCallback(m_window,
         [](GLFWwindow* window, unsigned int key)
         {
-            WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
+            WindowData& data =
+                *static_cast<WindowData*>(glfwGetWindowUserPointer(window));
             KeyTypedEvent event(static_cast<KeyCode>(key));
             data.event_callback(event);
         });
 
     glfwSetMouseButtonCallback(m_window,
-        [](GLFWwindow* window, int button, int action, int mods)
+        [](GLFWwindow* window,
+            int button,
+            int action,
+            [[maybe_unused]] int mods)
         {
-            WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
+            WindowData& data =
+                *static_cast<WindowData*>(glfwGetWindowUserPointer(window));
             switch (action)
             {
             case GLFW_PRESS:
@@ -145,18 +155,22 @@ void LinuxWindow::init()
         });
 
     glfwSetScrollCallback(m_window,
-        [](GLFWwindow* window, double offset_x, double offset_y)
+        [](GLFWwindow* window, const double offset_x, const double offset_y)
         {
-            WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
-            MouseScrolledEvent event((float)offset_x, (float)offset_y);
+            WindowData& data =
+                *static_cast<WindowData*>(glfwGetWindowUserPointer(window));
+            MouseScrolledEvent event(static_cast<float>(offset_x),
+                static_cast<float>(offset_y));
             data.event_callback(event);
         });
 
     glfwSetCursorPosCallback(m_window,
-        [](GLFWwindow* window, double pos_x, double pos_y)
+        [](GLFWwindow* window, const double pos_x, const double pos_y)
         {
-            WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
-            MouseMovedEvent event((float)pos_x, (float)pos_y);
+            WindowData& data =
+                *static_cast<WindowData*>(glfwGetWindowUserPointer(window));
+            MouseMovedEvent event(static_cast<float>(pos_x),
+                static_cast<float>(pos_y));
             data.event_callback(event);
         });
 }
@@ -174,7 +188,7 @@ std::pair<float, float> LinuxWindow::get_position() const
 {
     int x, y;
     glfwGetWindowPos(m_window, &x, &y);
-    return {(float)x, (float)y};
+    return {static_cast<float>(x), static_cast<float>(y)};
 }
 
 void LinuxWindow::maximize() { glfwMaximizeWindow(m_window); }
@@ -182,8 +196,8 @@ void LinuxWindow::maximize() { glfwMaximizeWindow(m_window); }
 void LinuxWindow::center_window()
 {
     const GLFWvidmode* video_mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
-    int x = (video_mode->width / 2) - (m_data.width / 2);
-    int y = (video_mode->height / 2) - (m_data.height / 2);
+    int x = video_mode->width / 2 - static_cast<int>(m_data.width) / 2;
+    int y = video_mode->height / 2 - static_cast<int>(m_data.height) / 2;
     glfwSetWindowPos(m_window, x, y);
 }
 

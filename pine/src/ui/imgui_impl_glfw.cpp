@@ -146,20 +146,20 @@ struct ImGui_ImplGlfw_Data
 // when using multi-context.
 static ImGui_ImplGlfw_Data* ImGui_ImplGlfw_GetBackendData()
 {
-    return ImGui::GetCurrentContext()
-        ? (ImGui_ImplGlfw_Data*)ImGui::GetIO().BackendPlatformUserData
-        : NULL;
+    return ImGui::GetCurrentContext() ? static_cast<ImGui_ImplGlfw_Data*>(
+               ImGui::GetIO().BackendPlatformUserData)
+                                      : NULL;
 }
 
 // Functions
 static const char* ImGui_ImplGlfw_GetClipboardText(void* user_data)
 {
-    return glfwGetClipboardString((GLFWwindow*)user_data);
+    return glfwGetClipboardString(static_cast<GLFWwindow*>(user_data));
 }
 
 static void ImGui_ImplGlfw_SetClipboardText(void* user_data, const char* text)
 {
-    glfwSetClipboardString((GLFWwindow*)user_data, text);
+    glfwSetClipboardString(static_cast<GLFWwindow*>(user_data), text);
 }
 
 void ImGui_ImplGlfw_MouseButtonCallback(GLFWwindow* window, int button,
@@ -182,8 +182,8 @@ void ImGui_ImplGlfw_ScrollCallback(GLFWwindow* window, double xoffset,
         bd->PrevUserCallbackScroll(window, xoffset, yoffset);
 
     ImGuiIO& io = ImGui::GetIO();
-    io.MouseWheelH += (float)xoffset;
-    io.MouseWheel += (float)yoffset;
+    io.MouseWheelH += static_cast<float>(xoffset);
+    io.MouseWheel += static_cast<float>(yoffset);
 }
 
 void ImGui_ImplGlfw_KeyCallback(GLFWwindow* window, int key, int scancode,
@@ -265,7 +265,7 @@ static bool ImGui_ImplGlfw_Init(GLFWwindow* window, bool install_callbacks,
 
     // Setup backend capabilities flags
     ImGui_ImplGlfw_Data* bd = IM_NEW(ImGui_ImplGlfw_Data)();
-    io.BackendPlatformUserData = (void*)bd;
+    io.BackendPlatformUserData = static_cast<void*>(bd);
     io.BackendPlatformName = "imgui_impl_glfw";
     io.BackendFlags |=
         ImGuiBackendFlags_HasMouseCursors; // We can honor GetMouseCursor()
@@ -450,15 +450,16 @@ static void ImGui_ImplGlfw_UpdateMousePosAndButtons()
     // when ImGuiConfigFlags_NavEnableSetMousePos is enabled by user)
     if (io.WantSetMousePos && focused)
         glfwSetCursorPos(bd->Window,
-            (double)mouse_pos_prev.x,
-            (double)mouse_pos_prev.y);
+            static_cast<double>(mouse_pos_prev.x),
+            static_cast<double>(mouse_pos_prev.y));
 
     // Set Dear ImGui mouse position from OS position
     if (mouse_window != NULL)
     {
         double mouse_x, mouse_y;
         glfwGetCursorPos(mouse_window, &mouse_x, &mouse_y);
-        io.MousePos = ImVec2((float)mouse_x, (float)mouse_y);
+        io.MousePos =
+            ImVec2(static_cast<float>(mouse_x), static_cast<float>(mouse_y));
     }
 }
 
@@ -550,15 +551,17 @@ void ImGui_ImplGlfw_NewFrame()
     int display_w, display_h;
     glfwGetWindowSize(bd->Window, &w, &h);
     glfwGetFramebufferSize(bd->Window, &display_w, &display_h);
-    io.DisplaySize = ImVec2((float)w, (float)h);
+    io.DisplaySize = ImVec2(static_cast<float>(w), static_cast<float>(h));
     if (w > 0 && h > 0)
-        io.DisplayFramebufferScale =
-            ImVec2((float)display_w / w, (float)display_h / h);
+    {
+        io.DisplayFramebufferScale = ImVec2(static_cast<float>(display_w / w),
+            static_cast<float>(display_h / h));
+    }
 
     // Setup time step
     double current_time = glfwGetTime();
-    io.DeltaTime = bd->Time > 0.0 ? (float)(current_time - bd->Time)
-                                  : (float)(1.0f / 60.0f);
+    io.DeltaTime = bd->Time > 0.0 ? static_cast<float>(current_time - bd->Time)
+                                  : 1.0f / 60.0f;
     bd->Time = current_time;
 
     ImGui_ImplGlfw_UpdateMousePosAndButtons();

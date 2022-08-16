@@ -28,7 +28,10 @@ OpenGLVertexBuffer::OpenGLVertexBuffer(const float* vertices, uint32_t size)
     glBufferData(GL_ARRAY_BUFFER, size, vertices, GL_STATIC_DRAW);
 }
 
-OpenGLVertexBuffer::~OpenGLVertexBuffer() { glDeleteBuffers(1, &m_renderer_id); }
+OpenGLVertexBuffer::~OpenGLVertexBuffer()
+{
+    glDeleteBuffers(1, &m_renderer_id);
+}
 
 void OpenGLVertexBuffer::bind() const
 {
@@ -54,7 +57,7 @@ OpenGLIndexBuffer::OpenGLIndexBuffer(const uint32_t* indices,
     glCreateBuffers(1, &m_renderer_id);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_renderer_id);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER,
-        count * sizeof(uint32_t),
+        static_cast<GLsizeiptr>(count * sizeof(uint32_t)),
         indices,
         GL_STATIC_DRAW);
 }
@@ -105,21 +108,20 @@ void OpenGLVertexArray::set_vertex_buffer(std::unique_ptr<VertexBuffer> buffer)
         if (is_integer_type(element.type))
         {
             glVertexAttribIPointer(index,
-                element.component_count,
+                static_cast<GLint>(element.component_count),
                 to_opengl(element.type),
-                layout.get_stride(),
+                static_cast<GLsizei>(layout.get_stride()),
                 reinterpret_cast<const void*>(element.offset));
         }
         else
         {
             glVertexAttribPointer(index,
-                element.component_count,
+                static_cast<GLint>(element.component_count),
                 to_opengl(element.type),
                 element.normalized ? GL_TRUE : GL_FALSE,
-                layout.get_stride(),
+                static_cast<GLsizei>(layout.get_stride()),
                 reinterpret_cast<const void*>(element.offset));
         }
-
         index++;
     }
 

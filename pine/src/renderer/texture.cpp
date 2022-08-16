@@ -15,6 +15,7 @@ std::unique_ptr<Texture2D> Texture2D::Create(
     case RendererAPI::API::None:
         PINE_CORE_ASSERT(false, "Renderer API None is currently not \
 			supported!");
+        return nullptr;
     case RendererAPI::API::OpenGL:
         return std::make_unique<OpenGLTexture2D>(filePath);
     }
@@ -30,6 +31,7 @@ std::unique_ptr<Texture2D> Texture2D::Create(const Image& image)
     case RendererAPI::API::None:
         PINE_CORE_ASSERT(false, "Renderer API None is currently not \
             supported!");
+        return nullptr;
     case RendererAPI::API::OpenGL:
         return std::make_unique<OpenGLTexture2D>(image);
     }

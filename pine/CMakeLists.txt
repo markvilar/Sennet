@@ -105,8 +105,8 @@ target_link_libraries(pine
         glm::glm
         imgui::imgui
         spdlog::spdlog
-        # TODO: Add project options
-        # TODO: Add project warnings
+        pine::warnings # TODO: Validate
+        pine::options # TODO: Validate
     PRIVATE 
         glad::glad 
         glfw::glfw 

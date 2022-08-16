@@ -13,4 +13,4 @@ using SocketType = asio::ip::tcp::socket;
 using Resolver = asio::ip::tcp::resolver;
 using ResolveType = asio::ip::tcp::resolver::results_type;
 
-}; // namespace pine
+} // namespace pine

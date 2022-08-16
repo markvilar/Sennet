@@ -58,7 +58,7 @@ private:
 private:
     GLFWwindow* m_window;
     std::unique_ptr<GraphicsContext> m_context;
-    
+
     WindowSpecs m_specification;
     WindowData m_data;
 };

@@ -2,13 +2,13 @@
 
 #include "pine/pine.hpp"
 
-static bool exitFlag = false;
+static bool exit_flag = false;
 
-void signalHandler(const int signum) { exitFlag = true; }
+void signal_handler([[maybe_unused]] const int signum) { exit_flag = true; }
 
-int main(int argc, char** argv)
+int main([[maybe_unused]] int argc, [[maybe_unused]] char** argv)
 {
-    signal(SIGINT, signalHandler);
+    signal(SIGINT, signal_handler);
 
     pine::Log::init();
 
@@ -22,7 +22,7 @@ int main(int argc, char** argv)
             return true;
         });
 
-    while (!exitFlag)
+    while (!exit_flag)
     {
         pine::update_server(server,
             [](const std::vector<uint8_t>& message) -> void

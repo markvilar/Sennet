@@ -1,5 +1,7 @@
 #pragma once
 
+#include <type_traits>
+
 #include <imgui.h>
 
 #include "pine/pch.hpp"
@@ -15,30 +17,39 @@ typedef ImGuiWindowFlags WindowFlags;
 typedef ImGuiStyle Style;
 
 template <typename Function>
-auto AddWindow(const std::string& name, const Vec2& position, const Vec2& size,
+auto render_window(const char* name, const Vec2& position, const Vec2& size,
     const Function func)
 {
     ImGui::SetNextWindowPos(ImVec2(position.x, position.y), ImGuiCond_Always);
     ImGui::SetNextWindowSize(ImVec2(size.x, size.y), ImGuiCond_Always);
 
-    ImGui::Begin(name.c_str(),
+    ImGui::Begin(name,
         nullptr,
         ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove
             | ImGuiWindowFlags_NoCollapse
             | ImGuiWindowFlags_NoBringToFrontOnFocus);
-    func();
-    ImGui::End();
+
+    if constexpr (!std::is_void<decltype(func())>::value)
+    {
+        const auto value = func();
+        ImGui::End();
+        return value;
+    }
+    else
+    {
+        func();
+        ImGui::End();
+    }
 }
 
-// TODO: Make template able to return value from func.
 template <typename Function>
-auto AddViewport(const std::string& name, const Vec2& position,
-    const Vec2& size, const Framebuffer& framebuffer, const Function func)
+auto render_viewport(const char* name, const Vec2& position, const Vec2& size,
+    const Framebuffer& framebuffer, const Function func)
 {
     ImGui::SetNextWindowPos(ImVec2(position.x, position.y), ImGuiCond_Always);
     ImGui::SetNextWindowSize(ImVec2(size.x, size.y), ImGuiCond_Always);
 
-    ImGui::Begin(name.c_str(),
+    ImGui::Begin(name,
         nullptr,
         ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize
             | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse
@@ -46,19 +57,32 @@ auto AddViewport(const std::string& name, const Vec2& position,
             | ImGuiWindowFlags_NoScrollbar
             | ImGuiWindowFlags_NoScrollWithMouse);
 
-    func();
-
-    auto textureID = framebuffer.get_color_attachment_renderer_id();
-    ImGui::Image(reinterpret_cast<void*>(textureID),
-        ImVec2{size.x, size.y},
-        ImVec2{0, 1},
-        ImVec2{1, 0});
-
-    ImGui::End();
+    // If func has a return type, we return it after ending the window.
+    if constexpr (!std::is_void<decltype(func())>::value)
+    {
+        const auto value = func();
+        const auto textureID = framebuffer.get_color_attachment_renderer_id();
+        ImGui::Image(reinterpret_cast<void*>(textureID),
+            ImVec2{size.x, size.y},
+            ImVec2{0, 1},
+            ImVec2{1, 0});
+        ImGui::End();
+        return value;
+    }
+    else
+    {
+        func();
+        const auto textureID = framebuffer.get_color_attachment_renderer_id();
+        ImGui::Image(reinterpret_cast<void*>(textureID),
+            ImVec2{size.x, size.y},
+            ImVec2{0, 1},
+            ImVec2{1, 0});
+        ImGui::End();
+    }
 }
 
 template <typename Function>
-auto AddMainMenuBar(const Function func)
+auto main_menu_bar(const Function func)
 {
     if (ImGui::BeginMainMenuBar())
     {
@@ -68,7 +92,7 @@ auto AddMainMenuBar(const Function func)
 }
 
 template <typename Function>
-auto AddMenuBar(const Function func)
+auto menu_bar(const Function func)
 {
     if (ImGui::BeginMenuBar())
     {
@@ -77,24 +101,26 @@ auto AddMenuBar(const Function func)
     }
 }
 
+// TODO: Better templating - Make container type more generic.
 template <typename T, size_t size>
-void AddCombo(const std::string& name, T* value,
-    const std::array<std::pair<std::string, T>, size>& options)
+void dropdown(const char* name, T* value,
+    const std::array<std::pair<const char*, T>, size>& options)
 {
-    static uint32_t labelIndex = 0;
-    const auto label = options[labelIndex].first;
-    if (ImGui::BeginCombo(name.c_str(), label.c_str(), 0))
+    static size_t label_index = 0;
+
+    const auto label = options[label_index].first;
+    if (ImGui::BeginCombo(name, label, 0))
     {
-        for (auto index = 0; index < options.size(); index++)
+        for (size_t index = 0; index < options.size(); index++)
         {
-            const auto isSelected = (labelIndex == index);
-            if (ImGui::Selectable(options[index].first.c_str(), isSelected))
+            const auto is_selected = (label_index == index);
+            if (ImGui::Selectable(options[index].first, is_selected))
             {
-                labelIndex = index;
+                label_index = index;
                 *value = options[index].second;
             }
 
-            if (isSelected)
+            if (is_selected)
             {
                 ImGui::SetItemDefaultFocus();
             }
@@ -103,40 +129,31 @@ void AddCombo(const std::string& name, T* value,
     }
 }
 
-WindowFlags ConfigureWindowFlags(const bool fullscreen);
-void SetDarkTheme(Style& style);
-void ImGuiHelpMarker(const char* desc);
+WindowFlags configure_window_flags(const bool fullscreen);
+void set_dark_theme(Style& style);
 
-void AddEmptySpace(const float width, const float height);
+void help_marker(const char* desc);
+void empty_space(const float width, const float height);
 
-bool SliderScalar(const std::string& name, int8_t* value, const int8_t minValue,
-    const int8_t maxValue);
-
-bool SliderScalar(const std::string& name, uint8_t* value,
-    const uint8_t minValue, const uint8_t maxValue);
-
-bool SliderScalar(const std::string& name, int16_t* value,
-    const int16_t minValue, const int16_t maxValue);
-
-bool SliderScalar(const std::string& name, uint16_t* value,
-    const uint16_t minValue, const uint16_t maxValue);
-
-bool SliderScalar(const std::string& name, int32_t* value,
-    const int32_t minValue, const int32_t maxValue);
-
-bool SliderScalar(const std::string& name, uint32_t* value,
-    const uint32_t minValue, const uint32_t maxValue);
-
-bool SliderScalar(const std::string& name, int64_t* value,
-    const int64_t minValue, const int64_t maxValue);
-
-bool SliderScalar(const std::string& name, uint64_t* value,
-    const uint64_t minValue, const uint64_t maxValue);
-
-bool SliderScalar(const std::string& name, float* value, const float minValue,
-    const float maxValue);
-
-bool SliderScalar(const std::string& name, double* value, const double minValue,
-    const double maxValue);
+bool slider_scalar(const char* name, int8_t* value, const int8_t min_value,
+    const int8_t max_value);
+bool slider_scalar(const char* name, uint8_t* value, const uint8_t min_value,
+    const uint8_t max_value);
+bool slider_scalar(const char* name, int16_t* value, const int16_t min_value,
+    const int16_t max_value);
+bool slider_scalar(const char* name, uint16_t* value, const uint16_t min_value,
+    const uint16_t max_value);
+bool slider_scalar(const char* name, int32_t* value, const int32_t min_value,
+    const int32_t max_value);
+bool slider_scalar(const char* name, uint32_t* value, const uint32_t min_value,
+    const uint32_t max_value);
+bool slider_scalar(const char* name, int64_t* value, const int64_t min_value,
+    const int64_t max_value);
+bool slider_scalar(const char* name, uint64_t* value, const uint64_t min_value,
+    const uint64_t max_value);
+bool slider_scalar(const char* name, float* value, const float min_value,
+    const float max_value);
+bool slider_scalar(const char* name, double* value, const double min_value,
+    const double max_value);
 
 } // namespace pine::ui

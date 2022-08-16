@@ -5,20 +5,20 @@
 namespace pine::ui
 {
 
-WindowFlags ConfigureWindowFlags(const bool fullscreen)
+WindowFlags configure_window_flags(const bool fullscreen)
 {
-    ImGuiWindowFlags windowFlags = ImGuiWindowFlags_MenuBar;
+    ImGuiWindowFlags window_flags = ImGuiWindowFlags_MenuBar;
     if (fullscreen)
     {
-        windowFlags |= ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse
-            | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove
-            | ImGuiWindowFlags_NoBringToFrontOnFocus
+        window_flags |= ImGuiWindowFlags_NoTitleBar
+            | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize
+            | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoBringToFrontOnFocus
             | ImGuiWindowFlags_NoNavFocus;
     }
-    return windowFlags;
+    return window_flags;
 }
 
-void SetDarkTheme(Style& style)
+void set_dark_theme(Style& style)
 {
     auto& colors = style.Colors;
     colors[ImGuiCol_WindowBg] = ImVec4(0.1f, 0.105f, 0.11f, 1.0f);
@@ -69,7 +69,7 @@ void SetDarkTheme(Style& style)
     colors[ImGuiCol_SliderGrabActive] = ImVec4(0.66f, 0.66f, 0.66f, 1.0f);
 }
 
-void ImGuiHelpMarker(const char* desc)
+void help_marker(const char* desc)
 {
     ImGui::TextDisabled("(?)");
     if (ImGui::IsItemHovered())
@@ -82,109 +82,109 @@ void ImGuiHelpMarker(const char* desc)
     }
 }
 
-void AddEmptySpace(const float width, const float height)
+void empty_space(const float width, const float height)
 {
     ImGui::Dummy({width, height});
 }
 
-bool SliderScalar(const std::string& name, int8_t* value, const int8_t minValue,
-    const int8_t maxValue)
+bool slider_scalar(const char* name, int8_t* value, const int8_t min_value,
+    const int8_t max_value)
 {
-    return ImGui::SliderScalar(name.c_str(),
+    return ImGui::SliderScalar(name,
         ImGuiDataType_S8,
         value,
-        &minValue,
-        &maxValue);
+        &min_value,
+        &max_value);
 }
 
-bool SliderScalar(const std::string& name, uint8_t* value,
-    const uint8_t minValue, const uint8_t maxValue)
+bool slider_scalar(const char* name, uint8_t* value, const uint8_t min_value,
+    const uint8_t max_value)
 {
-    return ImGui::SliderScalar(name.c_str(),
+    return ImGui::SliderScalar(name,
         ImGuiDataType_U8,
         value,
-        &minValue,
-        &maxValue);
+        &min_value,
+        &max_value);
 }
 
-bool SliderScalar(const std::string& name, int16_t* value,
-    const int16_t minValue, const int16_t maxValue)
+bool slider_scalar(const char* name, int16_t* value, const int16_t min_value,
+    const int16_t max_value)
 {
-    return ImGui::SliderScalar(name.c_str(),
+    return ImGui::SliderScalar(name,
         ImGuiDataType_S16,
         value,
-        &minValue,
-        &maxValue);
+        &min_value,
+        &max_value);
 }
 
-bool SliderScalar(const std::string& name, uint16_t* value,
-    const uint16_t minValue, const uint16_t maxValue)
+bool slider_scalar(const char* name, uint16_t* value, const uint16_t min_value,
+    const uint16_t max_value)
 {
-    return ImGui::SliderScalar(name.c_str(),
+    return ImGui::SliderScalar(name,
         ImGuiDataType_U16,
         value,
-        &minValue,
-        &maxValue);
+        &min_value,
+        &max_value);
 }
 
-bool SliderScalar(const std::string& name, int32_t* value,
-    const int32_t minValue, const int32_t maxValue)
+bool slider_scalar(const char* name, int32_t* value, const int32_t min_value,
+    const int32_t max_value)
 {
-    return ImGui::SliderScalar(name.c_str(),
+    return ImGui::SliderScalar(name,
         ImGuiDataType_S32,
         value,
-        &minValue,
-        &maxValue);
+        &min_value,
+        &max_value);
 }
 
-bool SliderScalar(const std::string& name, uint32_t* value,
-    const uint32_t minValue, const uint32_t maxValue)
+bool slider_scalar(const char* name, uint32_t* value, const uint32_t min_value,
+    const uint32_t max_value)
 {
-    return ImGui::SliderScalar(name.c_str(),
+    return ImGui::SliderScalar(name,
         ImGuiDataType_U32,
         value,
-        &minValue,
-        &maxValue);
+        &min_value,
+        &max_value);
 }
 
-bool SliderScalar(const std::string& name, int64_t* value,
-    const int64_t minValue, const int64_t maxValue)
+bool slider_scalar(const char* name, int64_t* value, const int64_t min_value,
+    const int64_t max_value)
 {
-    return ImGui::SliderScalar(name.c_str(),
+    return ImGui::SliderScalar(name,
         ImGuiDataType_S64,
         value,
-        &minValue,
-        &maxValue);
+        &min_value,
+        &max_value);
 }
 
-bool SliderScalar(const std::string& name, uint64_t* value,
-    const uint64_t minValue, const uint64_t maxValue)
+bool slider_scalar(const char* name, uint64_t* value, const uint64_t min_value,
+    const uint64_t max_value)
 {
-    return ImGui::SliderScalar(name.c_str(),
+    return ImGui::SliderScalar(name,
         ImGuiDataType_U64,
         value,
-        &minValue,
-        &maxValue);
+        &min_value,
+        &max_value);
 }
 
-bool SliderScalar(const std::string& name, float* value, const float minValue,
-    const float maxValue)
+bool slider_scalar(const char* name, float* value, const float min_value,
+    const float max_value)
 {
-    return ImGui::SliderScalar(name.c_str(),
+    return ImGui::SliderScalar(name,
         ImGuiDataType_Float,
         value,
-        &minValue,
-        &maxValue);
+        &min_value,
+        &max_value);
 }
 
-bool SliderScalar(const std::string& name, double* value, const double minValue,
-    const double maxValue)
+bool slider_scalar(const char* name, double* value, const double min_value,
+    const double max_value)
 {
-    return ImGui::SliderScalar(name.c_str(),
+    return ImGui::SliderScalar(name,
         ImGuiDataType_Double,
         value,
-        &minValue,
-        &maxValue);
+        &min_value,
+        &max_value);
 }
 
 } // namespace pine::ui

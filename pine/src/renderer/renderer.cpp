@@ -2,8 +2,8 @@
 
 #include "pine/pch.hpp"
 
-#include "pine/renderer/render_command.hpp"
 #include "pine/renderer/quad_renderer.hpp"
+#include "pine/renderer/render_command.hpp"
 
 #include "pine/platform/opengl/shader.hpp"
 
@@ -22,7 +22,7 @@ void Renderer::OnWindowResize(const uint32_t width, const uint32_t height)
 
 void Renderer::BeginScene(const OrthographicCamera& camera)
 {
-    s_SceneData->ViewProjectionMatrix = 
+    s_SceneData->ViewProjectionMatrix =
         camera.calculate_view_projection_matrix();
 }
 
@@ -31,9 +31,9 @@ void Renderer::EndScene() {}
 void Renderer::Submit(const Shader& shader, const VertexArray& vertex_array,
     const Mat4& transform)
 {
-    shader.Bind();
-    shader.SetMat4("u_ViewProjection", s_SceneData->ViewProjectionMatrix);
-    shader.SetMat4("u_Transform", transform);
+    shader.bind();
+    shader.set_mat4("u_ViewProjection", s_SceneData->ViewProjectionMatrix);
+    shader.set_mat4("u_Transform", transform);
 
     vertex_array.bind();
     RenderCommand::DrawIndexed(vertex_array);

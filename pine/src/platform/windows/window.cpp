@@ -23,8 +23,7 @@ std::unique_ptr<Window> Window::Create(const WindowSpecs& specs)
     return std::make_unique<WindowsWindow>(specs);
 }
 
-WindowsWindow::WindowsWindow(const WindowSpecs& specs)
-    : m_specification(specs)
+WindowsWindow::WindowsWindow(const WindowSpecs& specs) : m_specification(specs)
 {
 }
 

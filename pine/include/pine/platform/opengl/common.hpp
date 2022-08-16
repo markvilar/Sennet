@@ -2,7 +2,8 @@
 
 #include <cstdint>
 
-namespace pine {
+namespace pine
+{
 
 using GLenum = uint32_t;
 
@@ -47,4 +48,4 @@ static constexpr GLenum to_opengl(const ShaderDataType type)
     return 0;
 }
 
-}; // namespace pine
+} // namespace pine

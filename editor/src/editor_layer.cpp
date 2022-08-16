@@ -17,23 +17,23 @@ void EditorLayer::on_attach()
         nullptr,
         io.Fonts->GetGlyphRangesCyrillic());
 
-    if (!m_shader_library.Load("resources/shaders/quad_shader.glsl"))
+    if (!m_shader_library.load_shader("resources/shaders/quad_shader.glsl"))
     {
         PINE_ERROR("Failed to load shader.");
     }
 
     FramebufferSpecification specs;
-    specs.Width = m_interface_layouts["Viewport"].Size.x;
-    specs.Height = m_interface_layouts["Viewport"].Size.y;
+    specs.Width = static_cast<uint32_t>(m_interface_layouts["Viewport"].Size.x);
+    specs.Height =
+        static_cast<uint32_t>(m_interface_layouts["Viewport"].Size.y);
     m_viewport_framebuffer = Framebuffer::create(specs);
 
-    m_camera_controller.on_resize(
-        static_cast<uint32_t>(m_interface_layouts["Viewport"].Size.x),
-        static_cast<uint32_t>(m_interface_layouts["Viewport"].Size.y));
+    m_camera_controller.on_resize(m_interface_layouts["Viewport"].Size.x,
+        m_interface_layouts["Viewport"].Size.y);
 
-    m_quad_render_data = QuadRenderer::Init();
+    m_quad_render_data = QuadRenderer::init();
 
-    ui::SetDarkTheme(ImGui::GetStyle());
+    ui::set_dark_theme(ImGui::GetStyle());
 
     start_server(m_server,
         [](const ConnectionState& connection) -> bool
@@ -49,13 +49,15 @@ void EditorLayer::on_detach() {}
 void EditorLayer::on_update(Timestep ts)
 {
     UpdateInterfaceLayout();
-    auto specs = m_viewport_framebuffer->get_specification();
+    const auto& specs = m_viewport_framebuffer->get_specification();
     const auto viewport = m_interface_layouts["Viewport"];
 
     if (viewport.Size.x > 0.0f && viewport.Size.y > 0.0f
-        && (specs.Width != viewport.Size.x || specs.Height != viewport.Size.y))
+        && (static_cast<float>(specs.Width) != viewport.Size.x
+            || static_cast<float>(specs.Height) != viewport.Size.y))
     {
-        m_viewport_framebuffer->resize(viewport.Size.x, viewport.Size.y);
+        m_viewport_framebuffer->resize(static_cast<uint32_t>(viewport.Size.x),
+            static_cast<uint32_t>(viewport.Size.y));
         m_camera_controller.on_resize(viewport.Size.x, viewport.Size.y);
     }
 
@@ -74,26 +76,26 @@ void EditorLayer::on_update(Timestep ts)
     RenderCommand::SetClearColor({0.05f, 0.05f, 0.05f, 1.0f});
     RenderCommand::Clear();
 
-    QuadRenderer::BeginScene(m_quad_render_data, 
+    QuadRenderer::begin_scene(m_quad_render_data,
         m_camera_controller.get_camera());
 
-    QuadRenderer::DrawRotatedQuad(m_quad_render_data,
+    QuadRenderer::draw_rotated_quad(m_quad_render_data,
         {0.0f, 0.0f},
         {0.8f, 0.8f},
         Radians(m_quad_rotation),
         {0.9f, 0.1f, 0.2f, 1.0f});
-    QuadRenderer::DrawQuad(m_quad_render_data,
+    QuadRenderer::draw_quad(m_quad_render_data,
         {2.0f, -2.0f},
         {0.8f, 0.8f},
         {0.8f, 0.2f, 0.3f, 1.0f});
-    QuadRenderer::DrawQuad(m_quad_render_data,
+    QuadRenderer::draw_quad(m_quad_render_data,
         {2.0f, 2.0f},
         {0.5f, 0.75f},
         m_quad_color);
 
     if (m_texture)
     {
-        QuadRenderer::DrawQuad(m_quad_render_data,
+        QuadRenderer::draw_quad(m_quad_render_data,
             {-16.0f, 0.0f, -0.2f},
             {16.0f, 9.0f},
             m_texture,
@@ -101,7 +103,7 @@ void EditorLayer::on_update(Timestep ts)
             Vec4{1.0f, 1.0f, 1.0f, 1.0f});
     }
 
-    QuadRenderer::EndScene(m_quad_render_data);
+    QuadRenderer::end_scene(m_quad_render_data);
     m_viewport_framebuffer->unbind();
 
     update_server(m_server,
@@ -111,7 +113,7 @@ void EditorLayer::on_update(Timestep ts)
 
 void EditorLayer::on_imgui_render()
 {
-    ui::AddMainMenuBar(
+    ui::main_menu_bar(
         []()
         {
             static bool showImGuiDemoWindow = false;
@@ -200,7 +202,7 @@ void EditorLayer::on_imgui_render()
             }
         });
 
-    ui::AddViewport("Viewport",
+    ui::render_viewport("Viewport",
         m_interface_layouts["Viewport"].Position,
         m_interface_layouts["Viewport"].Size,
         *m_viewport_framebuffer.get(),
@@ -208,51 +210,52 @@ void EditorLayer::on_imgui_render()
         {
             m_viewport_focused = ImGui::IsWindowFocused();
             m_viewport_hovered = ImGui::IsWindowHovered();
-            Application::get().get_imgui_layer()->BlockEvents(
+            Application::get().get_imgui_layer()->block_events(
                 !m_viewport_focused || !m_viewport_hovered);
         });
 
-    ui::AddWindow("LeftPanel",
+    [[maybe_unused]] auto test_bool = ui::render_window("LeftPanel",
         m_interface_layouts["LeftPanel"].Position,
         m_interface_layouts["LeftPanel"].Size,
         [this]
         {
-            auto& stats = m_quad_render_data.Stats;
+            auto& stats = m_quad_render_data.statistics;
             ImGui::Text("QuadRenderer Stats:");
-            ImGui::Text("Draw Calls: %d", stats.DrawCalls);
-            ImGui::Text("Quads: %d", stats.QuadCount);
-            ImGui::Text("Vertices: %d", stats.GetTotalVertexCount());
-            ImGui::Text("Indices: %d", stats.GetTotalIndexCount());
+            ImGui::Text("Draw Calls: %d", stats.draw_calls);
+            ImGui::Text("Quads: %d", stats.quad_count);
+            ImGui::Text("Vertices: %d", stats.get_total_vertex_count());
+            ImGui::Text("Indices: %d", stats.get_total_index_count());
 
             ImGui::ColorEdit4("Square Color", ValuePtr(m_quad_color));
 
-            ui::AddEmptySpace(0.0f, 10.0f);
+            ui::empty_space(0.0f, 10.0f);
             ImGui::Separator();
 
-            for (const auto& [name, shader] : m_shader_library.GetShaders())
+            for (const auto& [name, shader] : m_shader_library.get_shader_map())
             {
                 ImGui::Text("%s", name.c_str());
             }
 
-            ui::AddEmptySpace(0.0f, 10.0f);
+            ui::empty_space(0.0f, 10.0f);
             ImGui::Separator();
 
             static bool flip_image = false;
             static char image_path[256] = "";
             static auto image_format = ImageFormat::BGRA;
 
-            const std::array<std::pair<std::string, ImageFormat>, 6>
-                image_format_options = { 
-                    std::make_pair("Gray", ImageFormat::GRAY),
+            const std::array<std::pair<const char*, ImageFormat>, 6>
+                image_format_options = {std::make_pair("Gray",
+                                            ImageFormat::GRAY),
                     std::make_pair("Gray-alpha", ImageFormat::GRAY_ALPHA),
                     std::make_pair("RGB", ImageFormat::RGB),
                     std::make_pair("BGR", ImageFormat::BGR),
                     std::make_pair("RGBA", ImageFormat::RGBA),
-                    std::make_pair("BGRA", ImageFormat::BGRA)
-                };
+                    std::make_pair("BGRA", ImageFormat::BGRA)};
 
-            ImGui::InputText("Image path", image_path, IM_ARRAYSIZE(image_path));
-            ui::AddCombo("Image format", &image_format, image_format_options);
+            ImGui::InputText("Image path",
+                image_path,
+                IM_ARRAYSIZE(image_path));
+            ui::dropdown("Image format", &image_format, image_format_options);
             ImGui::Checkbox("Flip image", &flip_image);
             ImGui::SameLine();
             if (ImGui::Button("Load image"))
@@ -261,38 +264,41 @@ void EditorLayer::on_imgui_render()
                 {
                     m_texture = Texture2D::Create(
                         read_image(image_path, image_format, flip_image));
-                    PINE_INFO("Loaded image: {0}, {1}", image_path, 
+                    PINE_INFO("Loaded image: {0}, {1}",
+                        image_path,
                         image_format);
                 }
             }
 
-            ui::AddEmptySpace(0.0f, 20.0f);
+            ui::empty_space(0.0f, 20.0f);
             ImGui::Separator();
 
-            static int8_t valueInt8 = 0;
-            static int16_t valueInt16 = 0;
-            static int32_t valueInt32 = 0;
-            static int64_t valueInt64 = 0;
-            static uint8_t valueUint8 = 0;
-            static uint16_t valueUint16 = 0;
-            static uint32_t valueUint32 = 0;
-            static uint64_t valueUint64 = 0;
-            static float valueFloat = 0.0;
-            static double valueDouble = 0.0;
+            static int8_t value_int8 = 0;
+            static int16_t value_int16 = 0;
+            static int32_t value_int32 = 0;
+            static int64_t value_int64 = 0;
+            static uint8_t value_uint8 = 0;
+            static uint16_t value_uint16 = 0;
+            static uint32_t value_uint32 = 0;
+            static uint64_t value_uint64 = 0;
+            static float value_float = 0.0;
+            static double value_double = 0.0;
 
-            ui::SliderScalar("Slider int8", &valueInt8, -10, 10);
-            ui::SliderScalar("Slider int16", &valueInt16, -10, 10);
-            ui::SliderScalar("Slider int32", &valueInt32, -10, 10);
-            ui::SliderScalar("Slider int64", &valueInt64, -10, 10);
-            ui::SliderScalar("Slider uint8", &valueUint8, 0, 10);
-            ui::SliderScalar("Slider uint16", &valueUint16, 0, 10);
-            ui::SliderScalar("Slider uint32", &valueUint32, 0, 10);
-            ui::SliderScalar("Slider uint64", &valueUint64, 0, 10);
-            ui::SliderScalar("Slider float", &valueFloat, -1.0, 1.0);
-            ui::SliderScalar("Slider double", &valueDouble, -1.0, 1.0);
+            ui::slider_scalar("Slider int8", &value_int8, -10, 10);
+            ui::slider_scalar("Slider int16", &value_int16, -10, 10);
+            ui::slider_scalar("Slider int32", &value_int32, -10, 10);
+            ui::slider_scalar("Slider int64", &value_int64, -10, 10);
+            ui::slider_scalar("Slider uint8", &value_uint8, 0, 10);
+            ui::slider_scalar("Slider uint16", &value_uint16, 0, 10);
+            ui::slider_scalar("Slider uint32", &value_uint32, 0, 10);
+            ui::slider_scalar("Slider uint64", &value_uint64, 0, 10);
+            ui::slider_scalar("Slider float", &value_float, -1.0, 1.0);
+            ui::slider_scalar("Slider double", &value_double, -1.0, 1.0);
+
+            return true;
         });
 
-    ui::AddWindow("RightPanel",
+    ui::render_window("RightPanel",
         m_interface_layouts["RightPanel"].Position,
         m_interface_layouts["RightPanel"].Size,
         [this]()
@@ -300,7 +306,7 @@ void EditorLayer::on_imgui_render()
             static char address[256] = "";
             static uint16_t port = 0;
             ImGui::InputText("Address", address, IM_ARRAYSIZE(address));
-            ImGui::InputInt("Port", (int*)&port);
+            ImGui::InputInt("Port", reinterpret_cast<int*>(&port));
             ImGui::Text("Client connected: %d", is_connected(m_client));
 
             if (ImGui::Button("Connect"))
@@ -343,7 +349,7 @@ void EditorLayer::on_imgui_render()
                     endpoint.port());
             }
 
-            ui::AddEmptySpace(0.0f, 20.0f);
+            ui::empty_space(0.0f, 20.0f);
 
             ImGui::Text("Server messages:");
             for (const auto& message : m_server_history)
@@ -353,45 +359,44 @@ void EditorLayer::on_imgui_render()
             }
         });
 
-    ui::AddWindow("BottomPanel",
+    ui::render_window("BottomPanel",
         m_interface_layouts["BottomPanel"].Position,
         m_interface_layouts["BottomPanel"].Size,
         []() {});
 }
 
-void EditorLayer::on_event(Event& event) 
-{ 
-    m_camera_controller.on_event(event); 
+void EditorLayer::on_event(Event& event)
+{
+    m_camera_controller.on_event(event);
 }
 
 void EditorLayer::UpdateInterfaceLayout()
 {
-    const auto& [windowWidth, windowHeight] =
-        pine::Application::get().get_window().get_size();
+    const auto& window_size = pine::Application::get().get_window().get_size();
+    const auto window_width = static_cast<float>(window_size.first);
+    const auto window_height = static_cast<float>(window_size.second);
 
     static constexpr auto menu_height = 20.0f;
 
-    const auto& main_menu_layout = m_interface_layouts["MainMenu"];
-
     m_interface_layouts["Viewport"] =
-        InterfaceLayout(Vec2(0.2f * windowWidth,
-                            0.0f * windowHeight + menu_height),
-            Vec2(0.6f * windowWidth, 0.8f * windowHeight));
+        InterfaceLayout(Vec2(0.2f * window_width,
+                            0.0f * window_height + menu_height),
+            Vec2(0.6f * window_width, 0.8f * window_height));
 
     m_interface_layouts["LeftPanel"] =
-        InterfaceLayout(Vec2(0.0f * windowWidth,
-                            0.0f * windowHeight + menu_height),
-            Vec2(0.2f * windowWidth, 1.0f * windowHeight - menu_height));
+        InterfaceLayout(Vec2(0.0f * window_width,
+                            0.0f * window_height + menu_height),
+            Vec2(0.2f * window_width, 1.0f * window_height - menu_height));
 
     m_interface_layouts["RightPanel"] =
-        InterfaceLayout(Vec2(0.8f * windowWidth,
-                            0.0f * windowHeight + menu_height),
-            Vec2(0.2f * windowWidth, 1.0f * windowHeight - menu_height));
+        InterfaceLayout(Vec2(0.8f * window_width,
+                            0.0f * window_height + menu_height),
+            Vec2(0.2f * window_width, 1.0f * window_height - menu_height));
 
     m_interface_layouts["BottomPanel"] =
-        InterfaceLayout(Vec2(0.2f * windowWidth,
-                            0.8f * windowHeight + menu_height),
-            Vec2(0.6f * windowWidth, 0.2f * windowHeight - menu_height));
+        InterfaceLayout(Vec2(0.2f * window_width,
+                            0.8f * window_height + menu_height),
+            Vec2(0.6f * window_width, 0.2f * window_height - menu_height));
 }
 
 } // namespace pine

@@ -1,5 +1,6 @@
 #pragma once
 
+#include <limits>
 #include <memory>
 
 #include "pine/core/common.hpp"
@@ -87,7 +88,7 @@ bool start_server(ServerState& server, ConnectHandler handler)
 
 template <typename MessageHandler>
 void update_server(ServerState& server, MessageHandler handler,
-    const uint64_t max_messages = -1)
+    const uint64_t max_messages = std::numeric_limits<uint64_t>::max())
 {
     // TODO: Add static assert of message handler signature.
     uint64_t message_count = 0;
@@ -99,4 +100,4 @@ void update_server(ServerState& server, MessageHandler handler,
     }
 }
 
-}; // namespace pine
+} // namespace pine

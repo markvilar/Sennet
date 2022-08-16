@@ -29,12 +29,14 @@ void connect_to_client(ConnectionState& connection)
     }
 }
 
-void connect_to_server(ConnectionState& connection, const ResolveType& endpoints)
+void connect_to_server(ConnectionState& connection,
+    const ResolveType& endpoints)
 {
     // TODO: Set up timeout.
     asio::async_connect(connection.socket,
         endpoints,
-        [&connection](const std::error_code error, const EndpointType endpoint)
+        [&connection](const std::error_code error,
+            [[maybe_unused]] const EndpointType endpoint)
         {
             if (error)
             {
@@ -55,7 +57,7 @@ void read_message_size(ConnectionState& connection)
     asio::async_read(connection.socket,
         asio::mutable_buffer(&*message_size.get(), sizeof(*message_size.get())),
         [&connection, message_size](const std::error_code error,
-            const uint64_t length)
+            [[maybe_unused]] const uint64_t length)
         {
             if (error)
             {
@@ -84,7 +86,7 @@ void read_message(ConnectionState& connection, const uint64_t size)
     asio::async_read(connection.socket,
         asio::mutable_buffer(message->data(), message->size()),
         [&connection, message](const std::error_code error,
-            const uint64_t length)
+            [[maybe_unused]] const uint64_t length)
         {
             if (error)
             {
@@ -124,7 +126,7 @@ void write_message_size(ConnectionState& connection)
     asio::async_write(connection.socket,
         asio::const_buffer(&*message_size.get(), sizeof(*message_size.get())),
         [&connection, message_size](const std::error_code error,
-            const uint64_t length) -> void
+            [[maybe_unused]] const uint64_t length) -> void
         {
             if (error)
             {
@@ -154,7 +156,7 @@ void write_message(ConnectionState& connection)
         asio::const_buffer(connection.write_queue.front().data(),
             connection.write_queue.front().size()),
         [&connection](const std::error_code error,
-            const uint64_t length) -> void
+            [[maybe_unused]] const uint64_t length) -> void
         {
             if (error)
             {

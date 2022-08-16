@@ -8,15 +8,25 @@
 namespace pine
 {
 
-typedef glm::vec2 Vec2;
-typedef glm::vec3 Vec3;
-typedef glm::vec4 Vec4;
+using Vec2 = glm::vec2;
+using Vec3 = glm::vec3;
+using Vec4 = glm::vec4;
 
-typedef glm::mat2 Mat2;
-typedef glm::mat3 Mat3;
-typedef glm::mat4 Mat4;
+// typedef glm::vec2 Vec2;
+// typedef glm::vec3 Vec3;
+// typedef glm::vec4 Vec4;
 
-typedef glm::quat Quat;
+using Mat2 = glm::mat2;
+using Mat3 = glm::mat3;
+using Mat4 = glm::mat4;
+
+// typedef glm::mat2 Mat2;
+// typedef glm::mat3 Mat3;
+// typedef glm::mat4 Mat4;
+
+using Quat = glm::quat;
+
+// typedef glm::quat Quat;
 
 template <typename T>
 float Radians(const T& t)

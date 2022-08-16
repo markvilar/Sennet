@@ -42,7 +42,7 @@ public:
         if (m_CurrentSession)
         {
             PINE_CORE_ERROR("Instrumentor::BeginSession('{0}') when session "
-                "'{1}' already open.",
+                            "'{1}' already open.",
                 name,
                 m_CurrentSession->Name);
             InternalEndSession();

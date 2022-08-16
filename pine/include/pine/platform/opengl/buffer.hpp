@@ -18,9 +18,9 @@ public:
 
     virtual void set_data(const void* data, const uint32_t size) override;
 
-    virtual const VertexBufferLayout& get_layout() const override 
-    { 
-        return m_layout; 
+    virtual const VertexBufferLayout& get_layout() const override
+    {
+        return m_layout;
     }
     virtual void set_layout(const VertexBufferLayout& layout) override
     {
@@ -57,7 +57,8 @@ public:
     virtual void bind() const override;
     virtual void unbind() const override;
 
-    virtual void set_vertex_buffer(std::unique_ptr<VertexBuffer> buffer) override;
+    virtual void set_vertex_buffer(
+        std::unique_ptr<VertexBuffer> buffer) override;
     virtual void set_index_buffer(std::unique_ptr<IndexBuffer> buffer) override;
 
     virtual VertexBuffer& get_vertex_buffer() const override

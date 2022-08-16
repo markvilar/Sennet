@@ -26,7 +26,7 @@ class EditorFactory : public pine::ApplicationFactory
 {
 public:
     EditorFactory(int argc, char** argv) : m_argc(argc), m_argv(argv) {}
-    
+
     virtual ~EditorFactory() = default;
 
     std::unique_ptr<pine::Application> create_application() override
@@ -64,8 +64,6 @@ private:
     int m_argc;
     char** m_argv;
 };
-
-
 
 int main(int argc, char** argv)
 {

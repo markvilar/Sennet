@@ -39,8 +39,8 @@ void OpenGLFramebuffer::invalidate()
     glTexImage2D(GL_TEXTURE_2D,
         0,
         GL_RGBA8,
-        m_specification.Width,
-        m_specification.Height,
+        static_cast<GLsizei>(m_specification.Width),
+        static_cast<GLsizei>(m_specification.Height),
         0,
         GL_RGBA,
         GL_UNSIGNED_BYTE,
@@ -59,8 +59,8 @@ void OpenGLFramebuffer::invalidate()
     glTexStorage2D(GL_TEXTURE_2D,
         1,
         GL_DEPTH24_STENCIL8,
-        m_specification.Width,
-        m_specification.Height);
+        static_cast<GLsizei>(m_specification.Width),
+        static_cast<GLsizei>(m_specification.Height));
     glFramebufferTexture2D(GL_FRAMEBUFFER,
         GL_DEPTH_STENCIL_ATTACHMENT,
         GL_TEXTURE_2D,
@@ -77,7 +77,10 @@ void OpenGLFramebuffer::invalidate()
 void OpenGLFramebuffer::bind()
 {
     glBindFramebuffer(GL_FRAMEBUFFER, m_renderer_id);
-    glViewport(0, 0, m_specification.Width, m_specification.Height);
+    glViewport(0,
+        0,
+        static_cast<GLsizei>(m_specification.Width),
+        static_cast<GLsizei>(m_specification.Height));
 }
 
 void OpenGLFramebuffer::unbind() { glBindFramebuffer(GL_FRAMEBUFFER, 0); }

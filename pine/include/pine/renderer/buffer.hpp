@@ -19,10 +19,11 @@ struct VertexBufferElement
     uint32_t offset = 0;
     bool normalized = false;
 
-    VertexBufferElement(const std::string& name, const ShaderDataType type,
-        const bool normalized = false)
-        : name(name), type(type), size(get_size(type)), 
-        component_count(get_count(type)), offset(0), normalized(normalized)
+    VertexBufferElement(const std::string& vertex_name,
+        const ShaderDataType data_type, const bool is_data_normalized = false)
+        : name(vertex_name), type(data_type), size(get_size(data_type)),
+          component_count(get_count(data_type)), offset(0),
+          normalized(is_data_normalized)
     {
     }
 };
@@ -53,11 +54,14 @@ public:
         return m_elements;
     }
 
-    std::vector<VertexBufferElement>::iterator begin() 
-    { 
-        return m_elements.begin(); 
+    std::vector<VertexBufferElement>::iterator begin()
+    {
+        return m_elements.begin();
     }
-    std::vector<VertexBufferElement>::iterator end() { return m_elements.end(); }
+    std::vector<VertexBufferElement>::iterator end()
+    {
+        return m_elements.end();
+    }
     std::vector<VertexBufferElement>::const_iterator begin() const
     {
         return m_elements.begin();

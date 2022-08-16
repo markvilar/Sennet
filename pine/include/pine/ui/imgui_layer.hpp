@@ -18,14 +18,14 @@ public:
     virtual void on_detach() override;
     virtual void on_event(Event& event) override;
 
-    void Begin();
-    void End();
+    void begin();
+    void end();
 
-    void BlockEvents(const bool block) { m_BlockEvents = block; }
+    void block_events(const bool block) { m_block_events = block; }
 
 private:
-    bool m_BlockEvents = true;
-    float m_Time;
+    bool m_block_events = true;
+    float m_time;
 };
 
 } // namespace pine

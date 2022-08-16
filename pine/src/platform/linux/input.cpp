@@ -18,27 +18,27 @@ bool is_key_pressed(const Window& window, const KeyCode keyCode)
 bool is_mouse_button_pressed(const Window& window, MouseCode button)
 {
     auto native_window = static_cast<GLFWwindow*>(window.get_native_window());
-    auto state = glfwGetMouseButton(native_window, 
-        static_cast<int32_t>(button));
+    auto state =
+        glfwGetMouseButton(native_window, static_cast<int32_t>(button));
     return state == GLFW_PRESS;
 }
 
 std::pair<float, float> get_mouse_position(const Window& window)
 {
     auto native_window = static_cast<GLFWwindow*>(window.get_native_window());
-    double posx, posy;
-    glfwGetCursorPos(native_window, &posx, &posy);
-    return { (float)posx, (float)posy };
+    double pos_x, pos_y;
+    glfwGetCursorPos(native_window, &pos_x, &pos_y);
+    return {static_cast<float>(pos_x), static_cast<float>(pos_y)};
 }
 
-float get_mouse_x(const Window& window) 
-{ 
-    return get_mouse_position(window).first; 
+float get_mouse_x(const Window& window)
+{
+    return get_mouse_position(window).first;
 }
 
-float get_mouse_y(const Window& window) 
-{ 
-    return get_mouse_position(window).second; 
+float get_mouse_y(const Window& window)
+{
+    return get_mouse_position(window).second;
 }
 
 } // namespace pine::input

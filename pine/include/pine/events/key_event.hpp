@@ -35,8 +35,8 @@ public:
     std::string to_string() const override
     {
         std::stringstream ss;
-        ss << "[KeyPressedEvent] " << m_key_code 
-            << " (" << m_repeat_count << " repeats)";
+        ss << "[KeyPressedEvent] " << m_key_code << " (" << m_repeat_count
+           << " repeats)";
         return ss.str();
     }
 

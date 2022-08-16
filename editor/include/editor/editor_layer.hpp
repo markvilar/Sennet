@@ -59,7 +59,7 @@ private:
     bool m_viewport_focused{false};
     bool m_viewport_hovered{false};
 
-    QuadRenderer::QuadRenderData m_quad_render_data{};
+    QuadRenderData m_quad_render_data{};
 
     Vec4 m_quad_color{0.2f, 0.3f, 0.8f, 1.0f};
     float m_quad_rotation{0.0f};

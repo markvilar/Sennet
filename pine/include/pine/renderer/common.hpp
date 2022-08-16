@@ -156,4 +156,4 @@ static constexpr bool is_integer_type(const ShaderDataType type)
     return 0;
 }
 
-};
+} // namespace pine

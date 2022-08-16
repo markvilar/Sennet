@@ -1,34 +1,70 @@
 #include "pine/renderer/quad_renderer.hpp"
 
+#include "pine/pch.hpp"
 #include "pine/renderer/buffer.hpp"
 #include "pine/renderer/render_command.hpp"
 #include "pine/renderer/renderer.hpp"
-#include "pine/pch.hpp"
 
-namespace pine::QuadRenderer
+namespace pine
 {
 
-QuadRenderData Init()
+constexpr bool is_indices_within_capabilities(const uint32_t index_count)
+{
+    return index_count
+        < (QuadRenderCaps::max_indices - QuadRenderCaps::indices_per_quad);
+}
+
+constexpr bool is_vertices_within_capabilities(const uint32_t vertex_count)
+{
+    return vertex_count
+        < (QuadRenderCaps::max_vertices - QuadRenderCaps::vertices_per_quad);
+}
+
+// Helper function used by quad draw functions.
+void update_quad_vertices(QuadRenderData& data, const Mat4& transform,
+    const Vec4& color, const uint32_t texture_index, const float tiling_factor)
+{
+    for (uint32_t i = 0; i < QuadRenderCaps::vertices_per_quad; i++)
+    {
+        data.quad_vertices[data.quad_vertex_count].position =
+            transform * QuadRenderCaps::quad_vertex_positions[i];
+        data.quad_vertices[data.quad_vertex_count].color = color;
+        data.quad_vertices[data.quad_vertex_count].texture_coordinates =
+            QuadRenderCaps::quad_texture_coordinates[i];
+        data.quad_vertices[data.quad_vertex_count].texture_index =
+            texture_index;
+        data.quad_vertices[data.quad_vertex_count].tiling_factor =
+            tiling_factor;
+        data.quad_vertex_count++;
+    }
+
+    data.quad_index_count += QuadRenderCaps::indices_per_quad;
+    data.statistics.quad_count++;
+}
+
+QuadRenderData QuadRenderer::init()
 {
     QuadRenderData data;
 
-    auto vertex_buffer = VertexBuffer::create(MaxVertices * sizeof(QuadVertex));
+    auto vertex_buffer =
+        VertexBuffer::create(QuadRenderCaps::max_vertices * sizeof(QuadVertex));
     vertex_buffer->set_layout({
-        { "a_Position",     ShaderDataType::Float3 },
-        { "a_Color",        ShaderDataType::Float4 },
-        { "a_TexCoord",     ShaderDataType::Float2 },
-        { "a_TexIndex",     ShaderDataType::Uint   },
-        { "a_TilingFactor", ShaderDataType::Float  },
+        {"a_Position", ShaderDataType::Float3},
+        {"a_Color", ShaderDataType::Float4},
+        {"a_TexCoord", ShaderDataType::Float2},
+        {"a_TexIndex", ShaderDataType::Uint},
+        {"a_TilingFactor", ShaderDataType::Float},
     });
 
-    data.QuadVertexArray = VertexArray::create();
-    data.QuadVertexArray->set_vertex_buffer(std::move(vertex_buffer));
+    data.quad_vertex_array = VertexArray::create();
+    data.quad_vertex_array->set_vertex_buffer(std::move(vertex_buffer));
 
-    constexpr auto quadIndices = []()
+    constexpr auto quad_indices = []()
     {
-        std::array<uint32_t, MaxIndices> indices{};
+        std::array<uint32_t, QuadRenderCaps::max_indices> indices{};
         uint32_t offset = 0;
-        for (uint32_t i = 0; i < indices.size(); i += IndicesPerQuad)
+        for (uint32_t i = 0; i < indices.size();
+             i += QuadRenderCaps::indices_per_quad)
         {
             indices[i + 0] = offset + 0;
             indices[i + 1] = offset + 1;
@@ -38,227 +74,216 @@ QuadRenderData Init()
             indices[i + 4] = offset + 3;
             indices[i + 5] = offset + 0;
 
-            offset += VerticesPerQuad;
+            offset += QuadRenderCaps::vertices_per_quad;
         }
         return indices;
     }();
 
-    data.QuadVertexArray->set_index_buffer(
-        IndexBuffer::create(quadIndices.data(), quadIndices.size()));
+    data.quad_vertex_array->set_index_buffer(
+        IndexBuffer::create(quad_indices.data(), quad_indices.size()));
 
-    constexpr auto samplers = []()
+    static constexpr auto samplers = []()
     {
-        std::array<int32_t, MaxTextureSlots> samplers = {};
+        std::array<int32_t, QuadRenderCaps::max_texture_slots> samplers = {};
         for (uint32_t i = 0; i < samplers.size(); i++)
-            samplers[i] = i;
+            samplers[i] = static_cast<int>(i);
         return samplers;
     }();
 
-    data.QuadShader = Shader::Create("resources/shaders/quad_shader.glsl");
-    data.QuadShader->Bind();
-    data.QuadShader->SetIntArray("u_Textures",
+    data.quad_shader = Shader::create("resources/shaders/quad_shader.glsl");
+    data.quad_shader->bind();
+    data.quad_shader->set_int_array("u_Textures",
         samplers.data(),
         samplers.size());
 
-    constexpr uint32_t width = 1;
-    constexpr uint32_t height = 1;
-    constexpr std::array<uint8_t, 4> whiteColor = {255, 255, 255, 255};
-    data.TextureSlots[data.TextureSlotIndex++] = Texture2D::Create(
-        Image(whiteColor.data(), width, height, ImageFormat::RGBA));
+    static constexpr uint32_t width = 1;
+    static constexpr uint32_t height = 1;
+    static constexpr std::array<uint8_t, 4> white_color = {255, 255, 255, 255};
+    data.texture_slots[data.texture_slot_index++] = Texture2D::Create(
+        Image(white_color.data(), width, height, ImageFormat::RGBA));
 
     return data;
 }
 
-void Shutdown(QuadRenderData& data)
+void QuadRenderer::shutdown(QuadRenderData& data)
 {
-    data.QuadVertexCount = 0;
-    data.QuadIndexCount = 0;
-    data.TextureSlotIndex = 1;
+    data.quad_vertex_count = 0;
+    data.quad_index_count = 0;
+    data.texture_slot_index = 1;
 }
 
-void BeginScene(QuadRenderData& data, const OrthographicCamera& camera)
+void QuadRenderer::begin_scene(QuadRenderData& data,
+    const OrthographicCamera& camera)
 {
-    data.QuadShader->Bind();
-    data.QuadShader->SetMat4("u_ViewProjection",
+    data.quad_shader->bind();
+    data.quad_shader->set_mat4("u_ViewProjection",
         camera.calculate_view_projection_matrix());
 
-    data.QuadVertexCount = 0;
-    data.QuadIndexCount = 0;
-    data.TextureSlotIndex = 1;
+    data.quad_vertex_count = 0;
+    data.quad_index_count = 0;
+    data.texture_slot_index = 1;
 
-    data.Stats.DrawCalls = 0;
-    data.Stats.QuadCount = 0;
+    data.statistics.draw_calls = 0;
+    data.statistics.quad_count = 0;
 }
-void EndScene(QuadRenderData& data)
+void QuadRenderer::end_scene(QuadRenderData& data)
 {
-    auto& vertex_buffer = data.QuadVertexArray->get_vertex_buffer();
-    vertex_buffer.set_data(data.QuadVertices.data(),
-        data.QuadVertexCount * sizeof(QuadVertex));
-    Flush(data);
+    auto& vertex_buffer = data.quad_vertex_array->get_vertex_buffer();
+    vertex_buffer.set_data(data.quad_vertices.data(),
+        static_cast<uint32_t>(data.quad_vertex_count * sizeof(QuadVertex)));
+    flush(data);
 }
 
-void Flush(QuadRenderData& data)
+void QuadRenderer::flush(QuadRenderData& data)
 {
-    for (uint32_t i = 0; i < data.TextureSlotIndex; i++)
-        data.TextureSlots[i]->Bind(i);
+    for (uint32_t i = 0; i < data.texture_slot_index; i++)
+        data.texture_slots[i]->Bind(i);
 
-    RenderCommand::DrawIndexed(*data.QuadVertexArray.get(),
-        data.QuadIndexCount);
+    RenderCommand::DrawIndexed(*data.quad_vertex_array.get(),
+        data.quad_index_count);
 
-    data.Stats.DrawCalls++;
+    data.statistics.draw_calls++;
 }
 
-void FlushAndReset(QuadRenderData& data)
+void QuadRenderer::flush_and_reset(QuadRenderData& data)
 {
-    EndScene(data);
-    data.QuadVertexCount = 0;
-    data.QuadIndexCount = 0;
-    data.TextureSlotIndex = 1;
+    end_scene(data);
+    data.quad_vertex_count = 0;
+    data.quad_index_count = 0;
+    data.texture_slot_index = 1;
 }
 
-void DrawQuad(QuadRenderData& data, const Vec2& position, const Vec2& size,
-    const Vec4& color)
+void QuadRenderer::draw_quad(QuadRenderData& data, const Vec2& position,
+    const Vec2& size, const Vec4& color)
 {
-    DrawQuad(data, {position.x, position.y, 0.0f}, size, color);
+    draw_quad(data, {position.x, position.y, 0.0f}, size, color);
 }
 
-void DrawQuad(QuadRenderData& data, const Vec3& position, const Vec2& size,
-    const Vec4& color)
+void QuadRenderer::draw_quad(QuadRenderData& data, const Vec3& position,
+    const Vec2& size, const Vec4& color)
 {
     Mat4 transform = Translate(Mat4(1.0f), position)
         * Scale(Mat4(1.0f), Vec3(size.x, size.y, 1.0f));
 
-    DrawQuad(data, transform, color);
+    draw_quad(data, transform, color);
 }
 
-void DrawQuad(QuadRenderData& data, const Vec2& position, const Vec2& size,
-    const std::shared_ptr<Texture2D>& texture, const float tilingFactor,
-    const Vec4& tintColor)
+void QuadRenderer::draw_quad(QuadRenderData& data, const Vec2& position,
+    const Vec2& size, const std::shared_ptr<Texture2D>& texture,
+    const float tiling_factor, const Vec4& tint_color)
 {
-    DrawQuad(data,
+    draw_quad(data,
         {position.x, position.y, 0.0f},
         size,
         texture,
-        tilingFactor,
-        tintColor);
+        tiling_factor,
+        tint_color);
 }
 
-void DrawQuad(QuadRenderData& data, const Vec3& position, const Vec2& size,
-    const std::shared_ptr<Texture2D>& texture, const float tilingFactor,
-    const Vec4& tintColor)
+void QuadRenderer::draw_quad(QuadRenderData& data, const Vec3& position,
+    const Vec2& size, const std::shared_ptr<Texture2D>& texture,
+    const float tiling_factor, const Vec4& tint_color)
 {
     Mat4 transform = Translate(Mat4(1.0f), position)
         * Scale(Mat4(1.0f), Vec3(size.x, size.y, 1.0f));
 
-    DrawQuad(data, transform, texture, tilingFactor, tintColor);
+    draw_quad(data, transform, texture, tiling_factor, tint_color);
 }
 
-void DrawRotatedQuad(QuadRenderData& data, const Vec2& position, const Vec2& size,
-    const float rotation, const Vec4& color)
+void QuadRenderer::draw_rotated_quad(QuadRenderData& data, const Vec2& position,
+    const Vec2& size, const float rotation, const Vec4& color)
 {
-    DrawRotatedQuad(data,
+    draw_rotated_quad(data,
         {position.x, position.y, 0.0f},
         size,
         rotation,
         color);
 }
 
-void DrawRotatedQuad(QuadRenderData& data, const Vec3& position, const Vec2& size,
-    const float rotation, const Vec4& color)
+void QuadRenderer::draw_rotated_quad(QuadRenderData& data, const Vec3& position,
+    const Vec2& size, const float rotation, const Vec4& color)
 {
     Mat4 transform = Translate(Mat4(1.0f), position)
         * Rotate(Mat4(1.0f), rotation, Vec3(0.0f, 0.0f, 1.0f))
         * Scale(Mat4(1.0f), Vec3(size.x, size.y, 1.0f));
 
-    DrawQuad(data, transform, color);
+    draw_quad(data, transform, color);
 }
 
-void DrawRotatedQuad(QuadRenderData& data, const Vec2& position, const Vec2& size,
-    const float rotation, const std::shared_ptr<Texture2D>& texture,
-    const float tilingFactor, const Vec4& tintColor)
+void QuadRenderer::draw_rotated_quad(QuadRenderData& data, const Vec2& position,
+    const Vec2& size, const float rotation,
+    const std::shared_ptr<Texture2D>& texture, const float tiling_factor,
+    const Vec4& tint_color)
 {
-    DrawRotatedQuad(data,
+    draw_rotated_quad(data,
         {position.x, position.y, 0.0f},
         size,
         rotation,
         texture,
-        tilingFactor,
-        tintColor);
+        tiling_factor,
+        tint_color);
 }
 
-void DrawRotatedQuad(QuadRenderData& data, const Vec3& position, const Vec2& size,
-    const float rotation, const std::shared_ptr<Texture2D>& texture,
-    const float tilingFactor, const Vec4& tintColor)
+void QuadRenderer::draw_rotated_quad(QuadRenderData& data, const Vec3& position,
+    const Vec2& size, const float rotation,
+    const std::shared_ptr<Texture2D>& texture, const float tiling_factor,
+    const Vec4& tint_color)
 {
 
     Mat4 transform = Translate(Mat4(1.0f), position)
         * Rotate(Mat4(1.0f), rotation, Vec3(0.0f, 0.0f, 1.0f))
         * Scale(Mat4(1.0f), Vec3(size.x, size.y, 1.0f));
 
-    DrawQuad(data, transform, texture, tilingFactor, tintColor);
+    draw_quad(data, transform, texture, tiling_factor, tint_color);
 }
 
-void UpdateQuadVertices(QuadRenderer::QuadRenderData& data, const Mat4& transform,
-    const Vec4& color, const uint32_t textureIndex, const float tilingFactor)
+void QuadRenderer::draw_quad(QuadRenderData& data, const Mat4& transform,
+    const Vec4& color)
 {
-    for (uint32_t i = 0; i < QuadRenderer::VerticesPerQuad; i++)
+    if (!is_indices_within_capabilities(data.quad_index_count)
+        || !is_vertices_within_capabilities(data.quad_vertex_count))
     {
-        data.QuadVertices[data.QuadVertexCount].Position =
-            transform * QuadRenderer::QuadVertexPositions[i];
-        data.QuadVertices[data.QuadVertexCount].Color = color;
-        data.QuadVertices[data.QuadVertexCount].TextureCoord =
-            QuadRenderer::QuadTextureCoords[i];
-        data.QuadVertices[data.QuadVertexCount].TextureIndex = textureIndex;
-        data.QuadVertices[data.QuadVertexCount].TilingFactor = tilingFactor;
-        data.QuadVertexCount++;
+        flush_and_reset(data);
     }
 
-    data.QuadIndexCount += IndicesPerQuad;
-    data.Stats.QuadCount++;
+    static constexpr uint32_t texture_index = 0; // White texture.
+    static constexpr float tiling_factor = 1.0f;
+
+    update_quad_vertices(data, transform, color, texture_index, tiling_factor);
 }
 
-void DrawQuad(QuadRenderData& data, const Mat4& transform, const Vec4& color)
+void QuadRenderer::draw_quad(QuadRenderData& data, const Mat4& transform,
+    const std::shared_ptr<Texture2D>& texture, const float tiling_factor,
+    const Vec4& tint_color)
 {
-    if (data.QuadIndexCount >= MaxIndices - IndicesPerQuad
-        || data.QuadVertexCount >= MaxVertices - VerticesPerQuad)
+    if (!is_indices_within_capabilities(data.quad_index_count)
+        || !is_vertices_within_capabilities(data.quad_vertex_count))
     {
-        FlushAndReset(data);
+        flush_and_reset(data);
     }
 
-    constexpr uint32_t textureIndex = 0; // White texture.
-    constexpr float tilingFactor = 1.0f;
-
-    UpdateQuadVertices(data, transform, color, textureIndex, tilingFactor);
-}
-
-void DrawQuad(QuadRenderData& data, const Mat4& transform,
-    const std::shared_ptr<Texture2D>& texture, const float tilingFactor,
-    const Vec4& tintColor)
-{
-    if (data.QuadIndexCount >= MaxIndices - IndicesPerQuad
-        || data.QuadVertexCount >= MaxVertices - VerticesPerQuad)
+    uint32_t texture_index = 0;
+    for (uint32_t i = 1; i < data.texture_slot_index; i++)
     {
-        FlushAndReset(data);
-    }
-
-    uint32_t textureIndex = 0;
-    for (uint32_t i = 1; i < data.TextureSlotIndex; i++)
-    {
-        if (*data.TextureSlots[i].get() == *texture.get())
+        if (*data.texture_slots[i].get() == *texture.get())
         {
-            textureIndex = i;
+            texture_index = i;
             break;
         }
     }
 
-    if (textureIndex == 0)
+    if (texture_index == 0)
     {
-        textureIndex = data.TextureSlotIndex;
-        data.TextureSlots[data.TextureSlotIndex] = texture;
-        data.TextureSlotIndex++;
+        texture_index = data.texture_slot_index;
+        data.texture_slots[data.texture_slot_index] = texture;
+        data.texture_slot_index++;
     }
 
-    UpdateQuadVertices(data, transform, tintColor, textureIndex, tilingFactor);
+    update_quad_vertices(data,
+        transform,
+        tint_color,
+        texture_index,
+        tiling_factor);
 }
 
-} // namespace pine::renderer2d
+} // namespace pine

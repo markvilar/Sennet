@@ -85,7 +85,7 @@ bool dispatch_event(const Event& event, const Callable& callable)
         return true;
     }
     return false;
-};
+}
 
 class EventDispatcher
 {
@@ -112,4 +112,4 @@ inline std::ostream& operator<<(std::ostream& os, Event& event)
     return os << event.to_string();
 }
 
-}; // namespace pine
+} // namespace pine

@@ -18,16 +18,16 @@ public:
 
     void set_projection(const float left, const float right, const float bottom,
         const float top);
-    
-    void set_position(const Vec3& position) 
-    { 
+
+    void set_position(const Vec3& position)
+    {
         m_position = position;
         update_view_matrix();
     }
-    
-    void set_rotation(const float rotation) 
-    { 
-        m_rotation = rotation; 
+
+    void set_rotation(const float rotation)
+    {
+        m_rotation = rotation;
         update_view_matrix();
     }
 
@@ -57,7 +57,6 @@ private:
     Vec3 m_position = {0.0f, 0.0f, 0.0f};
     float m_rotation = 0.0f; // Rotation in radians.
 };
-
 
 class OrthographicCameraController
 {

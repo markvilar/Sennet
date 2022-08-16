@@ -14,11 +14,13 @@ include(cmake/project_settings.cmake)
 include(cmake/prevent_in_source_build.cmake)
 
 # Interface library for options
-add_library(pine_options INTERFACE)
-target_compile_features(pine_options INTERFACE cxx_std_17)
+add_library(options INTERFACE)
+add_library(pine::options ALIAS options)
+target_compile_features(options INTERFACE cxx_std_17)
 
 # Interface library for warnings
-add_library(pine_warnings INTERFACE)
+add_library(warnings INTERFACE)
+add_library(pine::warnings ALIAS warnings)
 
 if(PINE_USE_CONAN)
     if(CONAN_EXPORTED)
@@ -39,11 +41,11 @@ include(cmake/cache.cmake)
 
 # Standard compiler warnings.
 include(cmake/compiler_warning.cmake)
-set_project_warnings(pine_warnings)
+set_project_warnings(warnings)
 
 # Sanitizer options if supported by compiler.
 include(cmake/sanitizers.cmake)
-enable_sanitizers(pine_options)
+enable_sanitizers(pine::options)
 
 # Allow static analysis options.
 include(cmake/static_analyzers.cmake)

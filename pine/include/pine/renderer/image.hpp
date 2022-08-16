@@ -66,9 +66,9 @@ private:
 };
 
 // TODO: Return std::optional<Image>
-Image read_image(const std::filesystem::path& filepath, 
+Image read_image(const std::filesystem::path& filepath,
     const bool flip = false);
-Image read_image(const std::filesystem::path& filepath, 
+Image read_image(const std::filesystem::path& filepath,
     const ImageFormat format, const bool flip = false);
 
 bool write_image(const std::filesystem::path& filepath, const Image& image,

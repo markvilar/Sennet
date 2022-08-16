@@ -16,6 +16,8 @@ GLenum to_opengl_internal_format(const ImageFormat& image_format)
     {
         switch (texture_format)
         {
+        case TextureFormat::UNKNOWN:
+            return GL_INVALID_ENUM;
         case TextureFormat::RED:
             return GL_R8;
         case TextureFormat::RG:
@@ -33,7 +35,7 @@ GLenum to_opengl_internal_format(const ImageFormat& image_format)
     }();
 
     PINE_CORE_ASSERT(internal_format, "Invalid OpenGL data format.");
-    return internal_format;
+    return static_cast<GLenum>(internal_format);
 }
 
 GLenum to_opengl_data_format(const ImageFormat& image_format)
@@ -43,6 +45,8 @@ GLenum to_opengl_data_format(const ImageFormat& image_format)
     {
         switch (texture_format)
         {
+        case TextureFormat::UNKNOWN:
+            return GL_INVALID_ENUM;
         case TextureFormat::RED:
             return GL_RED;
         case TextureFormat::RG:
@@ -60,7 +64,7 @@ GLenum to_opengl_data_format(const ImageFormat& image_format)
     }();
 
     PINE_CORE_ASSERT(internal_format, "Invalid OpenGL data format.");
-    return internal_format;
+    return static_cast<GLenum>(internal_format);
 }
 
 OpenGLTexture2D::OpenGLTexture2D(const std::filesystem::path& image_path)
@@ -77,8 +81,8 @@ OpenGLTexture2D::OpenGLTexture2D(const Image& image)
     glTextureStorage2D(m_RendererID,
         1,
         to_opengl_internal_format(image.get_format()),
-        image.get_width(),
-        image.get_height());
+        static_cast<GLsizei>(image.get_width()),
+        static_cast<GLsizei>(image.get_height()));
 
     glTextureParameteri(m_RendererID, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTextureParameteri(m_RendererID, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
@@ -89,8 +93,8 @@ OpenGLTexture2D::OpenGLTexture2D(const Image& image)
         0,
         0,
         0,
-        image.get_width(),
-        image.get_height(),
+        static_cast<GLsizei>(image.get_width()),
+        static_cast<GLsizei>(image.get_height()),
         to_opengl_data_format(image.get_format()),
         GL_UNSIGNED_BYTE,
         static_cast<const void*>(image.get_buffer().data()));
@@ -107,7 +111,8 @@ void OpenGLTexture2D::Unbind() const { glBindTexture(GL_TEXTURE_2D, 0); }
 
 bool OpenGLTexture2D::operator==(const Texture& other) const
 {
-    return m_RendererID == ((OpenGLTexture2D&)other).m_RendererID;
-};
+    return m_RendererID
+        == reinterpret_cast<const OpenGLTexture2D&>(other).m_RendererID;
+}
 
 } // namespace pine

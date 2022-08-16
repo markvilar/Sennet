@@ -1,9 +1,9 @@
 #include "pine/renderer/buffer.hpp"
 
+#include "pine/pch.hpp"
 #include "pine/platform/opengl/buffer.hpp"
 #include "pine/renderer/renderer.hpp"
 #include "pine/renderer/renderer_api.hpp"
-#include "pine/pch.hpp"
 
 namespace pine
 {
@@ -31,6 +31,7 @@ std::unique_ptr<VertexBuffer> VertexBuffer::create(const uint32_t size)
     case RendererAPI::API::None:
         PINE_CORE_ASSERT(false, "RendererAPI::API::None is currently not \
 				supported!");
+        return nullptr;
     case RendererAPI::API::OpenGL:
         return std::make_unique<OpenGLVertexBuffer>(size);
     }
@@ -47,6 +48,7 @@ std::unique_ptr<VertexBuffer> VertexBuffer::create(const float* vertices,
     case RendererAPI::API::None:
         PINE_CORE_ASSERT(false, "RendererAPI::API::None is currently not \
 				supported!");
+        return nullptr;
     case RendererAPI::API::OpenGL:
         return std::make_unique<OpenGLVertexBuffer>(vertices, size);
     }
@@ -63,6 +65,7 @@ std::unique_ptr<IndexBuffer> IndexBuffer::create(const uint32_t* indices,
     case RendererAPI::API::None:
         PINE_CORE_ASSERT(false, "RendererAPI::API::None is currently not \
 				supported!");
+        return nullptr;
     case RendererAPI::API::OpenGL:
         return std::make_unique<OpenGLIndexBuffer>(indices, count);
     }
@@ -78,6 +81,7 @@ std::unique_ptr<VertexArray> VertexArray::create()
     case RendererAPI::API::None:
         PINE_CORE_ASSERT(false, "Renderer API None is currently not \
 				supported!");
+        return nullptr;
     case RendererAPI::API::OpenGL:
         return std::make_unique<OpenGLVertexArray>();
     }

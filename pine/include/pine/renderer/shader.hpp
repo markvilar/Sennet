@@ -10,6 +10,10 @@
 namespace pine
 {
 
+// TODO: Implement ShaderPreprocessor
+// - Read from source
+// - Read from file
+
 class Shader
 {
 public:
@@ -21,25 +25,26 @@ public:
     Shader& operator=(const Shader&) = delete;
     Shader& operator=(Shader&&) = delete;
 
-    virtual void Bind() const = 0;
-    virtual void Unbind() const = 0;
+    virtual void bind() const = 0;
+    virtual void unbind() const = 0;
 
-    virtual void SetInt(const std::string& name, const int value) const = 0;
-    virtual void SetIntArray(const std::string& name, const int* values,
+    virtual void set_int(const std::string& name, const int value) const = 0;
+    virtual void set_int_array(const std::string& name, const int* values,
         const uint32_t count) const = 0;
-    virtual void SetFloat(const std::string& name, const float value) const = 0;
-    virtual void SetFloat3(const std::string& name,
+    virtual void set_float(const std::string& name,
+        const float value) const = 0;
+    virtual void set_float3(const std::string& name,
         const Vec3& value) const = 0;
-    virtual void SetFloat4(const std::string& name,
+    virtual void set_float4(const std::string& name,
         const Vec4& value) const = 0;
-    virtual void SetMat4(const std::string& name, const Mat4& value) const = 0;
+    virtual void set_mat4(const std::string& name, const Mat4& value) const = 0;
 
-    virtual const std::string& GetName() const = 0;
+    virtual const std::string& get_name() const = 0;
 
-    static std::unique_ptr<Shader> Create(
+    static std::unique_ptr<Shader> create(
         const std::filesystem::path& filepath);
-    static std::unique_ptr<Shader> Create(const std::string& name,
-        const std::string& vertexSrc, const std::string& fragmentSrc);
+    static std::unique_ptr<Shader> create(const std::string& name,
+        const std::string& vertex_source, const std::string& fragment_source);
 };
 
 class ShaderLibrary
@@ -47,19 +52,20 @@ class ShaderLibrary
     using ShaderMap = std::unordered_map<std::string, std::shared_ptr<Shader>>;
 
 public:
-    void Add(const std::string& name, const std::shared_ptr<Shader>& shader);
-    void Add(const std::shared_ptr<Shader>& shader);
+    void add_shader(const std::string& name,
+        const std::shared_ptr<Shader>& shader);
+    void add_shader(const std::shared_ptr<Shader>& shader);
 
-    bool Load(const std::string& name, const std::string filepath);
-    bool Load(const std::string& filepath);
+    bool load_shader(const std::string& name, const std::string filepath);
+    bool load_shader(const std::string& filepath);
 
-    const std::shared_ptr<Shader>& Get(const std::string& name) const;
-    const ShaderMap& GetShaders() const { return m_Shaders; }
+    const std::shared_ptr<Shader>& get_shader(const std::string& name) const;
+    const ShaderMap& get_shader_map() const { return m_shaders; }
 
-    bool Exists(const std::string& name) const;
+    bool has_shader(const std::string& name) const;
 
 private:
-    ShaderMap m_Shaders;
+    ShaderMap m_shaders;
 };
 
 } // namespace pine

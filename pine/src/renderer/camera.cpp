@@ -20,11 +20,11 @@ void OrthographicCamera::set_projection(const float left, const float right,
     m_projection_matrix = Ortho(left, right, bottom, top, -1.0f, 1.0f);
 }
 
-OrthographicCameraController::OrthographicCameraController(
-    const float aspect_ratio, const bool rotation)
-    : m_aspect_ratio(aspect_ratio), 
-        m_rotation_enabled(rotation),
-        m_camera(-m_aspect_ratio * m_zoom_level, m_aspect_ratio * m_zoom_level,
+OrthographicCameraController::OrthographicCameraController(const float
+                                                               aspect_ratio,
+    const bool rotation)
+    : m_aspect_ratio(aspect_ratio), m_rotation_enabled(rotation),
+      m_camera(-m_aspect_ratio * m_zoom_level, m_aspect_ratio * m_zoom_level,
           -m_zoom_level, m_zoom_level)
 {
 }
@@ -91,7 +91,8 @@ bool OrthographicCameraController::on_mouse_scrolled(
 bool OrthographicCameraController::on_window_resized(
     const WindowResizeEvent& event)
 {
-    on_resize((float)event.get_width(), (float)event.get_height());
+    on_resize(static_cast<float>(event.get_width()),
+        static_cast<float>(event.get_height()));
     return false;
 }
 

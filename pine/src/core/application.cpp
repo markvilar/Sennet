@@ -13,8 +13,7 @@ namespace pine
 
 Application* Application::s_instance = nullptr;
 
-Application::Application(const ApplicationSpecs& specs)
-    : m_specification(specs)
+Application::Application(const ApplicationSpecs& specs) : m_specification(specs)
 {
     PINE_CORE_ASSERT(!s_instance, "Application already exists!");
     s_instance = this;
@@ -53,7 +52,7 @@ Application::Application(const ApplicationSpecs& specs)
 
 Application::~Application()
 {
-    m_window->set_event_callback([](Event& event) {});
+    m_window->set_event_callback([]([[maybe_unused]] Event& event) {});
 }
 
 void Application::run()
@@ -62,7 +61,7 @@ void Application::run()
     while (m_running)
     {
         // TODO: Temporary.
-        auto time = glfwGetTime(); // Platform::GetTime
+        auto time = static_cast<float>(glfwGetTime()); // Platform::GetTime
         m_timestep = time - m_last_frame_time;
 
         m_window->poll_events();
@@ -135,15 +134,15 @@ void Application::pop_overlay(Layer* layer)
 
 void Application::render_imgui()
 {
-    m_imgui_layer->Begin();
+    m_imgui_layer->begin();
     for (Layer* layer : m_layer_stack)
     {
         layer->on_imgui_render();
     }
-    m_imgui_layer->End();
+    m_imgui_layer->end();
 }
 
-bool Application::on_window_close(WindowCloseEvent& event)
+bool Application::on_window_close([[maybe_unused]] WindowCloseEvent& event)
 {
     m_running = false;
     return true;
@@ -161,4 +160,4 @@ bool Application::on_window_iconify(WindowIconifyEvent& event)
     return false;
 }
 
-}; // namespace pine
+} // namespace pine

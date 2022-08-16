@@ -1,7 +1,7 @@
 #include "pine/renderer/graphics_context.hpp"
 
-#include "pine/platform/opengl/context.hpp"
 #include "pine/pch.hpp"
+#include "pine/platform/opengl/context.hpp"
 
 namespace pine
 {

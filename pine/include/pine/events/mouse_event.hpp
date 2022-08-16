@@ -11,8 +11,9 @@ namespace pine
 class MouseMovedEvent : public Event
 {
 public:
-    MouseMovedEvent(const float x, const float y) 
-        : m_mouse_x(x), m_mouse_y(y) {}
+    MouseMovedEvent(const float x, const float y) : m_mouse_x(x), m_mouse_y(y)
+    {
+    }
 
     float get_x() const { return m_mouse_x; }
     float get_y() const { return m_mouse_y; }
@@ -45,7 +46,8 @@ public:
     std::string to_string() const override
     {
         std::stringstream ss;
-        ss << "[MouseScrolledEvent] " << get_offset_x() << ", " << get_offset_y();
+        ss << "[MouseScrolledEvent] " << get_offset_x() << ", "
+           << get_offset_y();
         return ss.str();
     }
 

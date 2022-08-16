@@ -19,7 +19,6 @@ struct WindowSpecs
     bool vsync;
 };
 
-
 class Window
 {
     /*

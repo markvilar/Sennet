@@ -17,7 +17,10 @@ void OpenGLRendererAPI::Init()
 void OpenGLRendererAPI::SetViewport(const uint32_t x, const uint32_t y,
     const uint32_t width, const uint32_t height)
 {
-    glViewport(x, y, width, height);
+    glViewport(static_cast<GLint>(x),
+        static_cast<GLint>(y),
+        static_cast<GLsizei>(width),
+        static_cast<GLsizei>(height));
 }
 
 void OpenGLRendererAPI::SetClearColor(const Vec4& color)
@@ -36,7 +39,10 @@ void OpenGLRendererAPI::DrawIndexed(const VertexArray& vertex_array,
     const uint32_t count =
         index_count ? vertex_array.get_index_buffer().get_count() : index_count;
     vertex_array.bind();
-    glDrawElements(GL_TRIANGLES, count, GL_UNSIGNED_INT, nullptr);
+    glDrawElements(GL_TRIANGLES,
+        static_cast<GLsizei>(count),
+        GL_UNSIGNED_INT,
+        nullptr);
 }
 
 } // namespace pine

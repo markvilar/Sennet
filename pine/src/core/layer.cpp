@@ -22,9 +22,9 @@ void LayerStack::push_layer(Layer* layer)
     m_layer_insert_index++;
 }
 
-void LayerStack::push_overlay(Layer* overlay) 
-{ 
-    m_layers.emplace_back(overlay); 
+void LayerStack::push_overlay(Layer* overlay)
+{
+    m_layers.emplace_back(overlay);
 }
 
 void LayerStack::pop_layer(Layer* layer)

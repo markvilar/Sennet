@@ -18,7 +18,8 @@ OpenGLContext::OpenGLContext(GLFWwindow* window_handle)
 void OpenGLContext::init()
 {
     glfwMakeContextCurrent(m_window_handle);
-    int status = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
+    const auto status =
+        gladLoadGLLoader(reinterpret_cast<GLADloadproc>(glfwGetProcAddress));
     PINE_CORE_ASSERT(status, "Failed to initialize Glad!")
 
     PINE_CORE_INFO("OpenGL Info:");
@@ -27,8 +28,7 @@ void OpenGLContext::init()
     PINE_CORE_INFO(" - Version:  {0}", glGetString(GL_VERSION));
 
 #ifdef PINE_ENABLE_ASSERTS
-    int version_major;
-    int version_minor;
+    int version_major, version_minor;
     glGetIntegerv(GL_MAJOR_VERSION, &version_major);
     glGetIntegerv(GL_MINOR_VERSION, &version_minor);
 

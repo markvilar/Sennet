@@ -17,8 +17,8 @@ class OpenGLShader : public Shader
 {
 public:
     OpenGLShader(const std::filesystem::path& filepath);
-    OpenGLShader(const std::string& name, const std::string& vertexSrc,
-        const std::string& fragmentSrc);
+    OpenGLShader(const std::string& name, const std::string& vertex_source,
+        const std::string& fragment_source);
     virtual ~OpenGLShader();
 
     OpenGLShader(const OpenGLShader&) = delete;
@@ -27,45 +27,49 @@ public:
     OpenGLShader& operator=(const OpenGLShader&) = delete;
     OpenGLShader& operator=(OpenGLShader&&) = default;
 
-    virtual void Bind() const override;
-    virtual void Unbind() const override;
+    virtual void bind() const override;
+    virtual void unbind() const override;
 
-    virtual void SetInt(const std::string& name,
+    virtual void set_int(const std::string& name,
         const int value) const override;
-    virtual void SetIntArray(const std::string& name, const int* values,
+    virtual void set_int_array(const std::string& name, const int* values,
         const uint32_t count) const override;
-    virtual void SetFloat(const std::string& name,
+    virtual void set_float(const std::string& name,
         const float value) const override;
-    virtual void SetFloat3(const std::string& name,
+    virtual void set_float3(const std::string& name,
         const Vec3& value) const override;
-    virtual void SetFloat4(const std::string& name,
+    virtual void set_float4(const std::string& name,
         const Vec4& value) const override;
-    virtual void SetMat4(const std::string& name,
+    virtual void set_mat4(const std::string& name,
         const Mat4& value) const override;
 
-    virtual const std::string& GetName() const override { return m_Name; }
+    virtual const std::string& get_name() const override { return m_name; }
 
-    void UploadUniformInt(const std::string& name, const int value) const;
-    void UploadUniformIntArray(const std::string& name, const int* values,
+    void upload_uniform_int(const std::string& name, const int value) const;
+    void upload_uniform_int_array(const std::string& name, const int* values,
         const uint32_t count) const;
 
-    void UploadUniformFloat(const std::string& name, const float value) const;
-    void UploadUniformFloat2(const std::string& name, const Vec2& values) const;
-    void UploadUniformFloat3(const std::string& name, const Vec3& values) const;
-    void UploadUniformFloat4(const std::string& name, const Vec4& values) const;
+    void upload_uniform_float(const std::string& name, const float value) const;
+    void upload_uniform_float2(const std::string& name,
+        const Vec2& values) const;
+    void upload_uniform_float3(const std::string& name,
+        const Vec3& values) const;
+    void upload_uniform_float4(const std::string& name,
+        const Vec4& values) const;
 
-    void UploadUniformMat3(const std::string& name, const Mat3& matrix) const;
-    void UploadUniformMat4(const std::string& name, const Mat4& matrix) const;
+    void upload_uniform_mat3(const std::string& name, const Mat3& matrix) const;
+    void upload_uniform_mat4(const std::string& name, const Mat4& matrix) const;
 
 private:
-    std::string ReadFile(const std::filesystem::path& filepath);
-    std::unordered_map<GLenum, std::string> PreProcess(
+    std::string read_file(const std::filesystem::path& filepath);
+    std::unordered_map<GLenum, std::string> preprocess(
         const std::string& source);
-    void Compile(const std::unordered_map<GLenum, std::string>& shaderSources);
+    void compile_shader(
+        const std::unordered_map<GLenum, std::string>& shader_sources);
 
 private:
-    RendererID m_RendererID;
-    std::string m_Name;
+    RendererID m_renderer_id;
+    std::string m_name;
 };
 
 } // namespace pine

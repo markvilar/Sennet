@@ -48,4 +48,4 @@ void send_to_client(ServerState& server,
     }
 }
 
-}; // namespace pine
+} // namespace pine

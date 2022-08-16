@@ -17,14 +17,11 @@ public:
 
     virtual bool is_key_pressed(const KeyCode key) = 0;
     virtual bool is_mouse_button_pressed(const MouseCode button) = 0;
-    
+
     virtual std::pair<float, float> get_mouse_position() = 0;
 
     // TODO: Implement.
-    static std::unique_ptr<InputHandle> create()
-    {
-        return nullptr;
-    }
+    static std::unique_ptr<InputHandle> create() { return nullptr; }
 };
 
 bool is_key_pressed(const Window& window, const KeyCode key);
