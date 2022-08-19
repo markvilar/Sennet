@@ -107,7 +107,6 @@ jobs:
 
     - name: Install Conan packages
       run: |
-        sudo apt install -y xorg openbox xauth libx11-xcb-dev libx11-xcb-dev libfontenc-dev libxaw7-dev libxkbfile-dev libxmu-dev libxmuu-dev libxpm-dev libxres-dev libxss-dev libxt-dev libxtst-dev libxv-dev libxvmc-dev libxxf86vm-dev
         export CONAN_SYSREQUIRES_MODE=enabled
         conan install      ${{env.source_dir}} \
           --install-folder ${{env.package_dir}} \

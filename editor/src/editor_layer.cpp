@@ -9,7 +9,7 @@ EditorLayer::EditorLayer() : Layer("EditorLayer"), m_camera_controller(1.0f) {}
 
 void EditorLayer::on_attach()
 {
-    UpdateInterfaceLayout();
+    update_interface_layout();
 
     auto& io = ImGui::GetIO();
     io.Fonts->AddFontFromFileTTF("resources/fonts/OpenSans-Regular.ttf",
@@ -48,7 +48,7 @@ void EditorLayer::on_detach() {}
 
 void EditorLayer::on_update(Timestep ts)
 {
-    UpdateInterfaceLayout();
+    update_interface_layout();
     const auto& specs = m_viewport_framebuffer->get_specification();
     const auto viewport = m_interface_layouts["Viewport"];
 
@@ -168,7 +168,7 @@ void EditorLayer::on_imgui_render()
             {
                 static char workingDirectoryBuffer[256] = "";
                 strcpy(workingDirectoryBuffer,
-                    pine::filesystem::GetWorkingDirectory().c_str());
+                    pine::filesystem::get_working_directory().c_str());
                 ImGui::Text("Working directory: %s", workingDirectoryBuffer);
                 if (ImGui::Button("Close"))
                 {
@@ -214,7 +214,7 @@ void EditorLayer::on_imgui_render()
                 !m_viewport_focused || !m_viewport_hovered);
         });
 
-    [[maybe_unused]] auto test_bool = ui::render_window("LeftPanel",
+    ui::render_window("LeftPanel",
         m_interface_layouts["LeftPanel"].Position,
         m_interface_layouts["LeftPanel"].Size,
         [this]
@@ -244,23 +244,25 @@ void EditorLayer::on_imgui_render()
             static auto image_format = ImageFormat::BGRA;
 
             const std::array<std::pair<const char*, ImageFormat>, 6>
-                image_format_options = {std::make_pair("Gray",
-                                            ImageFormat::GRAY),
+                image_format_options = {
+                    std::make_pair("Gray", ImageFormat::GRAY),
                     std::make_pair("Gray-alpha", ImageFormat::GRAY_ALPHA),
                     std::make_pair("RGB", ImageFormat::RGB),
                     std::make_pair("BGR", ImageFormat::BGR),
                     std::make_pair("RGBA", ImageFormat::RGBA),
-                    std::make_pair("BGRA", ImageFormat::BGRA)};
+                    std::make_pair("BGRA", ImageFormat::BGRA) };
 
             ImGui::InputText("Image path",
                 image_path,
                 IM_ARRAYSIZE(image_path));
+
             ui::dropdown("Image format", &image_format, image_format_options);
+            
             ImGui::Checkbox("Flip image", &flip_image);
             ImGui::SameLine();
             if (ImGui::Button("Load image"))
             {
-                if (pine::filesystem::IsFile(image_path))
+                if (pine::filesystem::is_file(image_path))
                 {
                     m_texture = Texture2D::Create(
                         read_image(image_path, image_format, flip_image));
@@ -284,18 +286,16 @@ void EditorLayer::on_imgui_render()
             static float value_float = 0.0;
             static double value_double = 0.0;
 
-            ui::slider_scalar("Slider int8", &value_int8, -10, 10);
-            ui::slider_scalar("Slider int16", &value_int16, -10, 10);
-            ui::slider_scalar("Slider int32", &value_int32, -10, 10);
-            ui::slider_scalar("Slider int64", &value_int64, -10, 10);
-            ui::slider_scalar("Slider uint8", &value_uint8, 0, 10);
-            ui::slider_scalar("Slider uint16", &value_uint16, 0, 10);
-            ui::slider_scalar("Slider uint32", &value_uint32, 0, 10);
-            ui::slider_scalar("Slider uint64", &value_uint64, 0, 10);
-            ui::slider_scalar("Slider float", &value_float, -1.0, 1.0);
-            ui::slider_scalar("Slider double", &value_double, -1.0, 1.0);
-
-            return true;
+            ui::slider_scalar<int8_t>("Slider int8", &value_int8, -10, 10);
+            ui::slider_scalar<int16_t>("Slider int16", &value_int16, -10, 10);
+            ui::slider_scalar<int32_t>("Slider int32", &value_int32, -10, 10);
+            ui::slider_scalar<int64_t>("Slider int64", &value_int64, -10, 10);
+            ui::slider_scalar<uint8_t>("Slider uint8", &value_uint8, 0, 10);
+            ui::slider_scalar<uint16_t>("Slider uint16", &value_uint16, 0, 10);
+            ui::slider_scalar<uint32_t>("Slider uint32", &value_uint32, 0, 10);
+            ui::slider_scalar<uint64_t>("Slider uint64", &value_uint64, 0, 10);
+            ui::slider_scalar<float>("Slider float", &value_float, -1.0f, 1.0f);
+            ui::slider_scalar<double>("Slider double", &value_double, -1.0, 1.0);
         });
 
     ui::render_window("RightPanel",
@@ -319,11 +319,11 @@ void EditorLayer::on_imgui_render()
                 disconnect(m_client);
             }
 
-            static constexpr size_t messageSize = 10 * 5;
-            static char messageText[messageSize] = "";
+            static constexpr size_t message_size = 10 * 5;
+            static char message_text[message_size] = "";
             ImGui::InputTextMultiline("Message",
-                messageText,
-                IM_ARRAYSIZE(messageText),
+                message_text,
+                IM_ARRAYSIZE(message_text),
                 ImVec2(-FLT_MIN, ImGui::GetTextLineHeight() * 5),
                 ImGuiInputTextFlags_AllowTabInput);
 
@@ -331,8 +331,8 @@ void EditorLayer::on_imgui_render()
             {
                 if (is_connected(m_client))
                 {
-                    const auto message = std::vector<uint8_t>(messageText,
-                        messageText + sizeof(messageText));
+                    const auto message = std::vector<uint8_t>(message_text,
+                        message_text + sizeof(message_text));
                     send(m_client, message.data(), message.size());
                 }
             }
@@ -370,7 +370,7 @@ void EditorLayer::on_event(Event& event)
     m_camera_controller.on_event(event);
 }
 
-void EditorLayer::UpdateInterfaceLayout()
+void EditorLayer::update_interface_layout()
 {
     const auto& window_size = pine::Application::get().get_window().get_size();
     const auto window_width = static_cast<float>(window_size.first);

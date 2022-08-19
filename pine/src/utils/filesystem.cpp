@@ -5,85 +5,85 @@
 namespace pine
 {
 
-bool filesystem::CreateDirectory(const std::filesystem::path& directory)
+bool filesystem::create_directory(const std::filesystem::path& directory)
 {
     return std::filesystem::create_directory(directory);
 }
 
-bool filesystem::CreateDirectory(const std::string& directory)
+bool filesystem::create_directory(const std::string& directory)
 {
-    return CreateDirectory(std::filesystem::path(directory));
+    return std::filesystem::create_directory(directory);
 }
 
-bool filesystem::Exists(const std::filesystem::path& filepath)
+bool filesystem::exists(const std::filesystem::path& filepath)
 {
     return std::filesystem::exists(filepath);
 }
 
-bool filesystem::Exists(const std::string& filepath)
+bool filesystem::exists(const std::string& filepath)
 {
     return std::filesystem::exists(std::filesystem::path(filepath));
 }
 
-bool filesystem::Copy(const std::filesystem::path& oldFilepath,
-    const std::filesystem::path& newFilepath)
+bool filesystem::copy(const std::filesystem::path& old_filepath,
+    const std::filesystem::path& new_filepath)
 {
     std::error_code ec;
-    std::filesystem::copy(oldFilepath, newFilepath, ec);
+    std::filesystem::copy(old_filepath, new_filepath, ec);
     return !ec;
 }
 
-bool filesystem::Move(const std::filesystem::path& oldFilepath,
-    const std::filesystem::path& newFilepath)
+bool filesystem::move(const std::filesystem::path& old_filepath,
+    const std::filesystem::path& new_filepath)
 {
     std::error_code ec;
-    std::filesystem::rename(oldFilepath, newFilepath, ec);
+    std::filesystem::rename(old_filepath, new_filepath, ec);
     return !ec;
 }
 
-bool filesystem::MoveFile(const std::filesystem::path& filepath,
+bool filesystem::move_file(const std::filesystem::path& filepath,
     const std::filesystem::path& destination)
 {
-    return Move(filepath, destination);
+    return move(filepath, destination);
 }
 
-bool filesystem::RenameFile(const std::filesystem::path& oldFilepath,
-    const std::string& newName)
+bool filesystem::rename_file(const std::filesystem::path& old_filepath,
+    const std::string& new_name)
 {
-    auto newFilepath =
-        oldFilepath.parent_path() / newName / oldFilepath.extension();
-    return Move(oldFilepath, newFilepath);
+    auto new_filepath =
+        old_filepath.parent_path() / new_name / old_filepath.extension();
+    return move(old_filepath, new_filepath);
 }
 
-bool filesystem::DeleteFile(const std::filesystem::path& filepath)
+bool filesystem::delete_file(const std::filesystem::path& filepath)
 {
     return std::filesystem::remove(filepath);
 }
 
-bool filesystem::IsEmpty(const std::filesystem::path& filepath)
+bool filesystem::is_empty(const std::filesystem::path& filepath)
 {
     return std::filesystem::is_empty(filepath);
 }
 
-bool filesystem::IsEqual(const std::filesystem::path& filepath,
+bool filesystem::is_equal(const std::filesystem::path& filepath,
     const std::filesystem::path& other)
 {
     return std::filesystem::equivalent(filepath, other);
 }
 
-bool filesystem::IsFile(const std::filesystem::path& filepath)
+bool filesystem::is_file(const std::filesystem::path& filepath)
 {
     return std::filesystem::is_regular_file(filepath);
 }
 
-bool filesystem::IsDirectory(const std::filesystem::path& filepath)
+bool filesystem::is_directory(const std::filesystem::path& filepath)
 {
     return std::filesystem::is_directory(filepath);
 }
 
-bool filesystem::SetWorkingDirectory(const std::filesystem::path& filepath)
+bool filesystem::set_working_directory(const std::filesystem::path& filepath)
 {
-    if (IsDirectory(filepath))
+    if (filesystem::is_directory(filepath))
     {
         std::error_code ec;
         std::filesystem::current_path(filepath, ec);
@@ -95,7 +95,7 @@ bool filesystem::SetWorkingDirectory(const std::filesystem::path& filepath)
     }
 }
 
-std::filesystem::path filesystem::GetWorkingDirectory()
+std::filesystem::path filesystem::get_working_directory()
 {
     return std::filesystem::current_path();
 }

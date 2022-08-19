@@ -29,6 +29,7 @@ auto render_window(const char* name, const Vec2& position, const Vec2& size,
             | ImGuiWindowFlags_NoCollapse
             | ImGuiWindowFlags_NoBringToFrontOnFocus);
 
+    // If func has a non-void return type, we return it after ending the window.
     if constexpr (!std::is_void<decltype(func())>::value)
     {
         const auto value = func();
@@ -57,7 +58,7 @@ auto render_viewport(const char* name, const Vec2& position, const Vec2& size,
             | ImGuiWindowFlags_NoScrollbar
             | ImGuiWindowFlags_NoScrollWithMouse);
 
-    // If func has a return type, we return it after ending the window.
+    // If func has a non-void return type, we return it after ending the window.
     if constexpr (!std::is_void<decltype(func())>::value)
     {
         const auto value = func();
@@ -101,15 +102,31 @@ auto menu_bar(const Function func)
     }
 }
 
-// TODO: Better templating - Make container type more generic.
-template <typename T, size_t size>
-void dropdown(const char* name, T* value,
-    const std::array<std::pair<const char*, T>, size>& options)
+// TODO: Improve templating - Allow container to be vector. (C++20s std::span)
+template <typename T, size_t N>
+auto dropdown(const char* name, T* t, 
+    const std::array<std::pair<const char*, T>, N> options)
 {
-    static size_t label_index = 0;
+    static_assert(std::is_trivial<T>::value, "T must be trivial.");
+    static_assert(std::is_trivially_copyable<T>::value, 
+        "T must be trivially copyable.");
+    static_assert(std::is_copy_constructible_v<T>,
+        "T must be copy constructible.");
 
-    const auto label = options[label_index].first;
-    if (ImGui::BeginCombo(name, label, 0))
+    static typename std::array<std::pair<const char*, T>, N>::size_type 
+        label_index = 0;
+
+    // Set label index based on the value of t.
+    for (size_t index = 0; index < options.size(); index++)
+    {
+        if (*t == options[index].second)
+        {
+            label_index = index;
+        }
+    }
+
+    // Render dropdown menu and update reference value.
+    if (ImGui::BeginCombo(name, options[label_index].first, 0))
     {
         for (size_t index = 0; index < options.size(); index++)
         {
@@ -117,7 +134,7 @@ void dropdown(const char* name, T* value,
             if (ImGui::Selectable(options[index].first, is_selected))
             {
                 label_index = index;
-                *value = options[index].second;
+                *t = options[index].second;
             }
 
             if (is_selected)
@@ -127,6 +144,8 @@ void dropdown(const char* name, T* value,
         }
         ImGui::EndCombo();
     }
+
+    return *t;
 }
 
 WindowFlags configure_window_flags(const bool fullscreen);
@@ -135,25 +154,60 @@ void set_dark_theme(Style& style);
 void help_marker(const char* desc);
 void empty_space(const float width, const float height);
 
-bool slider_scalar(const char* name, int8_t* value, const int8_t min_value,
-    const int8_t max_value);
-bool slider_scalar(const char* name, uint8_t* value, const uint8_t min_value,
-    const uint8_t max_value);
-bool slider_scalar(const char* name, int16_t* value, const int16_t min_value,
-    const int16_t max_value);
-bool slider_scalar(const char* name, uint16_t* value, const uint16_t min_value,
-    const uint16_t max_value);
-bool slider_scalar(const char* name, int32_t* value, const int32_t min_value,
-    const int32_t max_value);
-bool slider_scalar(const char* name, uint32_t* value, const uint32_t min_value,
-    const uint32_t max_value);
-bool slider_scalar(const char* name, int64_t* value, const int64_t min_value,
-    const int64_t max_value);
-bool slider_scalar(const char* name, uint64_t* value, const uint64_t min_value,
-    const uint64_t max_value);
-bool slider_scalar(const char* name, float* value, const float min_value,
-    const float max_value);
-bool slider_scalar(const char* name, double* value, const double min_value,
-    const double max_value);
+// TODO: Fix implicit template deduction. Literal types ruin template argument
+// deduction.
+template <typename T>
+auto slider_scalar(const char* name, T* value, const T min_value, 
+    const T max_value)
+{
+    static_assert(std::is_scalar<T>::value, "T must be scalar");
+    static_assert(
+        std::is_integral<T>::value || std::is_floating_point<T>::value, 
+        "T must be integral or floating point.");
+
+    ImGuiDataType type = ImGuiDataType_S8;
+    if constexpr (std::is_same<T, int8_t>::value)
+    {
+        type = ImGuiDataType_S8;
+    }
+    else if constexpr (std::is_same<T, int16_t>::value)
+    {
+        type = ImGuiDataType_S16;
+    }
+    else if constexpr (std::is_same<T, int32_t>::value)
+    {
+        type = ImGuiDataType_S32;
+    }
+    else if constexpr (std::is_same<T, int64_t>::value)
+    {
+        type = ImGuiDataType_S64;
+    }
+    else if constexpr (std::is_same<T, uint8_t>::value)
+    {
+        type = ImGuiDataType_U8;
+    }
+    else if constexpr (std::is_same<T, uint16_t>::value)
+    {
+        type = ImGuiDataType_U16;
+    }
+    else if constexpr (std::is_same<T, uint32_t>::value)
+    {
+        type = ImGuiDataType_U32;
+    }
+    else if constexpr (std::is_same<T, uint64_t>::value)
+    {
+        type = ImGuiDataType_U64;
+    }
+    else if constexpr (std::is_same<T, float>::value)
+    {
+        type = ImGuiDataType_Float;
+    }
+    else if constexpr (std::is_same<T, double>::value)
+    {
+        type = ImGuiDataType_Double;
+    }
+
+    return ImGui::SliderScalar(name, type, value, &min_value, &max_value);
+}
 
 } // namespace pine::ui

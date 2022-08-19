@@ -42,7 +42,7 @@ public:
     virtual void on_event(Event& event) override;
 
 private:
-    void UpdateInterfaceLayout();
+    void update_interface_layout();
 
 private:
     OrthographicCameraController m_camera_controller{1.0f};
