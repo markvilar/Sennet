@@ -70,26 +70,26 @@ GLenum to_opengl_data_format(const ImageFormat& image_format)
 OpenGLTexture2D::OpenGLTexture2D(const std::filesystem::path& image_path)
     : OpenGLTexture2D(read_image(image_path))
 {
-    m_Source = image_path;
+    m_source = image_path;
 }
 
 OpenGLTexture2D::OpenGLTexture2D(const Image& image)
-    : m_Source(""), m_Width(image.get_width()), m_Height(image.get_height())
+    : m_source(""), m_width(image.get_width()), m_height(image.get_height())
 {
-    glCreateTextures(GL_TEXTURE_2D, 1, &m_RendererID);
+    glCreateTextures(GL_TEXTURE_2D, 1, &m_renderer_id);
 
-    glTextureStorage2D(m_RendererID,
+    glTextureStorage2D(m_renderer_id,
         1,
         to_opengl_internal_format(image.get_format()),
         static_cast<GLsizei>(image.get_width()),
         static_cast<GLsizei>(image.get_height()));
 
-    glTextureParameteri(m_RendererID, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTextureParameteri(m_RendererID, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    glTextureParameteri(m_RendererID, GL_TEXTURE_WRAP_S, GL_REPEAT);
-    glTextureParameteri(m_RendererID, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    glTextureParameteri(m_renderer_id, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTextureParameteri(m_renderer_id, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTextureParameteri(m_renderer_id, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTextureParameteri(m_renderer_id, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
-    glTextureSubImage2D(m_RendererID,
+    glTextureSubImage2D(m_renderer_id,
         0,
         0,
         0,
@@ -100,19 +100,19 @@ OpenGLTexture2D::OpenGLTexture2D(const Image& image)
         static_cast<const void*>(image.get_buffer().data()));
 }
 
-OpenGLTexture2D::~OpenGLTexture2D() { glDeleteTextures(1, &m_RendererID); }
+OpenGLTexture2D::~OpenGLTexture2D() { glDeleteTextures(1, &m_renderer_id); }
 
-void OpenGLTexture2D::Bind(const uint32_t slot) const
+void OpenGLTexture2D::bind(const uint32_t slot) const
 {
-    glBindTextureUnit(slot, m_RendererID);
+    glBindTextureUnit(slot, m_renderer_id);
 }
 
-void OpenGLTexture2D::Unbind() const { glBindTexture(GL_TEXTURE_2D, 0); }
+void OpenGLTexture2D::unbind() const { glBindTexture(GL_TEXTURE_2D, 0); }
 
 bool OpenGLTexture2D::operator==(const Texture& other) const
 {
-    return m_RendererID
-        == reinterpret_cast<const OpenGLTexture2D&>(other).m_RendererID;
+    return m_renderer_id
+        == reinterpret_cast<const OpenGLTexture2D&>(other).m_renderer_id;
 }
 
 } // namespace pine

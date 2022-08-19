@@ -264,7 +264,7 @@ void EditorLayer::on_imgui_render()
             {
                 if (pine::filesystem::is_file(image_path))
                 {
-                    m_texture = Texture2D::Create(
+                    m_texture = Texture2D::create(
                         read_image(image_path, image_format, flip_image));
                     PINE_INFO("Loaded image: {0}, {1}",
                         image_path,

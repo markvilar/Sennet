@@ -7,8 +7,8 @@
 namespace pine
 {
 
-std::unique_ptr<Texture2D> Texture2D::Create(
-    const std::filesystem::path& filePath)
+std::unique_ptr<Texture2D> Texture2D::create(
+    const std::filesystem::path& filepath)
 {
     switch (Renderer::get_api())
     {
@@ -17,14 +17,14 @@ std::unique_ptr<Texture2D> Texture2D::Create(
 			supported!");
         return nullptr;
     case RendererAPI::API::OpenGL:
-        return std::make_unique<OpenGLTexture2D>(filePath);
+        return std::make_unique<OpenGLTexture2D>(filepath);
     }
 
     PINE_CORE_ASSERT(false, "Unknown Renderer API.");
     return nullptr;
 }
 
-std::unique_ptr<Texture2D> Texture2D::Create(const Image& image)
+std::unique_ptr<Texture2D> Texture2D::create(const Image& image)
 {
     switch (Renderer::get_api())
     {

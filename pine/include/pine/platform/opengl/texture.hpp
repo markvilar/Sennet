@@ -13,22 +13,25 @@ public:
 
     ~OpenGLTexture2D();
 
-    virtual uint32_t GetWidth() const override { return m_Width; }
-    virtual uint32_t GetHeight() const override { return m_Height; }
+    virtual uint32_t get_width() const override { return m_width; }
+    virtual uint32_t get_height() const override { return m_height; }
 
-    virtual RendererID GetRendererID() const override { return m_RendererID; }
+    virtual RendererID get_renderer_id() const override
+    {
+        return m_renderer_id;
+    }
 
-    virtual void Bind(const uint32_t slot = 0) const override;
-    virtual void Unbind() const override;
+    virtual void bind(const uint32_t slot = 0) const override;
+    virtual void unbind() const override;
 
     virtual bool operator==(const Texture& other) const override;
 
 private:
-    RendererID m_RendererID;
-    std::filesystem::path m_Source;
-    Image m_Image;
-    uint32_t m_Width;
-    uint32_t m_Height;
+    RendererID m_renderer_id;
+    std::filesystem::path m_source;
+    Image m_image;
+    uint32_t m_width;
+    uint32_t m_height;
 };
 
 } // namespace pine

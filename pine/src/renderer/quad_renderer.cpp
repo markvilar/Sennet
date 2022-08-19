@@ -99,7 +99,7 @@ QuadRenderData QuadRenderer::init()
     static constexpr uint32_t width = 1;
     static constexpr uint32_t height = 1;
     static constexpr std::array<uint8_t, 4> white_color = {255, 255, 255, 255};
-    data.texture_slots[data.texture_slot_index++] = Texture2D::Create(
+    data.texture_slots[data.texture_slot_index++] = Texture2D::create(
         Image(white_color.data(), width, height, ImageFormat::RGBA));
 
     return data;
@@ -137,7 +137,7 @@ void QuadRenderer::end_scene(QuadRenderData& data)
 void QuadRenderer::flush(QuadRenderData& data)
 {
     for (uint32_t i = 0; i < data.texture_slot_index; i++)
-        data.texture_slots[i]->Bind(i);
+        data.texture_slots[i]->bind(i);
 
     RenderCommand::draw_indexed(*data.quad_vertex_array.get(),
         data.quad_index_count);
