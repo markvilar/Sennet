@@ -69,12 +69,12 @@ void EditorLayer::on_update(Timestep ts)
 
     m_quad_rotation += ts * 50.0f;
 
-    RenderCommand::SetClearColor({0.1f, 0.1f, 0.1f, 1.0f});
-    RenderCommand::Clear();
+    RenderCommand::set_clear_color({0.1f, 0.1f, 0.1f, 1.0f});
+    RenderCommand::clear();
 
     m_viewport_framebuffer->bind();
-    RenderCommand::SetClearColor({0.05f, 0.05f, 0.05f, 1.0f});
-    RenderCommand::Clear();
+    RenderCommand::set_clear_color({0.05f, 0.05f, 0.05f, 1.0f});
+    RenderCommand::clear();
 
     QuadRenderer::begin_scene(m_quad_render_data,
         m_camera_controller.get_camera());
@@ -82,7 +82,7 @@ void EditorLayer::on_update(Timestep ts)
     QuadRenderer::draw_rotated_quad(m_quad_render_data,
         {0.0f, 0.0f},
         {0.8f, 0.8f},
-        Radians(m_quad_rotation),
+        radians(m_quad_rotation),
         {0.9f, 0.1f, 0.2f, 1.0f});
     QuadRenderer::draw_quad(m_quad_render_data,
         {2.0f, -2.0f},
@@ -226,7 +226,7 @@ void EditorLayer::on_imgui_render()
             ImGui::Text("Vertices: %d", stats.get_total_vertex_count());
             ImGui::Text("Indices: %d", stats.get_total_index_count());
 
-            ImGui::ColorEdit4("Square Color", ValuePtr(m_quad_color));
+            ImGui::ColorEdit4("Square Color", value_ptr(m_quad_color));
 
             ui::empty_space(0.0f, 10.0f);
             ImGui::Separator();

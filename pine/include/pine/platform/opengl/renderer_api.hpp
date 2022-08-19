@@ -11,14 +11,14 @@ namespace pine
 class OpenGLRendererAPI : public RendererAPI
 {
 public:
-    virtual void Init() override;
+    virtual void init() override;
 
-    virtual void SetViewport(const uint32_t x, const uint32_t y,
+    virtual void set_viewport(const uint32_t x, const uint32_t y,
         const uint32_t width, const uint32_t height) override;
-    virtual void SetClearColor(const Vec4& color) override;
-    virtual void Clear() override;
+    virtual void set_clear_color(const Vec4& color) override;
+    virtual void clear() override;
 
-    virtual void DrawIndexed(const VertexArray& vertex_array,
+    virtual void draw_indexed(const VertexArray& vertex_array,
         const uint32_t index_count = 0) override;
 };
 

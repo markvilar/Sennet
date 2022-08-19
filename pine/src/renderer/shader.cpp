@@ -9,7 +9,7 @@ namespace pine
 
 std::unique_ptr<Shader> Shader::create(const std::filesystem::path& filepath)
 {
-    switch (Renderer::GetAPI())
+    switch (Renderer::get_api())
     {
     case RendererAPI::API::None:
         PINE_CORE_ASSERT(false, "Renderer API None is currently not \
@@ -26,7 +26,7 @@ std::unique_ptr<Shader> Shader::create(const std::filesystem::path& filepath)
 std::unique_ptr<Shader> Shader::create(const std::string& name,
     const std::string& vertex_source, const std::string& fragment_source)
 {
-    switch (Renderer::GetAPI())
+    switch (Renderer::get_api())
     {
     case RendererAPI::API::None:
         PINE_CORE_ASSERT(false, "Renderer API None is currently not \

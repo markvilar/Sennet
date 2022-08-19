@@ -139,7 +139,7 @@ void QuadRenderer::flush(QuadRenderData& data)
     for (uint32_t i = 0; i < data.texture_slot_index; i++)
         data.texture_slots[i]->Bind(i);
 
-    RenderCommand::DrawIndexed(*data.quad_vertex_array.get(),
+    RenderCommand::draw_indexed(*data.quad_vertex_array.get(),
         data.quad_index_count);
 
     data.statistics.draw_calls++;
@@ -162,8 +162,8 @@ void QuadRenderer::draw_quad(QuadRenderData& data, const Vec2& position,
 void QuadRenderer::draw_quad(QuadRenderData& data, const Vec3& position,
     const Vec2& size, const Vec4& color)
 {
-    Mat4 transform = Translate(Mat4(1.0f), position)
-        * Scale(Mat4(1.0f), Vec3(size.x, size.y, 1.0f));
+    Mat4 transform = translate(Mat4(1.0f), position)
+        * scale(Mat4(1.0f), Vec3(size.x, size.y, 1.0f));
 
     draw_quad(data, transform, color);
 }
@@ -184,8 +184,8 @@ void QuadRenderer::draw_quad(QuadRenderData& data, const Vec3& position,
     const Vec2& size, const std::shared_ptr<Texture2D>& texture,
     const float tiling_factor, const Vec4& tint_color)
 {
-    Mat4 transform = Translate(Mat4(1.0f), position)
-        * Scale(Mat4(1.0f), Vec3(size.x, size.y, 1.0f));
+    Mat4 transform = translate(Mat4(1.0f), position)
+        * scale(Mat4(1.0f), Vec3(size.x, size.y, 1.0f));
 
     draw_quad(data, transform, texture, tiling_factor, tint_color);
 }
@@ -203,9 +203,9 @@ void QuadRenderer::draw_rotated_quad(QuadRenderData& data, const Vec2& position,
 void QuadRenderer::draw_rotated_quad(QuadRenderData& data, const Vec3& position,
     const Vec2& size, const float rotation, const Vec4& color)
 {
-    Mat4 transform = Translate(Mat4(1.0f), position)
-        * Rotate(Mat4(1.0f), rotation, Vec3(0.0f, 0.0f, 1.0f))
-        * Scale(Mat4(1.0f), Vec3(size.x, size.y, 1.0f));
+    Mat4 transform = translate(Mat4(1.0f), position)
+        * rotate(Mat4(1.0f), rotation, Vec3(0.0f, 0.0f, 1.0f))
+        * scale(Mat4(1.0f), Vec3(size.x, size.y, 1.0f));
 
     draw_quad(data, transform, color);
 }
@@ -230,9 +230,9 @@ void QuadRenderer::draw_rotated_quad(QuadRenderData& data, const Vec3& position,
     const Vec4& tint_color)
 {
 
-    Mat4 transform = Translate(Mat4(1.0f), position)
-        * Rotate(Mat4(1.0f), rotation, Vec3(0.0f, 0.0f, 1.0f))
-        * Scale(Mat4(1.0f), Vec3(size.x, size.y, 1.0f));
+    Mat4 transform = translate(Mat4(1.0f), position)
+        * rotate(Mat4(1.0f), rotation, Vec3(0.0f, 0.0f, 1.0f))
+        * scale(Mat4(1.0f), Vec3(size.x, size.y, 1.0f));
 
     draw_quad(data, transform, texture, tiling_factor, tint_color);
 }

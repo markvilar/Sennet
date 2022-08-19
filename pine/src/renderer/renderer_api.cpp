@@ -7,11 +7,11 @@
 namespace pine
 {
 
-RendererAPI::API RendererAPI::s_API = RendererAPI::API::OpenGL;
+RendererAPI::API RendererAPI::s_api = RendererAPI::API::OpenGL;
 
-std::unique_ptr<RendererAPI> RendererAPI::Create()
+std::unique_ptr<RendererAPI> RendererAPI::create()
 {
-    switch (s_API)
+    switch (s_api)
     {
     case RendererAPI::API::None:
         PINE_CORE_ASSERT(false, "RendererAPI::None is currently not \

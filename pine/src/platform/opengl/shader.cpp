@@ -249,14 +249,14 @@ void OpenGLShader::upload_uniform_mat3(const std::string& name,
     const Mat3& matrix) const
 {
     const auto location = glGetUniformLocation(m_renderer_id, name.c_str());
-    glUniformMatrix3fv(location, 1, GL_FALSE, ValuePtr(matrix));
+    glUniformMatrix3fv(location, 1, GL_FALSE, value_ptr(matrix));
 }
 
 void OpenGLShader::upload_uniform_mat4(const std::string& name,
     const Mat4& matrix) const
 {
     const auto location = glGetUniformLocation(m_renderer_id, name.c_str());
-    glUniformMatrix4fv(location, 1, GL_FALSE, ValuePtr(matrix));
+    glUniformMatrix4fv(location, 1, GL_FALSE, value_ptr(matrix));
 }
 
 } // namespace pine

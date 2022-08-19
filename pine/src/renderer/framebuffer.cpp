@@ -10,7 +10,7 @@ namespace pine
 std::unique_ptr<Framebuffer> Framebuffer::create(
     const FramebufferSpecification& specs)
 {
-    switch (Renderer::GetAPI())
+    switch (Renderer::get_api())
     {
     case RendererAPI::API::None:
         PINE_CORE_ASSERT(false, "RendererAPI::None is currently not \

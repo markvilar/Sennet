@@ -10,7 +10,7 @@ namespace pine
 std::unique_ptr<Texture2D> Texture2D::Create(
     const std::filesystem::path& filePath)
 {
-    switch (Renderer::GetAPI())
+    switch (Renderer::get_api())
     {
     case RendererAPI::API::None:
         PINE_CORE_ASSERT(false, "Renderer API None is currently not \
@@ -26,7 +26,7 @@ std::unique_ptr<Texture2D> Texture2D::Create(
 
 std::unique_ptr<Texture2D> Texture2D::Create(const Image& image)
 {
-    switch (Renderer::GetAPI())
+    switch (Renderer::get_api())
     {
     case RendererAPI::API::None:
         PINE_CORE_ASSERT(false, "Renderer API None is currently not \

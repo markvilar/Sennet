@@ -45,9 +45,9 @@ public:
 private:
     void update_view_matrix()
     {
-        Mat4 transform = Translate(Mat4(1.0f), m_position)
-            * Rotate(Mat4(1.0f), m_rotation, Vec3(0, 0, 1));
-        m_view_matrix = Inverse(transform);
+        Mat4 transform = translate(Mat4(1.0f), m_position)
+            * rotate(Mat4(1.0f), m_rotation, Vec3(0, 0, 1));
+        m_view_matrix = inverse(transform);
     }
 
 private:

@@ -26,7 +26,7 @@ void VertexBufferLayout::calculate_offset_and_stride()
 
 std::unique_ptr<VertexBuffer> VertexBuffer::create(const uint32_t size)
 {
-    switch (Renderer::GetAPI())
+    switch (Renderer::get_api())
     {
     case RendererAPI::API::None:
         PINE_CORE_ASSERT(false, "RendererAPI::API::None is currently not \
@@ -43,7 +43,7 @@ std::unique_ptr<VertexBuffer> VertexBuffer::create(const uint32_t size)
 std::unique_ptr<VertexBuffer> VertexBuffer::create(const float* vertices,
     const uint32_t size)
 {
-    switch (Renderer::GetAPI())
+    switch (Renderer::get_api())
     {
     case RendererAPI::API::None:
         PINE_CORE_ASSERT(false, "RendererAPI::API::None is currently not \
@@ -60,7 +60,7 @@ std::unique_ptr<VertexBuffer> VertexBuffer::create(const float* vertices,
 std::unique_ptr<IndexBuffer> IndexBuffer::create(const uint32_t* indices,
     const uint32_t count)
 {
-    switch (Renderer::GetAPI())
+    switch (Renderer::get_api())
     {
     case RendererAPI::API::None:
         PINE_CORE_ASSERT(false, "RendererAPI::API::None is currently not \
@@ -76,7 +76,7 @@ std::unique_ptr<IndexBuffer> IndexBuffer::create(const uint32_t* indices,
 
 std::unique_ptr<VertexArray> VertexArray::create()
 {
-    switch (Renderer::GetAPI())
+    switch (Renderer::get_api())
     {
     case RendererAPI::API::None:
         PINE_CORE_ASSERT(false, "Renderer API None is currently not \

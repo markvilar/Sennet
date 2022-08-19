@@ -41,7 +41,7 @@ Application::Application(const ApplicationSpecs& specs) : m_specification(specs)
     m_window->set_resizable(m_specification.resizable);
     m_window->set_vsync(m_specification.vsync);
 
-    Renderer::Init();
+    Renderer::init();
 
     if (m_specification.enable_imgui)
     {
@@ -150,7 +150,7 @@ bool Application::on_window_close([[maybe_unused]] WindowCloseEvent& event)
 
 bool Application::on_window_resize(WindowResizeEvent& event)
 {
-    Renderer::OnWindowResize(event.get_width(), event.get_height());
+    Renderer::on_window_resize(event.get_width(), event.get_height());
     return false;
 }
 

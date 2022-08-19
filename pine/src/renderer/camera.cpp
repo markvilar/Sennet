@@ -9,7 +9,7 @@ namespace pine
 
 OrthographicCamera::OrthographicCamera(const float left, const float right,
     const float bottom, const float top)
-    : m_projection_matrix(Ortho(left, right, bottom, top, -1.0f, 1.0f)),
+    : m_projection_matrix(ortho(left, right, bottom, top, -1.0f, 1.0f)),
       m_view_matrix(1.0f)
 {
 }
@@ -17,7 +17,7 @@ OrthographicCamera::OrthographicCamera(const float left, const float right,
 void OrthographicCamera::set_projection(const float left, const float right,
     const float bottom, const float top)
 {
-    m_projection_matrix = Ortho(left, right, bottom, top, -1.0f, 1.0f);
+    m_projection_matrix = ortho(left, right, bottom, top, -1.0f, 1.0f);
 }
 
 OrthographicCameraController::OrthographicCameraController(const float
