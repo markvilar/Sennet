@@ -244,20 +244,20 @@ void EditorLayer::on_imgui_render()
             static auto image_format = ImageFormat::BGRA;
 
             const std::array<std::pair<const char*, ImageFormat>, 6>
-                image_format_options = {
-                    std::make_pair("Gray", ImageFormat::GRAY),
+                image_format_options = {std::make_pair("Gray",
+                                            ImageFormat::GRAY),
                     std::make_pair("Gray-alpha", ImageFormat::GRAY_ALPHA),
                     std::make_pair("RGB", ImageFormat::RGB),
                     std::make_pair("BGR", ImageFormat::BGR),
                     std::make_pair("RGBA", ImageFormat::RGBA),
-                    std::make_pair("BGRA", ImageFormat::BGRA) };
+                    std::make_pair("BGRA", ImageFormat::BGRA)};
 
             ImGui::InputText("Image path",
                 image_path,
                 IM_ARRAYSIZE(image_path));
 
             ui::dropdown("Image format", &image_format, image_format_options);
-            
+
             ImGui::Checkbox("Flip image", &flip_image);
             ImGui::SameLine();
             if (ImGui::Button("Load image"))
@@ -295,7 +295,10 @@ void EditorLayer::on_imgui_render()
             ui::slider_scalar<uint32_t>("Slider uint32", &value_uint32, 0, 10);
             ui::slider_scalar<uint64_t>("Slider uint64", &value_uint64, 0, 10);
             ui::slider_scalar<float>("Slider float", &value_float, -1.0f, 1.0f);
-            ui::slider_scalar<double>("Slider double", &value_double, -1.0, 1.0);
+            ui::slider_scalar<double>("Slider double",
+                &value_double,
+                -1.0,
+                1.0);
         });
 
     ui::render_window("RightPanel",

@@ -104,16 +104,16 @@ auto menu_bar(const Function func)
 
 // TODO: Improve templating - Allow container to be vector. (C++20s std::span)
 template <typename T, size_t N>
-auto dropdown(const char* name, T* t, 
+auto dropdown(const char* name, T* t,
     const std::array<std::pair<const char*, T>, N> options)
 {
     static_assert(std::is_trivial<T>::value, "T must be trivial.");
-    static_assert(std::is_trivially_copyable<T>::value, 
+    static_assert(std::is_trivially_copyable<T>::value,
         "T must be trivially copyable.");
     static_assert(std::is_copy_constructible_v<T>,
         "T must be copy constructible.");
 
-    static typename std::array<std::pair<const char*, T>, N>::size_type 
+    static typename std::array<std::pair<const char*, T>, N>::size_type
         label_index = 0;
 
     // Set label index based on the value of t.
@@ -157,12 +157,12 @@ void empty_space(const float width, const float height);
 // TODO: Fix implicit template deduction. Literal types ruin template argument
 // deduction.
 template <typename T>
-auto slider_scalar(const char* name, T* value, const T min_value, 
+auto slider_scalar(const char* name, T* value, const T min_value,
     const T max_value)
 {
     static_assert(std::is_scalar<T>::value, "T must be scalar");
-    static_assert(
-        std::is_integral<T>::value || std::is_floating_point<T>::value, 
+    static_assert(std::is_integral<T>::value
+            || std::is_floating_point<T>::value,
         "T must be integral or floating point.");
 
     ImGuiDataType type = ImGuiDataType_S8;
