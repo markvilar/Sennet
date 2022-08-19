@@ -18,7 +18,7 @@ OpenGLContext::OpenGLContext(GLFWwindow* window_handle)
 void OpenGLContext::init()
 {
     glfwMakeContextCurrent(m_window_handle);
-    const auto status =
+    [[maybe_unused]] const auto status =
         gladLoadGLLoader(reinterpret_cast<GLADloadproc>(glfwGetProcAddress));
     PINE_CORE_ASSERT(status, "Failed to initialize Glad!")
 

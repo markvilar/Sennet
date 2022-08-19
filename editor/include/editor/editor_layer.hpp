@@ -7,26 +7,6 @@
 namespace pine
 {
 
-struct InterfaceLayout
-{
-    Vec2 Position = {0.0f, 0.0f};
-    Vec2 Size = {0.0f, 0.0f};
-
-    InterfaceLayout() = default;
-    InterfaceLayout(const InterfaceLayout&) = default;
-    InterfaceLayout(InterfaceLayout&&) = default;
-
-    InterfaceLayout(const Vec2& position, const Vec2& size)
-        : Position(position), Size(size)
-    {
-    }
-
-    ~InterfaceLayout() = default;
-
-    InterfaceLayout& operator=(const InterfaceLayout&) = default;
-    InterfaceLayout& operator=(InterfaceLayout&&) = default;
-};
-
 class EditorLayer : public Layer
 {
 public:
@@ -40,9 +20,6 @@ public:
     virtual void on_imgui_render() override;
 
     virtual void on_event(Event& event) override;
-
-private:
-    void update_interface_layout();
 
 private:
     OrthographicCameraController m_camera_controller{1.0f};
@@ -63,8 +40,6 @@ private:
 
     Vec4 m_quad_color{0.2f, 0.3f, 0.8f, 1.0f};
     float m_quad_rotation{0.0f};
-
-    std::unordered_map<std::string, InterfaceLayout> m_interface_layouts{};
 };
 
 } // namespace pine

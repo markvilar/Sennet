@@ -3,60 +3,55 @@
 #include <type_traits>
 
 #include <imgui.h>
+#include <imgui_impl_glfw.h>
+#include <imgui_impl_opengl3.h>
 
 #include "pine/pch.hpp"
 #include "pine/renderer/framebuffer.hpp"
-#include "pine/ui/imgui_impl_glfw.hpp"
-#include "pine/ui/imgui_impl_opengl3.hpp"
 #include "pine/utils/math.hpp"
 
 namespace pine::ui
 {
 
-typedef ImGuiWindowFlags WindowFlags;
-typedef ImGuiStyle Style;
+using WindowFlags = ImGuiWindowFlags;
+using Style = ImGuiStyle;
 
 template <typename Function>
-auto render_window(const char* name, const Vec2& position, const Vec2& size,
-    const Function func)
+auto render_window(const char* name, const Function func)
 {
-    ImGui::SetNextWindowPos(ImVec2(position.x, position.y), ImGuiCond_Always);
-    ImGui::SetNextWindowSize(ImVec2(size.x, size.y), ImGuiCond_Always);
-
+    ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(5, 5));
     ImGui::Begin(name,
         nullptr,
-        ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove
-            | ImGuiWindowFlags_NoCollapse
-            | ImGuiWindowFlags_NoBringToFrontOnFocus);
+        ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoBringToFrontOnFocus);
 
     // If func has a non-void return type, we return it after ending the window.
     if constexpr (!std::is_void<decltype(func())>::value)
     {
         const auto value = func();
         ImGui::End();
+        ImGui::PopStyleVar();
         return value;
     }
     else
     {
         func();
         ImGui::End();
+        ImGui::PopStyleVar();
     }
 }
 
 template <typename Function>
-auto render_viewport(const char* name, const Vec2& position, const Vec2& size,
-    const Framebuffer& framebuffer, const Function func)
+auto render_viewport(const char* name, const Framebuffer& framebuffer,
+    const Function func)
 {
-    ImGui::SetNextWindowPos(ImVec2(position.x, position.y), ImGuiCond_Always);
-    ImGui::SetNextWindowSize(ImVec2(size.x, size.y), ImGuiCond_Always);
-
+    ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0, 0));
     ImGui::Begin(name,
         nullptr,
-        ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize
-            | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse
-            | ImGuiWindowFlags_NoBringToFrontOnFocus
+        ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoBringToFrontOnFocus
             | ImGuiWindowFlags_NoScrollbar
             | ImGuiWindowFlags_NoScrollWithMouse);
+
+    const auto size = ImGui::GetWindowSize();
 
     // If func has a non-void return type, we return it after ending the window.
     if constexpr (!std::is_void<decltype(func())>::value)
@@ -68,6 +63,7 @@ auto render_viewport(const char* name, const Vec2& position, const Vec2& size,
             ImVec2{0, 1},
             ImVec2{1, 0});
         ImGui::End();
+        ImGui::PopStyleVar();
         return value;
     }
     else
@@ -79,6 +75,7 @@ auto render_viewport(const char* name, const Vec2& position, const Vec2& size,
             ImVec2{0, 1},
             ImVec2{1, 0});
         ImGui::End();
+        ImGui::PopStyleVar();
     }
 }
 

@@ -9,8 +9,6 @@ EditorLayer::EditorLayer() : Layer("EditorLayer"), m_camera_controller(1.0f) {}
 
 void EditorLayer::on_attach()
 {
-    update_interface_layout();
-
     auto& io = ImGui::GetIO();
     io.Fonts->AddFontFromFileTTF("resources/fonts/OpenSans-Regular.ttf",
         15.0f,
@@ -23,13 +21,14 @@ void EditorLayer::on_attach()
     }
 
     FramebufferSpecification specs;
-    specs.Width = static_cast<uint32_t>(m_interface_layouts["Viewport"].Size.x);
-    specs.Height =
-        static_cast<uint32_t>(m_interface_layouts["Viewport"].Size.y);
+    // specs.Width =
+    // static_cast<uint32_t>(m_interface_layouts["Viewport"].Size.x);
+    // specs.Height =
+    // static_cast<uint32_t>(m_interface_layouts["Viewport"].Size.y);
     m_viewport_framebuffer = Framebuffer::create(specs);
 
-    m_camera_controller.on_resize(m_interface_layouts["Viewport"].Size.x,
-        m_interface_layouts["Viewport"].Size.y);
+    // m_camera_controller.on_resize(m_interface_layouts["Viewport"].Size.x,
+    // m_interface_layouts["Viewport"].Size.y);
 
     m_quad_render_data = QuadRenderer::init();
 
@@ -48,10 +47,9 @@ void EditorLayer::on_detach() {}
 
 void EditorLayer::on_update(Timestep ts)
 {
-    update_interface_layout();
+    /*
     const auto& specs = m_viewport_framebuffer->get_specification();
     const auto viewport = m_interface_layouts["Viewport"];
-
     if (viewport.Size.x > 0.0f && viewport.Size.y > 0.0f
         && (static_cast<float>(specs.Width) != viewport.Size.x
             || static_cast<float>(specs.Height) != viewport.Size.y))
@@ -60,6 +58,7 @@ void EditorLayer::on_update(Timestep ts)
             static_cast<uint32_t>(viewport.Size.y));
         m_camera_controller.on_resize(viewport.Size.x, viewport.Size.y);
     }
+    */
 
     if (m_viewport_focused)
     {
@@ -203,8 +202,6 @@ void EditorLayer::on_imgui_render()
         });
 
     ui::render_viewport("Viewport",
-        m_interface_layouts["Viewport"].Position,
-        m_interface_layouts["Viewport"].Size,
         *m_viewport_framebuffer.get(),
         [this]
         {
@@ -215,8 +212,6 @@ void EditorLayer::on_imgui_render()
         });
 
     ui::render_window("LeftPanel",
-        m_interface_layouts["LeftPanel"].Position,
-        m_interface_layouts["LeftPanel"].Size,
         [this]
         {
             auto& stats = m_quad_render_data.statistics;
@@ -302,8 +297,6 @@ void EditorLayer::on_imgui_render()
         });
 
     ui::render_window("RightPanel",
-        m_interface_layouts["RightPanel"].Position,
-        m_interface_layouts["RightPanel"].Size,
         [this]()
         {
             static char address[256] = "";
@@ -362,44 +355,12 @@ void EditorLayer::on_imgui_render()
             }
         });
 
-    ui::render_window("BottomPanel",
-        m_interface_layouts["BottomPanel"].Position,
-        m_interface_layouts["BottomPanel"].Size,
-        []() {});
+    ui::render_window("BottomPanel", []() {});
 }
 
 void EditorLayer::on_event(Event& event)
 {
     m_camera_controller.on_event(event);
-}
-
-void EditorLayer::update_interface_layout()
-{
-    const auto& window_size = pine::Application::get().get_window().get_size();
-    const auto window_width = static_cast<float>(window_size.first);
-    const auto window_height = static_cast<float>(window_size.second);
-
-    static constexpr auto menu_height = 20.0f;
-
-    m_interface_layouts["Viewport"] =
-        InterfaceLayout(Vec2(0.2f * window_width,
-                            0.0f * window_height + menu_height),
-            Vec2(0.6f * window_width, 0.8f * window_height));
-
-    m_interface_layouts["LeftPanel"] =
-        InterfaceLayout(Vec2(0.0f * window_width,
-                            0.0f * window_height + menu_height),
-            Vec2(0.2f * window_width, 1.0f * window_height - menu_height));
-
-    m_interface_layouts["RightPanel"] =
-        InterfaceLayout(Vec2(0.8f * window_width,
-                            0.0f * window_height + menu_height),
-            Vec2(0.2f * window_width, 1.0f * window_height - menu_height));
-
-    m_interface_layouts["BottomPanel"] =
-        InterfaceLayout(Vec2(0.2f * window_width,
-                            0.8f * window_height + menu_height),
-            Vec2(0.6f * window_width, 0.2f * window_height - menu_height));
 }
 
 } // namespace pine

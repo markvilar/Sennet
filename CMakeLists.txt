@@ -45,7 +45,7 @@ set_project_warnings(warnings)
 
 # Sanitizer options if supported by compiler.
 include(cmake/sanitizers.cmake)
-enable_sanitizers(pine::options)
+enable_sanitizers(options)
 
 # Allow static analysis options.
 include(cmake/static_analyzers.cmake)
@@ -56,6 +56,7 @@ enable_doxygen()
 
 add_subdirectory(pine)
 add_subdirectory(resources)
+add_subdirectory(vendor)
 
 if(PINE_BUILD_EDITOR)
     add_subdirectory(editor)

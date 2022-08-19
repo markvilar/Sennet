@@ -45,9 +45,6 @@ target_sources(pine
         include/pine/renderer/shader.hpp
         include/pine/renderer/texture.hpp
         include/pine/ui/common.hpp
-        include/pine/ui/imgui_impl_glfw.hpp
-        include/pine/ui/imgui_impl_opengl3.hpp
-        include/pine/ui/imgui_impl_opengl3_loader.hpp
         include/pine/ui/imgui_layer.hpp
         include/pine/utils/filesystem.hpp
         include/pine/utils/math.hpp
@@ -81,8 +78,6 @@ target_sources(pine
         src/renderer/shader.cpp
         src/renderer/texture.cpp
         src/ui/common.cpp
-        src/ui/imgui_impl_glfw.cpp
-        src/ui/imgui_impl_opengl3.cpp
         src/ui/imgui_layer.cpp
         src/utils/filesystem.cpp
     )
@@ -93,7 +88,7 @@ find_package(asio REQUIRED)
 find_package(glad REQUIRED)
 find_package(glfw3 REQUIRED)
 find_package(glm REQUIRED)
-find_package(imgui REQUIRED)
+# find_package(imgui REQUIRED) TODO: Add find imgui file.
 find_package(spdlog REQUIRED)
 find_package(stb REQUIRED)
 
@@ -105,12 +100,12 @@ target_link_libraries(pine
         glm::glm
         imgui::imgui
         spdlog::spdlog
-        pine::warnings # TODO: Validate
-        pine::options # TODO: Validate
     PRIVATE 
         glad::glad 
         glfw::glfw 
         stb::stb
+        #pine::warnings # FIXME: Warnings flowing over to dependencies.
+        pine::options
     )
 
 if(MSVC)
