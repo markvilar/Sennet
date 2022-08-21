@@ -20,19 +20,14 @@ void EditorLayer::on_attach()
         PINE_ERROR("Failed to load shader.");
     }
 
+    ui::set_dark_theme(ImGui::GetStyle());
+
     FramebufferSpecification specs;
-    // specs.Width =
-    // static_cast<uint32_t>(m_interface_layouts["Viewport"].Size.x);
-    // specs.Height =
-    // static_cast<uint32_t>(m_interface_layouts["Viewport"].Size.y);
+    specs.Width = static_cast<uint32_t>(m_viewport_panel.size.x);
+    specs.Height = static_cast<uint32_t>(m_viewport_panel.size.y);
     m_viewport_framebuffer = Framebuffer::create(specs);
 
-    // m_camera_controller.on_resize(m_interface_layouts["Viewport"].Size.x,
-    // m_interface_layouts["Viewport"].Size.y);
-
     m_quad_render_data = QuadRenderer::init();
-
-    ui::set_dark_theme(ImGui::GetStyle());
 
     start_server(m_server,
         [](const ConnectionState& connection) -> bool
@@ -47,22 +42,20 @@ void EditorLayer::on_detach() {}
 
 void EditorLayer::on_update(Timestep ts)
 {
-    /*
+    const auto viewport_size = m_viewport_panel.size;
     const auto& specs = m_viewport_framebuffer->get_specification();
-    const auto viewport = m_interface_layouts["Viewport"];
-    if (viewport.Size.x > 0.0f && viewport.Size.y > 0.0f
-        && (static_cast<float>(specs.Width) != viewport.Size.x
-            || static_cast<float>(specs.Height) != viewport.Size.y))
+    if (viewport_size.x > 0.0f && viewport_size.y > 0.0f
+        && (static_cast<float>(specs.Width) != viewport_size.x
+            || static_cast<float>(specs.Height) != viewport_size.y))
     {
-        m_viewport_framebuffer->resize(static_cast<uint32_t>(viewport.Size.x),
-            static_cast<uint32_t>(viewport.Size.y));
-        m_camera_controller.on_resize(viewport.Size.x, viewport.Size.y);
+        m_viewport_framebuffer->resize(static_cast<uint32_t>(viewport_size.x),
+            static_cast<uint32_t>(viewport_size.y));
+        m_camera_controller.on_resize(viewport_size.x, viewport_size.y);
     }
-    */
 
     if (m_viewport_focused)
     {
-        // FIXME: Update to include window handle.
+        // FIXME: Make camera controller independent of window handle.
         // m_camera_controller.OnUpdate(ts);
     }
 
@@ -112,6 +105,7 @@ void EditorLayer::on_update(Timestep ts)
 
 void EditorLayer::on_imgui_render()
 {
+    ui::render_dockspace("editor_dockspace");
     ui::main_menu_bar(
         []()
         {
@@ -201,17 +195,14 @@ void EditorLayer::on_imgui_render()
             }
         });
 
-    ui::render_viewport("Viewport",
-        *m_viewport_framebuffer.get(),
-        [this]
-        {
-            m_viewport_focused = ImGui::IsWindowFocused();
-            m_viewport_hovered = ImGui::IsWindowHovered();
-            Application::get().get_imgui_layer()->block_events(
-                !m_viewport_focused || !m_viewport_hovered);
-        });
+    m_viewport_panel = ui::render_viewport("Viewport", 
+        *m_viewport_framebuffer.get());
 
-    ui::render_window("LeftPanel",
+    Application::get().get_imgui_layer()->block_events(
+        !m_viewport_panel.focused || !m_viewport_panel.hovered);
+
+
+    auto left_panel_state = ui::render_window("LeftPanel",
         [this]
         {
             auto& stats = m_quad_render_data.statistics;
@@ -295,6 +286,12 @@ void EditorLayer::on_imgui_render()
                 -1.0,
                 1.0);
         });
+
+    PINE_INFO("Left panel");
+    PINE_INFO(" - {0}, {1}", left_panel_state.position.x,
+        left_panel_state.position.y);
+    PINE_INFO(" - {0}, {1}", left_panel_state.size.x,
+        left_panel_state.size.y);
 
     ui::render_window("RightPanel",
         [this]()

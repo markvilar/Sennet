@@ -16,67 +16,95 @@ namespace pine::ui
 using WindowFlags = ImGuiWindowFlags;
 using Style = ImGuiStyle;
 
+struct PanelState
+{
+    Vec2 position;
+    Vec2 size;
+    bool focused;
+    bool hovered;
+};
+
+inline PanelState get_panel_state()
+{
+    PanelState state;
+    state.position = { ImGui::GetWindowPos().x, ImGui::GetWindowPos().y };
+    state.size = { ImGui::GetWindowSize().x, ImGui::GetWindowSize().y } ;
+    state.focused = ImGui::IsWindowFocused();
+    state.hovered = ImGui::IsWindowHovered();
+
+    return state;
+}
+
+inline auto render_dockspace(const char* name, const bool fullscreen = true)
+{
+    auto window_flags = ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDocking;
+    if (fullscreen)
+    {
+        const auto& viewport = ImGui::GetMainViewport();
+        ImGui::SetNextWindowPos(viewport->Pos);
+        ImGui::SetNextWindowSize(viewport->Size);
+        ImGui::SetNextWindowViewport(viewport->ID);
+        window_flags |= ImGuiWindowFlags_NoTitleBar
+            | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize
+            | ImGuiWindowFlags_NoMove;
+        window_flags |= ImGuiWindowFlags_NoBringToFrontOnFocus
+            | ImGuiWindowFlags_NoNavFocus;
+    }
+
+    const auto io = ImGui::GetIO();
+    auto style = ImGui::GetStyle();
+
+    ImGuiDockNodeFlags dockspace_flags = ImGuiDockNodeFlags_None;
+
+    static bool dockspace_open = true;
+    ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
+    ImGui::Begin(name, &dockspace_open, window_flags);
+    ImGui::PopStyleVar();
+
+    style.WindowMinSize.x = 370.0f;
+    if (io.ConfigFlags & ImGuiConfigFlags_DockingEnable)
+    {
+        ImGuiID dockspace_id = ImGui::GetID("MyDockSpace");
+        ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), dockspace_flags);
+    }
+    ImGui::End();
+}
+
 template <typename Function>
 auto render_window(const char* name, const Function func)
 {
     ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(5, 5));
-    ImGui::Begin(name,
-        nullptr,
-        ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoBringToFrontOnFocus);
+    ImGui::Begin(name, nullptr, 0);
+    ImGui::PopStyleVar();
+    func();
 
-    // If func has a non-void return type, we return it after ending the window.
-    if constexpr (!std::is_void<decltype(func())>::value)
-    {
-        const auto value = func();
-        ImGui::End();
-        ImGui::PopStyleVar();
-        return value;
-    }
-    else
-    {
-        func();
-        ImGui::End();
-        ImGui::PopStyleVar();
-    }
+    const auto state = get_panel_state();
+
+    ImGui::End();
+
+    return state;
 }
 
-template <typename Function>
-auto render_viewport(const char* name, const Framebuffer& framebuffer,
-    const Function func)
+inline auto render_viewport(const char* name, const Framebuffer& framebuffer)
 {
     ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0, 0));
     ImGui::Begin(name,
         nullptr,
-        ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoBringToFrontOnFocus
-            | ImGuiWindowFlags_NoScrollbar
+        ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoScrollbar
             | ImGuiWindowFlags_NoScrollWithMouse);
+    ImGui::PopStyleVar();
 
-    const auto size = ImGui::GetWindowSize();
+    const auto state = get_panel_state();
+    const auto texture_id = framebuffer.get_color_attachment_renderer_id();
 
-    // If func has a non-void return type, we return it after ending the window.
-    if constexpr (!std::is_void<decltype(func())>::value)
-    {
-        const auto value = func();
-        const auto textureID = framebuffer.get_color_attachment_renderer_id();
-        ImGui::Image(reinterpret_cast<void*>(textureID),
-            ImVec2{size.x, size.y},
-            ImVec2{0, 1},
-            ImVec2{1, 0});
-        ImGui::End();
-        ImGui::PopStyleVar();
-        return value;
-    }
-    else
-    {
-        func();
-        const auto textureID = framebuffer.get_color_attachment_renderer_id();
-        ImGui::Image(reinterpret_cast<void*>(textureID),
-            ImVec2{size.x, size.y},
-            ImVec2{0, 1},
-            ImVec2{1, 0});
-        ImGui::End();
-        ImGui::PopStyleVar();
-    }
+    ImGui::Image(reinterpret_cast<void*>(texture_id),
+        ImVec2{state.size.x, state.size.y},
+        ImVec2{0, 1},
+        ImVec2{1, 0});
+
+    ImGui::End();
+
+    return state;
 }
 
 template <typename Function>

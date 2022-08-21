@@ -19,8 +19,10 @@ void ImGuiLayer::on_attach()
     ImGui::CreateContext();
 
     auto& io = ImGui::GetIO();
-    io.ConfigFlags |= ImGuiConfigFlags_None;
-    io.IniFilename = nullptr;
+    io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
+    io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+    io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
+    io.IniFilename = nullptr; // TODO: Add user profile.
 
     ImGui::StyleColorsDark();
 
@@ -67,6 +69,14 @@ void ImGuiLayer::end()
 
     ImGui::Render();
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+
+    if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
+    {
+        auto backup_current_context = glfwGetCurrentContext();
+        ImGui::UpdatePlatformWindows();
+        ImGui::RenderPlatformWindowsDefault();
+        glfwMakeContextCurrent(backup_current_context);
+    }
 }
 
 } // namespace pine

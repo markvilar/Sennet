@@ -40,6 +40,8 @@ private:
 
     Vec4 m_quad_color{0.2f, 0.3f, 0.8f, 1.0f};
     float m_quad_rotation{0.0f};
+
+    ui::PanelState m_viewport_panel{};
 };
 
 } // namespace pine

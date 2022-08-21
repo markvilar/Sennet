@@ -116,8 +116,6 @@ endif()
 
 target_compile_definitions(pine
     PUBLIC 
-        IMGUI_IMPL_GLFW_OPENGL3
-        IMGUI_IMPL_OPENGL_LOADER_GLAD
         GLFW_INCLUDE_NONE
         $<$<CONFIG:Debug>:PINE_DEBUG>
         $<$<CONFIG:Release>:PINE_RELEASE>
