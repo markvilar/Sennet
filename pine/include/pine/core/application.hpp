@@ -13,7 +13,7 @@
 
 #include "pine/renderer/renderer.hpp"
 
-#include "pine/ui/imgui_layer.hpp"
+#include "pine/gui/graphical_interface.hpp"
 
 int main(int argc, char** argv);
 
@@ -22,7 +22,6 @@ namespace pine
 
 struct ApplicationSpecs
 {
-    // TODO: Window::Specification window_specs
     std::string name = "Default App";
     uint32_t window_width = 1600;
     uint32_t window_height = 800;
@@ -32,7 +31,7 @@ struct ApplicationSpecs
     std::string working_directory;
     bool start_maximized = true;
     bool resizable = true;
-    bool enable_imgui = true;
+    bool enable_gui = true;
 };
 
 class Application
@@ -56,10 +55,14 @@ public:
     void pop_layer(Layer* layer);
     void pop_overlay(Layer* overlay);
 
-    void render_imgui();
+    void render_gui();
 
-    inline ImGuiLayer* get_imgui_layer() const { return m_imgui_layer; }
     inline Window& get_window() const { return *m_window; }
+    inline GraphicalInterface& get_graphical_interface() const 
+    { 
+        return *m_gui; 
+    }
+    
     static inline Application& get() { return *s_instance; }
 
     inline const ApplicationSpecs& get_specification() const
@@ -73,10 +76,11 @@ private:
     bool on_window_iconify(WindowIconifyEvent& event);
 
 private:
-    std::unique_ptr<Window> m_window;
     ApplicationSpecs m_specification;
 
-    ImGuiLayer* m_imgui_layer;
+    std::unique_ptr<Window> m_window;
+    std::unique_ptr<GraphicalInterface> m_gui;
+
     LayerStack m_layer_stack;
 
     bool m_running = true;

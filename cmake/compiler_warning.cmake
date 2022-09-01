@@ -84,9 +84,8 @@ function(set_project_warnings project_name)
     elseif(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
         set(PROJECT_WARNINGS ${GCC_WARNINGS})
     else()
-        message(
-            AUTHOR_WARNING
-                "No compiler warnings set for '${CMAKE_CXX_COMPILER_ID}' compiler."
+        message(AUTHOR_WARNING
+            "No compiler warnings set for '${CMAKE_CXX_COMPILER_ID}' compiler."
         )
     endif()
 

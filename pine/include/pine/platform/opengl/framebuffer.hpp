@@ -8,7 +8,7 @@ namespace pine
 class OpenGLFramebuffer : public Framebuffer
 {
 public:
-    OpenGLFramebuffer(const FramebufferSpecification& specs);
+    OpenGLFramebuffer(const FramebufferSpecs& specs);
     virtual ~OpenGLFramebuffer();
 
     void invalidate();
@@ -23,7 +23,7 @@ public:
         return m_color_attachment;
     }
 
-    virtual const FramebufferSpecification& get_specification() const override
+    virtual const FramebufferSpecs& get_specification() const override
     {
         return m_specification;
     }
@@ -32,7 +32,7 @@ private:
     RendererID m_renderer_id = 0;
     RendererID m_color_attachment = 0;
     RendererID m_depth_attachment = 0;
-    FramebufferSpecification m_specification;
+    FramebufferSpecs m_specification;
 };
 
 } // namespace pine

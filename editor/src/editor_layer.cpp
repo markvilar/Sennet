@@ -9,8 +9,6 @@ EditorLayer::EditorLayer() : Layer("EditorLayer"), m_camera_controller(1.0f) {}
 
 void EditorLayer::on_attach()
 {
-    update_interface_layout();
-
     auto& io = ImGui::GetIO();
     io.Fonts->AddFontFromFileTTF("resources/fonts/OpenSans-Regular.ttf",
         15.0f,
@@ -22,18 +20,14 @@ void EditorLayer::on_attach()
         PINE_ERROR("Failed to load shader.");
     }
 
-    FramebufferSpecification specs;
-    specs.Width = static_cast<uint32_t>(m_interface_layouts["Viewport"].Size.x);
-    specs.Height =
-        static_cast<uint32_t>(m_interface_layouts["Viewport"].Size.y);
+    gui::set_dark_theme(ImGui::GetStyle());
+
+    FramebufferSpecs specs;
+    specs.width = 0;
+    specs.height = 0;
     m_viewport_framebuffer = Framebuffer::create(specs);
 
-    m_camera_controller.on_resize(m_interface_layouts["Viewport"].Size.x,
-        m_interface_layouts["Viewport"].Size.y);
-
     m_quad_render_data = QuadRenderer::init();
-
-    ui::set_dark_theme(ImGui::GetStyle());
 
     start_server(m_server,
         [](const ConnectionState& connection) -> bool
@@ -48,22 +42,9 @@ void EditorLayer::on_detach() {}
 
 void EditorLayer::on_update(Timestep ts)
 {
-    update_interface_layout();
-    const auto& specs = m_viewport_framebuffer->get_specification();
-    const auto viewport = m_interface_layouts["Viewport"];
-
-    if (viewport.Size.x > 0.0f && viewport.Size.y > 0.0f
-        && (static_cast<float>(specs.Width) != viewport.Size.x
-            || static_cast<float>(specs.Height) != viewport.Size.y))
-    {
-        m_viewport_framebuffer->resize(static_cast<uint32_t>(viewport.Size.x),
-            static_cast<uint32_t>(viewport.Size.y));
-        m_camera_controller.on_resize(viewport.Size.x, viewport.Size.y);
-    }
-
     if (m_viewport_focused)
     {
-        // FIXME: Update to include window handle.
+        // FIXME: Make camera controller independent of window handle.
         // m_camera_controller.OnUpdate(ts);
     }
 
@@ -111,15 +92,16 @@ void EditorLayer::on_update(Timestep ts)
         { m_server_history.push_back(message); });
 }
 
-void EditorLayer::on_imgui_render()
+void EditorLayer::on_gui_render()
 {
-    ui::main_menu_bar(
+    gui::render_dockspace("editor_dockspace");
+    gui::main_menu_bar(
         []()
         {
-            static bool showImGuiDemoWindow = false;
-            static bool showImGuiMetrics = false;
-            static bool showImGuiStackTool = false;
-            static bool showImGuiStyleEditor = false;
+            static bool show_imgui_demo_window = false;
+            static bool show_imgui_metrics = false;
+            static bool show_imgui_stack_tool = false;
+            static bool show_imgui_style_editor = false;
             static bool showFileSystemPopup = false;
 
             if (ImGui::BeginMenu("File"))
@@ -166,10 +148,10 @@ void EditorLayer::on_imgui_render()
 
             if (ImGui::BeginPopupModal("WorkingDirectory"))
             {
-                static char workingDirectoryBuffer[256] = "";
-                strcpy(workingDirectoryBuffer,
+                static char working_directory_buffer[256] = "";
+                strcpy(working_directory_buffer,
                     pine::filesystem::get_working_directory().c_str());
-                ImGui::Text("Working directory: %s", workingDirectoryBuffer);
+                ImGui::Text("Working directory: %s", working_directory_buffer);
                 if (ImGui::Button("Close"))
                 {
                     showFileSystemPopup = false;
@@ -178,45 +160,50 @@ void EditorLayer::on_imgui_render()
                 ImGui::EndPopup();
             }
 
-            if (ImGui::BeginMenu("ImGui"))
+            if (ImGui::BeginMenu("GUI"))
             {
-                ImGui::Checkbox("Show ImGui demo window", &showImGuiDemoWindow);
-                ImGui::Checkbox("Show ImGui metrics", &showImGuiMetrics);
-                ImGui::Checkbox("Show ImGui stack tool", &showImGuiStackTool);
-                ImGui::Checkbox("Show ImGui style editor",
-                    &showImGuiStyleEditor);
+                ImGui::Checkbox("Show demo window", &show_imgui_demo_window);
+                ImGui::Checkbox("Show metrics", &show_imgui_metrics);
+                ImGui::Checkbox("Show stack tool", &show_imgui_stack_tool);
+                ImGui::Checkbox("Show style editor",
+                    &show_imgui_style_editor);
                 ImGui::EndMenu();
             }
 
-            if (showImGuiDemoWindow)
+            if (show_imgui_demo_window)
                 ImGui::ShowDemoWindow();
-            if (showImGuiMetrics)
+            if (show_imgui_metrics)
                 ImGui::ShowMetricsWindow();
-            if (showImGuiStackTool)
+            if (show_imgui_stack_tool)
                 ImGui::ShowStackToolWindow();
-            if (showImGuiStyleEditor)
+            if (show_imgui_style_editor)
             {
-                ImGui::Begin("Dear ImGui Style Editor", &showImGuiStyleEditor);
+                ImGui::Begin("Dear ImGui Style Editor", &show_imgui_style_editor);
                 ImGui::ShowStyleEditor();
                 ImGui::End();
             }
         });
 
-    ui::render_viewport("Viewport",
-        m_interface_layouts["Viewport"].Position,
-        m_interface_layouts["Viewport"].Size,
-        *m_viewport_framebuffer.get(),
-        [this]
-        {
-            m_viewport_focused = ImGui::IsWindowFocused();
-            m_viewport_hovered = ImGui::IsWindowHovered();
-            Application::get().get_imgui_layer()->block_events(
-                !m_viewport_focused || !m_viewport_hovered);
-        });
+    const auto viewport_panel = gui::render_viewport("Viewport", 
+        *m_viewport_framebuffer.get());
 
-    ui::render_window("LeftPanel",
-        m_interface_layouts["LeftPanel"].Position,
-        m_interface_layouts["LeftPanel"].Size,
+    const auto& specs = m_viewport_framebuffer->get_specification();
+    if (viewport_panel.size.x > 0.0f && viewport_panel.size.y > 0.0f
+        && (static_cast<float>(specs.width) != viewport_panel.size.x
+            || static_cast<float>(specs.height) != viewport_panel.size.y))
+    {
+        m_viewport_framebuffer->resize(
+            static_cast<uint32_t>(viewport_panel.size.x),
+            static_cast<uint32_t>(viewport_panel.size.y));
+        m_camera_controller.on_resize(
+            viewport_panel.size.x, 
+            viewport_panel.size.y);
+    }
+
+    Application::get().get_graphical_interface().block_events(
+        !viewport_panel.focused || !viewport_panel.hovered);
+
+    gui::render_window("Left Panel",
         [this]
         {
             auto& stats = m_quad_render_data.statistics;
@@ -228,7 +215,7 @@ void EditorLayer::on_imgui_render()
 
             ImGui::ColorEdit4("Square Color", value_ptr(m_quad_color));
 
-            ui::empty_space(0.0f, 10.0f);
+            gui::empty_space(0.0f, 10.0f);
             ImGui::Separator();
 
             for (const auto& [name, shader] : m_shader_library.get_shader_map())
@@ -236,7 +223,7 @@ void EditorLayer::on_imgui_render()
                 ImGui::Text("%s", name.c_str());
             }
 
-            ui::empty_space(0.0f, 10.0f);
+            gui::empty_space(0.0f, 10.0f);
             ImGui::Separator();
 
             static bool flip_image = false;
@@ -256,7 +243,7 @@ void EditorLayer::on_imgui_render()
                 image_path,
                 IM_ARRAYSIZE(image_path));
 
-            ui::dropdown("Image format", &image_format, image_format_options);
+            gui::dropdown("Image format", &image_format, image_format_options);
 
             ImGui::Checkbox("Flip image", &flip_image);
             ImGui::SameLine();
@@ -272,7 +259,7 @@ void EditorLayer::on_imgui_render()
                 }
             }
 
-            ui::empty_space(0.0f, 20.0f);
+            gui::empty_space(0.0f, 20.0f);
             ImGui::Separator();
 
             static int8_t value_int8 = 0;
@@ -286,24 +273,22 @@ void EditorLayer::on_imgui_render()
             static float value_float = 0.0;
             static double value_double = 0.0;
 
-            ui::slider_scalar<int8_t>("Slider int8", &value_int8, -10, 10);
-            ui::slider_scalar<int16_t>("Slider int16", &value_int16, -10, 10);
-            ui::slider_scalar<int32_t>("Slider int32", &value_int32, -10, 10);
-            ui::slider_scalar<int64_t>("Slider int64", &value_int64, -10, 10);
-            ui::slider_scalar<uint8_t>("Slider uint8", &value_uint8, 0, 10);
-            ui::slider_scalar<uint16_t>("Slider uint16", &value_uint16, 0, 10);
-            ui::slider_scalar<uint32_t>("Slider uint32", &value_uint32, 0, 10);
-            ui::slider_scalar<uint64_t>("Slider uint64", &value_uint64, 0, 10);
-            ui::slider_scalar<float>("Slider float", &value_float, -1.0f, 1.0f);
-            ui::slider_scalar<double>("Slider double",
+            gui::slider_scalar<int8_t>("Slider int8", &value_int8, -10, 10);
+            gui::slider_scalar<int16_t>("Slider int16", &value_int16, -10, 10);
+            gui::slider_scalar<int32_t>("Slider int32", &value_int32, -10, 10);
+            gui::slider_scalar<int64_t>("Slider int64", &value_int64, -10, 10);
+            gui::slider_scalar<uint8_t>("Slider uint8", &value_uint8, 0, 10);
+            gui::slider_scalar<uint16_t>("Slider uint16", &value_uint16, 0, 10);
+            gui::slider_scalar<uint32_t>("Slider uint32", &value_uint32, 0, 10);
+            gui::slider_scalar<uint64_t>("Slider uint64", &value_uint64, 0, 10);
+            gui::slider_scalar<float>("Slider float", &value_float, -1.0f, 1.0f);
+            gui::slider_scalar<double>("Slider double",
                 &value_double,
                 -1.0,
                 1.0);
         });
 
-    ui::render_window("RightPanel",
-        m_interface_layouts["RightPanel"].Position,
-        m_interface_layouts["RightPanel"].Size,
+    gui::render_window("Right Panel",
         [this]()
         {
             static char address[256] = "";
@@ -352,7 +337,7 @@ void EditorLayer::on_imgui_render()
                     endpoint.port());
             }
 
-            ui::empty_space(0.0f, 20.0f);
+            gui::empty_space(0.0f, 20.0f);
 
             ImGui::Text("Server messages:");
             for (const auto& message : m_server_history)
@@ -362,44 +347,12 @@ void EditorLayer::on_imgui_render()
             }
         });
 
-    ui::render_window("BottomPanel",
-        m_interface_layouts["BottomPanel"].Position,
-        m_interface_layouts["BottomPanel"].Size,
-        []() {});
+    gui::render_window("Bottom Panel", []() {});
 }
 
 void EditorLayer::on_event(Event& event)
 {
     m_camera_controller.on_event(event);
-}
-
-void EditorLayer::update_interface_layout()
-{
-    const auto& window_size = pine::Application::get().get_window().get_size();
-    const auto window_width = static_cast<float>(window_size.first);
-    const auto window_height = static_cast<float>(window_size.second);
-
-    static constexpr auto menu_height = 20.0f;
-
-    m_interface_layouts["Viewport"] =
-        InterfaceLayout(Vec2(0.2f * window_width,
-                            0.0f * window_height + menu_height),
-            Vec2(0.6f * window_width, 0.8f * window_height));
-
-    m_interface_layouts["LeftPanel"] =
-        InterfaceLayout(Vec2(0.0f * window_width,
-                            0.0f * window_height + menu_height),
-            Vec2(0.2f * window_width, 1.0f * window_height - menu_height));
-
-    m_interface_layouts["RightPanel"] =
-        InterfaceLayout(Vec2(0.8f * window_width,
-                            0.0f * window_height + menu_height),
-            Vec2(0.2f * window_width, 1.0f * window_height - menu_height));
-
-    m_interface_layouts["BottomPanel"] =
-        InterfaceLayout(Vec2(0.2f * window_width,
-                            0.8f * window_height + menu_height),
-            Vec2(0.6f * window_width, 0.2f * window_height - menu_height));
 }
 
 } // namespace pine

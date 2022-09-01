@@ -35,7 +35,7 @@ void LinuxWindow::init()
 
     if (s_glfw_window_count == 0)
     {
-        int success = glfwInit();
+        [[maybe_unused]] int success = glfwInit();
         PINE_CORE_ASSERT(success, "Could not initialize GLFW!");
         glfwSetErrorCallback(GLFWErrorCallback);
     }

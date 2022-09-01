@@ -7,8 +7,7 @@
 namespace pine
 {
 
-std::unique_ptr<Framebuffer> Framebuffer::create(
-    const FramebufferSpecification& specs)
+std::unique_ptr<Framebuffer> Framebuffer::create(const FramebufferSpecs& specs)
 {
     switch (Renderer::get_api())
     {

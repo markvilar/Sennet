@@ -9,7 +9,7 @@ namespace pine
 
 static constexpr uint32_t s_max_framebuffer_size = 8192;
 
-OpenGLFramebuffer::OpenGLFramebuffer(const FramebufferSpecification& specs)
+OpenGLFramebuffer::OpenGLFramebuffer(const FramebufferSpecs& specs)
     : m_specification(specs)
 {
     invalidate();
@@ -39,8 +39,8 @@ void OpenGLFramebuffer::invalidate()
     glTexImage2D(GL_TEXTURE_2D,
         0,
         GL_RGBA8,
-        static_cast<GLsizei>(m_specification.Width),
-        static_cast<GLsizei>(m_specification.Height),
+        static_cast<GLsizei>(m_specification.width),
+        static_cast<GLsizei>(m_specification.height),
         0,
         GL_RGBA,
         GL_UNSIGNED_BYTE,
@@ -59,8 +59,8 @@ void OpenGLFramebuffer::invalidate()
     glTexStorage2D(GL_TEXTURE_2D,
         1,
         GL_DEPTH24_STENCIL8,
-        static_cast<GLsizei>(m_specification.Width),
-        static_cast<GLsizei>(m_specification.Height));
+        static_cast<GLsizei>(m_specification.width),
+        static_cast<GLsizei>(m_specification.height));
     glFramebufferTexture2D(GL_FRAMEBUFFER,
         GL_DEPTH_STENCIL_ATTACHMENT,
         GL_TEXTURE_2D,
@@ -79,8 +79,8 @@ void OpenGLFramebuffer::bind()
     glBindFramebuffer(GL_FRAMEBUFFER, m_renderer_id);
     glViewport(0,
         0,
-        static_cast<GLsizei>(m_specification.Width),
-        static_cast<GLsizei>(m_specification.Height));
+        static_cast<GLsizei>(m_specification.width),
+        static_cast<GLsizei>(m_specification.height));
 }
 
 void OpenGLFramebuffer::unbind() { glBindFramebuffer(GL_FRAMEBUFFER, 0); }
@@ -96,8 +96,8 @@ void OpenGLFramebuffer::resize(const uint32_t width, const uint32_t height)
         return;
     }
 
-    m_specification.Width = width;
-    m_specification.Height = height;
+    m_specification.width = width;
+    m_specification.height = height;
 
     invalidate();
 }

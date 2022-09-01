@@ -19,6 +19,8 @@ target_sources(pine
         include/pine/events/event.hpp
         include/pine/events/key_event.hpp
         include/pine/events/mouse_event.hpp
+        include/pine/gui/common.hpp
+        include/pine/gui/graphical_interface.hpp
         include/pine/network/client.hpp
         include/pine/network/connection.hpp
         include/pine/network/server.hpp
@@ -44,11 +46,6 @@ target_sources(pine
         include/pine/renderer/renderer_api.hpp
         include/pine/renderer/shader.hpp
         include/pine/renderer/texture.hpp
-        include/pine/ui/common.hpp
-        include/pine/ui/imgui_impl_glfw.hpp
-        include/pine/ui/imgui_impl_opengl3.hpp
-        include/pine/ui/imgui_impl_opengl3_loader.hpp
-        include/pine/ui/imgui_layer.hpp
         include/pine/utils/filesystem.hpp
         include/pine/utils/math.hpp
         include/pine/utils/locked_queue.hpp
@@ -56,6 +53,8 @@ target_sources(pine
         src/core/application.cpp
         src/core/layer.cpp
         src/core/log.cpp
+        src/gui/common.cpp
+        src/gui/graphical_interface.cpp
         src/network/client.cpp
         src/network/connection.cpp
         src/network/server.cpp
@@ -80,10 +79,6 @@ target_sources(pine
         src/renderer/renderer_api.cpp
         src/renderer/shader.cpp
         src/renderer/texture.cpp
-        src/ui/common.cpp
-        src/ui/imgui_impl_glfw.cpp
-        src/ui/imgui_impl_opengl3.cpp
-        src/ui/imgui_layer.cpp
         src/utils/filesystem.cpp
     )
 
@@ -93,7 +88,6 @@ find_package(asio REQUIRED)
 find_package(glad REQUIRED)
 find_package(glfw3 REQUIRED)
 find_package(glm REQUIRED)
-find_package(imgui REQUIRED)
 find_package(spdlog REQUIRED)
 find_package(stb REQUIRED)
 
@@ -105,12 +99,12 @@ target_link_libraries(pine
         glm::glm
         imgui::imgui
         spdlog::spdlog
-        pine::warnings # TODO: Validate
-        pine::options # TODO: Validate
     PRIVATE 
         glad::glad 
         glfw::glfw 
         stb::stb
+        #pine::warnings # FIXME: Warnings transferring over to dependencies.
+        pine::options
     )
 
 if(MSVC)
@@ -121,8 +115,6 @@ endif()
 
 target_compile_definitions(pine
     PUBLIC 
-        IMGUI_IMPL_GLFW_OPENGL3
-        IMGUI_IMPL_OPENGL_LOADER_GLAD
         GLFW_INCLUDE_NONE
         $<$<CONFIG:Debug>:PINE_DEBUG>
         $<$<CONFIG:Release>:PINE_RELEASE>

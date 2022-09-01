@@ -1,14 +1,16 @@
 cmake_minimum_required(VERSION 3.16)
 
-project(pine VERSION 0.1.2 LANGUAGES CXX)
+project(pine VERSION 0.3 LANGUAGES CXX)
 
 option(PINE_USE_CONAN "Use Conan for package management." ON)
 
 option(PINE_BUILD_SHARED "Build shared library." ON)
 option(PINE_BUILD_WARNINGS "Enable compiler warnings." ON)
-option(PINE_BUILD_EDITOR "Build editor." OFF)
+option(PINE_BUILD_EDITOR "Build editor." ON)
 option(PINE_BUILD_EXAMPLES "Build examples." OFF)
 option(PINE_BUILD_TESTS "Build test." OFF)
+
+# TODO: Set up backend flags for window / graphical interface
 
 include(cmake/project_settings.cmake)
 include(cmake/prevent_in_source_build.cmake)
@@ -45,7 +47,7 @@ set_project_warnings(warnings)
 
 # Sanitizer options if supported by compiler.
 include(cmake/sanitizers.cmake)
-enable_sanitizers(pine::options)
+enable_sanitizers(options)
 
 # Allow static analysis options.
 include(cmake/static_analyzers.cmake)
@@ -56,6 +58,7 @@ enable_doxygen()
 
 add_subdirectory(pine)
 add_subdirectory(resources)
+add_subdirectory(vendor)
 
 if(PINE_BUILD_EDITOR)
     add_subdirectory(editor)

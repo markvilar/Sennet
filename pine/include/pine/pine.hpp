@@ -12,6 +12,10 @@
 
 #include "pine/debug/instrumentor.hpp"
 
+#include "pine/gui/common.hpp"
+#include "pine/gui/graphical_interface.hpp"
+#include "pine/gui/widgets.hpp"
+
 #include "pine/network/client.hpp"
 #include "pine/network/connection.hpp"
 #include "pine/network/server.hpp"
@@ -27,9 +31,6 @@
 #include "pine/renderer/renderer.hpp"
 #include "pine/renderer/shader.hpp"
 #include "pine/renderer/texture.hpp"
-
-#include "pine/ui/common.hpp"
-#include "pine/ui/imgui_layer.hpp"
 
 #include "pine/utils/filesystem.hpp"
 #include "pine/utils/locked_queue.hpp"

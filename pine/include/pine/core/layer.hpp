@@ -16,7 +16,7 @@ public:
     virtual void on_attach() {}
     virtual void on_detach() {}
     virtual void on_update([[maybe_unused]] Timestep ts) {}
-    virtual void on_imgui_render() {}
+    virtual void on_gui_render() {}
     virtual void on_event([[maybe_unused]] Event& event) {}
 
     inline const std::string& get_name() const { return m_debug_name; }

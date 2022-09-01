@@ -54,7 +54,7 @@ public:
         specs.start_maximized = true;
         specs.vsync = true;
         specs.resizable = true;
-        specs.enable_imgui = true;
+        specs.enable_gui = true;
         specs.fullscreen = true;
 
         return std::make_unique<Editor>(specs, project_path);
