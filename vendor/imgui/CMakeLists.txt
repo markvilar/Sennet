@@ -26,7 +26,7 @@ target_sources(imgui
         imgui_widgets.cpp
     )
 
-target_include_directories(imgui PUBLIC . backends)
+target_include_directories(imgui PUBLIC .)
 target_link_libraries(imgui 
     PRIVATE
         glfw::glfw
@@ -40,3 +40,17 @@ target_compile_definitions(imgui
 
 target_compile_features(imgui PUBLIC cxx_std_17)
 target_compile_options(imgui PUBLIC -std=c++17)
+
+set_target_properties(imgui PROPERTIES 
+    ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}"
+    LIBRARY_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}"
+    RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}"
+    )
+
+install(TARGETS imgui
+    ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}"
+    LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
+    RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
+    )
+
+install(DIRECTORY "." TYPE INCLUDE FILES_MATCHING PATTERN "*.h")

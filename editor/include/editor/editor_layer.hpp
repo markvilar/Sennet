@@ -17,7 +17,7 @@ public:
     virtual void on_detach() override;
     virtual void on_update(Timestep ts) override;
 
-    virtual void on_imgui_render() override;
+    virtual void on_gui_render() override;
 
     virtual void on_event(Event& event) override;
 
@@ -40,8 +40,6 @@ private:
 
     Vec4 m_quad_color{0.2f, 0.3f, 0.8f, 1.0f};
     float m_quad_rotation{0.0f};
-
-    ui::PanelState m_viewport_panel{};
 };
 
 } // namespace pine

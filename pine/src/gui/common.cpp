@@ -1,8 +1,8 @@
-#include "pine/ui/common.hpp"
+#include "pine/gui/common.hpp"
 
 #include "pine/pch.hpp"
 
-namespace pine::ui
+namespace pine::gui
 {
 
 WindowFlags configure_window_flags(const bool fullscreen)
@@ -69,22 +69,4 @@ void set_dark_theme(Style& style)
     colors[ImGuiCol_SliderGrabActive] = ImVec4(0.66f, 0.66f, 0.66f, 1.0f);
 }
 
-void help_marker(const char* description, const float scale = 35.0f)
-{
-    ImGui::TextDisabled("(?)");
-    if (ImGui::IsItemHovered())
-    {
-        ImGui::BeginTooltip();
-        ImGui::PushTextWrapPos(ImGui::GetFontSize() * scale);
-        ImGui::TextUnformatted(description);
-        ImGui::PopTextWrapPos();
-        ImGui::EndTooltip();
-    }
-}
-
-void empty_space(const float width, const float height)
-{
-    ImGui::Dummy({width, height});
-}
-
-} // namespace pine::ui
+} // namespace pine::gui

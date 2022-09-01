@@ -1,20 +1,9 @@
 #pragma once
 
-#include <type_traits>
+#include "pine/gui/common.hpp"
 
-#include <imgui.h>
-#include <imgui_impl_glfw.h>
-#include <imgui_impl_opengl3.h>
-
-#include "pine/pch.hpp"
-#include "pine/renderer/framebuffer.hpp"
-#include "pine/utils/math.hpp"
-
-namespace pine::ui
+namespace pine::gui
 {
-
-using WindowFlags = ImGuiWindowFlags;
-using Style = ImGuiStyle;
 
 struct PanelState
 {
@@ -33,6 +22,44 @@ inline PanelState get_panel_state()
     state.hovered = ImGui::IsWindowHovered();
 
     return state;
+}
+
+inline void empty_space(const float width, const float height)
+{
+    ImGui::Dummy({width, height});
+}
+
+inline void help_marker(const char* description, const float scale = 35.0f)
+{
+    ImGui::TextDisabled("(?)");
+    if (ImGui::IsItemHovered())
+    {
+        ImGui::BeginTooltip();
+        ImGui::PushTextWrapPos(ImGui::GetFontSize() * scale);
+        ImGui::TextUnformatted(description);
+        ImGui::PopTextWrapPos();
+        ImGui::EndTooltip();
+    }
+}
+
+template <typename Function>
+auto main_menu_bar(const Function func)
+{
+    if (ImGui::BeginMainMenuBar())
+    {
+        func();
+        ImGui::EndMainMenuBar();
+    }
+}
+
+template <typename Function>
+auto menu_bar(const Function func)
+{
+    if (ImGui::BeginMenuBar())
+    {
+        func();
+        ImGui::EndMenuBar();
+    }
 }
 
 inline auto render_dockspace(const char* name, const bool fullscreen = true)
@@ -107,26 +134,6 @@ inline auto render_viewport(const char* name, const Framebuffer& framebuffer)
     return state;
 }
 
-template <typename Function>
-auto main_menu_bar(const Function func)
-{
-    if (ImGui::BeginMainMenuBar())
-    {
-        func();
-        ImGui::EndMainMenuBar();
-    }
-}
-
-template <typename Function>
-auto menu_bar(const Function func)
-{
-    if (ImGui::BeginMenuBar())
-    {
-        func();
-        ImGui::EndMenuBar();
-    }
-}
-
 // TODO: Improve templating - Allow container to be vector. (C++20s std::span)
 template <typename T, size_t N>
 auto dropdown(const char* name, T* t,
@@ -172,12 +179,6 @@ auto dropdown(const char* name, T* t,
 
     return *t;
 }
-
-WindowFlags configure_window_flags(const bool fullscreen);
-void set_dark_theme(Style& style);
-
-void help_marker(const char* desc);
-void empty_space(const float width, const float height);
 
 // TODO: Fix implicit template deduction. Literal types ruin template argument
 // deduction.
@@ -235,4 +236,4 @@ auto slider_scalar(const char* name, T* value, const T min_value,
     return ImGui::SliderScalar(name, type, value, &min_value, &max_value);
 }
 
-} // namespace pine::ui
+} // namespace pine::gui

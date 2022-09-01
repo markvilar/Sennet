@@ -43,11 +43,7 @@ Application::Application(const ApplicationSpecs& specs) : m_specification(specs)
 
     Renderer::init();
 
-    if (m_specification.enable_imgui)
-    {
-        m_imgui_layer = new ImGuiLayer();
-        push_overlay(m_imgui_layer);
-    }
+    m_gui = GraphicalInterface::create(m_window.get());
 }
 
 Application::~Application()
@@ -75,9 +71,9 @@ void Application::run()
                 layer->on_update(m_timestep);
             }
 
-            if (m_specification.enable_imgui)
+            if (m_specification.enable_gui)
             {
-                render_imgui();
+                render_gui();
             }
 
             m_window->swap_buffers();
@@ -98,12 +94,18 @@ void Application::on_event(Event& event)
     dispatcher.dispatch<WindowIconifyEvent>(
         PINE_BIND_EVENT_FN(Application::on_window_iconify));
 
+    // Handle event in the GUI first.
+    m_gui->on_event(event);
+
     for (auto it = m_layer_stack.end(); it != m_layer_stack.begin();)
     {
-        (*--it)->on_event(event);
         if (event.handled)
         {
             break;
+        }
+        else
+        {
+            (*--it)->on_event(event);
         }
     }
 }
@@ -132,14 +134,17 @@ void Application::pop_overlay(Layer* layer)
     layer->on_detach();
 }
 
-void Application::render_imgui()
+void Application::render_gui()
 {
-    m_imgui_layer->begin();
-    for (Layer* layer : m_layer_stack)
+    if (m_gui)
     {
-        layer->on_imgui_render();
+        m_gui->begin_frame();
+        for (Layer* layer : m_layer_stack)
+        {
+            layer->on_gui_render();
+        }
+        m_gui->end_frame();
     }
-    m_imgui_layer->end();
 }
 
 bool Application::on_window_close([[maybe_unused]] WindowCloseEvent& event)

@@ -1,14 +1,16 @@
 cmake_minimum_required(VERSION 3.16)
 
-project(pine VERSION 0.1.2 LANGUAGES CXX)
+project(pine VERSION 0.3 LANGUAGES CXX)
 
 option(PINE_USE_CONAN "Use Conan for package management." ON)
 
 option(PINE_BUILD_SHARED "Build shared library." ON)
 option(PINE_BUILD_WARNINGS "Enable compiler warnings." ON)
-option(PINE_BUILD_EDITOR "Build editor." OFF)
+option(PINE_BUILD_EDITOR "Build editor." ON)
 option(PINE_BUILD_EXAMPLES "Build examples." OFF)
 option(PINE_BUILD_TESTS "Build test." OFF)
+
+# TODO: Set up backend flags for window / graphical interface
 
 include(cmake/project_settings.cmake)
 include(cmake/prevent_in_source_build.cmake)
