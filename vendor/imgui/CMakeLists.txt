@@ -1,11 +1,8 @@
 project(imgui VERSION 1.88 LANGUAGES CXX)
 
-set(PROJECT_WARNINGS "")
-
 add_library(imgui STATIC)
 add_library(imgui::imgui ALIAS imgui)
 
-find_package(glad REQUIRED)
 find_package(glfw3 REQUIRED)
 
 target_sources(imgui
@@ -26,7 +23,7 @@ target_sources(imgui
         imgui_widgets.cpp
     )
 
-target_include_directories(imgui PUBLIC .)
+target_include_directories(imgui SYSTEM PUBLIC .)
 target_link_libraries(imgui 
     PRIVATE
         glfw::glfw
@@ -47,10 +44,12 @@ set_target_properties(imgui PROPERTIES
     RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}"
     )
 
+# Install static libraries, shared libraries, and executables
 install(TARGETS imgui
     ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}"
     LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
     RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
     )
 
+# Install header files in include directory
 install(DIRECTORY "." TYPE INCLUDE FILES_MATCHING PATTERN "*.h")
