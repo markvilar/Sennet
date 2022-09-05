@@ -103,8 +103,8 @@ target_link_libraries(pine
         glad::glad 
         glfw::glfw 
         stb::stb
-        #pine::warnings # FIXME: Warnings transferring over to dependencies.
         pine::options
+        $<$<BOOL:${PINE_BUILD_WARNINGS}>:pine::warnings>
     )
 
 if(MSVC)
@@ -130,10 +130,12 @@ set_target_properties(pine PROPERTIES
     RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/bin"
     )
 
+# Install static libraries, shared libraries, and executables
 install(TARGETS pine
     ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}"
     LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
     RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
     )
 
+# Install header files in include directory
 install(DIRECTORY "include/pine" TYPE INCLUDE FILES_MATCHING PATTERN "*.hpp")

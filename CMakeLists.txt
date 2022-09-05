@@ -10,8 +10,6 @@ option(PINE_BUILD_EDITOR "Build editor." ON)
 option(PINE_BUILD_EXAMPLES "Build examples." OFF)
 option(PINE_BUILD_TESTS "Build test." OFF)
 
-# TODO: Set up backend flags for window / graphical interface
-
 include(cmake/project_settings.cmake)
 include(cmake/prevent_in_source_build.cmake)
 
@@ -24,6 +22,7 @@ target_compile_features(options INTERFACE cxx_std_17)
 add_library(warnings INTERFACE)
 add_library(pine::warnings ALIAS warnings)
 
+# Use conan for package management
 if(PINE_USE_CONAN)
     if(CONAN_EXPORTED)
         include(conanbuildinfo.cmake)
@@ -52,22 +51,26 @@ enable_sanitizers(options)
 # Allow static analysis options.
 include(cmake/static_analyzers.cmake)
 
-# Doxygen
+# Enable doxygen
 include(cmake/doxygen.cmake)
 enable_doxygen()
 
+# Add library core, resources, and dependencies
 add_subdirectory(pine)
 add_subdirectory(resources)
 add_subdirectory(vendor)
 
+# Add editor
 if(PINE_BUILD_EDITOR)
     add_subdirectory(editor)
 endif()
 
+# Add examples
 if(PINE_BUILD_EXAMPLES)
     add_subdirectory(examples)
 endif()
 
+# Add tests
 if(PINE_BUILD_TESTS)
-    add_subdirectory(test)
+    add_subdirectory(tests)
 endif()
