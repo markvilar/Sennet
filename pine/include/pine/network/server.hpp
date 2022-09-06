@@ -1,5 +1,6 @@
 #pragma once
 
+#include <functional>
 #include <limits>
 #include <memory>
 
@@ -13,16 +14,18 @@ namespace pine
 
 struct ServerState
 {
-    // TODO: Replace with unique pointer.
-    using Connection = ConnectionState;
-    using ConnectionPtr = std::shared_ptr<ConnectionState>;
-
     NetworkContext context{};
     std::thread context_thread{};
     AcceptorType acceptor;
 
-    std::deque<ConnectionPtr> connections{};
+    std::deque<std::shared_ptr<ConnectionState>> connections{};
     LockedQueue<std::vector<uint8_t>> message_queue{};
+
+    // Callbacks
+    std::function<bool(const ConnectionState&)> connection_callback =
+        [](const ConnectionState&){ return false; };
+    std::function<void(const std::vector<uint8_t>&)> message_callback =
+        [](const std::vector<uint8_t>&){};
 
 public:
     ServerState(const uint16_t port);
@@ -34,18 +37,30 @@ public:
     ServerState& operator=(ServerState&&) = delete;
 
     ~ServerState();
+
+    template <typename Callable>
+    void set_connection_callback(const Callable& callable)
+    {
+        connection_callback = callable;
+    }
+
+    template <typename Callable>
+    void set_message_callback(const Callable& callable)
+    {
+        message_callback = callable;
+    }
 };
 
 void stop_server(ServerState& server);
 void send_to_client(ServerState& server,
-    const std::shared_ptr<ConnectionState>& client, const uint8_t* data,
+    const std::shared_ptr<ConnectionState>& client, 
+    const uint8_t* data,
     const uint64_t size);
 
-template <typename ConnectHandler>
-void listen_for_clients(ServerState& server, ConnectHandler& handler)
+inline void listen_for_clients(ServerState& server)
 {
     server.acceptor.async_accept(
-        [&server, &handler](const std::error_code ec, SocketType socket)
+        [&server](const std::error_code ec, SocketType socket)
         {
             if (!ec)
             {
@@ -53,7 +68,7 @@ void listen_for_clients(ServerState& server, ConnectHandler& handler)
                     std::move(socket),
                     server.message_queue);
 
-                if (handler(*client.get()))
+                if (server.connection_callback(*client.get()))
                 {
                     server.connections.push_back(client);
                     connect_to_client(*client.get());
@@ -64,19 +79,16 @@ void listen_for_clients(ServerState& server, ConnectHandler& handler)
                 PINE_CORE_ERROR("Server error: {0}", ec.message());
             }
 
-            listen_for_clients(server, handler);
+            listen_for_clients(server);
         });
 }
 
-template <typename ConnectHandler>
-bool start_server(ServerState& server, ConnectHandler handler)
+inline bool start_server(ServerState& server)
 {
-    // TODO: Add static assert of connect handler signature.
     try
     {
-        listen_for_clients(server, handler);
-        server.context_thread =
-            std::thread([&server]() { server.context.run(); });
+        listen_for_clients(server);
+        server.context_thread = std::thread([&server]() { server.context.run(); });
     }
     catch (const std::exception& error)
     {
@@ -86,16 +98,14 @@ bool start_server(ServerState& server, ConnectHandler handler)
     return true;
 }
 
-template <typename MessageHandler>
-void update_server(ServerState& server, MessageHandler handler,
+inline void update_server(ServerState& server, 
     const uint64_t max_messages = std::numeric_limits<uint64_t>::max())
 {
-    // TODO: Add static assert of message handler signature.
     uint64_t message_count = 0;
     while (message_count < max_messages && !server.message_queue.empty())
     {
         const auto message = server.message_queue.pop_front();
-        handler(message);
+        server.message_callback(message);
         message_count++;
     }
 }

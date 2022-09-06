@@ -29,13 +29,23 @@ void EditorLayer::on_attach()
 
     m_quad_render_data = QuadRenderer::init();
 
-    start_server(m_server,
+    m_server.set_connection_callback(
         [](const ConnectionState& connection) -> bool
         {
             PINE_INFO("Editor server: New connection {0}",
                 connection.socket.remote_endpoint());
             return true;
-        });
+        }
+    );
+    
+    m_server.set_message_callback(
+        [this](const std::vector<uint8_t>& message) -> void
+        { 
+            m_server_history.push_back(message); 
+        }
+    );
+
+    start_server(m_server);
 }
 
 void EditorLayer::on_detach() {}
@@ -87,9 +97,7 @@ void EditorLayer::on_update(Timestep ts)
     QuadRenderer::end_scene(m_quad_render_data);
     m_viewport_framebuffer->unbind();
 
-    update_server(m_server,
-        [this](const std::vector<uint8_t>& message) -> void
-        { m_server_history.push_back(message); });
+    update_server(m_server);
 }
 
 void EditorLayer::on_gui_render()
@@ -203,7 +211,7 @@ void EditorLayer::on_gui_render()
     Application::get().get_graphical_interface().block_events(
         !viewport_panel.focused || !viewport_panel.hovered);
 
-    gui::render_window("Left Panel",
+    gui::render_window("Renderer",
         [this]
         {
             auto& stats = m_quad_render_data.statistics;
@@ -288,7 +296,7 @@ void EditorLayer::on_gui_render()
                 1.0);
         });
 
-    gui::render_window("Right Panel",
+    gui::render_window("Network",
         [this]()
         {
             static char address[256] = "";
@@ -347,7 +355,7 @@ void EditorLayer::on_gui_render()
             }
         });
 
-    gui::render_window("Bottom Panel", []() {});
+    gui::render_window("Console", []() {});
 }
 
 void EditorLayer::on_event(Event& event)
