@@ -33,6 +33,7 @@ target_sources(pine
         include/pine/platform/opengl/shader.hpp
         include/pine/platform/opengl/texture.hpp
         include/pine/platform/windows/window.hpp
+        include/pine/platform/linux/input.hpp
         include/pine/platform/linux/window.hpp
         include/pine/renderer/buffer.hpp
         include/pine/renderer/camera.hpp
@@ -51,6 +52,7 @@ target_sources(pine
         include/pine/utils/locked_queue.hpp
     PRIVATE 
         src/core/application.cpp
+        src/core/input.cpp
         src/core/layer.cpp
         src/core/log.cpp
         src/gui/common.cpp
