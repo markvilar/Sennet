@@ -1,5 +1,6 @@
 #pragma once
 
+// Core
 #include "pine/core/application.hpp"
 #include "pine/core/common.hpp"
 #include "pine/core/input.hpp"
@@ -10,17 +11,21 @@
 #include "pine/core/timestep.hpp"
 #include "pine/core/window.hpp"
 
+// Debug stuff
 #include "pine/debug/instrumentor.hpp"
 
+// Graphical user interface
 #include "pine/gui/common.hpp"
 #include "pine/gui/graphical_interface.hpp"
 #include "pine/gui/widgets.hpp"
 
+// Network
 #include "pine/network/client.hpp"
 #include "pine/network/connection.hpp"
 #include "pine/network/server.hpp"
 #include "pine/network/types.hpp"
 
+// Renderer
 #include "pine/renderer/buffer.hpp"
 #include "pine/renderer/camera.hpp"
 #include "pine/renderer/common.hpp"
@@ -32,6 +37,7 @@
 #include "pine/renderer/shader.hpp"
 #include "pine/renderer/texture.hpp"
 
+// Utils
 #include "pine/utils/filesystem.hpp"
 #include "pine/utils/locked_queue.hpp"
 #include "pine/utils/math.hpp"

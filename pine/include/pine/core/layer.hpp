@@ -15,7 +15,7 @@ public:
 
     virtual void on_attach() {}
     virtual void on_detach() {}
-    virtual void on_update([[maybe_unused]] Timestep ts) {}
+    virtual void on_update([[maybe_unused]] const Timestep& ts) {}
     virtual void on_gui_render() {}
     virtual void on_event([[maybe_unused]] Event& event) {}
 

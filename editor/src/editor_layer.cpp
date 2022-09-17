@@ -5,7 +5,10 @@
 namespace pine
 {
 
-EditorLayer::EditorLayer() : Layer("EditorLayer"), m_camera_controller(1.0f) {}
+EditorLayer::EditorLayer() 
+    : Layer("EditorLayer"), camera_controller(1.0f, true) 
+{
+}
 
 void EditorLayer::on_attach()
 {
@@ -15,7 +18,7 @@ void EditorLayer::on_attach()
         nullptr,
         io.Fonts->GetGlyphRangesCyrillic());
 
-    if (!m_shader_library.load_shader("resources/shaders/quad_shader.glsl"))
+    if (!shader_library.load_shader("resources/shaders/quad_shader.glsl"))
     {
         PINE_ERROR("Failed to load shader.");
     }
@@ -25,11 +28,11 @@ void EditorLayer::on_attach()
     FramebufferSpecs specs;
     specs.width = 0;
     specs.height = 0;
-    m_viewport_framebuffer = Framebuffer::create(specs);
+    viewport_framebuffer = Framebuffer::create(specs);
 
-    m_quad_render_data = QuadRenderer::init();
+    quad_render_data = QuadRenderer::init();
 
-    m_server.set_connection_callback(
+    server.set_connection_callback(
         [](const ConnectionState& connection) -> bool
         {
             PINE_INFO("Editor server: New connection {0}",
@@ -38,66 +41,65 @@ void EditorLayer::on_attach()
         }
     );
     
-    m_server.set_message_callback(
+    server.set_message_callback(
         [this](const std::vector<uint8_t>& message) -> void
         { 
-            m_server_history.push_back(message); 
+            server_history.push_back(message); 
         }
     );
 
-    start_server(m_server);
+    start_server(server);
 }
 
 void EditorLayer::on_detach() {}
 
-void EditorLayer::on_update(Timestep ts)
+void EditorLayer::on_update(const Timestep& ts)
 {
-    if (m_viewport_focused)
+    if (viewport_panel.focused)
     {
-        // FIXME: Make camera controller independent of window handle.
-        // m_camera_controller.OnUpdate(ts);
+        update_camera_controller(ts);
     }
 
-    m_quad_rotation += ts * 50.0f;
+    quad_rotation += ts * 50.0f;
 
     RenderCommand::set_clear_color({0.1f, 0.1f, 0.1f, 1.0f});
     RenderCommand::clear();
 
-    m_viewport_framebuffer->bind();
+    viewport_framebuffer->bind();
     RenderCommand::set_clear_color({0.05f, 0.05f, 0.05f, 1.0f});
     RenderCommand::clear();
 
-    QuadRenderer::begin_scene(m_quad_render_data,
-        m_camera_controller.get_camera());
+    QuadRenderer::begin_scene(quad_render_data,
+        camera_controller.get_camera());
 
-    QuadRenderer::draw_rotated_quad(m_quad_render_data,
+    QuadRenderer::draw_rotated_quad(quad_render_data,
         {0.0f, 0.0f},
         {0.8f, 0.8f},
-        radians(m_quad_rotation),
+        radians(quad_rotation),
         {0.9f, 0.1f, 0.2f, 1.0f});
-    QuadRenderer::draw_quad(m_quad_render_data,
+    QuadRenderer::draw_quad(quad_render_data,
         {2.0f, -2.0f},
         {0.8f, 0.8f},
         {0.8f, 0.2f, 0.3f, 1.0f});
-    QuadRenderer::draw_quad(m_quad_render_data,
+    QuadRenderer::draw_quad(quad_render_data,
         {2.0f, 2.0f},
         {0.5f, 0.75f},
-        m_quad_color);
+        quad_color);
 
-    if (m_texture)
+    if (texture)
     {
-        QuadRenderer::draw_quad(m_quad_render_data,
+        QuadRenderer::draw_quad(quad_render_data,
             {-16.0f, 0.0f, -0.2f},
             {16.0f, 9.0f},
-            m_texture,
+            texture,
             1.0f,
             Vec4{1.0f, 1.0f, 1.0f, 1.0f});
     }
 
-    QuadRenderer::end_scene(m_quad_render_data);
-    m_viewport_framebuffer->unbind();
+    QuadRenderer::end_scene(quad_render_data);
+    viewport_framebuffer->unbind();
 
-    update_server(m_server);
+    update_server(server);
 }
 
 void EditorLayer::on_gui_render()
@@ -110,7 +112,7 @@ void EditorLayer::on_gui_render()
             static bool show_imgui_metrics = false;
             static bool show_imgui_stack_tool = false;
             static bool show_imgui_style_editor = false;
-            static bool showFileSystemPopup = false;
+            static bool show_filesystem_popup = false;
 
             if (ImGui::BeginMenu("File"))
             {
@@ -142,7 +144,7 @@ void EditorLayer::on_gui_render()
             {
                 if (ImGui::MenuItem("Working directory"))
                 {
-                    showFileSystemPopup = true;
+                    show_filesystem_popup = true;
                 }
                 if (ImGui::MenuItem("Resource directory"))
                 {
@@ -151,7 +153,7 @@ void EditorLayer::on_gui_render()
                 ImGui::EndMenu();
             }
 
-            if (showFileSystemPopup)
+            if (show_filesystem_popup)
                 ImGui::OpenPopup("WorkingDirectory");
 
             if (ImGui::BeginPopupModal("WorkingDirectory"))
@@ -162,13 +164,13 @@ void EditorLayer::on_gui_render()
                 ImGui::Text("Working directory: %s", working_directory_buffer);
                 if (ImGui::Button("Close"))
                 {
-                    showFileSystemPopup = false;
+                    show_filesystem_popup = false;
                     ImGui::CloseCurrentPopup();
                 }
                 ImGui::EndPopup();
             }
 
-            if (ImGui::BeginMenu("GUI"))
+            if (ImGui::BeginMenu("Gui"))
             {
                 ImGui::Checkbox("Show demo window", &show_imgui_demo_window);
                 ImGui::Checkbox("Show metrics", &show_imgui_metrics);
@@ -186,24 +188,25 @@ void EditorLayer::on_gui_render()
                 ImGui::ShowStackToolWindow();
             if (show_imgui_style_editor)
             {
-                ImGui::Begin("Dear ImGui Style Editor", &show_imgui_style_editor);
+                ImGui::Begin("Dear ImGui Style Editor", 
+                    &show_imgui_style_editor);
                 ImGui::ShowStyleEditor();
                 ImGui::End();
             }
         });
 
-    const auto viewport_panel = gui::render_viewport("Viewport", 
-        *m_viewport_framebuffer.get());
+    viewport_panel = gui::render_viewport("Viewport", 
+        *viewport_framebuffer.get());
 
-    const auto& specs = m_viewport_framebuffer->get_specification();
+    const auto& specs = viewport_framebuffer->get_specification();
     if (viewport_panel.size.x > 0.0f && viewport_panel.size.y > 0.0f
         && (static_cast<float>(specs.width) != viewport_panel.size.x
             || static_cast<float>(specs.height) != viewport_panel.size.y))
     {
-        m_viewport_framebuffer->resize(
+        viewport_framebuffer->resize(
             static_cast<uint32_t>(viewport_panel.size.x),
             static_cast<uint32_t>(viewport_panel.size.y));
-        m_camera_controller.on_resize(
+        camera_controller.on_resize(
             viewport_panel.size.x, 
             viewport_panel.size.y);
     }
@@ -214,19 +217,19 @@ void EditorLayer::on_gui_render()
     gui::render_window("Renderer",
         [this]
         {
-            auto& stats = m_quad_render_data.statistics;
+            auto& stats = quad_render_data.statistics;
             ImGui::Text("QuadRenderer Stats:");
             ImGui::Text("Draw Calls: %d", stats.draw_calls);
             ImGui::Text("Quads: %d", stats.quad_count);
             ImGui::Text("Vertices: %d", stats.get_total_vertex_count());
             ImGui::Text("Indices: %d", stats.get_total_index_count());
 
-            ImGui::ColorEdit4("Square Color", value_ptr(m_quad_color));
+            ImGui::ColorEdit4("Square Color", value_ptr(quad_color));
 
             gui::empty_space(0.0f, 10.0f);
             ImGui::Separator();
 
-            for (const auto& [name, shader] : m_shader_library.get_shader_map())
+            for (const auto& [name, shader] : shader_library.get_shader_map())
             {
                 ImGui::Text("%s", name.c_str());
             }
@@ -259,7 +262,7 @@ void EditorLayer::on_gui_render()
             {
                 if (pine::filesystem::is_file(image_path))
                 {
-                    m_texture = Texture2D::create(
+                    texture = Texture2D::create(
                         read_image(image_path, image_format, flip_image));
                     PINE_INFO("Loaded image: {0}, {1}",
                         image_path,
@@ -303,16 +306,16 @@ void EditorLayer::on_gui_render()
             static uint16_t port = 0;
             ImGui::InputText("Address", address, IM_ARRAYSIZE(address));
             ImGui::InputInt("Port", reinterpret_cast<int*>(&port));
-            ImGui::Text("Client connected: %d", is_connected(m_client));
+            ImGui::Text("Client connected: %d", is_connected(client));
 
             if (ImGui::Button("Connect"))
             {
-                connect(m_client, std::string(address), port);
+                connect(client, std::string(address), port);
             }
             ImGui::SameLine();
             if (ImGui::Button("Disconnect"))
             {
-                disconnect(m_client);
+                disconnect(client);
             }
 
             static constexpr size_t message_size = 10 * 5;
@@ -325,11 +328,11 @@ void EditorLayer::on_gui_render()
 
             if (ImGui::Button("Send to server"))
             {
-                if (is_connected(m_client))
+                if (is_connected(client))
                 {
                     const auto message = std::vector<uint8_t>(message_text,
                         message_text + sizeof(message_text));
-                    send(m_client, message.data(), message.size());
+                    send(client, message.data(), message.size());
                 }
             }
 
@@ -337,7 +340,7 @@ void EditorLayer::on_gui_render()
 
             ImGui::Text("Server");
 
-            for (const auto& connection : m_server.connections)
+            for (const auto& connection : server.connections)
             {
                 const auto endpoint = connection->socket.remote_endpoint();
                 ImGui::Text("Connection: %s:%d",
@@ -348,7 +351,7 @@ void EditorLayer::on_gui_render()
             gui::empty_space(0.0f, 20.0f);
 
             ImGui::Text("Server messages:");
-            for (const auto& message : m_server_history)
+            for (const auto& message : server_history)
             {
                 ImGui::Text("%s",
                     std::string(message.begin(), message.end()).c_str());
@@ -360,7 +363,26 @@ void EditorLayer::on_gui_render()
 
 void EditorLayer::on_event(Event& event)
 {
-    m_camera_controller.on_event(event);
+    camera_controller.on_event(event);
+}
+
+void EditorLayer::update_camera_controller(const Timestep& ts)
+{
+    const auto& window = Application::get().get_window();
+    const auto input_handle = pine::InputHandle::create(window);
+    
+    if (input_handle->is_key_pressed(KeyCode::A))
+        camera_controller.move_left(ts);
+    if (input_handle->is_key_pressed(KeyCode::D))
+        camera_controller.move_right(ts);
+    if (input_handle->is_key_pressed(KeyCode::W))
+        camera_controller.move_up(ts);
+    if (input_handle->is_key_pressed(KeyCode::S))
+        camera_controller.move_down(ts);
+    if (input_handle->is_key_pressed(KeyCode::Q))
+        camera_controller.rotate_counter_clockwise(ts);
+    if (input_handle->is_key_pressed(KeyCode::E))
+        camera_controller.rotate_clockwise(ts);
 }
 
 } // namespace pine

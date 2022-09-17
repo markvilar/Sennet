@@ -57,17 +57,17 @@ public:
 
     void render_gui();
 
-    inline Window& get_window() const { return *m_window; }
+    inline Window& get_window() const { return *window; }
     inline GraphicalInterface& get_graphical_interface() const 
     { 
-        return *m_gui; 
+        return *gui; 
     }
     
-    static inline Application& get() { return *s_instance; }
+    static inline Application& get() { return *instance; }
 
     inline const ApplicationSpecs& get_specification() const
     {
-        return m_specification;
+        return specification;
     }
 
 private:
@@ -76,19 +76,18 @@ private:
     bool on_window_iconify(WindowIconifyEvent& event);
 
 private:
-    ApplicationSpecs m_specification;
+    ApplicationSpecs specification;
 
-    std::unique_ptr<Window> m_window;
-    std::unique_ptr<GraphicalInterface> m_gui;
+    std::unique_ptr<Window> window;
+    std::unique_ptr<GraphicalInterface> gui;
 
-    LayerStack m_layer_stack;
+    LayerStack layer_stack;
 
-    bool m_running = true;
-    bool m_minimized = false;
-    float m_last_frame_time = 0.0f;
-    Timestep m_timestep;
+    bool running = true;
+    bool minimized = false;
+    float last_frame_time = 0.0f;
 
-    static Application* s_instance;
+    static Application* instance;
 };
 
 class ApplicationFactory
