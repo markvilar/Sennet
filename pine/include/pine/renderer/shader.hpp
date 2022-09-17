@@ -10,7 +10,7 @@
 namespace pine
 {
 
-// TODO: Implement ShaderPreprocessor
+// TODO: Implement ShaderPreprocessor / ShaderFactory
 // - Read from source
 // - Read from file
 

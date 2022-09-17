@@ -27,7 +27,11 @@ Application::Application(const ApplicationSpecs& specs) : specification(specs)
 
     window = Window::create(window_specs);
     window->init();
-    window->set_event_callback(PINE_BIND_EVENT_FN(Application::on_event));
+    window->set_event_callback(
+        [this](Event& event) -> void
+        {
+            on_event(event);
+        });
 
     if (specification.start_maximized)
     {
@@ -56,8 +60,8 @@ void Application::run()
     on_init();
     while (running)
     {
-        // TODO: Temporary.
-        auto time = static_cast<float>(glfwGetTime()); // Platform::GetTime
+        // TODO: Temporary - Implement platform independent time system
+        auto time = static_cast<float>(glfwGetTime());
         Timestep ts = time - last_frame_time;
 
         window->poll_events();
@@ -102,10 +106,6 @@ void Application::on_event(Event& event)
         {
             return on_window_iconify(event);
         });
-
-    //PINE_BIND_EVENT_FN(Application::on_window_close));
-    //PINE_BIND_EVENT_FN(Application::on_window_resize));
-    //PINE_BIND_EVENT_FN(Application::on_window_iconify));
 
     // Handle event in the GUI first.
     gui->on_event(event);

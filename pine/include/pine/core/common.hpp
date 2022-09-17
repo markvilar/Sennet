@@ -10,7 +10,3 @@
 #include "pine/core/assert.hpp"
 #include "pine/core/log.hpp"
 #include "pine/core/platform.hpp"
-
-#define BIT(x) (1 << x)
-
-#define PINE_BIND_EVENT_FN(fn) std::bind(&fn, this, std::placeholders::_1)

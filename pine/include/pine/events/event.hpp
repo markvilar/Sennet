@@ -3,6 +3,8 @@
 
 #include "pine/core/common.hpp"
 
+#define BIT(x) (1 << x)
+
 namespace pine
 {
 
