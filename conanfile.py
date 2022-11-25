@@ -4,19 +4,20 @@ required_conan_version = ">=1.39.0"
 
 class Pine(ConanFile):
     name = "pine"
-    version = "0.1.1"
+    version = "0.3"
     license = "Apache 2.0"
     author = "Martin Kvisvik Larsen"
     description = "Pine - Library for graphics and network"
     url = "https://github.com/markvilar/pine"
     homepage = "https://github.com/markvilar/pine"
 
-    # Binary configuration
     settings = ["os", "compiler", "build_type", "arch"]
+    
     options = {
         "shared" : [True, False], 
         "fPIC" : [True, False]
     }
+    
     default_options = {
         "shared" : False, 
         "fPIC" : True
@@ -28,9 +29,11 @@ class Pine(ConanFile):
         "examples/*", 
         "pine/*", 
         "resources/*", 
-        "test/*"
+        "test/*",
+        "vendor/*"
     ]
-    generators = ["cmake", "cmake_find_package"]
+    
+    generators = ["cmake", "cmake_find_package", "cmake_find_package_multi"]
 
     @property
     def _source_subfolder(self):
@@ -48,7 +51,6 @@ class Pine(ConanFile):
         """ Configure project settings. """
         if self.options.shared:
             del self.options.fPIC
-
         self.options["glad"].shared        = False
         self.options["glad"].no_loader     = False
         self.options["glad"].spec          = "gl"
@@ -65,7 +67,6 @@ class Pine(ConanFile):
         self.requires("glad/0.1.34")
         self.requires("glfw/3.3.4")
         self.requires("glm/0.9.9.8")
-        self.requires("imgui/1.85")
         self.requires("spdlog/1.9.2")
         self.requires("stb/cci.20210713")
 
@@ -108,15 +109,37 @@ class Pine(ConanFile):
 
     def package_info(self):
         """ Configures the package information. """
-        self.cpp_info.libs = tools.collect_libs(self)
-        self.cpp_info.resdirs = ['resources']
+        # Definitions for component libimgui
+        self.cpp_info.components["libimgui"].libs = ["imgui"]
+        self.cpp_info.components["libimgui"].requires = ["glfw::glfw"]
+
+        
+        self.cpp_info.components["libimgui"].defines.append(
+            "IMGUI_IMPL_GLFW_OPENGL3")
+        self.cpp_info.components["libimgui"].defines.append(
+            "IMGUI_IMPL_OPENGL_LOADER_GLAD")
+
+        # Definitions for component libpine
+        self.cpp_info.components["libpine"].libs = ["pine"]
+        self.cpp_info.components["libpine"].requires = [
+            "libimgui",
+            "asio::asio",
+            "glad::glad",
+            "glfw::glfw",
+            "glm::glm",
+            "spdlog::spdlog",
+            "stb::stb",
+            ]
+        self.cpp_info.components["libpine"].resdirs= ["resources"]
 
         if self.settings.os == "Windows":
-            self.cpp_info.defines.append("PINE_PLATFORM_WINDOWS")
+            self.cpp_info.components["libpine"].defines.append(
+                "PINE_PLATFORM_WINDOWS")
         elif self.settings.os == "Linux":
-            self.cpp_info.defines.append("PINE_PLATFORM_LINUX")
+            self.cpp_info.components["libpine"].defines.append(
+                "PINE_PLATFORM_LINUX")
 
         if self.settings.build_type == "Debug":
-            self.cpp_info.defines.append("PINE_DEBUG")
+            self.cpp_info.components["libpine"].defines.append("PINE_DEBUG")
         elif self.settings.build_type == "Release":
-            self.cpp_info.defines.append("PINE_RELEASE")
+            self.cpp_info.components["libpine"].defines.append("PINE_RELEASE")

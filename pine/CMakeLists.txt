@@ -3,103 +3,93 @@ add_library(pine::pine ALIAS pine)
 
 target_sources(pine
     PUBLIC 
-        include/Pine/Core/Application.hpp
-        include/Pine/Core/Assert.hpp
-        include/Pine/Core/Base.hpp
-        include/Pine/Core/Input.hpp
-        include/Pine/Core/KeyCodes.hpp
-        include/Pine/Core/Layer.hpp
-        include/Pine/Core/LayerStack.hpp
-        include/Pine/Core/Log.hpp
-        include/Pine/Core/MouseCodes.hpp
-        include/Pine/Core/Platform.hpp
-        include/Pine/Core/Timestep.hpp
-        include/Pine/Core/Window.hpp
-        include/Pine/Debug/Instrumentor.hpp
-        include/Pine/Events/ApplicationEvent.hpp
-        include/Pine/Events/Event.hpp
-        include/Pine/Events/KeyEvent.hpp
-        include/Pine/Events/MouseEvent.hpp
-        include/Pine/Network/Client.hpp
-        include/Pine/Network/Connection.hpp
-        include/Pine/Network/Message.hpp
-        include/Pine/Network/Server.hpp
-        include/Pine/Network/Types.hpp
-        include/Pine/Platform/OpenGL/OpenGLBuffer.hpp
-        include/Pine/Platform/OpenGL/OpenGLFramebuffer.hpp
-        include/Pine/Platform/OpenGL/OpenGLContext.hpp
-        include/Pine/Platform/OpenGL/OpenGLRendererAPI.hpp
-        include/Pine/Platform/OpenGL/OpenGLShader.hpp
-        include/Pine/Platform/OpenGL/OpenGLTexture.hpp
-        include/Pine/Platform/OpenGL/OpenGLVertexArray.hpp
-        include/Pine/Platform/Windows/WindowsWindow.hpp
-        include/Pine/Platform/Linux/LinuxWindow.hpp
-        include/Pine/Renderer/Buffer.hpp
-        include/Pine/Renderer/Framebuffer.hpp
-        include/Pine/Renderer/GraphicsContext.hpp
-        include/Pine/Renderer/Image.hpp
-        include/Pine/Renderer/OrthographicCamera.hpp
-        include/Pine/Renderer/OrthographicCameraController.hpp
-        include/Pine/Renderer/RenderCommand.hpp
-        include/Pine/Renderer/Renderer.hpp
-        include/Pine/Renderer/Renderer2D.hpp
-        include/Pine/Renderer/RendererAPI.hpp
-        include/Pine/Renderer/Shader.hpp
-        include/Pine/Renderer/Texture.hpp
-        include/Pine/Renderer/VertexArray.hpp
-        include/Pine/UI/UI.hpp
-        include/Pine/UI/ImGuiImplGLFW.hpp
-        include/Pine/UI/ImGuiImplOpenGL3.hpp
-        include/Pine/UI/ImGuiImplOpenGL3Loader.hpp
-        include/Pine/UI/ImGuiLayer.hpp
-        include/Pine/Utils/FileSystem.hpp
-        include/Pine/Utils/Math.hpp
-        include/Pine/Utils/ThreadSafeQueue.hpp
+        include/pine/core/application.hpp
+        include/pine/core/assert.hpp
+        include/pine/core/common.hpp
+        include/pine/core/input.hpp
+        include/pine/core/key_codes.hpp
+        include/pine/core/layer.hpp
+        include/pine/core/log.hpp
+        include/pine/core/mouse_codes.hpp
+        include/pine/core/platform.hpp
+        include/pine/core/timestep.hpp
+        include/pine/core/window.hpp
+        include/pine/debug/instrumentor.hpp
+        include/pine/events/application_event.hpp
+        include/pine/events/event.hpp
+        include/pine/events/key_event.hpp
+        include/pine/events/mouse_event.hpp
+        include/pine/gui/common.hpp
+        include/pine/gui/graphical_interface.hpp
+        include/pine/network/client.hpp
+        include/pine/network/connection.hpp
+        include/pine/network/server.hpp
+        include/pine/network/types.hpp
+        include/pine/platform/opengl/buffer.hpp
+        include/pine/platform/opengl/common.hpp
+        include/pine/platform/opengl/framebuffer.hpp
+        include/pine/platform/opengl/context.hpp
+        include/pine/platform/opengl/renderer_api.hpp
+        include/pine/platform/opengl/shader.hpp
+        include/pine/platform/opengl/texture.hpp
+        include/pine/platform/windows/window.hpp
+        include/pine/platform/linux/input.hpp
+        include/pine/platform/linux/window.hpp
+        include/pine/renderer/buffer.hpp
+        include/pine/renderer/camera.hpp
+        include/pine/renderer/common.hpp
+        include/pine/renderer/framebuffer.hpp
+        include/pine/renderer/graphics_context.hpp
+        include/pine/renderer/image.hpp
+        include/pine/renderer/quad_renderer.hpp
+        include/pine/renderer/render_command.hpp
+        include/pine/renderer/renderer.hpp
+        include/pine/renderer/renderer_api.hpp
+        include/pine/renderer/shader.hpp
+        include/pine/renderer/texture.hpp
+        include/pine/utils/filesystem.hpp
+        include/pine/utils/math.hpp
+        include/pine/utils/locked_queue.hpp
     PRIVATE 
-        src/Core/Application.cpp
-        src/Core/Layer.cpp
-        src/Core/LayerStack.cpp
-        src/Core/Log.cpp
-        src/Network/Client.cpp
-        src/Network/Connection.cpp
-        src/Network/Server.cpp
-        src/Platform/OpenGL/OpenGLBuffer.cpp
-        src/Platform/OpenGL/OpenGLFramebuffer.cpp
-        src/Platform/OpenGL/OpenGLContext.cpp
-        src/Platform/OpenGL/OpenGLRendererAPI.cpp
-        src/Platform/OpenGL/OpenGLShader.cpp
-        src/Platform/OpenGL/OpenGLTexture.cpp
-        src/Platform/OpenGL/OpenGLVertexArray.cpp
-        src/Platform/Windows/WindowsInput.cpp
-        src/Platform/Windows/WindowsWindow.cpp
-        src/Platform/Linux/LinuxInput.cpp
-        src/Platform/Linux/LinuxWindow.cpp
-        src/Renderer/Buffer.cpp
-        src/Renderer/Framebuffer.cpp
-        src/Renderer/GraphicsContext.cpp
-        src/Renderer/Image.cpp
-        src/Renderer/OrthographicCamera.cpp
-        src/Renderer/OrthographicCameraController.cpp
-        src/Renderer/RenderCommand.cpp
-        src/Renderer/Renderer.cpp
-        src/Renderer/Renderer2D.cpp
-        src/Renderer/RendererAPI.cpp
-        src/Renderer/Shader.cpp
-        src/Renderer/Texture.cpp
-        src/Renderer/VertexArray.cpp
-        src/UI/UI.cpp
-        src/UI/ImGuiImplGLFW.cpp
-        src/UI/ImGuiImplOpenGL3.cpp
-        src/UI/ImGuiLayer.cpp
-        src/Utils/FileSystem.cpp)
+        src/core/application.cpp
+        src/core/input.cpp
+        src/core/layer.cpp
+        src/core/log.cpp
+        src/gui/common.cpp
+        src/gui/graphical_interface.cpp
+        src/network/client.cpp
+        src/network/connection.cpp
+        src/network/server.cpp
+        src/platform/opengl/buffer.cpp
+        src/platform/opengl/framebuffer.cpp
+        src/platform/opengl/context.cpp
+        src/platform/opengl/renderer_api.cpp
+        src/platform/opengl/shader.cpp
+        src/platform/opengl/texture.cpp
+        src/platform/windows/input.cpp
+        src/platform/windows/window.cpp
+        src/platform/linux/input.cpp
+        src/platform/linux/window.cpp
+        src/renderer/buffer.cpp
+        src/renderer/camera.cpp
+        src/renderer/framebuffer.cpp
+        src/renderer/graphics_context.cpp
+        src/renderer/image.cpp
+        src/renderer/quad_renderer.cpp
+        src/renderer/render_command.cpp
+        src/renderer/renderer.cpp
+        src/renderer/renderer_api.cpp
+        src/renderer/shader.cpp
+        src/renderer/texture.cpp
+        src/utils/filesystem.cpp
+    )
 
-target_precompile_headers(pine PRIVATE include/Pine/Pch.hpp)
+target_precompile_headers(pine PRIVATE include/pine/pch.hpp)
 
 find_package(asio REQUIRED)
 find_package(glad REQUIRED)
 find_package(glfw3 REQUIRED)
 find_package(glm REQUIRED)
-find_package(imgui REQUIRED)
 find_package(spdlog REQUIRED)
 find_package(stb REQUIRED)
 
@@ -114,7 +104,10 @@ target_link_libraries(pine
     PRIVATE 
         glad::glad 
         glfw::glfw 
-        stb::stb)
+        stb::stb
+        pine::options
+        $<$<BOOL:${PINE_BUILD_WARNINGS}>:pine::warnings>
+    )
 
 if(MSVC)
     target_compile_definitions(pine PUBLIC PINE_PLATFORM_WINDOWS)
@@ -124,12 +117,11 @@ endif()
 
 target_compile_definitions(pine
     PUBLIC 
-        IMGUI_IMPL_GLFW_OPENGL3
-        IMGUI_IMPL_OPENGL_LOADER_GLAD
         GLFW_INCLUDE_NONE
         $<$<CONFIG:Debug>:PINE_DEBUG>
         $<$<CONFIG:Release>:PINE_RELEASE>
-    PRIVATE)
+    PRIVATE
+    )
 
 target_compile_features(pine PUBLIC cxx_std_17)
 target_compile_options(pine PUBLIC -std=c++17)
@@ -137,11 +129,15 @@ target_compile_options(pine PUBLIC -std=c++17)
 set_target_properties(pine PROPERTIES 
     ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/lib"
     LIBRARY_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/lib"
-    RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/bin")
+    RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/bin"
+    )
 
+# Install static libraries, shared libraries, and executables
 install(TARGETS pine
     ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}"
     LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
-    RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}")
+    RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
+    )
 
-install(DIRECTORY "include/Pine" TYPE INCLUDE FILES_MATCHING PATTERN "*.hpp")
+# Install header files in include directory
+install(DIRECTORY "include/pine" TYPE INCLUDE FILES_MATCHING PATTERN "*.hpp")

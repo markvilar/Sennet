@@ -108,7 +108,7 @@ jobs:
     - name: Install Conan packages
       run: |
         export CONAN_SYSREQUIRES_MODE=enabled
-        conan install    ${{env.source_dir}} \
+        conan install      ${{env.source_dir}} \
           --install-folder ${{env.package_dir}} \
           --settings       build_type=${{matrix.build_type}} \
           --build          missing
