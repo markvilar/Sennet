@@ -19,7 +19,7 @@ Pine requires the follow tools to be built:
 
 | **Library** | **Version**  | **Library purpose.**                |
 |-------------|--------------|-------------------------------------|
-| asio        | 1.21.0       | Network and asynchronicity.         |
+| asio        | 1.21.0       | Networking and asynchronicity.      |
 | glad        | 0.1.34       | Bindings and loaders of OpenGL 4.6. |
 | glfw        | 3.3.4        | Window and input handling.          |
 | glm         | 0.9.9.8      | Vectorized mathematical operations. |
@@ -30,33 +30,23 @@ Pine requires the follow tools to be built:
 By default, Pine utilizes CMake for build generation and Conan for package
 management. However, all the native features of CMake are preserved by Pine.
 This means that the user can utilize another package manager by simply 
-providing ```FindXXX.cmake``` files for each of the dependencies in the 
-```CMAKE_MODULE_PATH``` variable.
+providing paths to ```FindXXX.cmake``` files for each of the dependencies in 
+the ```CMAKE_MODULE_PATH``` variable.
 
 ### Linux Workflow
 
 #### Building
 
 ```shell
+# Clone pine
 git clone https://github.com/markvilar/pine.git
 cd pine
-
-# Configure CMake
-export CMAKE_GENERATOR="Unix Makefiles"
-export CMAKE_BUILD_TYPE="Release"
-export CMAKE_CXX_COMPILER="gcc"
 
 # Allow Conan to install OS requirements
 export CONAN_SYSREQUIRES_MODE=enabled
 
-# Install packages with Conan
-conan install .                   \
-    --install-folder ./packages   \
-    --settings build_type=Release \
-    --build missing
-
 # Generate build with CMake
-cmake -S . -B build -D CMAKE_MODULE_PATH="${PWD}/packages"
+cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
 
 # Build
 cmake --build build
