@@ -56,14 +56,9 @@ include(cmake/doxygen.cmake)
 enable_doxygen()
 
 # Add library core, resources, and dependencies
-add_subdirectory(pine)
+add_subdirectory(src)
 add_subdirectory(resources)
 add_subdirectory(vendor)
-
-# Add editor
-if(PINE_BUILD_EDITOR)
-    add_subdirectory(editor)
-endif()
 
 # Add examples
 if(PINE_BUILD_EXAMPLES)
