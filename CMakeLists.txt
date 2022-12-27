@@ -32,7 +32,8 @@ if(PINE_USE_CONAN)
         conan_cmake_run(CONANFILE "${CMAKE_CURRENT_SOURCE_DIR}/conanfile.py"
             BASIC_SETUP 
             CMAKE_TARGETS 
-            BUILD missing)
+            BUILD missing
+        )
         list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_BINARY_DIR}")
     endif()
 endif()
