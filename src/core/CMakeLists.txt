@@ -82,7 +82,7 @@ target_sources(pine
         src/renderer/shader.cpp
         src/renderer/texture.cpp
         src/utils/filesystem.cpp
-    )
+)
 
 target_precompile_headers(pine PRIVATE include/pine/pch.hpp)
 
@@ -107,7 +107,7 @@ target_link_libraries(pine
         stb::stb
         pine::options
         $<$<BOOL:${PINE_BUILD_WARNINGS}>:pine::warnings>
-    )
+)
 
 if(MSVC)
     target_compile_definitions(pine PUBLIC PINE_PLATFORM_WINDOWS)
@@ -121,7 +121,7 @@ target_compile_definitions(pine
         $<$<CONFIG:Debug>:PINE_DEBUG>
         $<$<CONFIG:Release>:PINE_RELEASE>
     PRIVATE
-    )
+)
 
 target_compile_features(pine PUBLIC cxx_std_17)
 target_compile_options(pine PUBLIC -std=c++17)
@@ -130,14 +130,14 @@ set_target_properties(pine PROPERTIES
     ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/lib"
     LIBRARY_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/lib"
     RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/bin"
-    )
+)
 
 # Install static libraries, shared libraries, and executables
 install(TARGETS pine
     ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}"
     LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
     RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
-    )
+)
 
 # Install header files in include directory
 install(DIRECTORY "include/pine" TYPE INCLUDE FILES_MATCHING PATTERN "*.hpp")

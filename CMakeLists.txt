@@ -32,7 +32,8 @@ if(PINE_USE_CONAN)
         conan_cmake_run(CONANFILE "${CMAKE_CURRENT_SOURCE_DIR}/conanfile.py"
             BASIC_SETUP 
             CMAKE_TARGETS 
-            BUILD missing)
+            BUILD missing
+        )
         list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_BINARY_DIR}")
     endif()
 endif()
@@ -56,14 +57,9 @@ include(cmake/doxygen.cmake)
 enable_doxygen()
 
 # Add library core, resources, and dependencies
-add_subdirectory(pine)
+add_subdirectory(src)
 add_subdirectory(resources)
 add_subdirectory(vendor)
-
-# Add editor
-if(PINE_BUILD_EDITOR)
-    add_subdirectory(editor)
-endif()
 
 # Add examples
 if(PINE_BUILD_EXAMPLES)
