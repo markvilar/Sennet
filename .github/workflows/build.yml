@@ -68,7 +68,7 @@ jobs:
       if: runner.os == 'linux'
       run: |
         sudo apt update -y
-        sudo apt install -y 
+        sudo apt install -y \
             cmake \
             gcc \
             clang \
