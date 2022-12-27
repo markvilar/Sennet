@@ -1,11 +1,8 @@
+# syntax=docker/dockerfile:1
 FROM ubuntu:20.04
 
 MAINTAINER markvilar EMAIL martin.kvisvik.larsen@hotmail.com
 
-# Copy source code and set up working directory
-RUN mkdir /pine
-COPY . /pine/
-WORKDIR /pine
 
 # Install dependencies
 ENV DEBIAN_FRONTEND="noninteractive" TZ="Etc/UTC"
@@ -15,7 +12,7 @@ RUN apt install -y \
     gcc \
     clang \
     python3-dev \
-    python3-pip \
+    python3-pip \ 
     pkg-config \
     libgl-dev \
     libx11-xcb-dev \
@@ -62,6 +59,11 @@ RUN conan profile update conf.tools.system.package_manager:mode=install \
     sudo_install
 RUN conan profile update conf.tools.system.package_manager:sudo=True \
     sudo_install
+
+# Copy source code and set up working directory
+RUN mkdir /pine
+COPY . /pine/
+WORKDIR /pine
 
 # Generate build for pine
 RUN cd /pine

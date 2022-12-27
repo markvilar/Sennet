@@ -12,7 +12,6 @@ defaults:
 env:
   source_dir: "${{github.workspace}}"
   build_dir: "${{github.workspace}}/build"
-  package_dir: "${{github.workspace}}/packages"
 
 jobs:
   build:
@@ -23,39 +22,15 @@ jobs:
       matrix:
         include:
           - os: ubuntu-latest
-            compiler: { c: gcc-10, cpp: g++-10 }
+            compiler: { c: gcc, cpp: g++ }
             generator: Ninja
             build_type: Release
             platform: x64
 
           - os: ubuntu-latest
-            compiler: { c: gcc-10, cpp: g++-10 }
-            generator: Ninja
-            build_type: Debug
-            platform: x64
-
-          - os: ubuntu-latest
-            compiler: { c: clang-11, cpp: clang++-11 }
+            compiler: { c: clang, cpp: clang++ }
             generator: Ninja
             build_type: Release
-            platform: x64
-
-          - os: ubuntu-latest
-            compiler: { c: clang-11, cpp: clang++-11 }
-            generator: Ninja
-            build_type: Debug
-            platform: x64
-
-          - os: ubuntu-latest
-            compiler: { c: clang-12, cpp: clang++-12 }
-            generator: Ninja
-            build_type: Release
-            platform: x64
-
-          - os: ubuntu-latest
-            compiler: { c: clang-12, cpp: clang++-12 }
-            generator: Ninja
-            build_type: Debug
             platform: x64
 
     steps:
@@ -93,48 +68,64 @@ jobs:
       if: runner.os == 'linux'
       run: |
         sudo apt update -y
-        sudo apt install -y ninja-build
+        sudo apt install -y 
+            cmake \
+            gcc \
+            clang \
+            ninja-build \
+            python3-dev \
+            python3-pip \
+            pkg-config \
+            libgl-dev \
+            libx11-xcb-dev \
+            libx11-xcb-dev \
+            libfontenc-dev \
+            libice-dev \
+            libsm-dev \
+            libxaw7-dev \
+            libxcomposite-dev \
+            libxcursor-dev \
+            libxdamage-dev \
+            libxi-dev \
+            libxinerama-dev \
+            libxkbfile-dev \
+            libxmuu-dev \
+            libxrandr-dev \
+            libxres-dev \
+            libxss-dev \
+            libxtst-dev \
+            libxv-dev \
+            libxvmc-dev \
+            libxxf86vm-dev \
+            libxcb-render0-dev \
+            libxcb-render-util0-dev \
+            libxcb-xkb-dev \
+            libxcb-icccm4-dev \
+            libxcb-image0-dev \
+            libxcb-keysyms1-dev \
+            libxcb-randr0-dev \
+            libxcb-shape0-dev \
+            libxcb-sync-dev \
+            libxcb-xfixes0-dev \
+            libxcb-xinerama0-dev \
+            libxcb-dri3-dev \
+            uuid-dev \
+            libxcb-util-dev \
+            libxcb-util0-dev 
         pip3 install wheel setuptools
         pip3 install conan
         export PATH=$PATH:~/.local/bin
 
-    - name: Install Windows dependencies
-      if: runner.os == 'windows'
-      run: |
-        choco install -y ninja
-        pip3 install wheel setuptools
-        pip3 install conan
-
-    - name: Install Conan packages
-      run: |
-        export CONAN_SYSREQUIRES_MODE=enabled
-        conan install      ${{env.source_dir}} \
-          --install-folder ${{env.package_dir}} \
-          --settings       build_type=${{matrix.build_type}} \
-          --build          missing
-
     - name: Generate build
       run: |
         export CMAKE_GENERATOR="${{matrix.generator}}"
-        export CMAKE_BUILD_TYPE="${{matrix.build_type}}"
         export CMAKE_C_COMPILER="${{matrix.compiler.c}}"
         export CMAKE_CXX_COMPILER="${{matrix.compiler.cpp}}"
         cmake -S ${{env.source_dir}} \
           -B ${{env.build_dir}} \
-          -D CMAKE_MODULE_PATH=${{env.package_dir}} \
+          -D CMAKE_BUILD_TYPE=${{env.build_type}} \
           -D PINE_BUILD_EDITOR=ON \
           -D PINE_BUILD_EXAMPLES=ON
 
     - name: Build
       run: cmake --build ${{env.build_dir}}
-
-    - name: Install
-      run: |
-        cmake --install ${{env.build_dir}} \
-          --prefix ${{env.source_dir}}/install/ \
-          --config ${{matrix.build_type}}
-
-    - name: Create Conan package
-      run: |
-        conan create ${{env.source_dir}} \
-          --build missing
