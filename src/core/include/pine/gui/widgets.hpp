@@ -79,6 +79,8 @@ inline auto render_dockspace(const char* name, const bool fullscreen = true)
     }
 
     const auto io = ImGui::GetIO();
+
+    [[maybe_unused]]
     auto style = ImGui::GetStyle();
 
     ImGuiDockNodeFlags dockspace_flags = ImGuiDockNodeFlags_None;
