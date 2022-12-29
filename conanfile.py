@@ -27,7 +27,7 @@ class PineConanFile(ConanFile):
         "CMakeLists.txt", 
         "cmake/*",
         "examples/*", 
-        "pine/*", 
+        "src/*", 
         "resources/*", 
         "test/*",
         "vendor/*"
@@ -112,7 +112,6 @@ class PineConanFile(ConanFile):
         # Definitions for component libimgui
         self.cpp_info.components["libimgui"].libs = ["imgui"]
         self.cpp_info.components["libimgui"].requires = ["glfw::glfw"]
-
         
         self.cpp_info.components["libimgui"].defines.append(
             "IMGUI_IMPL_GLFW_OPENGL3")

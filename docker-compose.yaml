@@ -1,0 +1,7 @@
+version: '3'
+services:
+  pine-build:
+    build: .
+    container_name: pine
+    volumes: 
+      - .:/pine
