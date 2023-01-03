@@ -4,6 +4,7 @@ project(pine VERSION 0.3 LANGUAGES CXX)
 
 option(PINE_USE_CONAN "Use Conan for package management." ON)
 
+# Build options
 option(PINE_BUILD_SHARED "Build shared library." ON)
 option(PINE_BUILD_WARNINGS "Enable compiler warnings." ON)
 option(PINE_BUILD_EDITOR "Build editor." ON)
@@ -34,6 +35,7 @@ if(PINE_USE_CONAN)
             CMAKE_TARGETS 
             BUILD missing
         )
+        # Add build directory to module path to find Conans' cmake config files.
         list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_BINARY_DIR}")
     endif()
 endif()
