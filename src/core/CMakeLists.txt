@@ -100,6 +100,7 @@ target_link_libraries(pine
         asio::asio
         glm::glm
         imgui::imgui
+        implot::implot
         spdlog::spdlog
     PRIVATE 
         glad::glad 

@@ -1,8 +1,12 @@
 #include "pine/gui/graphical_interface.hpp"
 
+// ImGui
 #include <imgui.h>
 #include <backends/imgui_impl_glfw.h>
 #include <backends/imgui_impl_opengl3.h>
+
+// ImPlot
+#include <implot.h>
 
 // TODO: TEMPORARY
 #include <GLFW/glfw3.h>
@@ -25,6 +29,7 @@ GraphicalInterface::GraphicalInterface(Window* window)
 {
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
+    ImPlot::CreateContext();
 
     auto& io = ImGui::GetIO();
     io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
@@ -44,6 +49,7 @@ GraphicalInterface::~GraphicalInterface()
 {
     ImGui_ImplOpenGL3_Shutdown();
     ImGui_ImplGlfw_Shutdown();
+    ImPlot::DestroyContext();
     ImGui::DestroyContext();
 }
 

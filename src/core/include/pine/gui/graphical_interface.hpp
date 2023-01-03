@@ -28,4 +28,4 @@ private:
     bool m_block_events = true;
 };
 
-} // namespace pine::ui
+} // namespace pine

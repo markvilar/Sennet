@@ -1,6 +1,9 @@
 #pragma once
 
 #include "pine/gui/common.hpp"
+#include "pine/renderer/framebuffer.hpp"
+#include "pine/utils/math.hpp"
+
 
 namespace pine::gui
 {
