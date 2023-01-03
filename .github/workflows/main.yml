@@ -1,13 +1,16 @@
-name: Build
+name: main
 
 on: 
   push:
   pull_request:
-    branches: [master]
+    branches: [main]
 
 defaults:
   run:
     shell: bash
+
+runs:
+  using: "node16"
 
 env:
   source_dir: "${{github.workspace}}"
@@ -34,7 +37,7 @@ jobs:
             platform: x64
 
     steps:
-    - name: Checkout code
+    - name: Checkout repository
       uses: actions/checkout@v2
 
     - name: Echo build configuration
@@ -121,7 +124,8 @@ jobs:
         export CMAKE_GENERATOR="${{matrix.generator}}"
         export CMAKE_C_COMPILER="${{matrix.compiler.c}}"
         export CMAKE_CXX_COMPILER="${{matrix.compiler.cpp}}"
-        cmake -S ${{env.source_dir}} \
+        cmake \
+          -S ${{env.source_dir}} \
           -B ${{env.build_dir}} \
           -D CMAKE_BUILD_TYPE=${{env.build_type}} \
           -D PINE_BUILD_EDITOR=ON \
