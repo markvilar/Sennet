@@ -1,15 +1,17 @@
 cmake_minimum_required(VERSION 3.16)
 
-project(pine VERSION 0.3 LANGUAGES CXX)
+project(pine VERSION 0.3.1 LANGUAGES CXX)
 
 option(PINE_USE_CONAN "Use Conan for package management." ON)
 
 # Build options
-option(PINE_BUILD_SHARED "Build shared library." ON)
-option(PINE_BUILD_WARNINGS "Enable compiler warnings." ON)
+option(PINE_ENABLE_SANITIZERS "Enable sanitizers." ON)
+option(PINE_ENABLE_WARNINGS "Enable compiler warnings." ON)
+
+# Build targets
 option(PINE_BUILD_EDITOR "Build editor." ON)
-option(PINE_BUILD_EXAMPLES "Build examples." OFF)
-option(PINE_BUILD_TESTS "Build test." OFF)
+option(PINE_BUILD_EXAMPLES "Build examples." ON)
+option(PINE_BUILD_TESTS "Build test." ON)
 
 include(cmake/project_settings.cmake)
 include(cmake/prevent_in_source_build.cmake)
@@ -58,7 +60,7 @@ include(cmake/static_analyzers.cmake)
 include(cmake/doxygen.cmake)
 enable_doxygen()
 
-# Add library core, resources, and dependencies
+# Add library, resources, and dependencies built by the project
 add_subdirectory(src)
 add_subdirectory(resources)
 add_subdirectory(vendor)

@@ -103,13 +103,10 @@ void Application::on_event(Event& event)
             return on_window_iconify(event);
         });
 
-    //PINE_BIND_EVENT_FN(Application::on_window_close));
-    //PINE_BIND_EVENT_FN(Application::on_window_resize));
-    //PINE_BIND_EVENT_FN(Application::on_window_iconify));
-
     // Handle event in the GUI first.
     gui->on_event(event);
 
+    // Propagate event down the layer stack.
     for (auto it = layer_stack.end(); it != layer_stack.begin();)
     {
         if (event.handled)

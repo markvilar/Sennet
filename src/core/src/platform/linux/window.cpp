@@ -59,7 +59,7 @@ void LinuxWindow::init()
     set_vsync(true);
 
     glfwSetWindowSizeCallback(m_window,
-        [](GLFWwindow* window, int width, int height)
+        [](NativeWindow* window, int width, int height)
         {
             WindowData& data =
                 *static_cast<WindowData*>(glfwGetWindowUserPointer(window));
@@ -71,7 +71,7 @@ void LinuxWindow::init()
         });
 
     glfwSetWindowIconifyCallback(m_window,
-        [](GLFWwindow* window, int iconified)
+        [](NativeWindow* window, int iconified)
         {
             WindowData& data =
                 *static_cast<WindowData*>(glfwGetWindowUserPointer(window));
@@ -80,7 +80,7 @@ void LinuxWindow::init()
         });
 
     glfwSetWindowCloseCallback(m_window,
-        [](GLFWwindow* window)
+        [](NativeWindow* window)
         {
             WindowData& data =
                 *static_cast<WindowData*>(glfwGetWindowUserPointer(window));
@@ -89,7 +89,7 @@ void LinuxWindow::init()
         });
 
     glfwSetKeyCallback(m_window,
-        [](GLFWwindow* window,
+        [](NativeWindow* window,
             int key,
             [[maybe_unused]] int scancode,
             int action,
@@ -121,7 +121,7 @@ void LinuxWindow::init()
         });
 
     glfwSetCharCallback(m_window,
-        [](GLFWwindow* window, unsigned int key)
+        [](NativeWindow* window, unsigned int key)
         {
             WindowData& data =
                 *static_cast<WindowData*>(glfwGetWindowUserPointer(window));
@@ -130,7 +130,7 @@ void LinuxWindow::init()
         });
 
     glfwSetMouseButtonCallback(m_window,
-        [](GLFWwindow* window,
+        [](NativeWindow* window,
             int button,
             int action,
             [[maybe_unused]] int mods)
@@ -155,7 +155,7 @@ void LinuxWindow::init()
         });
 
     glfwSetScrollCallback(m_window,
-        [](GLFWwindow* window, const double offset_x, const double offset_y)
+        [](NativeWindow* window, const double offset_x, const double offset_y)
         {
             WindowData& data =
                 *static_cast<WindowData*>(glfwGetWindowUserPointer(window));
@@ -165,7 +165,7 @@ void LinuxWindow::init()
         });
 
     glfwSetCursorPosCallback(m_window,
-        [](GLFWwindow* window, const double pos_x, const double pos_y)
+        [](NativeWindow* window, const double pos_x, const double pos_y)
         {
             WindowData& data =
                 *static_cast<WindowData*>(glfwGetWindowUserPointer(window));
@@ -195,7 +195,7 @@ void LinuxWindow::maximize() { glfwMaximizeWindow(m_window); }
 
 void LinuxWindow::center_window()
 {
-    const GLFWvidmode* video_mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+    const auto& video_mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
     int x = video_mode->width / 2 - static_cast<int>(m_data.width) / 2;
     int y = video_mode->height / 2 - static_cast<int>(m_data.height) / 2;
     glfwSetWindowPos(m_window, x, y);

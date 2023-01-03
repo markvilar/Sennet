@@ -12,11 +12,11 @@ namespace pine
 
 struct WindowSpecs
 {
-    std::string title;
-    uint32_t width;
-    uint32_t height;
-    bool fullscreen;
-    bool vsync;
+    std::string title{"Window"};
+    uint32_t width{1280};
+    uint32_t height{720};
+    bool fullscreen{false};
+    bool vsync{true};
 };
 
 class Window
