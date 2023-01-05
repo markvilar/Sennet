@@ -2,8 +2,6 @@
 
 #include <array>
 
-#include <implot.h>
-
 namespace pine
 {
 
@@ -361,16 +359,6 @@ void EditorLayer::on_gui_render()
         });
 
     gui::render_window("Console", [](){});
-
-    gui::render_window("ImPlot", 
-        []() 
-        {
-            if (ImPlot::BeginPlot("My Plot")) 
-            {
-                ImPlot::EndPlot();
-            }
-        });
-
 }
 
 void EditorLayer::on_event(Event& event)
