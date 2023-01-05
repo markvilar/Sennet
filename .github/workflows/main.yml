@@ -130,6 +130,3 @@ jobs:
 
     - name: Build
       run: cmake --build ${{env.build_dir}}
-
-    - name: Create conan package
-      run: conan create ${{env.source_dir}} --build missing
