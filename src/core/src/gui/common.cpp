@@ -1,5 +1,7 @@
 #include "pine/gui/common.hpp"
 
+#include <imgui.h>
+
 #include "pine/pch.hpp"
 
 namespace pine::gui

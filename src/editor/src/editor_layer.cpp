@@ -358,7 +358,7 @@ void EditorLayer::on_gui_render()
             }
         });
 
-    gui::render_window("Console", []() {});
+    gui::render_window("Console", [](){});
 }
 
 void EditorLayer::on_event(Event& event)
