@@ -4,7 +4,7 @@ required_conan_version = ">=1.39.0"
 
 class PineConanFile(ConanFile):
     name = "pine"
-    version = "0.3"
+    version = "0.3.0"
     license = "Apache 2.0"
     author = "Martin Kvisvik Larsen"
     description = "Pine - Library for graphics and network"
@@ -109,16 +109,15 @@ class PineConanFile(ConanFile):
 
     def package_info(self):
         """ Configures the package information. """
-        # Definitions for component libimgui
+        # ImGui component
         self.cpp_info.components["libimgui"].libs = ["imgui"]
         self.cpp_info.components["libimgui"].requires = ["glfw::glfw"]
-        
         self.cpp_info.components["libimgui"].defines.append(
             "IMGUI_IMPL_GLFW_OPENGL3")
         self.cpp_info.components["libimgui"].defines.append(
             "IMGUI_IMPL_OPENGL_LOADER_GLAD")
 
-        # Definitions for component libpine
+        # Pine component
         self.cpp_info.components["libpine"].libs = ["pine"]
         self.cpp_info.components["libpine"].requires = [
             "libimgui",
@@ -128,7 +127,7 @@ class PineConanFile(ConanFile):
             "glm::glm",
             "spdlog::spdlog",
             "stb::stb",
-            ]
+        ]
         self.cpp_info.components["libpine"].resdirs= ["resources"]
 
         if self.settings.os == "Windows":
