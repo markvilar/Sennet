@@ -1,14 +1,10 @@
 #include "pine/gui/graphical_interface.hpp"
 
-// ImGui
 #include <imgui.h>
 #include <backends/imgui_impl_glfw.h>
 #include <backends/imgui_impl_opengl3.h>
 
-// ImPlot
-#include <implot.h>
-
-// TODO: TEMPORARY
+// FIXME: TEMPORARY
 #include <GLFW/glfw3.h>
 #include <glad/glad.h>
 
@@ -29,13 +25,13 @@ GraphicalInterface::GraphicalInterface(Window* window)
 {
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
-    ImPlot::CreateContext();
 
     auto& io = ImGui::GetIO();
     io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
     io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
     io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
-    io.IniFilename = nullptr; // TODO: Add user profile.
+    // TODO: Add user profile.
+    // io.IniFilename = nullptr; 
 
     ImGui::StyleColorsDark();
 
@@ -49,7 +45,6 @@ GraphicalInterface::~GraphicalInterface()
 {
     ImGui_ImplOpenGL3_Shutdown();
     ImGui_ImplGlfw_Shutdown();
-    ImPlot::DestroyContext();
     ImGui::DestroyContext();
 }
 

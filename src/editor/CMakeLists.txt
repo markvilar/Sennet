@@ -20,6 +20,7 @@ target_compile_features(editor PUBLIC cxx_std_17)
 target_compile_options(editor PRIVATE -std=c++17)
 
 set_target_properties(editor PROPERTIES 
+    CXX_STANDARD 17
     ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/lib"
     LIBRARY_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/lib"
     RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/bin"
@@ -35,6 +36,7 @@ target_compile_features(editor_app PRIVATE cxx_std_17)
 target_link_libraries(editor_app PRIVATE pine::editor)
 
 set_target_properties(editor_app PROPERTIES 
+    CXX_STANDARD 17
     ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/lib"
     LIBRARY_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/lib"
     RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/bin"
