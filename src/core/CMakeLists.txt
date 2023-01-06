@@ -105,8 +105,8 @@ target_link_libraries(pine
         glad::glad 
         glfw::glfw 
         stb::stb
-        $<$<BOOL:${PINE_ENABLE_SANITIZERS}>:pine::options>
-        $<$<BOOL:${PINE_ENABLE_WARNINGS}>:pine::warnings>
+        $<$<BOOL:${PINE_SANITIZERS_ENABLE}>:pine::options>
+        $<$<BOOL:${PINE_WARNINGS_ENABLE}>:pine::warnings>
 )
 
 if(MSVC)

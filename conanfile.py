@@ -2,7 +2,7 @@ from conans import ConanFile, CMake, tools
 
 required_conan_version = ">=1.39.0"
 
-class PineConanFile(ConanFile):
+class PineConan(ConanFile):
     name = "pine"
     version = "0.3.0"
     license = "Apache 2.0"
@@ -27,8 +27,8 @@ class PineConanFile(ConanFile):
         "CMakeLists.txt", 
         "cmake/*",
         "examples/*", 
-        "src/*", 
         "resources/*", 
+        "src/*", 
         "test/*",
         "vendor/*"
     ]
