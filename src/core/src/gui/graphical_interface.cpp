@@ -1,6 +1,5 @@
 #include "pine/gui/graphical_interface.hpp"
 
-// ImGui
 #include <imgui.h>
 #include <backends/imgui_impl_glfw.h>
 #include <backends/imgui_impl_opengl3.h>
@@ -31,7 +30,8 @@ GraphicalInterface::GraphicalInterface(Window* window)
     io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
     io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
     io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
-    io.IniFilename = nullptr; // TODO: Add user profile.
+    // TODO: Add user profile.
+    // io.IniFilename = nullptr; 
 
     ImGui::StyleColorsDark();
 
