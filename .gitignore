@@ -5,9 +5,10 @@ install/
 packages/
 
 # Vim files
-*.swp
-*.swo
 *.swa
+*.swn
+*.swo
+*.swp
 
 # Visual C++ cache files
 out/

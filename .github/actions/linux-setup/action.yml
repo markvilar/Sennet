@@ -1,5 +1,6 @@
-name: "Hello World"
-description: "Greet someone"
+name: "linux-setup"
+author: "markvilar"
+description: "Sets up system dependencies, and C/C++ compilers for Linux."
 
 defaults:
   run:
