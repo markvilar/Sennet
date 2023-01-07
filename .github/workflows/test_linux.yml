@@ -15,7 +15,7 @@ env:
 
 jobs:
   build_and_test:
-    name: "test-${{matrix.os}}-${{matrix.compiler.c}}-${{matrix.build_type}}"
+    name: "test-${{matrix.os}}-${{matrix.build_type}}-${{matrix.compiler.c}}"
     runs-on: "${{matrix.os}}"
     strategy:
       fail-fast: false
