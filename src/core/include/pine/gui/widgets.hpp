@@ -128,7 +128,6 @@ inline auto render_viewport(const char* name, const Framebuffer& framebuffer)
     const auto texture_id = framebuffer.get_color_attachment_renderer_id();
     const auto size = ImGui::GetContentRegionAvail();
 
-    // TODO: Subtract title bar size
     ImGui::Image(reinterpret_cast<void*>(texture_id),
         ImVec2{size.x, size.y},
         ImVec2{0, 1},
@@ -139,7 +138,7 @@ inline auto render_viewport(const char* name, const Framebuffer& framebuffer)
     return state;
 }
 
-// TODO: Improve templating - Allow container to be vector. (C++20s std::span)
+// FIXME: Improve templating - Allow container to be vector. (C++20s std::span)
 template <typename T, size_t N>
 auto dropdown(const char* name, T* t,
     const std::array<std::pair<const char*, T>, N> options)
@@ -185,7 +184,7 @@ auto dropdown(const char* name, T* t,
     return *t;
 }
 
-// TODO: Fix implicit template deduction. Literal types ruin template argument
+// FIXME: Fix implicit template deduction. Literal types ruin template argument
 // deduction.
 template <typename T>
 auto slider_scalar(const char* name, T* value, const T min_value,
