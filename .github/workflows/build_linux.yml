@@ -118,8 +118,9 @@ jobs:
           -S ${{env.source_dir}} \
           -B ${{env.build_dir}} \
           -D CMAKE_BUILD_TYPE=${{env.build_type}} \
-          -D PINE_BUILD_EDITOR=ON \
-          -D PINE_BUILD_EXAMPLES=ON
+          -D PINE_EDITOR_ENABLE=ON \
+          -D PINE_EXAMPLE_ENABLE=ON \
+          -D PINE_TEST_ENABLE=ON
 
     - name: Build
       run: cmake --build ${{env.build_dir}}
