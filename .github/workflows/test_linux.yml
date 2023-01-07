@@ -33,18 +33,6 @@ jobs:
             build_type: Release
             platform: x64
 
-          - os: ubuntu-18.04
-            compiler: { c: gcc, cpp: g++ }
-            generator: Ninja
-            build_type: Release
-            platform: x64
-
-          - os: ubuntu-18.04
-            compiler: { c: clang, cpp: clang++ }
-            generator: Ninja
-            build_type: Release
-            platform: x64
-
     steps:
     - name: Checkout repository
       uses: actions/checkout@v3
