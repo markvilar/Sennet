@@ -20,7 +20,7 @@ target_sources(pine
         include/pine/events/key_event.hpp
         include/pine/events/mouse_event.hpp
         include/pine/gui/common.hpp
-        include/pine/gui/graphical_interface.hpp
+        include/pine/gui/manager.hpp
         include/pine/network/client.hpp
         include/pine/network/connection.hpp
         include/pine/network/server.hpp
@@ -56,7 +56,7 @@ target_sources(pine
         src/core/layer.cpp
         src/core/log.cpp
         src/gui/common.cpp
-        src/gui/graphical_interface.cpp
+        src/gui/manager.cpp
         src/network/client.cpp
         src/network/connection.cpp
         src/network/server.cpp

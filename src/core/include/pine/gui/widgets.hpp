@@ -75,7 +75,8 @@ inline auto render_dockspace(const char* name, const bool fullscreen = true)
         ImGui::SetNextWindowSize(viewport->Size);
         ImGui::SetNextWindowViewport(viewport->ID);
         window_flags |= ImGuiWindowFlags_NoTitleBar
-            | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize
+            | ImGuiWindowFlags_NoCollapse 
+            | ImGuiWindowFlags_NoResize
             | ImGuiWindowFlags_NoMove;
         window_flags |= ImGuiWindowFlags_NoBringToFrontOnFocus
             | ImGuiWindowFlags_NoNavFocus;
@@ -106,7 +107,7 @@ template <typename Function>
 auto render_window(const char* name, const Function func)
 {
     ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(5, 5));
-    ImGui::Begin(name, nullptr, 0);
+    ImGui::Begin(name, nullptr, ImGuiWindowFlags_None);
     ImGui::PopStyleVar();
     func();
 
@@ -120,17 +121,16 @@ auto render_window(const char* name, const Function func)
 inline auto render_viewport(const char* name, const Framebuffer& framebuffer)
 {
     ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0, 0));
-    ImGui::Begin(name,
-        nullptr,
-        ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoScrollbar
-            | ImGuiWindowFlags_NoScrollWithMouse);
+    ImGui::Begin(name, nullptr, ImGuiWindowFlags_None);
     ImGui::PopStyleVar();
 
     const auto state = get_panel_state();
     const auto texture_id = framebuffer.get_color_attachment_renderer_id();
+    const auto size = ImGui::GetContentRegionAvail();
 
+    // TODO: Subtract title bar size
     ImGui::Image(reinterpret_cast<void*>(texture_id),
-        ImVec2{state.size.x, state.size.y},
+        ImVec2{size.x, size.y},
         ImVec2{0, 1},
         ImVec2{1, 0});
 

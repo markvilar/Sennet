@@ -43,7 +43,7 @@ Application::Application(const ApplicationSpecs& specs) : specification(specs)
 
     Renderer::init();
 
-    gui = GraphicalInterface::create(window.get());
+    gui = gui::create_manager(window.get());
 }
 
 Application::~Application()

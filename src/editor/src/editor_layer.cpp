@@ -358,6 +358,23 @@ void EditorLayer::on_gui_render()
             }
         });
 
+    gui::render_window("GUI", 
+        []()
+        {
+            static std::array<char, 50> input_profile_name{""};
+
+            ImGui::InputText("gui profile", input_profile_name.data(),
+                input_profile_name.size());
+            if (ImGui::Button("Update profile"))
+            {
+                const auto new_profile_name = 
+                    std::string(input_profile_name.data());
+
+                auto& gui = Application::get().get_graphical_interface();
+                gui.set_profile_name(new_profile_name);
+            }
+        });
+
     gui::render_window("Console", [](){});
 }
 

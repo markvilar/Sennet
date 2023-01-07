@@ -13,7 +13,7 @@
 
 #include "pine/renderer/renderer.hpp"
 
-#include "pine/gui/graphical_interface.hpp"
+#include "pine/gui/manager.hpp"
 
 int main(int argc, char** argv);
 
@@ -58,7 +58,7 @@ public:
     void render_gui();
 
     inline Window& get_window() const { return *window; }
-    inline GraphicalInterface& get_graphical_interface() const 
+    inline gui::Manager& get_graphical_interface() const 
     { 
         return *gui; 
     }
@@ -79,7 +79,7 @@ private:
     ApplicationSpecs specification;
 
     std::unique_ptr<Window> window;
-    std::unique_ptr<GraphicalInterface> gui;
+    std::unique_ptr<gui::Manager> gui;
 
     LayerStack layer_stack;
 

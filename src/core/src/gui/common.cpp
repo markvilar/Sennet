@@ -9,15 +9,29 @@ namespace pine::gui
 
 WindowFlags configure_window_flags(const bool fullscreen)
 {
-    ImGuiWindowFlags window_flags = ImGuiWindowFlags_MenuBar;
+    WindowFlags window_flags = ImGuiWindowFlags_MenuBar;
     if (fullscreen)
     {
         window_flags |= ImGuiWindowFlags_NoTitleBar
-            | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize
-            | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoBringToFrontOnFocus
+            | ImGuiWindowFlags_NoCollapse 
+            | ImGuiWindowFlags_NoResize
+            | ImGuiWindowFlags_NoMove 
+            | ImGuiWindowFlags_NoBringToFrontOnFocus
             | ImGuiWindowFlags_NoNavFocus;
     }
     return window_flags;
+}
+
+ConfigFlags get_config_flags()
+{
+    const auto& io = ImGui::GetIO();
+    return io.ConfigFlags;
+}
+
+void set_config_flags(const ConfigFlags& config)
+{
+    auto& io = ImGui::GetIO();
+    io.ConfigFlags = config;
 }
 
 void set_dark_theme(Style& style)
