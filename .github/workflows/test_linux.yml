@@ -14,8 +14,8 @@ env:
   build_dir: "${{github.workspace}}/build"
 
 jobs:
-  build:
-    name: "build-${{matrix.os}}-${{matrix.compiler.c}}-${{matrix.build_type}}"
+  build_and_test:
+    name: "test-${{matrix.os}}-${{matrix.compiler.c}}-${{matrix.build_type}}"
     runs-on: "${{matrix.os}}"
     strategy:
       fail-fast: false
@@ -55,12 +55,7 @@ jobs:
 
     - name: Build project
       run: cmake --build ${{env.build_dir}}
-
-  test:
-    name: "test-${{matrix.os}}-${{matrix.compiler.c}}-${{matrix.build_type}}"
-    needs: build
-    runs-on: "${{matrix.os}}"
-    steps:
+    
     - name: Run project tests
       run: |
         cd ${{env.build_dir}}
