@@ -18,11 +18,21 @@ std::unique_ptr<Context> create_context(Window* window)
     return std::make_unique<Context>(window);
 }
 
+std::unique_ptr<IO> create_io(Context* context)
+{
+    return std::make_unique<IO>(context);
+}
+
 std::unique_ptr<Manager> create_manager(Window* window)
 {
     auto context = create_context(window);
-    return std::make_unique<Manager>(context);
+    auto io = create_io(context.get());
+    return std::make_unique<Manager>(context, io);
 }
+
+// ----------------------------------------------------------------------------
+// Context
+// ----------------------------------------------------------------------------
 
 Context::Context(Window* window_)
     : window(window_)
@@ -69,7 +79,7 @@ void Context::end_frame() const
     ImGui::Render();
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
-    if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
+    if (io.ConfigFlags & ConfigFlagOptions::VIEWPORTS_ENABLE)
     {
         auto backup_current_context = glfwGetCurrentContext();
         ImGui::UpdatePlatformWindows();
@@ -78,15 +88,65 @@ void Context::end_frame() const
     }
 }
 
+// ----------------------------------------------------------------------------
+// IO
+// ----------------------------------------------------------------------------
 
-Manager::Manager(std::unique_ptr<Context>& context_)
-    : context(std::move(context_))
+IO::IO(Context* context_)
+    : context(context_)
 {
-    auto config_flags = gui::get_config_flags();
-    config_flags |= ConfigFlagOptions::NavEnableKeyboard;
-    config_flags |= ConfigFlagOptions::DockingEnable;
-    config_flags |= ConfigFlagOptions::ViewportsEnable;
-    gui::set_config_flags(config_flags);
+    auto& io = ImGui::GetIO();
+    io.WantSaveIniSettings = false;
+}
+
+IO::~IO()
+{
+}
+
+ConfigFlags IO::get_config_flags() const
+{
+    return ImGui::GetIO().ConfigFlags;
+}
+
+void IO::set_config_flags(const ConfigFlags& config) const
+{
+    ImGui::GetIO().ConfigFlags = config;
+}
+
+bool IO::load_settings(const std::filesystem::path& filepath) const
+{
+    ImGui::LoadIniSettingsFromDisk(filepath.c_str());
+    return false;
+}
+
+bool IO::save_settings(const std::filesystem::path& filepath) const
+{
+    ImGui::SaveIniSettingsToDisk(filepath.c_str());
+    return false;
+}
+
+bool IO::want_capture_mouse() const
+{
+    return ImGui::GetIO().WantCaptureMouse;
+}
+
+bool IO::want_capture_keyboard() const
+{
+    return ImGui::GetIO().WantCaptureKeyboard;
+}
+
+// ----------------------------------------------------------------------------
+// Manager
+// ----------------------------------------------------------------------------
+
+Manager::Manager(std::unique_ptr<Context>& context_, std::unique_ptr<IO>& io_)
+    : context(std::move(context_)), io(std::move(io_))
+{
+    auto config_flags = io->get_config_flags();
+    config_flags |= ConfigFlagOptions::ENABLE_KEYBOARD;
+    config_flags |= ConfigFlagOptions::DOCKING_ENABLE;
+    config_flags |= ConfigFlagOptions::VIEWPORTS_ENABLE;
+    io->set_config_flags(config_flags);
     
     // Set dark theme by default
     auto& style = ImGui::GetStyle();
@@ -96,9 +156,6 @@ Manager::Manager(std::unique_ptr<Context>& context_)
     {
         context->init();
     }
-    
-    auto& io = ImGui::GetIO();
-    io.IniFilename = profile.c_str(); 
 }
 
 Manager::~Manager()
@@ -106,7 +163,6 @@ Manager::~Manager()
     if (context)
     {
         context->shutdown();
-        context.reset();
     }
 }
 
@@ -126,28 +182,33 @@ void Manager::end_frame() const
     }
 }
 
+bool Manager::load_settings(const std::filesystem::path& filepath) const
+{
+    if (io)
+    {
+        return io->load_settings(filepath);
+    }
+    return false;
+}
+
+bool Manager::save_settings(const std::filesystem::path& filepath) const
+{
+    if (io)
+    {
+        return io->save_settings(filepath);
+    }
+    return false;
+}
+
 void Manager::on_event(Event& event) const
 {
     if (handle_event)
     {
-        auto& io = ImGui::GetIO();
         event.handled |= event.is_in_category(EventCategoryMouse) 
-            & io.WantCaptureMouse;
+            & io->want_capture_mouse();
         event.handled |= event.is_in_category(EventCategoryKeyboard)
-            & io.WantCaptureKeyboard;
+            & io->want_capture_keyboard();
     }
-}
-
-std::string Manager::get_profile_name() const
-{
-    return profile;
-}
-
-void Manager::set_profile_name(const std::string& name)
-{
-    profile = name;
-    auto& io = ImGui::GetIO();
-    io.IniFilename = profile.c_str(); 
 }
 
 } // namespace pine::gui

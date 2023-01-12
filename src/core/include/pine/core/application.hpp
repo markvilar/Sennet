@@ -58,7 +58,7 @@ public:
     void render_gui();
 
     inline Window& get_window() const { return *window; }
-    inline gui::Manager& get_graphical_interface() const 
+    inline gui::Manager& get_gui_manager() const 
     { 
         return *gui; 
     }

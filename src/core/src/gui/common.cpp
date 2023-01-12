@@ -22,18 +22,6 @@ WindowFlags configure_window_flags(const bool fullscreen)
     return window_flags;
 }
 
-ConfigFlags get_config_flags()
-{
-    const auto& io = ImGui::GetIO();
-    return io.ConfigFlags;
-}
-
-void set_config_flags(const ConfigFlags& config)
-{
-    auto& io = ImGui::GetIO();
-    io.ConfigFlags = config;
-}
-
 void set_dark_theme(Style& style)
 {
     auto& colors = style.Colors;

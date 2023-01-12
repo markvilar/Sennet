@@ -3,16 +3,21 @@
 #include <memory>
 
 #include "pine/core/window.hpp"
+#include "pine/gui/common.hpp"
+#include "pine/gui/style.hpp"
+#include "pine/utils/filesystem.hpp"
 
 namespace pine::gui
 {
 
 // Forward declaration
 class Context;
+class IO;
 class Manager;
 
 // Factory methods
 std::unique_ptr<Context> create_context(Window* window);
+std::unique_ptr<IO> create_io(Context* context);
 std::unique_ptr<Manager> create_manager(Window* window);
 
 class Context
@@ -31,24 +36,43 @@ private:
     Window* window{};
 };
 
+class IO
+{
+public:
+    IO(Context* context);
+    ~IO();
+
+    ConfigFlags get_config_flags() const;
+    void set_config_flags(const ConfigFlags& config) const;
+
+    bool load_settings(const std::filesystem::path& filepath) const;
+    bool save_settings(const std::filesystem::path& filepath) const;
+
+    bool want_capture_mouse() const;
+    bool want_capture_keyboard() const;
+
+private:
+    Context* context{};
+};
+
 class Manager
 {
 public:
-    Manager(std::unique_ptr<Context>& context);
+    Manager(std::unique_ptr<Context>& context, std::unique_ptr<IO>& io);
     ~Manager();
 
     void begin_frame() const;
     void end_frame() const;
 
+    bool load_settings(const std::filesystem::path& filepath) const;
+    bool save_settings(const std::filesystem::path& filepath) const;
+
     void on_event(Event& event) const;
     void block_events(const bool block) { handle_event = block; }
 
-    std::string get_profile_name() const;
-    void set_profile_name(const std::string& name);
-
 private:
     std::unique_ptr<Context> context;
-    std::string profile{"imgui.ini"};
+    std::unique_ptr<IO> io;
     bool handle_event = true;
 };
 

@@ -9,36 +9,34 @@
 namespace pine::gui
 {
 
-// Config system
-using ConfigFlags = int;
-
-ConfigFlags get_config_flags();
-void set_config_flags(const ConfigFlags& config);
-
-enum ConfigFlagOptions : int
-{
-    None                    = 0,
-    NavEnableKeyboard       = 1 << 0,
-    NavEnableGamepad        = 1 << 1,
-    NavEnableSetMousePos    = 1 << 2,
-    NavNoCaptureKeyboard    = 1 << 3,
-    NoMouse                 = 1 << 4,
-    NoMouseCursorChange     = 1 << 5,
-    DockingEnable           = 1 << 6,
-
-    ViewportsEnable         = 1 << 10,
-    DpiEnableScaleViewports = 1 << 14,
-    DpiEnableScaleFonts     = 1 << 15,
-    IsSRGB                  = 1 << 20,
-    IsTouchScreen           = 1 << 21,
-};
-
-// Window system
+// Window
 using WindowFlags = int;
 
 WindowFlags configure_window_flags(const bool fullscreen);
 
-// Style system
+// Config
+using ConfigFlags = int;
+
+enum ConfigFlagOptions : ConfigFlags
+{
+    NONE                   = 0,
+    ENABLE_KEYBOARD        = 1 << 0,
+    ENABLE_GAMEPAD         = 1 << 1,
+    ENABLE_SET_MOUSE_POS   = 1 << 2,
+    NO_CAPTURE_KEYBOARD    = 1 << 3,
+    NO_MOUSE               = 1 << 4,
+    NO_MOUSE_CURSOR_CHANGE = 1 << 5,
+    DOCKING_ENABLE         = 1 << 6,
+    
+    // DOCKING FLAGS
+    VIEWPORTS_ENABLE       = 1 << 10,
+    ENABLE_SCALE_VIEWPORTS = 1 << 14,
+    ENABLE_SCALE_FONTS     = 1 << 15,
+    IS_SRGB                = 1 << 20,
+    IS_TOUCHSCREEN         = 1 << 21,
+};
+
+// Style
 using Style = ImGuiStyle;
 
 void set_dark_theme(Style& style);
