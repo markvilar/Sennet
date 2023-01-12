@@ -48,6 +48,9 @@ apt install -y cmake gcc python3-dev python3-pip pkg-config
 # Install conan
 pip3 install conan
 
+# Set up a default conan profile if one does not exist. Optionally, change the compiler, compiler version, and C++ standard library implementation by updating the conan profile.
+conan profile new default --detect
+
 # Install system dependencies
 apt install -y libgl-dev libx11-xcb-dev libx11-xcb-dev libfontenc-dev \
     libice-dev libsm-dev libxaw7-dev libxcomposite-dev libxcursor-dev \
@@ -58,7 +61,7 @@ apt install -y libgl-dev libx11-xcb-dev libx11-xcb-dev libfontenc-dev \
     libxcb-shape0-dev libxcb-sync-dev libxcb-xfixes0-dev libxcb-xinerama0-dev \
     libxcb-dri3-dev libxcb-util-dev libxcb-util0-dev uuid-dev
 
-# Alternatively, allow Conan to install system dependencies with sudo permission
+# Alternatively, allow Conan to install system dependencies by giving the default profile system install and sudo permission
 conan profile update conf.tools.system.package_manager:mode=install default
 conan profile update conf.tools.system.package_manager:sudo=True default
 
@@ -67,9 +70,6 @@ cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
 
 # Build
 cmake --build build
-
-# Optionally, install
-cmake --install build --prefix install --config Release
 ```
 
 #### Packaging with Conan
