@@ -62,7 +62,6 @@ void read_message_size(ConnectionState& connection)
             if (error)
             {
                 PINE_CORE_ERROR("Read size error: {0}", error.message());
-                connection.socket.close();
                 return;
             }
 
@@ -91,7 +90,6 @@ void read_message(ConnectionState& connection, const uint64_t size)
             if (error)
             {
                 PINE_CORE_ERROR("Read message: {0}", error.message());
-                connection.socket.close();
                 return;
             }
 
@@ -131,7 +129,6 @@ void write_message_size(ConnectionState& connection)
             if (error)
             {
                 PINE_CORE_ERROR("Write message size: {0}", error.message());
-                connection.socket.close();
                 return;
             }
 
@@ -161,7 +158,6 @@ void write_message(ConnectionState& connection)
             if (error)
             {
                 PINE_CORE_ERROR("Write message: {0}", error.message());
-                connection.socket.close();
                 return;
             }
 

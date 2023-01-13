@@ -310,7 +310,9 @@ void EditorLayer::on_gui_render()
 
             if (ImGui::Button("Connect"))
             {
-                connect(client, std::string(address), port);
+                const auto status = connect(client, std::string(address), port);
+                PINE_INFO("Client connect:  {0}", status);
+                PINE_INFO("Context stopped: {0}", client.context.stopped());
             }
             ImGui::SameLine();
             if (ImGui::Button("Disconnect"))
