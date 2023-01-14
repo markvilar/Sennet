@@ -2,7 +2,7 @@ from conans import ConanFile, CMake, tools
 
 required_conan_version = ">=1.39.0"
 
-class PineConanFile(ConanFile):
+class PineConan(ConanFile):
     name = "pine"
     version = "0.3.0"
     license = "Apache 2.0"
@@ -26,9 +26,9 @@ class PineConanFile(ConanFile):
     exports_sources = [
         "CMakeLists.txt", 
         "cmake/*",
-        "examples/*", 
-        "src/*", 
+        "example/*", 
         "resources/*", 
+        "src/*", 
         "test/*",
         "vendor/*"
     ]
@@ -88,11 +88,11 @@ class PineConanFile(ConanFile):
     def _configure_cmake(self):
         """ """
         cmake = CMake(self)
-        cmake.definitions["PINE_BUILD_SHARED"] = self.options["shared"]
-        cmake.definitions["PINE_BUILD_WARNING"] = True
-        cmake.definitions["PINE_BUILD_EDITOR"] = False
-        cmake.definitions["PINE_BUILD_EXAMPLES"] = False
-        cmake.definitions["PINE_BUILD_TESTS"] = False
+        cmake.definitions["PINE_SANITIZERS_ENABLE"] = True
+        cmake.definitions["PINE_WARNINGS_ENABLE"] = True
+        cmake.definitions["PINE_EDITOR_ENABLE"] = True
+        cmake.definitions["PINE_EXAMPLE_ENABLE"] = True
+        cmake.definitions["PINE_TEST_ENABLE"] = True
         cmake.configure(build_folder=self._build_subfolder)        
         return cmake
 

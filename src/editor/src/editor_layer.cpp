@@ -1,6 +1,7 @@
 #include "editor/editor_layer.hpp"
 
 #include <array>
+#include <string_view>
 
 namespace pine
 {
@@ -211,7 +212,7 @@ void EditorLayer::on_gui_render()
             viewport_panel.size.y);
     }
 
-    Application::get().get_graphical_interface().block_events(
+    Application::get().get_gui_manager().block_events(
         !viewport_panel.focused || !viewport_panel.hovered);
 
     gui::render_window("Renderer",
@@ -356,6 +357,37 @@ void EditorLayer::on_gui_render()
                 ImGui::Text("%s",
                     std::string(message.begin(), message.end()).c_str());
             }
+        });
+
+    gui::render_window("GUI", 
+        []()
+        {
+            static std::array<char, 50> input_profile_name{""};
+           
+            ImGui::InputText("GUI Profile", input_profile_name.data(),
+                input_profile_name.size());
+
+            auto& gui = Application::get().get_gui_manager();
+
+            if (ImGui::Button("Load profile"))
+            {
+                const std::string_view filename(
+                    input_profile_name.data(),
+                    input_profile_name.size()   
+                );
+                const std::filesystem::path filepath = filename;
+                gui.load_settings(filepath);
+            }
+            if (ImGui::Button("Save profile"))
+            {
+                const std::string_view filename(
+                    input_profile_name.data(),
+                    input_profile_name.size()   
+                );
+                const std::filesystem::path filepath = filename;
+                gui.save_settings(filepath);
+            }
+
         });
 
     gui::render_window("Console", [](){});

@@ -16,7 +16,7 @@
 
 // Graphical user interface
 #include "pine/gui/common.hpp"
-#include "pine/gui/graphical_interface.hpp"
+#include "pine/gui/manager.hpp"
 #include "pine/gui/widgets.hpp"
 
 // Network

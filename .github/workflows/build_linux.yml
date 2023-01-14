@@ -1,0 +1,63 @@
+name: build-linux
+
+on: 
+  push:
+  pull_request:
+    branches: [main]
+
+defaults:
+  run:
+    shell: bash
+
+env:
+  source_dir: "${{github.workspace}}"
+  build_dir: "${{github.workspace}}/build"
+
+jobs:
+  build:
+    name: "build-${{matrix.os}}-${{matrix.build_type}}-${{matrix.compiler.c}}"
+    runs-on: "${{matrix.os}}"
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-20.04
+            compiler: { c: gcc, cpp: g++ }
+            generator: Ninja
+            build_type: Release
+            platform: x64
+
+          - os: ubuntu-20.04
+            compiler: { c: clang, cpp: clang++ }
+            generator: Ninja
+            build_type: Release
+            platform: x64
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Environment setup
+      uses: ./.github/actions/linux-setup
+
+    - name: Generate build
+      run: |
+        export CMAKE_GENERATOR="${{matrix.generator}}"
+        export CMAKE_C_COMPILER="${{matrix.compiler.c}}"
+        export CMAKE_CXX_COMPILER="${{matrix.compiler.cpp}}"
+        cmake \
+          -S ${{env.source_dir}} \
+          -B ${{env.build_dir}} \
+          -D CMAKE_BUILD_TYPE=${{env.build_type}} \
+          -D PINE_EDITOR_ENABLE=ON \
+          -D PINE_EXAMPLE_ENABLE=ON \
+          -D PINE_TEST_ENABLE=ON
+
+    - name: Build
+      run: cmake --build ${{env.build_dir}}
+
+    - name: Create Conan profile
+      run: conan profile new default --detect --force
+
+    - name: Create Conan package
+      run: conan create . --build missing

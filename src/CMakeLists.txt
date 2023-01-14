@@ -1,6 +1,6 @@
 add_subdirectory(core)
 
 # Add editor
-if(PINE_BUILD_EDITOR)
+if(PINE_EDITOR_ENABLE)
     add_subdirectory(editor)
 endif()
