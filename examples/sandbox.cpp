@@ -12,6 +12,4 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char** argv)
     signal(SIGINT, signal_handler);
 
     pine::Log::init();
-
-    // Sandbox for pines functionality.
 }

@@ -21,13 +21,13 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - os: ubuntu-latest
+          - os: ubuntu-20.04
             compiler: { c: gcc, cpp: g++ }
             generator: Ninja
             build_type: Release
             platform: x64
 
-          - os: ubuntu-latest
+          - os: ubuntu-20.04
             compiler: { c: clang, cpp: clang++ }
             generator: Ninja
             build_type: Release
@@ -58,13 +58,7 @@ jobs:
         version: latest
         platform: ${{matrix.platform}}
 
-    - name: Set up MinGW
-      if: runner.os == 'windows'      
-      uses: egor-tensin/setup-mingw@v2
-      with:
-        platform: ${{matrix.platform}}
-
-    - name: Install Linux dependencies
+    - name: Install system dependencies
       if: runner.os == 'linux'
       run: |
         sudo apt update -y
@@ -109,10 +103,9 @@ jobs:
             libxcb-xfixes0-dev \
             libxcb-xinerama0-dev \
             libxcb-dri3-dev \
-            uuid-dev \
             libxcb-util-dev \
-            libxcb-util0-dev 
-        pip3 install wheel setuptools
+            libxcb-util0-dev \
+            uuid-dev
         pip3 install conan
         export PATH=$PATH:~/.local/bin
 
@@ -130,3 +123,9 @@ jobs:
 
     - name: Build
       run: cmake --build ${{env.build_dir}}
+
+    - name: Create Conan profile
+      run: conan profile new default --detect --force
+
+    - name: Create Conan package
+      run: conan create . --build missing

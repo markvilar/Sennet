@@ -3,9 +3,10 @@ FROM ubuntu:20.04
 
 MAINTAINER markvilar EMAIL martin.kvisvik.larsen@hotmail.com
 
-
-# Install dependencies
+# Environment variables
 ENV DEBIAN_FRONTEND="noninteractive" TZ="Etc/UTC"
+
+# Install system dependencies
 RUN apt update -y
 RUN apt install -y \
     cmake \
@@ -53,21 +54,20 @@ RUN apt install -y \
 # Install conan
 RUN pip3 install conan
 
-# Set up conan profile for system requirement installation
-RUN conan profile new sudo_install --detect
-RUN conan profile update conf.tools.system.package_manager:mode=install \
-    sudo_install
-RUN conan profile update conf.tools.system.package_manager:sudo=True \
-    sudo_install
-
 # Copy source code and set up working directory
 RUN mkdir /pine
 COPY . /pine/
 WORKDIR /pine
 
-# Generate build for pine
+# Create Conan profile
+RUN conan profile new default --detect --force
+
+# Generate build
 RUN cd /pine
 RUN cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
 
-# Build pine
+# Build
 RUN cmake --build build
+
+# Create Conan package
+RUN conan create . --build missing
