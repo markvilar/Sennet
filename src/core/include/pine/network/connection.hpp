@@ -25,6 +25,11 @@ public:
         : socket(std::move(socket)), context(context), read_queue(owner_queue)
     {
     }
+
+    ~ConnectionState()
+    {
+        socket.close();
+    }
 };
 
 bool is_connected(const ConnectionState& connection);

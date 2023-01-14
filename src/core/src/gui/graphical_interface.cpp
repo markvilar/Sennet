@@ -30,8 +30,6 @@ GraphicalInterface::GraphicalInterface(Window* window)
     io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
     io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
     io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
-    // TODO: Add user profile.
-    // io.IniFilename = nullptr; 
 
     ImGui::StyleColorsDark();
 
