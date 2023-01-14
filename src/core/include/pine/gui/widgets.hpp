@@ -75,7 +75,8 @@ inline auto render_dockspace(const char* name, const bool fullscreen = true)
         ImGui::SetNextWindowSize(viewport->Size);
         ImGui::SetNextWindowViewport(viewport->ID);
         window_flags |= ImGuiWindowFlags_NoTitleBar
-            | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize
+            | ImGuiWindowFlags_NoCollapse 
+            | ImGuiWindowFlags_NoResize
             | ImGuiWindowFlags_NoMove;
         window_flags |= ImGuiWindowFlags_NoBringToFrontOnFocus
             | ImGuiWindowFlags_NoNavFocus;
@@ -106,6 +107,7 @@ template <typename Function>
 auto render_window(const char* name, const Function func)
 {
     ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(5, 5));
+    ImGui::SetNextWindowViewport(ImGui::GetMainViewport()->ID);
     ImGui::Begin(name, nullptr, 0);
     ImGui::PopStyleVar();
     func();
@@ -120,10 +122,10 @@ auto render_window(const char* name, const Function func)
 inline auto render_viewport(const char* name, const Framebuffer& framebuffer)
 {
     ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0, 0));
+    ImGui::SetNextWindowViewport(ImGui::GetMainViewport()->ID);
     ImGui::Begin(name,
         nullptr,
-        ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoScrollbar
-            | ImGuiWindowFlags_NoScrollWithMouse);
+        ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
     ImGui::PopStyleVar();
 
     const auto state = get_panel_state();
