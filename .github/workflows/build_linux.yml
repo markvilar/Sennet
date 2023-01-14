@@ -42,13 +42,12 @@ jobs:
 
     - name: Generate build
       run: |
-        export CMAKE_GENERATOR="${{matrix.generator}}"
-        export CMAKE_C_COMPILER="${{matrix.compiler.c}}"
-        export CMAKE_CXX_COMPILER="${{matrix.compiler.cpp}}"
         cmake \
           -S ${{env.source_dir}} \
           -B ${{env.build_dir}} \
+          -G ${{matrix.generator}} \
           -D CMAKE_BUILD_TYPE=${{env.build_type}} \
+          -D CMAKE_CXX_COMPILER=${{matrix.compiler.cpp}} \
           -D PINE_EDITOR_ENABLE=ON \
           -D PINE_EXAMPLE_ENABLE=ON \
           -D PINE_TEST_ENABLE=ON
