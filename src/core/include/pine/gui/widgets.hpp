@@ -107,6 +107,7 @@ template <typename Function>
 auto render_window(const char* name, const Function func)
 {
     ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(5, 5));
+    ImGui::SetNextWindowViewport(ImGui::GetMainViewport()->ID);
     ImGui::Begin(name, nullptr, ImGuiWindowFlags_None);
     ImGui::PopStyleVar();
     func();
@@ -121,7 +122,10 @@ auto render_window(const char* name, const Function func)
 inline auto render_viewport(const char* name, const Framebuffer& framebuffer)
 {
     ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0, 0));
-    ImGui::Begin(name, nullptr, ImGuiWindowFlags_None);
+    ImGui::SetNextWindowViewport(ImGui::GetMainViewport()->ID);
+    ImGui::Begin(name,
+        nullptr,
+        ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
     ImGui::PopStyleVar();
 
     const auto state = get_panel_state();
