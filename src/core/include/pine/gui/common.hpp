@@ -9,12 +9,6 @@
 namespace pine::gui
 {
 
-// Window
-using WindowFlags = int;
-
-WindowFlags configure_window_flags(const bool fullscreen);
-
-// Config
 using ConfigFlags = int;
 
 enum ConfigFlagOptions : ConfigFlags

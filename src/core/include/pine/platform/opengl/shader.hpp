@@ -22,10 +22,10 @@ public:
     virtual ~OpenGLShader();
 
     OpenGLShader(const OpenGLShader&) = delete;
-    OpenGLShader(OpenGLShader&&) = default;
+    OpenGLShader(OpenGLShader&&) = delete;
 
     OpenGLShader& operator=(const OpenGLShader&) = delete;
-    OpenGLShader& operator=(OpenGLShader&&) = default;
+    OpenGLShader& operator=(OpenGLShader&&) = delete;
 
     virtual void bind() const override;
     virtual void unbind() const override;

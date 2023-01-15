@@ -38,7 +38,12 @@ private:
     std::vector<std::vector<uint8_t>> server_history{};
 
     // Graphical interface
-    gui::PanelState viewport_panel{};
+    gui::Window viewport_window{"Viewport"};
+    gui::Window gui_control_window{"GUI Controls"};
+    gui::Window network_window{"Network"};
+    gui::Window renderer_window{"Renderer"};
+    gui::Window console_window{"Console"};
+    gui::Window test_window{"Test"};
 
     // Misc
     Vec4 quad_color{0.2f, 0.3f, 0.8f, 1.0f};

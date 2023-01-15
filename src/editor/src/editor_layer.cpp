@@ -15,7 +15,7 @@ void EditorLayer::on_attach()
 {
     auto& io = ImGui::GetIO();
     io.Fonts->AddFontFromFileTTF("resources/fonts/OpenSans-Regular.ttf",
-        15.0f,
+        16.0f,
         nullptr,
         io.Fonts->GetGlyphRangesCyrillic());
 
@@ -56,7 +56,7 @@ void EditorLayer::on_detach() {}
 
 void EditorLayer::on_update(const Timestep& ts)
 {
-    if (viewport_panel.focused)
+    if (viewport_window.is_focused())
     {
         update_camera_controller(ts);
     }
@@ -125,7 +125,7 @@ void EditorLayer::on_gui_render()
                 }
                 if (ImGui::MenuItem("Exit", "Ctrl+W"))
                 {
-                    pine::Application::get().close();
+                    Application::get().close();
                 }
                 ImGui::EndMenu();
             }
@@ -159,10 +159,11 @@ void EditorLayer::on_gui_render()
 
             if (ImGui::BeginPopupModal("WorkingDirectory"))
             {
-                static char working_directory_buffer[256] = "";
-                strcpy(working_directory_buffer,
-                    pine::filesystem::get_working_directory().c_str());
-                ImGui::Text("Working directory: %s", working_directory_buffer);
+                static std::array<char, 256> working_directory_buffer = {""};
+                strcpy(working_directory_buffer.data(),
+                    filesystem::get_working_directory().c_str());
+                ImGui::Text("Working directory: %s", 
+                    working_directory_buffer.data());
                 if (ImGui::Button("Close"))
                 {
                     show_filesystem_popup = false;
@@ -196,122 +197,80 @@ void EditorLayer::on_gui_render()
             }
         });
 
-    viewport_panel = gui::render_viewport("Viewport", 
-        *viewport_framebuffer.get());
+    viewport_window.on_render(
+        [this]()
+        {
+            const auto texture_id 
+                = viewport_framebuffer->get_color_attachment_renderer_id();
+            const auto size = ImGui::GetContentRegionAvail();
 
+            ImGui::Image(reinterpret_cast<void*>(texture_id),
+                ImVec2{size.x, size.y},
+                ImVec2{0, 1},
+                ImVec2{1, 0}
+            );
+        }
+    );
+    
     const auto& specs = viewport_framebuffer->get_specification();
-    if (viewport_panel.size.x > 0.0f && viewport_panel.size.y > 0.0f
-        && (static_cast<float>(specs.width) != viewport_panel.size.x
-            || static_cast<float>(specs.height) != viewport_panel.size.y))
+    const auto size = viewport_window.get_size();
+    const auto viewport_valid = size.x > 0.0f && size.y > 0.0f;
+    const auto viewport_changed = static_cast<float>(specs.width) != size.x
+        || static_cast<float>(specs.height) != size.y;
+    if (viewport_valid && viewport_changed)
     {
-        viewport_framebuffer->resize(
-            static_cast<uint32_t>(viewport_panel.size.x),
-            static_cast<uint32_t>(viewport_panel.size.y));
-        camera_controller.on_resize(
-            viewport_panel.size.x, 
-            viewport_panel.size.y);
+        viewport_framebuffer->resize(static_cast<uint32_t>(size.x),
+            static_cast<uint32_t>(size.y));
+        camera_controller.on_resize(size.x, size.y);
     }
 
     Application::get().get_gui_manager().block_events(
-        !viewport_panel.focused || !viewport_panel.hovered);
+        !viewport_window.is_focused() || !viewport_window.is_hovered());
 
-    gui::render_window("Renderer",
-        [this]
+    gui_control_window.on_render( 
+        []()
         {
-            auto& stats = quad_render_data.statistics;
-            ImGui::Text("QuadRenderer Stats:");
-            ImGui::Text("Draw Calls: %d", stats.draw_calls);
-            ImGui::Text("Quads: %d", stats.quad_count);
-            ImGui::Text("Vertices: %d", stats.get_total_vertex_count());
-            ImGui::Text("Indices: %d", stats.get_total_index_count());
+            static std::array<char, 50> input_profile_name{""};
+           
+            ImGui::InputText("GUI Profile", input_profile_name.data(),
+                input_profile_name.size());
 
-            ImGui::ColorEdit4("Square Color", value_ptr(quad_color));
+            auto& gui = Application::get().get_gui_manager();
 
-            gui::empty_space(0.0f, 10.0f);
-            ImGui::Separator();
-
-            for (const auto& [name, shader] : shader_library.get_shader_map())
+            if (ImGui::Button("Load profile"))
             {
-                ImGui::Text("%s", name.c_str());
+                const std::string_view filename(input_profile_name.data(),
+                    input_profile_name.size());
+                const std::filesystem::path filepath = filename;
+                gui.load_settings(filepath);
+            }
+            
+            if (ImGui::Button("Save profile"))
+            {
+                const std::string_view filename(input_profile_name.data(),
+                    input_profile_name.size());
+                const std::filesystem::path filepath = filename;
+                gui.save_settings(filepath);
             }
 
-            gui::empty_space(0.0f, 10.0f);
-            ImGui::Separator();
+        }
+    );
 
-            static bool flip_image = false;
-            static char image_path[256] = "";
-            static auto image_format = ImageFormat::BGRA;
-
-            const std::array<std::pair<const char*, ImageFormat>, 6>
-                image_format_options = {std::make_pair("Gray",
-                                            ImageFormat::GRAY),
-                    std::make_pair("Gray-alpha", ImageFormat::GRAY_ALPHA),
-                    std::make_pair("RGB", ImageFormat::RGB),
-                    std::make_pair("BGR", ImageFormat::BGR),
-                    std::make_pair("RGBA", ImageFormat::RGBA),
-                    std::make_pair("BGRA", ImageFormat::BGRA)};
-
-            ImGui::InputText("Image path",
-                image_path,
-                IM_ARRAYSIZE(image_path));
-
-            gui::dropdown("Image format", &image_format, image_format_options);
-
-            ImGui::Checkbox("Flip image", &flip_image);
-            ImGui::SameLine();
-            if (ImGui::Button("Load image"))
-            {
-                if (pine::filesystem::is_file(image_path))
-                {
-                    texture = Texture2D::create(
-                        read_image(image_path, image_format, flip_image));
-                    PINE_INFO("Loaded image: {0}, {1}",
-                        image_path,
-                        image_format);
-                }
-            }
-
-            gui::empty_space(0.0f, 20.0f);
-            ImGui::Separator();
-
-            static int8_t value_int8 = 0;
-            static int16_t value_int16 = 0;
-            static int32_t value_int32 = 0;
-            static int64_t value_int64 = 0;
-            static uint8_t value_uint8 = 0;
-            static uint16_t value_uint16 = 0;
-            static uint32_t value_uint32 = 0;
-            static uint64_t value_uint64 = 0;
-            static float value_float = 0.0;
-            static double value_double = 0.0;
-
-            gui::slider_scalar<int8_t>("Slider int8", &value_int8, -10, 10);
-            gui::slider_scalar<int16_t>("Slider int16", &value_int16, -10, 10);
-            gui::slider_scalar<int32_t>("Slider int32", &value_int32, -10, 10);
-            gui::slider_scalar<int64_t>("Slider int64", &value_int64, -10, 10);
-            gui::slider_scalar<uint8_t>("Slider uint8", &value_uint8, 0, 10);
-            gui::slider_scalar<uint16_t>("Slider uint16", &value_uint16, 0, 10);
-            gui::slider_scalar<uint32_t>("Slider uint32", &value_uint32, 0, 10);
-            gui::slider_scalar<uint64_t>("Slider uint64", &value_uint64, 0, 10);
-            gui::slider_scalar<float>("Slider float", &value_float, -1.0f, 1.0f);
-            gui::slider_scalar<double>("Slider double",
-                &value_double,
-                -1.0,
-                1.0);
-        });
-
-    gui::render_window("Network",
+    network_window.on_render(
         [this]()
         {
-            static char address[256] = "";
-            static uint16_t port = 0;
-            ImGui::InputText("Address", address, IM_ARRAYSIZE(address));
-            ImGui::InputInt("Port", reinterpret_cast<int*>(&port));
+            static std::array<char, 256> remote_address = {""};
+            static uint16_t remote_port = 0;
+            ImGui::InputText("Address", remote_address.data(), 
+                remote_address.size());
+            gui::input_scalar("Remote port", &remote_port);
             ImGui::Text("Client connected: %d", is_connected(client));
 
             if (ImGui::Button("Connect"))
             {
-                connect(client, std::string(address), port);
+                const auto address
+                    = std::string(remote_address.data(), remote_address.size());
+                connect(client, address, remote_port);
             }
             ImGui::SameLine();
             if (ImGui::Button("Disconnect"))
@@ -357,40 +316,108 @@ void EditorLayer::on_gui_render()
                 ImGui::Text("%s",
                     std::string(message.begin(), message.end()).c_str());
             }
-        });
+        }
+    );
 
-    gui::render_window("GUI", 
-        []()
+    renderer_window.on_render(
+        [this]()
         {
-            static std::array<char, 50> input_profile_name{""};
-           
-            ImGui::InputText("GUI Profile", input_profile_name.data(),
-                input_profile_name.size());
+            auto& stats = quad_render_data.statistics;
+            ImGui::Text("QuadRenderer Stats:");
+            ImGui::Text("Draw Calls: %d", stats.draw_calls);
+            ImGui::Text("Quads: %d", stats.quad_count);
+            ImGui::Text("Vertices: %d", stats.get_total_vertex_count());
+            ImGui::Text("Indices: %d", stats.get_total_index_count());
 
-            auto& gui = Application::get().get_gui_manager();
+            ImGui::ColorEdit4("Square Color", value_ptr(quad_color));
 
-            if (ImGui::Button("Load profile"))
+            gui::empty_space(0.0f, 10.0f);
+            ImGui::Separator();
+
+            for (const auto& [name, shader] : shader_library.get_shader_map())
             {
-                const std::string_view filename(
-                    input_profile_name.data(),
-                    input_profile_name.size()   
-                );
-                const std::filesystem::path filepath = filename;
-                gui.load_settings(filepath);
-            }
-            if (ImGui::Button("Save profile"))
-            {
-                const std::string_view filename(
-                    input_profile_name.data(),
-                    input_profile_name.size()   
-                );
-                const std::filesystem::path filepath = filename;
-                gui.save_settings(filepath);
+                ImGui::Text("%s", name.c_str());
             }
 
-        });
+            gui::empty_space(0.0f, 10.0f);
+            ImGui::Separator();
 
-    gui::render_window("Console", [](){});
+            static bool flip_image = false;
+            static std::array<char, 256> image_path = {""};
+            static auto image_format = ImageFormat::BGRA;
+
+            const std::array<std::pair<const char*, ImageFormat>, 6>
+                image_format_options = 
+                {
+                    std::make_pair("Gray", ImageFormat::GRAY),
+                    std::make_pair("Gray-alpha", ImageFormat::GRAY_ALPHA),
+                    std::make_pair("RGB", ImageFormat::RGB),
+                    std::make_pair("BGR", ImageFormat::BGR),
+                    std::make_pair("RGBA", ImageFormat::RGBA),
+                    std::make_pair("BGRA", ImageFormat::BGRA)
+                };
+
+            ImGui::InputText("Image path", image_path.data(), 
+                image_path.size());
+
+            gui::dropdown("Image format", &image_format, image_format_options);
+
+            ImGui::Checkbox("Flip image", &flip_image);
+            ImGui::SameLine();
+            if (ImGui::Button("Load image"))
+            {
+                if (filesystem::is_file(image_path.data()))
+                {
+                    texture = Texture2D::create(
+                        read_image(image_path.data(), image_format, flip_image));
+                    PINE_INFO("Loaded image: {0}, {1}",
+                        image_path.data(),
+                        image_format);
+                }
+            }
+
+            gui::empty_space(0.0f, 20.0f);
+            ImGui::Separator();
+
+            static int8_t value_int8 = 0;
+            static int16_t value_int16 = 0;
+            static int32_t value_int32 = 0;
+            static int64_t value_int64 = 0;
+            static uint8_t value_uint8 = 0;
+            static uint16_t value_uint16 = 0;
+            static uint32_t value_uint32 = 0;
+            static uint64_t value_uint64 = 0;
+            static float value_float = 0.0;
+            static double value_double = 0.0;
+
+            gui::slider_scalar<int8_t>("Slider int8", &value_int8, -10, 10);
+            gui::slider_scalar<int16_t>("Slider int16", &value_int16, -10, 10);
+            gui::slider_scalar<int32_t>("Slider int32", &value_int32, -10, 10);
+            gui::slider_scalar<int64_t>("Slider int64", &value_int64, -10, 10);
+            gui::slider_scalar<uint8_t>("Slider uint8", &value_uint8, 0, 10);
+            gui::slider_scalar<uint16_t>("Slider uint16", &value_uint16, 0, 10);
+            gui::slider_scalar<uint32_t>("Slider uint32", &value_uint32, 0, 10);
+            gui::slider_scalar<uint64_t>("Slider uint64", &value_uint64, 0, 10);
+            gui::slider_scalar<float>("Slider float", &value_float, -1.0f, 1.0f);
+            gui::slider_scalar<double>("Slider double",
+                &value_double,
+                -1.0,
+                1.0);
+        }
+    );
+
+    console_window.on_render();
+
+    test_window.on_render([this]() {
+        const auto position = test_window.get_position();
+        const auto size = test_window.get_size();
+        const auto focused = test_window.is_focused();
+        const auto hovered = test_window.is_hovered();
+        ImGui::Text("Position: %f, %f", position.x, position.y);
+        ImGui::Text("Size:     %f, %f", size.x, size.y);
+        ImGui::Text("Focused:  %d", focused);
+        ImGui::Text("Hovered:  %d", hovered);
+    });
 }
 
 void EditorLayer::on_event(Event& event)
@@ -401,7 +428,7 @@ void EditorLayer::on_event(Event& event)
 void EditorLayer::update_camera_controller(const Timestep& ts)
 {
     const auto& window = Application::get().get_window();
-    const auto input_handle = pine::InputHandle::create(window);
+    const auto input_handle = InputHandle::create(window);
     
     if (input_handle->is_key_pressed(KeyCode::A))
         camera_controller.move_left(ts);
