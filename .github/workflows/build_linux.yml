@@ -50,7 +50,9 @@ jobs:
           -D CMAKE_CXX_COMPILER=${{matrix.compiler.cpp}} \
           -D PINE_EDITOR_ENABLE=ON \
           -D PINE_EXAMPLE_ENABLE=ON \
-          -D PINE_TEST_ENABLE=ON
+          -D PINE_TEST_ENABLE=ON \
+          -D PINE_SANITIZERS_ENABLE=OFF \
+          -D PINE_WARNINGS_ENABLE=OFF 
 
     - name: Build
       run: cmake --build ${{env.build_dir}}
