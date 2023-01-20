@@ -14,8 +14,10 @@ void OpenGLRendererAPI::init()
     glEnable(GL_DEPTH_TEST);
 }
 
-void OpenGLRendererAPI::set_viewport(const uint32_t x, const uint32_t y,
-    const uint32_t width, const uint32_t height)
+void OpenGLRendererAPI::set_viewport(const uint32_t x,
+    const uint32_t y,
+    const uint32_t width,
+    const uint32_t height)
 {
     glViewport(static_cast<GLint>(x),
         static_cast<GLint>(y),

@@ -80,7 +80,9 @@ constexpr uint32_t get_format_channel_count(const ImageFormat format)
     return 0;
 }
 
-Image::Image(const uint8_t* data, const uint32_t width, const uint32_t height,
+Image::Image(const uint8_t* data,
+    const uint32_t width,
+    const uint32_t height,
     const ImageFormat format)
     : width(width), height(height), format(format)
 {
@@ -105,7 +107,8 @@ Image read_image(const std::filesystem::path& filepath, const bool flip)
 }
 
 Image read_image(const std::filesystem::path& filepath,
-    const ImageFormat format, const bool flip)
+    const ImageFormat format,
+    const bool flip)
 {
     int width, height, channels = 0;
     auto desired_channels = get_format_channel_count(format);
@@ -124,7 +127,8 @@ Image read_image(const std::filesystem::path& filepath,
         format);
 }
 
-bool write_image(const std::filesystem::path& filepath, const Image& image,
+bool write_image(const std::filesystem::path& filepath,
+    const Image& image,
     const bool flip)
 {
     const auto file_extension = filepath.extension();
@@ -133,8 +137,7 @@ bool write_image(const std::filesystem::path& filepath, const Image& image,
     stbi_set_flip_vertically_on_load(flip);
 
     const auto channels = get_format_channel_count(image.get_format());
-    const auto write_result = [filepath, image, channels, file_format]()
-    {
+    const auto write_result = [filepath, image, channels, file_format]() {
         switch (file_format)
         {
         case ImageFileFormat::JPG:

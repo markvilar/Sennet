@@ -13,8 +13,10 @@ class OpenGLRendererAPI : public RendererAPI
 public:
     virtual void init() override;
 
-    virtual void set_viewport(const uint32_t x, const uint32_t y,
-        const uint32_t width, const uint32_t height) override;
+    virtual void set_viewport(const uint32_t x,
+        const uint32_t y,
+        const uint32_t width,
+        const uint32_t height) override;
     virtual void set_clear_color(const Vec4& color) override;
     virtual void clear() override;
 

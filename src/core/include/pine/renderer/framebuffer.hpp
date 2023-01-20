@@ -33,8 +33,7 @@ public:
     virtual RendererID get_color_attachment_renderer_id() const = 0;
 
     virtual const FramebufferSpecs& get_specification() const = 0;
-    static std::unique_ptr<Framebuffer> create(
-        const FramebufferSpecs& specs);
+    static std::unique_ptr<Framebuffer> create(const FramebufferSpecs& specs);
 };
 
 } // namespace pine

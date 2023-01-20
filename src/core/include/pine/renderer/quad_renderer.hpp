@@ -86,37 +86,61 @@ void end_scene(QuadRenderData& data);
 void flush(QuadRenderData& data);
 void flush_and_reset(QuadRenderData& data);
 
-void draw_quad(QuadRenderData& data, const Vec2& position, const Vec2& size,
+void draw_quad(QuadRenderData& data,
+    const Vec2& position,
+    const Vec2& size,
     const Vec4& color);
-void draw_quad(QuadRenderData& data, const Vec3& position, const Vec2& size,
+void draw_quad(QuadRenderData& data,
+    const Vec3& position,
+    const Vec2& size,
     const Vec4& color);
-void draw_quad(QuadRenderData& data, const Vec2& position, const Vec2& size,
-    const std::shared_ptr<Texture2D>& texture, const float tilingFactor = 1.0f,
+void draw_quad(QuadRenderData& data,
+    const Vec2& position,
+    const Vec2& size,
+    const std::shared_ptr<Texture2D>& texture,
+    const float tilingFactor = 1.0f,
     const Vec4& tintColor = Vec4(1.0f));
-void draw_quad(QuadRenderData& data, const Vec3& position, const Vec2& size,
-    const std::shared_ptr<Texture2D>& texture, const float tilingFactor = 1.0f,
-    const Vec4& tintColor = Vec4(1.0f));
-
-void draw_rotated_quad(QuadRenderData& data, const Vec2& position,
-    const Vec2& size, const float rotation, const Vec4& color);
-
-void draw_rotated_quad(QuadRenderData& data, const Vec3& position,
-    const Vec2& size, const float rotation, const Vec4& color);
-
-void draw_rotated_quad(QuadRenderData& data, const Vec2& position,
-    const Vec2& size, const float rotation,
-    const std::shared_ptr<Texture2D>& texture, const float tilingFactor = 1.0f,
+void draw_quad(QuadRenderData& data,
+    const Vec3& position,
+    const Vec2& size,
+    const std::shared_ptr<Texture2D>& texture,
+    const float tilingFactor = 1.0f,
     const Vec4& tintColor = Vec4(1.0f));
 
-void draw_rotated_quad(QuadRenderData& data, const Vec3& position,
-    const Vec2& size, const float rotation,
-    const std::shared_ptr<Texture2D>& texture, const float tilingFactor = 1.0f,
+void draw_rotated_quad(QuadRenderData& data,
+    const Vec2& position,
+    const Vec2& size,
+    const float rotation,
+    const Vec4& color);
+
+void draw_rotated_quad(QuadRenderData& data,
+    const Vec3& position,
+    const Vec2& size,
+    const float rotation,
+    const Vec4& color);
+
+void draw_rotated_quad(QuadRenderData& data,
+    const Vec2& position,
+    const Vec2& size,
+    const float rotation,
+    const std::shared_ptr<Texture2D>& texture,
+    const float tilingFactor = 1.0f,
+    const Vec4& tintColor = Vec4(1.0f));
+
+void draw_rotated_quad(QuadRenderData& data,
+    const Vec3& position,
+    const Vec2& size,
+    const float rotation,
+    const std::shared_ptr<Texture2D>& texture,
+    const float tilingFactor = 1.0f,
     const Vec4& tintColor = Vec4(1.0f));
 
 void draw_quad(QuadRenderData& data, const Mat4& transform, const Vec4& color);
 
-void draw_quad(QuadRenderData& data, const Mat4& transform,
-    const std::shared_ptr<Texture2D>& texture, const float tilingFactor = 1.0f,
+void draw_quad(QuadRenderData& data,
+    const Mat4& transform,
+    const std::shared_ptr<Texture2D>& texture,
+    const float tilingFactor = 1.0f,
     const Vec4& tintColor = Vec4(1.0f));
 } // namespace QuadRenderer
 

@@ -88,18 +88,15 @@ void Application::on_event(Event& event)
 {
     EventDispatcher dispatcher(event);
     dispatcher.dispatch<WindowCloseEvent>(
-        [this](WindowCloseEvent& event) -> bool
-        {
+        [this](WindowCloseEvent& event) -> bool {
             return on_window_close(event);
         });
     dispatcher.dispatch<WindowResizeEvent>(
-        [this](WindowResizeEvent& event) -> bool
-        {
+        [this](WindowResizeEvent& event) -> bool {
             return on_window_resize(event);
         });
     dispatcher.dispatch<WindowIconifyEvent>(
-        [this](WindowIconifyEvent& event) -> bool
-        {
+        [this](WindowIconifyEvent& event) -> bool {
             return on_window_iconify(event);
         });
 

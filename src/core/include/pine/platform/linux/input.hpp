@@ -20,4 +20,4 @@ private:
     const Window* window;
 };
 
-}
+} // namespace pine

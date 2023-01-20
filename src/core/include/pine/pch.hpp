@@ -23,7 +23,6 @@
 #include <vector>
 
 #include "pine/core/log.hpp"
-#include "pine/debug/instrumentor.hpp"
 
 #ifdef PINE_PLATFORM_WINDOWS
 #include <Windows.h>

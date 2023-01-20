@@ -40,7 +40,7 @@ class IO
 {
 public:
     IO(Context* context);
-    ~IO();
+    ~IO() = default;
 
     ConfigFlags get_config_flags() const;
     void set_config_flags(const ConfigFlags& config) const;

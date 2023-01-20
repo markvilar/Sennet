@@ -5,15 +5,12 @@
 namespace pine::gui
 {
 
-Window::Window(const std::string& name_)
-    : name(name_)
-{
-}
+Window::Window(const std::string& name_) : name(name_) {}
 
 void Window::update_state()
 {
-    position = { ImGui::GetWindowPos().x, ImGui::GetWindowPos().y };
-    size = { ImGui::GetWindowSize().x, ImGui::GetWindowSize().y } ;
+    position = {ImGui::GetWindowPos().x, ImGui::GetWindowPos().y};
+    size = {ImGui::GetWindowSize().x, ImGui::GetWindowSize().y};
     focused = ImGui::IsWindowFocused();
     hovered = ImGui::IsWindowHovered();
 }
@@ -27,9 +24,6 @@ void Window::begin() const
     ImGui::PopStyleVar();
 }
 
-void Window::end() const
-{
-    ImGui::End();
-}
+void Window::end() const { ImGui::End(); }
 
 } // namespace pine::gui

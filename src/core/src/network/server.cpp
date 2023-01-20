@@ -29,7 +29,8 @@ void stop_server(ServerState& server)
 }
 
 void send_to_client(ServerState& server,
-    const std::shared_ptr<ConnectionState>& client, const uint8_t* data,
+    const std::shared_ptr<ConnectionState>& client,
+    const uint8_t* data,
     const uint64_t size)
 {
     if (client)

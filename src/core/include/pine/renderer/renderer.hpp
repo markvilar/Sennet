@@ -23,7 +23,8 @@ public:
     static void begin_scene(const OrthographicCamera& camera);
     static void end_scene();
 
-    static void submit(const Shader& shader, const VertexArray& vertexArray,
+    static void submit(const Shader& shader,
+        const VertexArray& vertexArray,
         const Mat4& transform = Mat4(1.0f));
 
     inline static RendererAPI::API get_api() { return RendererAPI::get_api(); }
