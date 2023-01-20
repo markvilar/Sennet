@@ -32,7 +32,6 @@ void connect_to_client(ConnectionState& connection)
 void connect_to_server(ConnectionState& connection,
     const ResolveType& endpoints)
 {
-    // TODO: Set up timeout.
     asio::async_connect(connection.socket,
         endpoints,
         [&connection](const std::error_code error,
@@ -51,8 +50,6 @@ void read_message_size(ConnectionState& connection)
 {
     auto message_size = std::make_shared<uint64_t>(0);
 
-    // TODO: Look into solution for copying message_size into asio, instead
-    // of making it shared.
     asio::async_read(connection.socket,
         asio::mutable_buffer(&*message_size.get(), sizeof(*message_size.get())),
         [&connection, message_size](const std::error_code error,
@@ -60,7 +57,6 @@ void read_message_size(ConnectionState& connection)
             if (error)
             {
                 PINE_CORE_ERROR("Read size error: {0}", error.message());
-                connection.socket.close();
                 return;
             }
 
@@ -88,7 +84,6 @@ void read_message(ConnectionState& connection, const uint64_t size)
             if (error)
             {
                 PINE_CORE_ERROR("Read message: {0}", error.message());
-                connection.socket.close();
                 return;
             }
 
@@ -125,7 +120,6 @@ void write_message_size(ConnectionState& connection)
             if (error)
             {
                 PINE_CORE_ERROR("Write message size: {0}", error.message());
-                connection.socket.close();
                 return;
             }
 
@@ -154,7 +148,6 @@ void write_message(ConnectionState& connection)
             if (error)
             {
                 PINE_CORE_ERROR("Write message: {0}", error.message());
-                connection.socket.close();
                 return;
             }
 

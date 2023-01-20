@@ -27,7 +27,10 @@ bool connect(ClientState& client, const std::string& host, const uint16_t port)
         std::move(socket),
         client.message_queue);
     connect_to_server(*client.connection.get(), endpoints);
-    client.context_thread = std::thread([&client]() { client.context.run(); });
+    client.context_thread = std::thread([&client]() {
+        client.context.restart();
+        client.context.run();
+    });
     return true;
 }
 
