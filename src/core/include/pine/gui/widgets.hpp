@@ -4,7 +4,6 @@
 #include "pine/renderer/framebuffer.hpp"
 #include "pine/utils/math.hpp"
 
-
 namespace pine::gui
 {
 
@@ -56,8 +55,7 @@ inline auto render_dockspace(const char* name, const bool fullscreen = true)
         ImGui::SetNextWindowSize(viewport->Size);
         ImGui::SetNextWindowViewport(viewport->ID);
         window_flags |= ImGuiWindowFlags_NoTitleBar
-            | ImGuiWindowFlags_NoCollapse 
-            | ImGuiWindowFlags_NoResize
+            | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize
             | ImGuiWindowFlags_NoMove;
         window_flags |= ImGuiWindowFlags_NoBringToFrontOnFocus
             | ImGuiWindowFlags_NoNavFocus;
@@ -65,8 +63,7 @@ inline auto render_dockspace(const char* name, const bool fullscreen = true)
 
     const auto io = ImGui::GetIO();
 
-    [[maybe_unused]]
-    auto style = ImGui::GetStyle();
+    [[maybe_unused]] auto style = ImGui::GetStyle();
 
     ImGuiDockNodeFlags dockspace_flags = ImGuiDockNodeFlags_None;
 
@@ -86,7 +83,8 @@ inline auto render_dockspace(const char* name, const bool fullscreen = true)
 
 // FIXME: Improve templating - Allow container to be vector. (C++20s std::span)
 template <typename T, size_t N>
-auto dropdown(const char* name, T* t,
+auto dropdown(const char* name,
+    T* t,
     const std::array<std::pair<const char*, T>, N> options)
 {
     static_assert(std::is_trivial<T>::value, "T must be trivial.");
@@ -178,12 +176,14 @@ constexpr auto get_internal_type()
 // FIXME: Fix implicit template deduction. Literal types ruin template argument
 // deduction.
 template <typename T>
-auto slider_scalar(const char* name, T* value, const T min_value,
+auto slider_scalar(const char* name,
+    T* value,
+    const T min_value,
     const T max_value)
 {
     static_assert(std::is_scalar<T>::value, "T must be scalar");
-    static_assert(std::is_integral<T>::value
-            || std::is_floating_point<T>::value,
+    static_assert(
+        std::is_integral<T>::value || std::is_floating_point<T>::value,
         "T must be integral or floating point.");
 
     const auto type = get_internal_type<T>();
@@ -191,13 +191,13 @@ auto slider_scalar(const char* name, T* value, const T min_value,
 }
 
 template <typename T>
-auto input_scalar(const char* name, T* value, const char* format=nullptr)
+auto input_scalar(const char* name, T* value, const char* format = nullptr)
 {
     static_assert(std::is_scalar<T>::value, "T must be scalar");
-    static_assert(std::is_integral<T>::value
-            || std::is_floating_point<T>::value,
+    static_assert(
+        std::is_integral<T>::value || std::is_floating_point<T>::value,
         "T must be integral or floating point.");
-    
+
     const auto type = get_internal_type<T>();
     ImGui::InputScalar(name, type, value, nullptr, nullptr, format);
 }

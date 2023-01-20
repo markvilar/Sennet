@@ -10,8 +10,7 @@ namespace pine
 
 void VertexBufferLayout::calculate_offset_and_stride()
 {
-    m_stride = [this]()
-    {
+    m_stride = [this]() {
         uint32_t offset = 0;
         uint32_t stride = 0;
         for (auto& element : m_elements)

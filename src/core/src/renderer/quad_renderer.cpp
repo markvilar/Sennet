@@ -21,8 +21,11 @@ constexpr bool is_vertices_within_capabilities(const uint32_t vertex_count)
 }
 
 // Helper function used by quad draw functions.
-void update_quad_vertices(QuadRenderData& data, const Mat4& transform,
-    const Vec4& color, const uint32_t texture_index, const float tiling_factor)
+void update_quad_vertices(QuadRenderData& data,
+    const Mat4& transform,
+    const Vec4& color,
+    const uint32_t texture_index,
+    const float tiling_factor)
 {
     for (uint32_t i = 0; i < QuadRenderCaps::vertices_per_quad; i++)
     {
@@ -59,8 +62,7 @@ QuadRenderData QuadRenderer::init()
     data.quad_vertex_array = VertexArray::create();
     data.quad_vertex_array->set_vertex_buffer(std::move(vertex_buffer));
 
-    constexpr auto quad_indices = []()
-    {
+    constexpr auto quad_indices = []() {
         std::array<uint32_t, QuadRenderCaps::max_indices> indices{};
         uint32_t offset = 0;
         for (uint32_t i = 0; i < indices.size();
@@ -82,8 +84,7 @@ QuadRenderData QuadRenderer::init()
     data.quad_vertex_array->set_index_buffer(
         IndexBuffer::create(quad_indices.data(), quad_indices.size()));
 
-    static constexpr auto samplers = []()
-    {
+    static constexpr auto samplers = []() {
         std::array<int32_t, QuadRenderCaps::max_texture_slots> samplers = {};
         for (uint32_t i = 0; i < samplers.size(); i++)
             samplers[i] = static_cast<int>(i);
@@ -153,14 +154,18 @@ void QuadRenderer::flush_and_reset(QuadRenderData& data)
     data.texture_slot_index = 1;
 }
 
-void QuadRenderer::draw_quad(QuadRenderData& data, const Vec2& position,
-    const Vec2& size, const Vec4& color)
+void QuadRenderer::draw_quad(QuadRenderData& data,
+    const Vec2& position,
+    const Vec2& size,
+    const Vec4& color)
 {
     draw_quad(data, {position.x, position.y, 0.0f}, size, color);
 }
 
-void QuadRenderer::draw_quad(QuadRenderData& data, const Vec3& position,
-    const Vec2& size, const Vec4& color)
+void QuadRenderer::draw_quad(QuadRenderData& data,
+    const Vec3& position,
+    const Vec2& size,
+    const Vec4& color)
 {
     Mat4 transform = translate(Mat4(1.0f), position)
         * scale(Mat4(1.0f), Vec3(size.x, size.y, 1.0f));
@@ -168,9 +173,12 @@ void QuadRenderer::draw_quad(QuadRenderData& data, const Vec3& position,
     draw_quad(data, transform, color);
 }
 
-void QuadRenderer::draw_quad(QuadRenderData& data, const Vec2& position,
-    const Vec2& size, const std::shared_ptr<Texture2D>& texture,
-    const float tiling_factor, const Vec4& tint_color)
+void QuadRenderer::draw_quad(QuadRenderData& data,
+    const Vec2& position,
+    const Vec2& size,
+    const std::shared_ptr<Texture2D>& texture,
+    const float tiling_factor,
+    const Vec4& tint_color)
 {
     draw_quad(data,
         {position.x, position.y, 0.0f},
@@ -180,9 +188,12 @@ void QuadRenderer::draw_quad(QuadRenderData& data, const Vec2& position,
         tint_color);
 }
 
-void QuadRenderer::draw_quad(QuadRenderData& data, const Vec3& position,
-    const Vec2& size, const std::shared_ptr<Texture2D>& texture,
-    const float tiling_factor, const Vec4& tint_color)
+void QuadRenderer::draw_quad(QuadRenderData& data,
+    const Vec3& position,
+    const Vec2& size,
+    const std::shared_ptr<Texture2D>& texture,
+    const float tiling_factor,
+    const Vec4& tint_color)
 {
     Mat4 transform = translate(Mat4(1.0f), position)
         * scale(Mat4(1.0f), Vec3(size.x, size.y, 1.0f));
@@ -190,8 +201,11 @@ void QuadRenderer::draw_quad(QuadRenderData& data, const Vec3& position,
     draw_quad(data, transform, texture, tiling_factor, tint_color);
 }
 
-void QuadRenderer::draw_rotated_quad(QuadRenderData& data, const Vec2& position,
-    const Vec2& size, const float rotation, const Vec4& color)
+void QuadRenderer::draw_rotated_quad(QuadRenderData& data,
+    const Vec2& position,
+    const Vec2& size,
+    const float rotation,
+    const Vec4& color)
 {
     draw_rotated_quad(data,
         {position.x, position.y, 0.0f},
@@ -200,8 +214,11 @@ void QuadRenderer::draw_rotated_quad(QuadRenderData& data, const Vec2& position,
         color);
 }
 
-void QuadRenderer::draw_rotated_quad(QuadRenderData& data, const Vec3& position,
-    const Vec2& size, const float rotation, const Vec4& color)
+void QuadRenderer::draw_rotated_quad(QuadRenderData& data,
+    const Vec3& position,
+    const Vec2& size,
+    const float rotation,
+    const Vec4& color)
 {
     Mat4 transform = translate(Mat4(1.0f), position)
         * rotate(Mat4(1.0f), rotation, Vec3(0.0f, 0.0f, 1.0f))
@@ -210,9 +227,12 @@ void QuadRenderer::draw_rotated_quad(QuadRenderData& data, const Vec3& position,
     draw_quad(data, transform, color);
 }
 
-void QuadRenderer::draw_rotated_quad(QuadRenderData& data, const Vec2& position,
-    const Vec2& size, const float rotation,
-    const std::shared_ptr<Texture2D>& texture, const float tiling_factor,
+void QuadRenderer::draw_rotated_quad(QuadRenderData& data,
+    const Vec2& position,
+    const Vec2& size,
+    const float rotation,
+    const std::shared_ptr<Texture2D>& texture,
+    const float tiling_factor,
     const Vec4& tint_color)
 {
     draw_rotated_quad(data,
@@ -224,9 +244,12 @@ void QuadRenderer::draw_rotated_quad(QuadRenderData& data, const Vec2& position,
         tint_color);
 }
 
-void QuadRenderer::draw_rotated_quad(QuadRenderData& data, const Vec3& position,
-    const Vec2& size, const float rotation,
-    const std::shared_ptr<Texture2D>& texture, const float tiling_factor,
+void QuadRenderer::draw_rotated_quad(QuadRenderData& data,
+    const Vec3& position,
+    const Vec2& size,
+    const float rotation,
+    const std::shared_ptr<Texture2D>& texture,
+    const float tiling_factor,
     const Vec4& tint_color)
 {
 
@@ -237,7 +260,8 @@ void QuadRenderer::draw_rotated_quad(QuadRenderData& data, const Vec3& position,
     draw_quad(data, transform, texture, tiling_factor, tint_color);
 }
 
-void QuadRenderer::draw_quad(QuadRenderData& data, const Mat4& transform,
+void QuadRenderer::draw_quad(QuadRenderData& data,
+    const Mat4& transform,
     const Vec4& color)
 {
     if (!is_indices_within_capabilities(data.quad_index_count)
@@ -252,8 +276,10 @@ void QuadRenderer::draw_quad(QuadRenderData& data, const Mat4& transform,
     update_quad_vertices(data, transform, color, texture_index, tiling_factor);
 }
 
-void QuadRenderer::draw_quad(QuadRenderData& data, const Mat4& transform,
-    const std::shared_ptr<Texture2D>& texture, const float tiling_factor,
+void QuadRenderer::draw_quad(QuadRenderData& data,
+    const Mat4& transform,
+    const std::shared_ptr<Texture2D>& texture,
+    const float tiling_factor,
     const Vec4& tint_color)
 {
     if (!is_indices_within_capabilities(data.quad_index_count)

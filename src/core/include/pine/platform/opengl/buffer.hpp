@@ -20,16 +20,16 @@ public:
 
     virtual const VertexBufferLayout& get_layout() const override
     {
-        return m_layout;
+        return layout;
     }
-    virtual void set_layout(const VertexBufferLayout& layout) override
+    virtual void set_layout(const VertexBufferLayout& layout_) override
     {
-        m_layout = layout;
+        layout = layout_;
     }
 
 private:
-    RendererID m_renderer_id;
-    VertexBufferLayout m_layout;
+    RendererID renderer_id;
+    VertexBufferLayout layout;
 };
 
 class OpenGLIndexBuffer : public IndexBuffer
@@ -41,11 +41,11 @@ public:
     virtual void bind() const override;
     virtual void unbind() const override;
 
-    virtual uint32_t get_count() const override { return m_count; }
+    virtual uint32_t get_count() const override { return count; }
 
 private:
-    RendererID m_renderer_id;
-    uint32_t m_count;
+    RendererID renderer_id;
+    uint32_t count;
 };
 
 class OpenGLVertexArray : public VertexArray
@@ -63,18 +63,18 @@ public:
 
     virtual VertexBuffer& get_vertex_buffer() const override
     {
-        return *m_vertex_buffer.get();
+        return *vertex_buffer.get();
     }
 
     virtual IndexBuffer& get_index_buffer() const override
     {
-        return *m_index_buffer.get();
+        return *index_buffer.get();
     }
 
 private:
-    RendererID m_renderer_id = {};
-    std::unique_ptr<VertexBuffer> m_vertex_buffer = {};
-    std::unique_ptr<IndexBuffer> m_index_buffer = {};
+    RendererID renderer_id = {};
+    std::unique_ptr<VertexBuffer> vertex_buffer = {};
+    std::unique_ptr<IndexBuffer> index_buffer = {};
 };
 
 } // namespace pine

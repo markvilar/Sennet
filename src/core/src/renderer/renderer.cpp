@@ -28,7 +28,8 @@ void Renderer::begin_scene(const OrthographicCamera& camera)
 
 void Renderer::end_scene() {}
 
-void Renderer::submit(const Shader& shader, const VertexArray& vertex_array,
+void Renderer::submit(const Shader& shader,
+    const VertexArray& vertex_array,
     const Mat4& transform)
 {
     shader.bind();

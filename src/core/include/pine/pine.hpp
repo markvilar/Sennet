@@ -11,9 +11,6 @@
 #include "pine/core/timestep.hpp"
 #include "pine/core/window.hpp"
 
-// Debug stuff
-#include "pine/debug/instrumentor.hpp"
-
 // Graphical user interface
 #include "pine/gui/common.hpp"
 #include "pine/gui/manager.hpp"

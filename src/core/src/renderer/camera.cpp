@@ -7,24 +7,31 @@
 namespace pine
 {
 
-OrthographicCamera::OrthographicCamera(const float left, const float right,
-    const float bottom, const float top)
+OrthographicCamera::OrthographicCamera(const float left,
+    const float right,
+    const float bottom,
+    const float top)
     : projection_matrix(ortho(left, right, bottom, top, -1.0f, 1.0f)),
       view_matrix(1.0f)
 {
 }
 
-void OrthographicCamera::set_projection(const float left, const float right,
-    const float bottom, const float top)
+void OrthographicCamera::set_projection(const float left,
+    const float right,
+    const float bottom,
+    const float top)
 {
     projection_matrix = ortho(left, right, bottom, top, -1.0f, 1.0f);
 }
 
 OrthographicCameraController::OrthographicCameraController(
-    const float aspect_ratio, const bool rotation)
+    const float aspect_ratio,
+    const bool rotation)
     : aspect_ratio(aspect_ratio), rotation_enabled(rotation),
-      camera(-aspect_ratio * zoom_level, aspect_ratio * zoom_level,
-          -zoom_level, zoom_level)
+      camera(-aspect_ratio * zoom_level,
+          aspect_ratio * zoom_level,
+          -zoom_level,
+          zoom_level)
 {
 }
 
@@ -74,19 +81,17 @@ void OrthographicCameraController::on_event(Event& event)
 {
     EventDispatcher dispatcher(event);
     dispatcher.dispatch<MouseScrolledEvent>(
-        [this](const MouseScrolledEvent& event) -> bool
-        {
+        [this](const MouseScrolledEvent& event) -> bool {
             return on_mouse_scrolled(event);
         });
-        
+
     // PINE_BIND_EVENT_FN(OrthographicCameraController::on_mouse_scrolled));
     dispatcher.dispatch<WindowResizeEvent>(
-        [this](const WindowResizeEvent& event) -> bool
-        {
+        [this](const WindowResizeEvent& event) -> bool {
             return on_window_resized(event);
         });
-        
-    //PINE_BIND_EVENT_FN(OrthographicCameraController::on_window_resized));
+
+    // PINE_BIND_EVENT_FN(OrthographicCameraController::on_window_resized));
 }
 
 void OrthographicCameraController::on_resize(const float width,

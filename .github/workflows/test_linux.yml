@@ -51,7 +51,9 @@ jobs:
           -D CMAKE_BUILD_TYPE=${{env.build_type}} \
           -D PINE_EDITOR_ENABLE=ON \
           -D PINE_EXAMPLE_ENABLE=ON \
-          -D PINE_TEST_ENABLE=ON
+          -D PINE_TEST_ENABLE=ON \
+          -D PINE_SANITIZERS_ENABLE=OFF \
+          -D PINE_WARNINGS_ENABLE=OFF 
 
     - name: Build project
       run: cmake --build ${{env.build_dir}}

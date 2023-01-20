@@ -36,6 +36,7 @@ public:
 
     virtual uint32_t get_width() const = 0;
     virtual uint32_t get_height() const = 0;
+
     virtual std::pair<uint32_t, uint32_t> get_size() const = 0;
     virtual std::pair<float, float> get_position() const = 0;
 

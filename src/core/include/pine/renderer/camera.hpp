@@ -13,10 +13,14 @@ namespace pine
 class OrthographicCamera
 {
 public:
-    OrthographicCamera(const float left, const float right, const float bottom,
+    OrthographicCamera(const float left,
+        const float right,
+        const float bottom,
         const float top);
 
-    void set_projection(const float left, const float right, const float bottom,
+    void set_projection(const float left,
+        const float right,
+        const float bottom,
         const float top);
 
     void set_position(const Vec3& position_)

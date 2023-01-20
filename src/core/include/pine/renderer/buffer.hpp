@@ -20,7 +20,8 @@ struct VertexBufferElement
     bool normalized = false;
 
     VertexBufferElement(const std::string& vertex_name,
-        const ShaderDataType data_type, const bool is_data_normalized = false)
+        const ShaderDataType data_type,
+        const bool is_data_normalized = false)
         : name(vertex_name), type(data_type), size(get_size(data_type)),
           component_count(get_count(data_type)), offset(0),
           normalized(is_data_normalized)

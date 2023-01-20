@@ -58,11 +58,8 @@ public:
     void render_gui();
 
     inline Window& get_window() const { return *window; }
-    inline gui::Manager& get_gui_manager() const 
-    { 
-        return *gui; 
-    }
-    
+    inline gui::Manager& get_gui_manager() const { return *gui; }
+
     static inline Application& get() { return *instance; }
 
     inline const ApplicationSpecs& get_specification() const

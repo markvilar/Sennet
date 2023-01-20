@@ -22,7 +22,7 @@ public:
 
     Shader(const Shader&) = delete;
     Shader(Shader&&) = delete;
-    
+
     Shader& operator=(const Shader&) = delete;
     Shader& operator=(Shader&&) = delete;
 
@@ -30,7 +30,8 @@ public:
     virtual void unbind() const = 0;
 
     virtual void set_int(const std::string& name, const int value) const = 0;
-    virtual void set_int_array(const std::string& name, const int* values,
+    virtual void set_int_array(const std::string& name,
+        const int* values,
         const uint32_t count) const = 0;
     virtual void set_float(const std::string& name,
         const float value) const = 0;
@@ -45,7 +46,8 @@ public:
     static std::unique_ptr<Shader> create(
         const std::filesystem::path& filepath);
     static std::unique_ptr<Shader> create(const std::string& name,
-        const std::string& vertex_source, const std::string& fragment_source);
+        const std::string& vertex_source,
+        const std::string& fragment_source);
 };
 
 class ShaderLibrary

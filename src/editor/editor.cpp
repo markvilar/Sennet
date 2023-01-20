@@ -34,8 +34,7 @@ public:
         const auto argc = m_argc;
         const auto argv = m_argv;
 
-        const auto project_path = [argc, argv]()
-        {
+        const auto project_path = [argc, argv]() {
             if (argc > 1)
             {
                 return std::string(argv[1]);

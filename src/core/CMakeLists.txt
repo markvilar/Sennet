@@ -14,7 +14,6 @@ target_sources(pine
         include/pine/core/platform.hpp
         include/pine/core/timestep.hpp
         include/pine/core/window.hpp
-        include/pine/debug/instrumentor.hpp
         include/pine/events/application_event.hpp
         include/pine/events/event.hpp
         include/pine/events/key_event.hpp

@@ -36,8 +36,7 @@ void connect_to_server(ConnectionState& connection,
     asio::async_connect(connection.socket,
         endpoints,
         [&connection](const std::error_code error,
-            [[maybe_unused]] const EndpointType endpoint)
-        {
+            [[maybe_unused]] const EndpointType endpoint) {
             if (error)
             {
                 PINE_CORE_ERROR("Connection to server failed: {0}",
@@ -57,8 +56,7 @@ void read_message_size(ConnectionState& connection)
     asio::async_read(connection.socket,
         asio::mutable_buffer(&*message_size.get(), sizeof(*message_size.get())),
         [&connection, message_size](const std::error_code error,
-            [[maybe_unused]] const uint64_t length)
-        {
+            [[maybe_unused]] const uint64_t length) {
             if (error)
             {
                 PINE_CORE_ERROR("Read size error: {0}", error.message());
@@ -86,8 +84,7 @@ void read_message(ConnectionState& connection, const uint64_t size)
     asio::async_read(connection.socket,
         asio::mutable_buffer(message->data(), message->size()),
         [&connection, message](const std::error_code error,
-            [[maybe_unused]] const uint64_t length)
-        {
+            [[maybe_unused]] const uint64_t length) {
             if (error)
             {
                 PINE_CORE_ERROR("Read message: {0}", error.message());
@@ -104,16 +101,14 @@ void send(ConnectionState& connection, const uint8_t* data, const uint64_t size)
 {
     std::vector<uint8_t> buffer(data, data + size);
 
-    asio::post(connection.context,
-        [&connection, buffer]() -> void
+    asio::post(connection.context, [&connection, buffer]() -> void {
+        const auto is_writing = !connection.write_queue.empty();
+        connection.write_queue.push_back(std::move(buffer));
+        if (!is_writing)
         {
-            const auto is_writing = !connection.write_queue.empty();
-            connection.write_queue.push_back(std::move(buffer));
-            if (!is_writing)
-            {
-                write_message_size(connection);
-            }
-        });
+            write_message_size(connection);
+        }
+    });
 }
 
 void write_message_size(ConnectionState& connection)
@@ -126,8 +121,7 @@ void write_message_size(ConnectionState& connection)
     asio::async_write(connection.socket,
         asio::const_buffer(&*message_size.get(), sizeof(*message_size.get())),
         [&connection, message_size](const std::error_code error,
-            [[maybe_unused]] const uint64_t length) -> void
-        {
+            [[maybe_unused]] const uint64_t length) -> void {
             if (error)
             {
                 PINE_CORE_ERROR("Write message size: {0}", error.message());
@@ -156,8 +150,7 @@ void write_message(ConnectionState& connection)
         asio::const_buffer(connection.write_queue.front().data(),
             connection.write_queue.front().size()),
         [&connection](const std::error_code error,
-            [[maybe_unused]] const uint64_t length) -> void
-        {
+            [[maybe_unused]] const uint64_t length) -> void {
             if (error)
             {
                 PINE_CORE_ERROR("Write message: {0}", error.message());

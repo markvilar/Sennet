@@ -1,14 +1,14 @@
 #include "pine/gui/manager.hpp"
 
 // FIXME: GUI implementation abstraction
-#include <imgui.h>
+#include <GLFW/glfw3.h>
 #include <backends/imgui_impl_glfw.h>
 #include <backends/imgui_impl_opengl3.h>
-#include <GLFW/glfw3.h>
 #include <glad/glad.h>
+#include <imgui.h>
 
-#include "pine/pch.hpp"
 #include "pine/gui/common.hpp"
+#include "pine/pch.hpp"
 
 namespace pine::gui
 {
@@ -34,17 +34,13 @@ std::unique_ptr<Manager> create_manager(Window* window)
 // Context
 // ----------------------------------------------------------------------------
 
-Context::Context(Window* window_)
-    : window(window_)
+Context::Context(Window* window_) : window(window_)
 {
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
 }
 
-Context::~Context()
-{
-    ImGui::DestroyContext();
-}
+Context::~Context() { ImGui::DestroyContext(); }
 
 void Context::init() const
 {
@@ -92,21 +88,13 @@ void Context::end_frame() const
 // IO
 // ----------------------------------------------------------------------------
 
-IO::IO(Context* context_)
-    : context(context_)
+IO::IO(Context* context_) : context(context_)
 {
     auto& io = ImGui::GetIO();
     io.WantSaveIniSettings = false;
 }
 
-IO::~IO()
-{
-}
-
-ConfigFlags IO::get_config_flags() const
-{
-    return ImGui::GetIO().ConfigFlags;
-}
+ConfigFlags IO::get_config_flags() const { return ImGui::GetIO().ConfigFlags; }
 
 void IO::set_config_flags(const ConfigFlags& config) const
 {
@@ -125,10 +113,7 @@ bool IO::save_settings(const std::filesystem::path& filepath) const
     return false;
 }
 
-bool IO::want_capture_mouse() const
-{
-    return ImGui::GetIO().WantCaptureMouse;
-}
+bool IO::want_capture_mouse() const { return ImGui::GetIO().WantCaptureMouse; }
 
 bool IO::want_capture_keyboard() const
 {
@@ -147,7 +132,7 @@ Manager::Manager(std::unique_ptr<Context>& context_, std::unique_ptr<IO>& io_)
     config_flags |= ConfigFlagOptions::DOCKING_ENABLE;
     config_flags |= ConfigFlagOptions::VIEWPORTS_ENABLE;
     io->set_config_flags(config_flags);
-    
+
     // Set dark theme by default
     auto& style = ImGui::GetStyle();
     set_dark_theme(style);
@@ -204,8 +189,8 @@ void Manager::on_event(Event& event) const
 {
     if (handle_event)
     {
-        event.handled |= event.is_in_category(EventCategoryMouse) 
-            & io->want_capture_mouse();
+        event.handled |=
+            event.is_in_category(EventCategoryMouse) & io->want_capture_mouse();
         event.handled |= event.is_in_category(EventCategoryKeyboard)
             & io->want_capture_keyboard();
     }

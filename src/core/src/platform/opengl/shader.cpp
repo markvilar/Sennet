@@ -27,12 +27,13 @@ OpenGLShader::OpenGLShader(const std::filesystem::path& filepath)
     const auto source = read_file(filepath);
     const auto shader_sources = preprocess(source);
     compile_shader(shader_sources);
-    m_name = filepath.stem();
+    shader_name = filepath.stem();
 }
 
-OpenGLShader::OpenGLShader(const std::string& name,
-    const std::string& vertex_source, const std::string& fragment_source)
-    : m_name(name)
+OpenGLShader::OpenGLShader(const std::string& shader_name_,
+    const std::string& vertex_source,
+    const std::string& fragment_source)
+    : shader_name(shader_name_)
 {
     std::unordered_map<GLenum, std::string> shader_sources;
     shader_sources[GL_VERTEX_SHADER] = vertex_source;
@@ -40,7 +41,7 @@ OpenGLShader::OpenGLShader(const std::string& name,
     compile_shader(shader_sources);
 }
 
-OpenGLShader::~OpenGLShader() { glDeleteProgram(m_renderer_id); }
+OpenGLShader::~OpenGLShader() { glDeleteProgram(renderer_id); }
 
 std::string OpenGLShader::read_file(const std::filesystem::path& filepath)
 {
@@ -165,10 +166,10 @@ void OpenGLShader::compile_shader(
         glDetachShader(program, id);
     }
 
-    m_renderer_id = program;
+    renderer_id = program;
 }
 
-void OpenGLShader::bind() const { glUseProgram(m_renderer_id); }
+void OpenGLShader::bind() const { glUseProgram(renderer_id); }
 
 void OpenGLShader::unbind() const { glUseProgram(0); }
 
@@ -177,7 +178,8 @@ void OpenGLShader::set_int(const std::string& name, const int value) const
     upload_uniform_int(name, value);
 }
 
-void OpenGLShader::set_int_array(const std::string& name, const int* values,
+void OpenGLShader::set_int_array(const std::string& name,
+    const int* values,
     const uint32_t count) const
 {
     upload_uniform_int_array(name, const_cast<int*>(values), count);
@@ -206,56 +208,57 @@ void OpenGLShader::set_mat4(const std::string& name, const Mat4& value) const
 void OpenGLShader::upload_uniform_int(const std::string& name,
     const int value) const
 {
-    const auto location = glGetUniformLocation(m_renderer_id, name.c_str());
+    const auto location = glGetUniformLocation(renderer_id, name.c_str());
     glUniform1i(location, value);
 }
 
 void OpenGLShader::upload_uniform_int_array(const std::string& name,
-    const int* values, const uint32_t count) const
+    const int* values,
+    const uint32_t count) const
 {
-    const auto location = glGetUniformLocation(m_renderer_id, name.c_str());
+    const auto location = glGetUniformLocation(renderer_id, name.c_str());
     glUniform1iv(location, static_cast<GLsizei>(count), values);
 }
 
 void OpenGLShader::upload_uniform_float(const std::string& name,
     const float value) const
 {
-    const auto location = glGetUniformLocation(m_renderer_id, name.c_str());
+    const auto location = glGetUniformLocation(renderer_id, name.c_str());
     glUniform1f(location, value);
 }
 
 void OpenGLShader::upload_uniform_float2(const std::string& name,
     const Vec2& values) const
 {
-    const auto location = glGetUniformLocation(m_renderer_id, name.c_str());
+    const auto location = glGetUniformLocation(renderer_id, name.c_str());
     glUniform2f(location, values.x, values.y);
 }
 
 void OpenGLShader::upload_uniform_float3(const std::string& name,
     const Vec3& values) const
 {
-    const auto location = glGetUniformLocation(m_renderer_id, name.c_str());
+    const auto location = glGetUniformLocation(renderer_id, name.c_str());
     glUniform3f(location, values.x, values.y, values.z);
 }
 
 void OpenGLShader::upload_uniform_float4(const std::string& name,
     const Vec4& values) const
 {
-    const auto location = glGetUniformLocation(m_renderer_id, name.c_str());
+    const auto location = glGetUniformLocation(renderer_id, name.c_str());
     glUniform4f(location, values.x, values.y, values.z, values.w);
 }
 
 void OpenGLShader::upload_uniform_mat3(const std::string& name,
     const Mat3& matrix) const
 {
-    const auto location = glGetUniformLocation(m_renderer_id, name.c_str());
+    const auto location = glGetUniformLocation(renderer_id, name.c_str());
     glUniformMatrix3fv(location, 1, GL_FALSE, value_ptr(matrix));
 }
 
 void OpenGLShader::upload_uniform_mat4(const std::string& name,
     const Mat4& matrix) const
 {
-    const auto location = glGetUniformLocation(m_renderer_id, name.c_str());
+    const auto location = glGetUniformLocation(renderer_id, name.c_str());
     glUniformMatrix4fv(location, 1, GL_FALSE, value_ptr(matrix));
 }
 

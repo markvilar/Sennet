@@ -24,7 +24,8 @@ std::unique_ptr<Shader> Shader::create(const std::filesystem::path& filepath)
 }
 
 std::unique_ptr<Shader> Shader::create(const std::string& name,
-    const std::string& vertex_source, const std::string& fragment_source)
+    const std::string& vertex_source,
+    const std::string& fragment_source)
 {
     switch (Renderer::get_api())
     {
