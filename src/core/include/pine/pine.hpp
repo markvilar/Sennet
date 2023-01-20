@@ -13,6 +13,7 @@
 
 // Graphical user interface
 #include "pine/gui/common.hpp"
+#include "pine/gui/fonts.hpp"
 #include "pine/gui/manager.hpp"
 #include "pine/gui/widgets.hpp"
 #include "pine/gui/window.hpp"

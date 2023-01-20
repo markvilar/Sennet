@@ -13,8 +13,12 @@ EditorLayer::EditorLayer() : Layer("EditorLayer"), camera_controller(1.0f, true)
 void EditorLayer::on_attach()
 {
     auto& io = ImGui::GetIO();
-    io.Fonts->AddFontFromFileTTF("resources/fonts/OpenSans-Regular.ttf",
-        16.0f,
+
+    const auto opensans = pine::font::OpenSans;
+    const auto font_size = 18.0f;
+    io.Fonts->AddFontFromMemoryCompressedTTF(opensans.data(),
+        opensans.size(),
+        font_size,
         nullptr,
         io.Fonts->GetGlyphRangesCyrillic());
 

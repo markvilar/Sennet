@@ -19,6 +19,7 @@ target_sources(pine
         include/pine/events/key_event.hpp
         include/pine/events/mouse_event.hpp
         include/pine/gui/common.hpp
+        include/pine/gui/fonts.hpp
         include/pine/gui/manager.hpp
         include/pine/gui/widgets.hpp
         include/pine/gui/window.hpp
