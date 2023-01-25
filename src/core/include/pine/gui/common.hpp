@@ -30,9 +30,4 @@ enum ConfigFlagOptions : ConfigFlags
     IS_TOUCHSCREEN = 1 << 21,
 };
 
-// Style
-using Style = ImGuiStyle;
-
-void set_dark_theme(Style& style);
-
 } // namespace pine::gui

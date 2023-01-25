@@ -8,6 +8,7 @@
 #include <imgui.h>
 
 #include "pine/gui/common.hpp"
+#include "pine/gui/style.hpp"
 #include "pine/pch.hpp"
 
 namespace pine::gui
@@ -113,6 +114,30 @@ bool IO::save_settings(const std::filesystem::path& filepath) const
     return false;
 }
 
+bool IO::load_font(const void* data,
+    const int size,
+    const float pixel_size) const
+{
+    auto& io = ImGui::GetIO();
+    io.Fonts->AddFontFromMemoryCompressedTTF(data,
+        size,
+        pixel_size,
+        nullptr,
+        io.Fonts->GetGlyphRangesCyrillic());
+    return true;
+}
+
+bool IO::load_font(const std::filesystem::path& filepath,
+    const float pixel_size) const
+{
+    auto& io = ImGui::GetIO();
+    io.Fonts->AddFontFromFileTTF(filepath.c_str(),
+        pixel_size,
+        nullptr,
+        io.Fonts->GetGlyphRangesCyrillic());
+    return true;
+}
+
 bool IO::want_capture_mouse() const { return ImGui::GetIO().WantCaptureMouse; }
 
 bool IO::want_capture_keyboard() const
@@ -134,8 +159,7 @@ Manager::Manager(std::unique_ptr<Context>& context_, std::unique_ptr<IO>& io_)
     io->set_config_flags(config_flags);
 
     // Set dark theme by default
-    auto& style = ImGui::GetStyle();
-    set_dark_theme(style);
+    set_dark_theme();
 
     if (context)
     {
@@ -181,6 +205,27 @@ bool Manager::save_settings(const std::filesystem::path& filepath) const
     if (io)
     {
         return io->save_settings(filepath);
+    }
+    return false;
+}
+
+bool Manager::load_font(const void* data,
+    const int size,
+    const float pixel_size) const
+{
+    if (io)
+    {
+        return io->load_font(data, size, pixel_size);
+    }
+    return false;
+}
+
+bool Manager::load_font(const std::filesystem::path& filepath,
+    const float pixel_size) const
+{
+    if (io)
+    {
+        return io->load_font(filepath, pixel_size);
     }
     return false;
 }

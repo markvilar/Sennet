@@ -1,9 +1,8 @@
-// File: 'opensans_regular.ttf' (217360 bytes)
-// Exported using binary_to_compressed_c.cpp
+#pragma once
 
 #include <array>
 
-namespace pine::font
+namespace pine::fonts
 {
 
 static constexpr std::array<uint32_t, 40330> OpenSans = {
@@ -40339,4 +40338,4 @@ static constexpr std::array<uint32_t, 40330> OpenSans = {
     0xf6404e73,
 };
 
-} // namespace pine::font
+} // namespace pine::fonts

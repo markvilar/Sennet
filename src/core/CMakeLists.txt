@@ -19,8 +19,8 @@ target_sources(pine
         include/pine/events/key_event.hpp
         include/pine/events/mouse_event.hpp
         include/pine/gui/common.hpp
-        include/pine/gui/fonts.hpp
         include/pine/gui/manager.hpp
+        include/pine/gui/style.hpp
         include/pine/gui/widgets.hpp
         include/pine/gui/window.hpp
         include/pine/network/client.hpp
@@ -50,6 +50,7 @@ target_sources(pine
         include/pine/renderer/shader.hpp
         include/pine/renderer/texture.hpp
         include/pine/utils/filesystem.hpp
+        include/pine/utils/fonts.hpp
         include/pine/utils/math.hpp
         include/pine/utils/locked_queue.hpp
     PRIVATE 
@@ -57,8 +58,8 @@ target_sources(pine
         src/core/input.cpp
         src/core/layer.cpp
         src/core/log.cpp
-        src/gui/common.cpp
         src/gui/manager.cpp
+        src/gui/style.cpp
         src/gui/window.cpp
         src/network/client.cpp
         src/network/connection.cpp

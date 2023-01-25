@@ -12,22 +12,16 @@ EditorLayer::EditorLayer() : Layer("EditorLayer"), camera_controller(1.0f, true)
 
 void EditorLayer::on_attach()
 {
-    auto& io = ImGui::GetIO();
-
-    const auto opensans = pine::font::OpenSans;
-    const auto font_size = 18.0f;
-    io.Fonts->AddFontFromMemoryCompressedTTF(opensans.data(),
-        opensans.size(),
-        font_size,
-        nullptr,
-        io.Fonts->GetGlyphRangesCyrillic());
+    const auto opensans = pine::fonts::OpenSans;
+    const auto& gui = Application::get().get_gui();
+    gui.load_font(opensans.data(), opensans.size(), 18.0f);
 
     if (!shader_library.load_shader("resources/shaders/quad_shader.glsl"))
     {
         PINE_ERROR("Failed to load shader.");
     }
 
-    gui::set_dark_theme(ImGui::GetStyle());
+    // gui::set_dark_theme();
 
     FramebufferSpecs specs;
     specs.width = 0;
@@ -202,19 +196,9 @@ void EditorLayer::on_gui_render()
             ImVec2{1, 0});
     });
 
-    const auto& specs = viewport_framebuffer->get_specification();
-    const auto size = viewport_window.get_size();
-    const auto viewport_valid = size.x > 0.0f && size.y > 0.0f;
-    const auto viewport_changed = static_cast<float>(specs.width) != size.x
-        || static_cast<float>(specs.height) != size.y;
-    if (viewport_valid && viewport_changed)
-    {
-        viewport_framebuffer->resize(static_cast<uint32_t>(size.x),
-            static_cast<uint32_t>(size.y));
-        camera_controller.on_resize(size.x, size.y);
-    }
+    update_viewport();
 
-    Application::get().get_gui_manager().block_events(
+    Application::get().get_gui().block_events(
         !viewport_window.is_focused() || !viewport_window.is_hovered());
 
     gui_control_window.on_render([]() {
@@ -224,7 +208,7 @@ void EditorLayer::on_gui_render()
             input_profile_name.data(),
             input_profile_name.size());
 
-        auto& gui = Application::get().get_gui_manager();
+        const auto& gui = Application::get().get_gui();
 
         if (ImGui::Button("Load profile"))
         {
@@ -299,8 +283,9 @@ void EditorLayer::on_gui_render()
         ImGui::Text("Server messages:");
         for (const auto& message : server_history)
         {
-            ImGui::Text("%s",
-                std::string(message.begin(), message.end()).c_str());
+            const auto message_text =
+                std::string(message.begin(), message.end());
+            ImGui::Text("%s", message_text.c_str());
         }
     });
 
@@ -329,7 +314,7 @@ void EditorLayer::on_gui_render()
         static std::array<char, 256> image_path = {""};
         static auto image_format = ImageFormat::BGRA;
 
-        const std::array<std::pair<const char*, ImageFormat>, 6>
+        static constexpr std::array<std::pair<const char*, ImageFormat>, 6>
             image_format_options = {std::make_pair("Gray", ImageFormat::GRAY),
                 std::make_pair("Gray-alpha", ImageFormat::GRAY_ALPHA),
                 std::make_pair("RGB", ImageFormat::RGB),
@@ -414,6 +399,23 @@ void EditorLayer::update_camera_controller(const Timestep& ts)
         camera_controller.rotate_counter_clockwise(ts);
     if (input_handle->is_key_pressed(KeyCode::E))
         camera_controller.rotate_clockwise(ts);
+}
+
+void EditorLayer::update_viewport()
+{
+    const auto& specs = viewport_framebuffer->get_specification();
+    const auto size = viewport_window.get_size();
+
+    camera_controller.on_resize(size.x, size.y);
+
+    const auto viewport_valid = size.x > 0.0f && size.y > 0.0f;
+    const auto viewport_changed = static_cast<float>(specs.width) != size.x
+        || static_cast<float>(specs.height) != size.y;
+    if (viewport_valid && viewport_changed)
+    {
+        viewport_framebuffer->resize(static_cast<uint32_t>(size.x),
+            static_cast<uint32_t>(size.y));
+    }
 }
 
 } // namespace pine

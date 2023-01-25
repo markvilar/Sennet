@@ -48,6 +48,11 @@ public:
     bool load_settings(const std::filesystem::path& filepath) const;
     bool save_settings(const std::filesystem::path& filepath) const;
 
+    bool
+    load_font(const void* data, const int size, const float pixel_size) const;
+    bool load_font(const std::filesystem::path& filepath,
+        const float pixel_size) const;
+
     bool want_capture_mouse() const;
     bool want_capture_keyboard() const;
 
@@ -66,6 +71,11 @@ public:
 
     bool load_settings(const std::filesystem::path& filepath) const;
     bool save_settings(const std::filesystem::path& filepath) const;
+
+    bool
+    load_font(const void* data, const int size, const float pixel_size) const;
+    bool load_font(const std::filesystem::path& filepath,
+        const float pixel_size) const;
 
     void on_event(Event& event) const;
     void block_events(const bool block) { handle_event = block; }

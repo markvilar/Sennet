@@ -23,6 +23,7 @@ public:
 
 private:
     void update_camera_controller(const Timestep& ts);
+    void update_viewport();
 
 private:
     // Rendering
