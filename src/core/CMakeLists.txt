@@ -29,8 +29,9 @@ target_sources(pine
         include/pine/network/types.hpp
         include/pine/platform/opengl/buffer.hpp
         include/pine/platform/opengl/common.hpp
-        include/pine/platform/opengl/framebuffer.hpp
         include/pine/platform/opengl/context.hpp
+        include/pine/platform/opengl/framebuffer.hpp
+        include/pine/platform/opengl/helpers.hpp
         include/pine/platform/opengl/renderer_api.hpp
         include/pine/platform/opengl/shader.hpp
         include/pine/platform/opengl/texture.hpp
@@ -65,8 +66,9 @@ target_sources(pine
         src/network/connection.cpp
         src/network/server.cpp
         src/platform/opengl/buffer.cpp
-        src/platform/opengl/framebuffer.cpp
         src/platform/opengl/context.cpp
+        src/platform/opengl/framebuffer.cpp
+        src/platform/opengl/helpers.cpp
         src/platform/opengl/renderer_api.cpp
         src/platform/opengl/shader.cpp
         src/platform/opengl/texture.cpp
@@ -97,7 +99,7 @@ find_package(glm REQUIRED)
 find_package(spdlog REQUIRED)
 find_package(stb REQUIRED)
 
-target_include_directories(pine PUBLIC include PRIVATE src)
+target_include_directories(pine PUBLIC include)
 
 target_link_libraries(pine
     PUBLIC 

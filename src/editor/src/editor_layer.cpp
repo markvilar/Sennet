@@ -16,12 +16,16 @@ void EditorLayer::on_attach()
     const auto& gui = Application::get().get_gui();
     gui.load_font(opensans.data(), opensans.size(), 18.0f);
 
-    if (!shader_library.load_shader("resources/shaders/quad_shader.glsl"))
-    {
-        PINE_ERROR("Failed to load shader.");
-    }
+    // NOTE: Goal for shader API
+    auto shader = create_shader("resources/shaders/quad.vert",
+        "resources/shaders/quad.frag");
 
-    // gui::set_dark_theme();
+    const auto shader_loaded =
+        shader_library.load_shader("resources/shaders/quad.vert",
+            "resources/shaders/quad.frag");
+
+    if (!shader_loaded)
+        PINE_ERROR("Failed to load shader.");
 
     FramebufferSpecs specs;
     specs.width = 0;

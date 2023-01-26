@@ -1,173 +1,25 @@
 #include "pine/platform/opengl/shader.hpp"
 
-#include <fstream>
-
 #include <glad/glad.h>
 
 #include "pine/pch.hpp"
+#include "pine/platform/opengl/helpers.hpp"
+#include "pine/utils/filesystem.hpp"
 #include "pine/utils/math.hpp"
 
 namespace pine
 {
 
-static auto to_opengl_shader_type(const std::string& type)
-{
-    if (type == "vertex")
-        return GL_VERTEX_SHADER;
-    if (type == "fragment" || type == "pixel")
-        return GL_FRAGMENT_SHADER;
+// ----------------------------------------------------------------------------
+// OpenGLShader
+// ----------------------------------------------------------------------------
 
-    PINE_CORE_ERROR("Could not convert shader type '{0}'", type);
-    PINE_CORE_ASSERT(false, "Unknown shader type!");
-    return 0;
-}
-
-OpenGLShader::OpenGLShader(const std::filesystem::path& filepath)
+OpenGLShader::OpenGLShader(const std::string& name, const RendererID id)
+    : shader_name(name), renderer_id(id)
 {
-    const auto source = read_file(filepath);
-    const auto shader_sources = preprocess(source);
-    compile_shader(shader_sources);
-    shader_name = filepath.stem();
-}
-
-OpenGLShader::OpenGLShader(const std::string& shader_name_,
-    const std::string& vertex_source,
-    const std::string& fragment_source)
-    : shader_name(shader_name_)
-{
-    std::unordered_map<GLenum, std::string> shader_sources;
-    shader_sources[GL_VERTEX_SHADER] = vertex_source;
-    shader_sources[GL_FRAGMENT_SHADER] = fragment_source;
-    compile_shader(shader_sources);
 }
 
 OpenGLShader::~OpenGLShader() { glDeleteProgram(renderer_id); }
-
-std::string OpenGLShader::read_file(const std::filesystem::path& filepath)
-{
-    std::string result;
-    std::ifstream input_stream(filepath, std::ios::in | std::ios::binary);
-    if (input_stream)
-    {
-        input_stream.seekg(0, std::ios::end);
-        result.resize(static_cast<uint32_t>(input_stream.tellg()));
-        input_stream.seekg(0, std::ios::beg);
-        input_stream.read(&result[0], static_cast<int>(result.size()));
-        input_stream.close();
-    }
-    else
-    {
-        PINE_CORE_ERROR("Could not open file '{0}'", filepath);
-    }
-
-    return result;
-}
-
-std::unordered_map<GLenum, std::string> OpenGLShader::preprocess(
-    const std::string& source)
-{
-    std::unordered_map<GLenum, std::string> shader_sources;
-
-    // TODO: Refine and clean up!
-    constexpr auto type_token = "#type";
-    const auto type_token_length = strlen(type_token);
-    auto pos = source.find(type_token, 0);
-    while (pos != std::string::npos)
-    {
-        const auto eol = source.find_first_of("\r\n", pos);
-        PINE_CORE_ASSERT(eol != std::string::npos,
-            "Syntax error in shader preprocessing!");
-        const auto begin = pos + type_token_length + 1;
-        const auto type = source.substr(begin, eol - begin);
-        PINE_CORE_ASSERT(to_opengl_shader_type(type),
-            "Invalid shader type specified!");
-
-        const auto next_line_pos = source.find_first_not_of("\r\n", eol);
-        pos = source.find(type_token, next_line_pos);
-
-        const auto entry_size = next_line_pos == std::string::npos
-            ? source.size() - 1
-            : next_line_pos;
-        shader_sources[static_cast<uint32_t>(to_opengl_shader_type(type))] =
-            source.substr(next_line_pos, pos - entry_size);
-    }
-
-    return shader_sources;
-}
-
-void OpenGLShader::compile_shader(
-    const std::unordered_map<GLenum, std::string>& shader_sources)
-{
-    const auto program = glCreateProgram();
-    PINE_CORE_ASSERT(shader_sources.size() <= 2,
-        "pine only supports 2 shaders for now.");
-    std::array<GLenum, 2> shader_ids;
-    auto shader_id_index = 0;
-    for (auto& source : shader_sources)
-    {
-        const auto& source_type = source.first;
-        const auto source_string = source.second.c_str();
-        const auto shader = glCreateShader(source_type);
-
-        glShaderSource(shader, 1, &source_string, 0);
-        glCompileShader(shader);
-
-        auto is_compiled = 0;
-        glGetShaderiv(shader, GL_COMPILE_STATUS, &is_compiled);
-        if (is_compiled == GL_FALSE)
-        {
-            auto max_length = 0;
-            glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &max_length);
-
-            std::vector<GLchar> info_log(static_cast<uint32_t>(max_length));
-            glGetShaderInfoLog(shader, max_length, &max_length, &info_log[0]);
-
-            glDeleteShader(shader);
-
-            // TODO: Add shader type logging.
-            PINE_CORE_ERROR("{0}", info_log.data());
-            PINE_CORE_ASSERT(false, "Shader compilation failure!")
-            break;
-        }
-
-        glAttachShader(program, shader);
-        shader_ids[static_cast<uint32_t>(shader_id_index++)] = shader;
-    }
-
-    glLinkProgram(program);
-
-    auto is_linked = 0;
-    // NOTE: Was const_cast<int*>(&is_linked)
-    glGetProgramiv(program, GL_LINK_STATUS, &is_linked);
-    if (is_linked == GL_FALSE)
-    {
-        auto max_length = 0;
-        glGetProgramiv(program, GL_INFO_LOG_LENGTH, &max_length);
-
-        // The max_length includes the NULL character
-        std::vector<GLchar> info_log(static_cast<uint32_t>(max_length));
-        glGetProgramInfoLog(program, max_length, &max_length, &info_log[0]);
-
-        // We don't need the program anymore.
-        glDeleteProgram(program);
-
-        for (auto id : shader_ids)
-        {
-            glDeleteShader(id);
-        }
-
-        PINE_CORE_ERROR("{0}", info_log.data());
-        PINE_CORE_ASSERT(false, "Shader link failure!");
-        return;
-    }
-
-    for (auto id : shader_ids)
-    {
-        glDetachShader(program, id);
-    }
-
-    renderer_id = program;
-}
 
 void OpenGLShader::bind() const { glUseProgram(renderer_id); }
 
@@ -261,5 +113,44 @@ void OpenGLShader::upload_uniform_mat4(const std::string& name,
     const auto location = glGetUniformLocation(renderer_id, name.c_str());
     glUniformMatrix4fv(location, 1, GL_FALSE, value_ptr(matrix));
 }
+
+// ----------------------------------------------------------------------------
+// Factory methods
+// ----------------------------------------------------------------------------
+
+namespace opengl
+{
+
+std::unique_ptr<OpenGLShader> create_shader(
+    const std::filesystem::path& vertex_file,
+    const std::filesystem::path& fragment_file)
+{
+    // Check that files exist
+    const auto vertex_exists = pine::filesystem::is_file(vertex_file);
+    const auto fragment_exists = pine::filesystem::is_file(fragment_file);
+
+    PINE_CORE_ASSERT(vertex_exists, "Vertex shader file does not exist.");
+    PINE_CORE_ASSERT(fragment_exists, "Fragment shader file does not exist.");
+
+    const auto name = vertex_file.stem();
+
+    // Read sources from file
+    const auto vertex_source = pine::filesystem::read_file_source(vertex_file);
+    const auto fragment_source =
+        pine::filesystem::read_file_source(fragment_file);
+
+    const auto program = compile_shader(vertex_source, fragment_source);
+    return std::make_unique<OpenGLShader>(name, program);
+}
+
+std::unique_ptr<OpenGLShader> create_shader(const std::string& name,
+    const std::string& vertex_source,
+    const std::string& fragment_source)
+{
+    const auto program = compile_shader(vertex_source, fragment_source);
+    return std::make_unique<OpenGLShader>(name, program);
+}
+
+} // namespace opengl
 
 } // namespace pine

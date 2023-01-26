@@ -91,7 +91,8 @@ QuadRenderData QuadRenderer::init()
         return samplers;
     }();
 
-    data.quad_shader = Shader::create("resources/shaders/quad_shader.glsl");
+    data.quad_shader = create_shader("resources/shaders/quad.vert",
+        "resources/shaders/quad.frag");
     data.quad_shader->bind();
     data.quad_shader->set_int_array("u_Textures",
         samplers.data(),

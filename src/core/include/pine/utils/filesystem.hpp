@@ -3,12 +3,13 @@
 #include <filesystem>
 #include <functional>
 #include <string>
+#include <string_view>
 
 namespace pine::filesystem
 {
 
 bool create_directory(const std::filesystem::path& directory);
-bool create_directory(const std::string& directory);
+bool create_directory(const std::string_view& directory);
 
 bool exists(const std::filesystem::path& filepath);
 bool exists(const std::string& filepath);
@@ -32,5 +33,7 @@ bool is_directory(const std::filesystem::path& filepath);
 
 bool set_working_directory(const std::filesystem::path& filepath);
 std::filesystem::path get_working_directory();
+
+std::string read_file_source(const std::filesystem::path& filepath);
 
 } // namespace pine::filesystem
