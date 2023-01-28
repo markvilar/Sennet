@@ -9,7 +9,6 @@
 
 namespace pine::gui
 {
-
 // Forward declaration
 class Context;
 class IO;

@@ -3,13 +3,10 @@
 #include <cstdint>
 #include <string>
 
+#include <glad/glad.h>
+
 namespace pine::opengl
 {
-
-// OpenGL types
-typedef uint32_t GLuint;
-typedef uint32_t GLenum;
-
 // Process shader program
 GLuint process_shader(const GLenum type, const std::string& source);
 

@@ -4,7 +4,6 @@
 
 namespace pine
 {
-
 class OpenGLFramebuffer : public Framebuffer
 {
 public:
@@ -32,7 +31,7 @@ private:
     RendererID renderer_id = 0;
     RendererID color_attachment = 0;
     RendererID depth_attachment = 0;
-    FramebufferSpecs specification;
+    FramebufferSpecs specification{};
 };
 
 } // namespace pine

@@ -4,7 +4,6 @@
 
 namespace pine::gui
 {
-
 void set_dark_theme();
 
 enum Color : int

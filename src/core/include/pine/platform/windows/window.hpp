@@ -12,7 +12,6 @@
 
 namespace pine
 {
-
 class WindowsWindow : public Window
 {
 public:

@@ -1,15 +1,14 @@
 #pragma once
 
-#include <memory>
-
 #include "pine/renderer/camera.hpp"
 #include "pine/renderer/shader.hpp"
 #include "pine/renderer/texture.hpp"
 #include "pine/utils/math.hpp"
 
+#include <memory>
+
 namespace pine
 {
-
 struct QuadVertex
 {
     Vec3 position = {};
@@ -30,9 +29,9 @@ struct QuadRenderCaps
 
     static constexpr Vec4 quad_vertex_positions[vertices_per_quad] = {
         {-0.5f, -0.5f, 0.0f, 1.0f},
-        {0.5f, -0.5f, 0.0f, 1.0f},
-        {0.5f, 0.5f, 0.0f, 1.0f},
-        {-0.5f, 0.5f, 0.0f, 1.0f},
+        {0.5f,  -0.5f, 0.0f, 1.0f},
+        {0.5f,  0.5f,  0.0f, 1.0f},
+        {-0.5f, 0.5f,  0.0f, 1.0f},
     };
 
     static constexpr Vec2 quad_texture_coordinates[vertices_per_quad] = {

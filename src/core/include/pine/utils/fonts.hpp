@@ -4,7 +4,6 @@
 
 namespace pine::fonts
 {
-
 static constexpr std::array<uint32_t, 40330> OpenSans = {
     0x0000bc57,
     0x00000000,

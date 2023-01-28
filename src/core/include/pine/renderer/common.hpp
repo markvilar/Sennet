@@ -2,7 +2,6 @@
 
 namespace pine
 {
-
 enum class RendererPrimitives
 {
     None,

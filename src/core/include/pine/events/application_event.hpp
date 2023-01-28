@@ -7,22 +7,22 @@
 
 namespace pine
 {
-
 class WindowResizeEvent : public Event
 {
 public:
-    WindowResizeEvent(unsigned int width, unsigned int height)
-        : m_width(width), m_height(height)
+    WindowResizeEvent(unsigned int width_, unsigned int height_)
+        : width(width_),
+          height(height_)
     {
     }
 
-    inline uint32_t get_width() const { return m_width; }
-    inline uint32_t get_height() const { return m_height; }
+    inline uint32_t get_width() const { return width; }
+    inline uint32_t get_height() const { return height; }
 
     std::string to_string() const override
     {
         std::stringstream ss;
-        ss << "[WindowResizeEvent] " << m_width << ", " << m_height;
+        ss << "[WindowResizeEvent] " << width << ", " << height;
         return ss.str();
     }
 
@@ -30,8 +30,8 @@ public:
     EVENT_CLASS_CATEGORY(EventCategoryApplication)
 
 private:
-    uint32_t m_width;
-    uint32_t m_height;
+    uint32_t width;
+    uint32_t height;
 };
 
 class WindowIconifyEvent : public Event
@@ -43,6 +43,7 @@ public:
 
     EVENT_CLASS_TYPE(WindowIconify)
     EVENT_CLASS_CATEGORY(EventCategoryApplication)
+
 private:
     bool m_minimized;
 };

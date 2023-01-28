@@ -9,7 +9,6 @@
 
 namespace pine
 {
-
 struct WindowSpecs
 {
     std::string title{"Window"};

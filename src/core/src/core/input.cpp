@@ -4,7 +4,6 @@
 
 namespace pine
 {
-
 std::unique_ptr<InputHandle> InputHandle::create(const Window& window)
 {
 #if defined(PINE_PLATFORM_LINUX)

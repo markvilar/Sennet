@@ -10,7 +10,6 @@
 
 namespace pine
 {
-
 static uint8_t s_glfw_window_count = 0;
 
 static void GLFWErrorCallback(int error, const char* description)
@@ -59,9 +58,10 @@ void LinuxWindow::init()
     set_vsync(true);
 
     glfwSetWindowSizeCallback(m_window,
-        [](NativeWindow* window, int width, int height) {
-            WindowData& data =
-                *static_cast<WindowData*>(glfwGetWindowUserPointer(window));
+        [](NativeWindow* window, int width, int height)
+        {
+            WindowData& data
+                = *static_cast<WindowData*>(glfwGetWindowUserPointer(window));
             data.width = static_cast<uint32_t>(width);
             data.height = static_cast<uint32_t>(height);
             WindowResizeEvent event(static_cast<uint32_t>(width),
@@ -70,28 +70,32 @@ void LinuxWindow::init()
         });
 
     glfwSetWindowIconifyCallback(m_window,
-        [](NativeWindow* window, int iconified) {
-            WindowData& data =
-                *static_cast<WindowData*>(glfwGetWindowUserPointer(window));
+        [](NativeWindow* window, int iconified)
+        {
+            WindowData& data
+                = *static_cast<WindowData*>(glfwGetWindowUserPointer(window));
             WindowIconifyEvent event(iconified == 1);
             data.event_callback(event);
         });
 
-    glfwSetWindowCloseCallback(m_window, [](NativeWindow* window) {
-        WindowData& data =
-            *static_cast<WindowData*>(glfwGetWindowUserPointer(window));
-        WindowCloseEvent event;
-        data.event_callback(event);
-    });
+    glfwSetWindowCloseCallback(m_window,
+        [](NativeWindow* window)
+        {
+            WindowData& data
+                = *static_cast<WindowData*>(glfwGetWindowUserPointer(window));
+            WindowCloseEvent event;
+            data.event_callback(event);
+        });
 
     glfwSetKeyCallback(m_window,
         [](NativeWindow* window,
             int key,
             [[maybe_unused]] int scancode,
             int action,
-            [[maybe_unused]] int mods) {
-            WindowData& data =
-                *static_cast<WindowData*>(glfwGetWindowUserPointer(window));
+            [[maybe_unused]] int mods)
+        {
+            WindowData& data
+                = *static_cast<WindowData*>(glfwGetWindowUserPointer(window));
             switch (action)
             {
             case GLFW_PRESS:
@@ -115,20 +119,23 @@ void LinuxWindow::init()
             }
         });
 
-    glfwSetCharCallback(m_window, [](NativeWindow* window, unsigned int key) {
-        WindowData& data =
-            *static_cast<WindowData*>(glfwGetWindowUserPointer(window));
-        KeyTypedEvent event(static_cast<KeyCode>(key));
-        data.event_callback(event);
-    });
+    glfwSetCharCallback(m_window,
+        [](NativeWindow* window, unsigned int key)
+        {
+            WindowData& data
+                = *static_cast<WindowData*>(glfwGetWindowUserPointer(window));
+            KeyTypedEvent event(static_cast<KeyCode>(key));
+            data.event_callback(event);
+        });
 
     glfwSetMouseButtonCallback(m_window,
         [](NativeWindow* window,
             int button,
             int action,
-            [[maybe_unused]] int mods) {
-            WindowData& data =
-                *static_cast<WindowData*>(glfwGetWindowUserPointer(window));
+            [[maybe_unused]] int mods)
+        {
+            WindowData& data
+                = *static_cast<WindowData*>(glfwGetWindowUserPointer(window));
             switch (action)
             {
             case GLFW_PRESS:
@@ -147,18 +154,20 @@ void LinuxWindow::init()
         });
 
     glfwSetScrollCallback(m_window,
-        [](NativeWindow* window, const double offset_x, const double offset_y) {
-            WindowData& data =
-                *static_cast<WindowData*>(glfwGetWindowUserPointer(window));
+        [](NativeWindow* window, const double offset_x, const double offset_y)
+        {
+            WindowData& data
+                = *static_cast<WindowData*>(glfwGetWindowUserPointer(window));
             MouseScrolledEvent event(static_cast<float>(offset_x),
                 static_cast<float>(offset_y));
             data.event_callback(event);
         });
 
     glfwSetCursorPosCallback(m_window,
-        [](NativeWindow* window, const double pos_x, const double pos_y) {
-            WindowData& data =
-                *static_cast<WindowData*>(glfwGetWindowUserPointer(window));
+        [](NativeWindow* window, const double pos_x, const double pos_y)
+        {
+            WindowData& data
+                = *static_cast<WindowData*>(glfwGetWindowUserPointer(window));
             MouseMovedEvent event(static_cast<float>(pos_x),
                 static_cast<float>(pos_y));
             data.event_callback(event);

@@ -5,7 +5,6 @@
 
 namespace pine
 {
-
 enum class TextureFormat : uint8_t
 {
     UNKNOWN,

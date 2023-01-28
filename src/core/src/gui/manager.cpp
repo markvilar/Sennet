@@ -1,19 +1,20 @@
 #include "pine/gui/manager.hpp"
 
-// FIXME: GUI implementation abstraction
+#include <glad/glad.h>
+
 #include <GLFW/glfw3.h>
+
 #include <backends/imgui_impl_glfw.h>
 #include <backends/imgui_impl_opengl3.h>
-#include <glad/glad.h>
 #include <imgui.h>
 
+// FIXME: GUI implementation abstraction
 #include "pine/gui/common.hpp"
 #include "pine/gui/style.hpp"
 #include "pine/pch.hpp"
 
 namespace pine::gui
 {
-
 std::unique_ptr<Context> create_context(Window* window)
 {
     return std::make_unique<Context>(window);
@@ -150,7 +151,8 @@ bool IO::want_capture_keyboard() const
 // ----------------------------------------------------------------------------
 
 Manager::Manager(std::unique_ptr<Context>& context_, std::unique_ptr<IO>& io_)
-    : context(std::move(context_)), io(std::move(io_))
+    : context(std::move(context_)),
+      io(std::move(io_))
 {
     auto config_flags = io->get_config_flags();
     config_flags |= ConfigFlagOptions::ENABLE_KEYBOARD;
@@ -234,8 +236,8 @@ void Manager::on_event(Event& event) const
 {
     if (handle_event)
     {
-        event.handled |=
-            event.is_in_category(EventCategoryMouse) & io->want_capture_mouse();
+        event.handled |= event.is_in_category(EventCategoryMouse)
+            & io->want_capture_mouse();
         event.handled |= event.is_in_category(EventCategoryKeyboard)
             & io->want_capture_keyboard();
     }

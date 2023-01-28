@@ -7,7 +7,6 @@
 
 namespace pine
 {
-
 constexpr bool is_indices_within_capabilities(const uint32_t index_count)
 {
     return index_count
@@ -29,15 +28,15 @@ void update_quad_vertices(QuadRenderData& data,
 {
     for (uint32_t i = 0; i < QuadRenderCaps::vertices_per_quad; i++)
     {
-        data.quad_vertices[data.quad_vertex_count].position =
-            transform * QuadRenderCaps::quad_vertex_positions[i];
+        data.quad_vertices[data.quad_vertex_count].position
+            = transform * QuadRenderCaps::quad_vertex_positions[i];
         data.quad_vertices[data.quad_vertex_count].color = color;
-        data.quad_vertices[data.quad_vertex_count].texture_coordinates =
-            QuadRenderCaps::quad_texture_coordinates[i];
-        data.quad_vertices[data.quad_vertex_count].texture_index =
-            texture_index;
-        data.quad_vertices[data.quad_vertex_count].tiling_factor =
-            tiling_factor;
+        data.quad_vertices[data.quad_vertex_count].texture_coordinates
+            = QuadRenderCaps::quad_texture_coordinates[i];
+        data.quad_vertices[data.quad_vertex_count].texture_index
+            = texture_index;
+        data.quad_vertices[data.quad_vertex_count].tiling_factor
+            = tiling_factor;
         data.quad_vertex_count++;
     }
 
@@ -49,20 +48,21 @@ QuadRenderData QuadRenderer::init()
 {
     QuadRenderData data;
 
-    auto vertex_buffer =
-        VertexBuffer::create(QuadRenderCaps::max_vertices * sizeof(QuadVertex));
+    auto vertex_buffer = VertexBuffer::create(
+        QuadRenderCaps::max_vertices * sizeof(QuadVertex));
     vertex_buffer->set_layout({
-        {"a_Position", ShaderDataType::Float3},
-        {"a_Color", ShaderDataType::Float4},
-        {"a_TexCoord", ShaderDataType::Float2},
-        {"a_TexIndex", ShaderDataType::Uint},
-        {"a_TilingFactor", ShaderDataType::Float},
+        {"a_Position",     ShaderDataType::Float3},
+        {"a_Color",        ShaderDataType::Float4},
+        {"a_TexCoord",     ShaderDataType::Float2},
+        {"a_TexIndex",     ShaderDataType::Uint  },
+        {"a_TilingFactor", ShaderDataType::Float },
     });
 
     data.quad_vertex_array = VertexArray::create();
     data.quad_vertex_array->set_vertex_buffer(std::move(vertex_buffer));
 
-    constexpr auto quad_indices = []() {
+    constexpr auto quad_indices = []()
+    {
         std::array<uint32_t, QuadRenderCaps::max_indices> indices{};
         uint32_t offset = 0;
         for (uint32_t i = 0; i < indices.size();
@@ -84,7 +84,8 @@ QuadRenderData QuadRenderer::init()
     data.quad_vertex_array->set_index_buffer(
         IndexBuffer::create(quad_indices.data(), quad_indices.size()));
 
-    static constexpr auto samplers = []() {
+    static constexpr auto samplers = []()
+    {
         std::array<int32_t, QuadRenderCaps::max_texture_slots> samplers = {};
         for (uint32_t i = 0; i < samplers.size(); i++)
             samplers[i] = static_cast<int>(i);
@@ -253,7 +254,6 @@ void QuadRenderer::draw_rotated_quad(QuadRenderData& data,
     const float tiling_factor,
     const Vec4& tint_color)
 {
-
     Mat4 transform = translate(Mat4(1.0f), position)
         * rotate(Mat4(1.0f), rotation, Vec3(0.0f, 0.0f, 1.0f))
         * scale(Mat4(1.0f), Vec3(size.x, size.y, 1.0f));

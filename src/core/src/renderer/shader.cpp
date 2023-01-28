@@ -6,7 +6,6 @@
 
 namespace pine
 {
-
 std::unique_ptr<Shader> create_shader(const std::filesystem::path& vertex_file,
     const std::filesystem::path& fragment_file)
 {
@@ -58,8 +57,8 @@ void ShaderLibrary::add_shader(const std::shared_ptr<Shader>& shader)
 bool ShaderLibrary::load_shader(const std::filesystem::path& vertex_file,
     const std::filesystem::path& fragment_file)
 {
-    const std::shared_ptr<Shader> shader =
-        create_shader(vertex_file, fragment_file);
+    const std::shared_ptr<Shader> shader
+        = create_shader(vertex_file, fragment_file);
     PINE_CORE_ASSERT(shader, "Shader is null.");
     add_shader(shader->get_name(), shader);
     return shader ? true : false;
