@@ -5,7 +5,6 @@
 
 namespace pine
 {
-
 class OpenGLVertexBuffer : public VertexBuffer
 {
 public:

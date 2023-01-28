@@ -6,7 +6,6 @@
 
 namespace pine
 {
-
 void OpenGLRendererAPI::init()
 {
     glEnable(GL_BLEND);
@@ -38,8 +37,9 @@ void OpenGLRendererAPI::clear()
 void OpenGLRendererAPI::draw_indexed(const VertexArray& vertex_array,
     const uint32_t index_count)
 {
-    const uint32_t count =
-        index_count ? vertex_array.get_index_buffer().get_count() : index_count;
+    const uint32_t count = index_count
+        ? vertex_array.get_index_buffer().get_count()
+        : index_count;
     vertex_array.bind();
     glDrawElements(GL_TRIANGLES,
         static_cast<GLsizei>(count),

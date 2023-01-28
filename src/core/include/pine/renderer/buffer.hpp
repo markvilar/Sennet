@@ -1,15 +1,14 @@
 #pragma once
 
+#include "pine/core/common.hpp"
+#include "pine/renderer/common.hpp"
+
 #include <memory>
 #include <string>
 #include <vector>
 
-#include "pine/core/common.hpp"
-#include "pine/renderer/common.hpp"
-
 namespace pine
 {
-
 struct VertexBufferElement
 {
     std::string name = "";
@@ -22,8 +21,11 @@ struct VertexBufferElement
     VertexBufferElement(const std::string& vertex_name,
         const ShaderDataType data_type,
         const bool is_data_normalized = false)
-        : name(vertex_name), type(data_type), size(get_size(data_type)),
-          component_count(get_count(data_type)), offset(0),
+        : name(vertex_name),
+          type(data_type),
+          size(get_size(data_type)),
+          component_count(get_count(data_type)),
+          offset(0),
           normalized(is_data_normalized)
     {
     }

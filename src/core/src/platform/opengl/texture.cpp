@@ -1,18 +1,19 @@
 #include "pine/platform/opengl/texture.hpp"
-#include "pine/pch.hpp"
 
 #include <filesystem>
 #include <fstream>
 
 #include <glad/glad.h>
 
+#include "pine/pch.hpp"
+
 namespace pine
 {
-
 GLenum to_opengl_internal_format(const ImageFormat& image_format)
 {
     const auto texture_format = static_cast<TextureFormat>(image_format);
-    const auto internal_format = [texture_format]() {
+    const auto internal_format = [texture_format]()
+    {
         switch (texture_format)
         {
         case TextureFormat::UNKNOWN:
@@ -40,7 +41,8 @@ GLenum to_opengl_internal_format(const ImageFormat& image_format)
 GLenum to_opengl_data_format(const ImageFormat& image_format)
 {
     const auto texture_format = static_cast<TextureFormat>(image_format);
-    const auto internal_format = [texture_format]() {
+    const auto internal_format = [texture_format]()
+    {
         switch (texture_format)
         {
         case TextureFormat::UNKNOWN:
@@ -71,7 +73,8 @@ OpenGLTexture2D::OpenGLTexture2D(const std::filesystem::path& image_path)
 }
 
 OpenGLTexture2D::OpenGLTexture2D(const Image& image)
-    : width(image.get_width()), height(image.get_height())
+    : width(image.get_width()),
+      height(image.get_height())
 {
     glCreateTextures(GL_TEXTURE_2D, 1, &renderer_id);
 

@@ -1,14 +1,13 @@
 #pragma once
 
-#include <cstdint>
-#include <memory>
-
 #include "pine/renderer/renderer_api.hpp"
 #include "pine/utils/math.hpp"
 
+#include <cstdint>
+#include <memory>
+
 namespace pine
 {
-
 class RenderCommand
 {
 public:

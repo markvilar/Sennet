@@ -10,7 +10,6 @@
 
 namespace pine
 {
-
 Application* Application::instance = nullptr;
 
 Application::Application(const ApplicationSpecs& specs) : specification(specs)
@@ -88,17 +87,14 @@ void Application::on_event(Event& event)
 {
     EventDispatcher dispatcher(event);
     dispatcher.dispatch<WindowCloseEvent>(
-        [this](WindowCloseEvent& event) -> bool {
-            return on_window_close(event);
-        });
+        [this](WindowCloseEvent& event) -> bool
+        { return on_window_close(event); });
     dispatcher.dispatch<WindowResizeEvent>(
-        [this](WindowResizeEvent& event) -> bool {
-            return on_window_resize(event);
-        });
+        [this](WindowResizeEvent& event) -> bool
+        { return on_window_resize(event); });
     dispatcher.dispatch<WindowIconifyEvent>(
-        [this](WindowIconifyEvent& event) -> bool {
-            return on_window_iconify(event);
-        });
+        [this](WindowIconifyEvent& event) -> bool
+        { return on_window_iconify(event); });
 
     // Handle event in the GUI first.
     gui->on_event(event);

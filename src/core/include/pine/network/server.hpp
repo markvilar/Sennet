@@ -11,7 +11,6 @@
 
 namespace pine
 {
-
 struct ServerState
 {
     NetworkContext context{};
@@ -22,10 +21,10 @@ struct ServerState
     LockedQueue<std::vector<uint8_t>> message_queue{};
 
     // Callbacks
-    std::function<bool(const ConnectionState&)> connection_callback =
-        [](const ConnectionState&) { return false; };
-    std::function<void(const std::vector<uint8_t>&)> message_callback =
-        [](const std::vector<uint8_t>&) {};
+    std::function<bool(const ConnectionState&)> connection_callback
+        = [](const ConnectionState&) { return false; };
+    std::function<void(const std::vector<uint8_t>&)> message_callback
+        = [](const std::vector<uint8_t>&) {};
 
 public:
     ServerState(const uint16_t port);
@@ -60,7 +59,8 @@ void send_to_client(ServerState& server,
 inline void listen_for_clients(ServerState& server)
 {
     server.acceptor.async_accept(
-        [&server](const std::error_code ec, SocketType socket) {
+        [&server](const std::error_code ec, SocketType socket)
+        {
             if (!ec)
             {
                 auto client = std::make_shared<ConnectionState>(server.context,
@@ -87,8 +87,8 @@ inline bool start_server(ServerState& server)
     try
     {
         listen_for_clients(server);
-        server.context_thread =
-            std::thread([&server]() { server.context.run(); });
+        server.context_thread
+            = std::thread([&server]() { server.context.run(); });
     }
     catch (const std::exception& error)
     {

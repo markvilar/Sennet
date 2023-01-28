@@ -1,7 +1,7 @@
 #pragma once
-#include "pine/pch.hpp"
 
 #include "pine/core/common.hpp"
+#include "pine/pch.hpp"
 
 namespace pine
 {
@@ -81,21 +81,21 @@ bool dispatch_event(const Event& event, const Callable& callable)
 class EventDispatcher
 {
 public:
-    EventDispatcher(Event& event) : m_event(event) {}
+    EventDispatcher(Event& event_) : event(event_) {}
 
     template <typename T, typename F>
     bool dispatch(const F& func)
     {
-        if (m_event.get_event_type() == T::get_static_type())
+        if (event.get_event_type() == T::get_static_type())
         {
-            m_event.handled = func(static_cast<T&>(m_event));
+            event.handled = func(static_cast<T&>(event));
             return true;
         }
         return false;
     }
 
 private:
-    Event& m_event;
+    Event& event;
 };
 
 inline std::ostream& operator<<(std::ostream& os, Event& event)

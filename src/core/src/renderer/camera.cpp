@@ -6,7 +6,6 @@
 
 namespace pine
 {
-
 OrthographicCamera::OrthographicCamera(const float left,
     const float right,
     const float bottom,
@@ -24,10 +23,11 @@ void OrthographicCamera::set_projection(const float left,
     projection_matrix = ortho(left, right, bottom, top, -1.0f, 1.0f);
 }
 
-OrthographicCameraController::OrthographicCameraController(
-    const float aspect_ratio,
+OrthographicCameraController::OrthographicCameraController(const float
+                                                               aspect_ratio,
     const bool rotation)
-    : aspect_ratio(aspect_ratio), rotation_enabled(rotation),
+    : aspect_ratio(aspect_ratio),
+      rotation_enabled(rotation),
       camera(-aspect_ratio * zoom_level,
           aspect_ratio * zoom_level,
           -zoom_level,
@@ -81,15 +81,13 @@ void OrthographicCameraController::on_event(Event& event)
 {
     EventDispatcher dispatcher(event);
     dispatcher.dispatch<MouseScrolledEvent>(
-        [this](const MouseScrolledEvent& event) -> bool {
-            return on_mouse_scrolled(event);
-        });
+        [this](const MouseScrolledEvent& event) -> bool
+        { return on_mouse_scrolled(event); });
 
     // PINE_BIND_EVENT_FN(OrthographicCameraController::on_mouse_scrolled));
     dispatcher.dispatch<WindowResizeEvent>(
-        [this](const WindowResizeEvent& event) -> bool {
-            return on_window_resized(event);
-        });
+        [this](const WindowResizeEvent& event) -> bool
+        { return on_window_resized(event); });
 
     // PINE_BIND_EVENT_FN(OrthographicCameraController::on_window_resized));
 }

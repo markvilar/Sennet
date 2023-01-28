@@ -10,7 +10,6 @@
 
 namespace pine
 {
-
 static uint8_t s_glfw_window_count = 0;
 
 static void GLFWErrorCallback(int error, const char* description)
@@ -54,15 +53,16 @@ void WindowsWindow::Init()
         ++s_glfw_window_count;
     }
 
-    m_context =
-        std::unique_ptr<GraphicsContext>(GraphicsContext::create(m_window));
+    m_context
+        = std::unique_ptr<GraphicsContext>(GraphicsContext::create(m_window));
     m_context->init();
 
     glfwSetWindowUserPointer(m_window, &m_data);
     set_vsync(true);
 
     glfwSetWindowSizeCallback(m_window,
-        [](GLFWwindow* window, int width, int height) {
+        [](GLFWwindow* window, int width, int height)
+        {
             WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
             data.width = width;
             data.height = height;
@@ -71,20 +71,24 @@ void WindowsWindow::Init()
         });
 
     glfwSetWindowIconifyCallback(m_window,
-        [](GLFWwindow* window, int iconified) {
+        [](GLFWwindow* window, int iconified)
+        {
             WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
             WindowIconifyEvent event(iconified == 1);
             data.event_callback(event);
         });
 
-    glfwSetWindowCloseCallback(m_window, [](GLFWwindow* window) {
-        WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
-        WindowCloseEvent event;
-        data.event_callback(event);
-    });
+    glfwSetWindowCloseCallback(m_window,
+        [](GLFWwindow* window)
+        {
+            WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
+            WindowCloseEvent event;
+            data.event_callback(event);
+        });
 
     glfwSetKeyCallback(m_window,
-        [](GLFWwindow* window, int key, int scancode, int action, int mods) {
+        [](GLFWwindow* window, int key, int scancode, int action, int mods)
+        {
             WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
             switch (action)
             {
@@ -109,14 +113,17 @@ void WindowsWindow::Init()
             }
         });
 
-    glfwSetCharCallback(m_window, [](GLFWwindow* window, unsigned int key) {
-        WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
-        KeyTypedEvent event(static_cast<KeyCode>(key));
-        data.event_callback(event);
-    });
+    glfwSetCharCallback(m_window,
+        [](GLFWwindow* window, unsigned int key)
+        {
+            WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
+            KeyTypedEvent event(static_cast<KeyCode>(key));
+            data.event_callback(event);
+        });
 
     glfwSetMouseButtonCallback(m_window,
-        [](GLFWwindow* window, int button, int action, int mods) {
+        [](GLFWwindow* window, int button, int action, int mods)
+        {
             WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
             switch (action)
             {
@@ -136,14 +143,16 @@ void WindowsWindow::Init()
         });
 
     glfwSetScrollCallback(m_window,
-        [](GLFWwindow* window, double offset_x, double offset_y) {
+        [](GLFWwindow* window, double offset_x, double offset_y)
+        {
             WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
             MouseScrolledEvent event((float)offset_x, (float)offset_y);
             data.event_callback(event);
         });
 
     glfwSetCursorPosCallback(m_window,
-        [](GLFWwindow* window, double pos_x, double pos_y) {
+        [](GLFWwindow* window, double pos_x, double pos_y)
+        {
             WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
             MouseMovedEvent event((float)pos_x, (float)pos_y);
             data.event_callback(event);

@@ -8,7 +8,6 @@
 
 namespace pine
 {
-
 struct ConnectionState
 {
     using size_t = uint64_t;
@@ -23,7 +22,9 @@ public:
     ConnectionState(NetworkContext& context,
         SocketType socket,
         LockedQueue<std::vector<uint8_t>>& owner_queue)
-        : socket(std::move(socket)), context(context), read_queue(owner_queue)
+        : socket(std::move(socket)),
+          context(context),
+          read_queue(owner_queue)
     {
     }
 

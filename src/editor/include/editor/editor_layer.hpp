@@ -6,7 +6,6 @@
 
 namespace pine
 {
-
 class EditorLayer : public Layer
 {
 public:

@@ -6,7 +6,6 @@
 
 namespace pine
 {
-
 class OpenGLContext : public GraphicsContext
 {
 public:

@@ -8,7 +8,6 @@
 
 namespace pine::gui
 {
-
 inline void empty_space(const float width, const float height)
 {
     ImGui::Dummy({width, height});
@@ -95,8 +94,9 @@ auto dropdown(const char* name,
     static_assert(std::is_copy_constructible_v<T>,
         "T must be copy constructible.");
 
-    static typename std::array<std::pair<const char*, T>, N>::size_type
-        label_index = 0;
+    static
+        typename std::array<std::pair<const char*, T>, N>::size_type label_index
+        = 0;
 
     // Set label index based on the value of t.
     for (size_t index = 0; index < options.size(); index++)
@@ -184,8 +184,8 @@ auto slider_scalar(const char* name,
     const T max_value)
 {
     static_assert(std::is_scalar<T>::value, "T must be scalar");
-    static_assert(
-        std::is_integral<T>::value || std::is_floating_point<T>::value,
+    static_assert(std::is_integral<T>::value
+            || std::is_floating_point<T>::value,
         "T must be integral or floating point.");
 
     const auto type = get_internal_type<T>();
@@ -196,8 +196,8 @@ template <typename T>
 auto input_scalar(const char* name, T* value, const char* format = nullptr)
 {
     static_assert(std::is_scalar<T>::value, "T must be scalar");
-    static_assert(
-        std::is_integral<T>::value || std::is_floating_point<T>::value,
+    static_assert(std::is_integral<T>::value
+            || std::is_floating_point<T>::value,
         "T must be integral or floating point.");
 
     const auto type = get_internal_type<T>();
