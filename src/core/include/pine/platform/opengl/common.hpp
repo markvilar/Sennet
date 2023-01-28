@@ -2,11 +2,10 @@
 
 #include <cstdint>
 
+#include <glad/glad.h>
+
 namespace pine
 {
-
-using GLenum = uint32_t;
-
 static constexpr GLenum to_opengl(const ShaderDataType type)
 {
     switch (type)

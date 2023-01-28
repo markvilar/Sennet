@@ -10,7 +10,6 @@
 
 namespace pine
 {
-
 Application* Application::instance = nullptr;
 
 Application::Application(const ApplicationSpecs& specs) : specification(specs)
@@ -43,7 +42,7 @@ Application::Application(const ApplicationSpecs& specs) : specification(specs)
 
     Renderer::init();
 
-    gui = GraphicalInterface::create(window.get());
+    gui = gui::create_manager(window.get());
 }
 
 Application::~Application()
@@ -89,27 +88,18 @@ void Application::on_event(Event& event)
     EventDispatcher dispatcher(event);
     dispatcher.dispatch<WindowCloseEvent>(
         [this](WindowCloseEvent& event) -> bool
-        {
-            return on_window_close(event);
-        });
+        { return on_window_close(event); });
     dispatcher.dispatch<WindowResizeEvent>(
         [this](WindowResizeEvent& event) -> bool
-        {
-            return on_window_resize(event);
-        });
+        { return on_window_resize(event); });
     dispatcher.dispatch<WindowIconifyEvent>(
         [this](WindowIconifyEvent& event) -> bool
-        {
-            return on_window_iconify(event);
-        });
-
-    //PINE_BIND_EVENT_FN(Application::on_window_close));
-    //PINE_BIND_EVENT_FN(Application::on_window_resize));
-    //PINE_BIND_EVENT_FN(Application::on_window_iconify));
+        { return on_window_iconify(event); });
 
     // Handle event in the GUI first.
     gui->on_event(event);
 
+    // Propagate event down the layer stack.
     for (auto it = layer_stack.end(); it != layer_stack.begin();)
     {
         if (event.handled)

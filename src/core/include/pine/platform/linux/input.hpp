@@ -4,7 +4,6 @@
 
 namespace pine
 {
-
 class LinuxInputHandle : public InputHandle
 {
 public:
@@ -20,4 +19,4 @@ private:
     const Window* window;
 };
 
-}
+} // namespace pine

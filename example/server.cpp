@@ -1,6 +1,6 @@
-#include <csignal>
-
 #include "pine/pine.hpp"
+
+#include <csignal>
 
 static bool exit_flag = false;
 
@@ -30,7 +30,6 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char** argv)
                 std::string(message.begin(), message.end()));
         });
 
-    
     pine::start_server(server);
 
     while (!exit_flag)

@@ -7,32 +7,27 @@
 #include "pine/renderer/shader.hpp"
 #include "pine/utils/math.hpp"
 
-// TODO: Remove!
-typedef unsigned int GLenum;
-
 namespace pine
 {
-
 class OpenGLShader : public Shader
 {
 public:
-    OpenGLShader(const std::filesystem::path& filepath);
-    OpenGLShader(const std::string& name, const std::string& vertex_source,
-        const std::string& fragment_source);
+    OpenGLShader(const std::string& shader_name, const RendererID id);
     virtual ~OpenGLShader();
 
     OpenGLShader(const OpenGLShader&) = delete;
-    OpenGLShader(OpenGLShader&&) = default;
+    OpenGLShader(OpenGLShader&&) = delete;
 
     OpenGLShader& operator=(const OpenGLShader&) = delete;
-    OpenGLShader& operator=(OpenGLShader&&) = default;
+    OpenGLShader& operator=(OpenGLShader&&) = delete;
 
     virtual void bind() const override;
     virtual void unbind() const override;
 
     virtual void set_int(const std::string& name,
         const int value) const override;
-    virtual void set_int_array(const std::string& name, const int* values,
+    virtual void set_int_array(const std::string& name,
+        const int* values,
         const uint32_t count) const override;
     virtual void set_float(const std::string& name,
         const float value) const override;
@@ -43,10 +38,11 @@ public:
     virtual void set_mat4(const std::string& name,
         const Mat4& value) const override;
 
-    virtual const std::string& get_name() const override { return m_name; }
+    virtual const std::string& get_name() const override { return shader_name; }
 
     void upload_uniform_int(const std::string& name, const int value) const;
-    void upload_uniform_int_array(const std::string& name, const int* values,
+    void upload_uniform_int_array(const std::string& name,
+        const int* values,
         const uint32_t count) const;
 
     void upload_uniform_float(const std::string& name, const float value) const;
@@ -61,15 +57,22 @@ public:
     void upload_uniform_mat4(const std::string& name, const Mat4& matrix) const;
 
 private:
-    std::string read_file(const std::filesystem::path& filepath);
-    std::unordered_map<GLenum, std::string> preprocess(
-        const std::string& source);
-    void compile_shader(
-        const std::unordered_map<GLenum, std::string>& shader_sources);
-
-private:
-    RendererID m_renderer_id;
-    std::string m_name;
+    std::string shader_name{};
+    RendererID renderer_id{};
 };
+
+namespace opengl
+{
+// Create from files
+std::unique_ptr<OpenGLShader>
+create_shader(const std::filesystem::path& vertex_file,
+    const std::filesystem::path& fragment_file);
+
+// Create from source
+std::unique_ptr<OpenGLShader> create_shader(const std::string& name,
+    const std::string& vertex_source,
+    const std::string& fragment_source);
+
+} // namespace opengl
 
 } // namespace pine

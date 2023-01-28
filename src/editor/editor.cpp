@@ -1,16 +1,17 @@
+#include "editor/editor_layer.hpp"
+#include "pine/pine.hpp"
+
 #include <filesystem>
 #include <memory>
 #include <string>
 
-#include "pine/pine.hpp"
-
-#include "editor/editor_layer.hpp"
-
 class Editor : public pine::Application
 {
 public:
-    Editor(const pine::ApplicationSpecs& specs, const std::string& project_path)
-        : pine::Application(specs), m_project_path(project_path)
+    Editor(const pine::ApplicationSpecs& specs,
+        const std::string& project_path_)
+        : pine::Application(specs),
+          project_path(project_path_)
     {
         push_layer(new pine::EditorLayer());
     }
@@ -18,27 +19,27 @@ public:
     ~Editor() {}
 
 private:
-    std::filesystem::path m_project_path;
-    std::filesystem::path m_storage_path;
+    std::filesystem::path project_path;
+    std::filesystem::path storage_path;
 };
 
 class EditorFactory : public pine::ApplicationFactory
 {
 public:
-    EditorFactory(int argc, char** argv) : m_argc(argc), m_argv(argv) {}
+    EditorFactory(int argc_, char** argv_) : argc(argc_), argv(argv_) {}
 
     virtual ~EditorFactory() = default;
 
     std::unique_ptr<pine::Application> create_application() override
     {
-        const auto argc = m_argc;
-        const auto argv = m_argv;
+        const auto count = argc;
+        const auto arguments = argv;
 
-        const auto project_path = [argc, argv]()
+        const auto project_path = [count, arguments]()
         {
-            if (argc > 1)
+            if (count > 1)
             {
-                return std::string(argv[1]);
+                return std::string(arguments[1]);
             }
             else
             {
@@ -61,8 +62,8 @@ public:
     }
 
 private:
-    int m_argc;
-    char** m_argv;
+    int argc;
+    char** argv;
 };
 
 int main(int argc, char** argv)

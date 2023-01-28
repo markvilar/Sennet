@@ -1,14 +1,13 @@
 #pragma once
 
-#include <cstdint>
-#include <memory>
-
 #include "pine/core/common.hpp"
 #include "pine/renderer/renderer_api.hpp"
 
+#include <cstdint>
+#include <memory>
+
 namespace pine
 {
-
 struct FramebufferSpecs
 {
     uint32_t width = 0;
@@ -33,8 +32,7 @@ public:
     virtual RendererID get_color_attachment_renderer_id() const = 0;
 
     virtual const FramebufferSpecs& get_specification() const = 0;
-    static std::unique_ptr<Framebuffer> create(
-        const FramebufferSpecs& specs);
+    static std::unique_ptr<Framebuffer> create(const FramebufferSpecs& specs);
 };
 
 } // namespace pine

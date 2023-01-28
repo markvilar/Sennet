@@ -1,7 +1,7 @@
 #pragma once
-#include "pine/pch.hpp"
 
 #include "pine/core/common.hpp"
+#include "pine/pch.hpp"
 
 namespace pine
 {
@@ -38,24 +38,15 @@ enum EventCategory
 };
 
 #define EVENT_CLASS_TYPE(type)                                                 \
-    static EventType get_static_type()                                         \
-    {                                                                          \
-        return EventType::type;                                                \
-    }                                                                          \
+    static EventType get_static_type() { return EventType::type; }             \
     virtual EventType get_event_type() const override                          \
     {                                                                          \
         return get_static_type();                                              \
     }                                                                          \
-    virtual const char* get_name() const override                              \
-    {                                                                          \
-        return #type;                                                          \
-    }
+    virtual const char* get_name() const override { return #type; }
 
 #define EVENT_CLASS_CATEGORY(category)                                         \
-    virtual int get_category_flags() const override                            \
-    {                                                                          \
-        return category;                                                       \
-    }
+    virtual int get_category_flags() const override { return category; }
 
 class Event
 {
@@ -90,21 +81,21 @@ bool dispatch_event(const Event& event, const Callable& callable)
 class EventDispatcher
 {
 public:
-    EventDispatcher(Event& event) : m_event(event) {}
+    EventDispatcher(Event& event_) : event(event_) {}
 
     template <typename T, typename F>
     bool dispatch(const F& func)
     {
-        if (m_event.get_event_type() == T::get_static_type())
+        if (event.get_event_type() == T::get_static_type())
         {
-            m_event.handled = func(static_cast<T&>(m_event));
+            event.handled = func(static_cast<T&>(event));
             return true;
         }
         return false;
     }
 
 private:
-    Event& m_event;
+    Event& event;
 };
 
 inline std::ostream& operator<<(std::ostream& os, Event& event)

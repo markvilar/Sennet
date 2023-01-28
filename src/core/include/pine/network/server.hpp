@@ -11,7 +11,6 @@
 
 namespace pine
 {
-
 struct ServerState
 {
     NetworkContext context{};
@@ -22,10 +21,10 @@ struct ServerState
     LockedQueue<std::vector<uint8_t>> message_queue{};
 
     // Callbacks
-    std::function<bool(const ConnectionState&)> connection_callback =
-        [](const ConnectionState&){ return false; };
-    std::function<void(const std::vector<uint8_t>&)> message_callback =
-        [](const std::vector<uint8_t>&){};
+    std::function<bool(const ConnectionState&)> connection_callback
+        = [](const ConnectionState&) { return false; };
+    std::function<void(const std::vector<uint8_t>&)> message_callback
+        = [](const std::vector<uint8_t>&) {};
 
 public:
     ServerState(const uint16_t port);
@@ -53,7 +52,7 @@ public:
 
 void stop_server(ServerState& server);
 void send_to_client(ServerState& server,
-    const std::shared_ptr<ConnectionState>& client, 
+    const std::shared_ptr<ConnectionState>& client,
     const uint8_t* data,
     const uint64_t size);
 
@@ -88,7 +87,8 @@ inline bool start_server(ServerState& server)
     try
     {
         listen_for_clients(server);
-        server.context_thread = std::thread([&server]() { server.context.run(); });
+        server.context_thread
+            = std::thread([&server]() { server.context.run(); });
     }
     catch (const std::exception& error)
     {
@@ -98,7 +98,7 @@ inline bool start_server(ServerState& server)
     return true;
 }
 
-inline void update_server(ServerState& server, 
+inline void update_server(ServerState& server,
     const uint64_t max_messages = std::numeric_limits<uint64_t>::max())
 {
     uint64_t message_count = 0;

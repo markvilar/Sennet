@@ -4,7 +4,6 @@
 #define STBI_NO_GIF
 #define STB_IMAGE_IMPLEMENTATION
 #define STB_IMAGE_WRITE_IMPLEMENTATION
-
 #include <stb_image.h>
 #include <stb_image_write.h>
 
@@ -13,7 +12,6 @@
 
 namespace pine
 {
-
 constexpr ImageFormat parse_image_format(const int channels)
 {
     switch (channels)
@@ -80,9 +78,13 @@ constexpr uint32_t get_format_channel_count(const ImageFormat format)
     return 0;
 }
 
-Image::Image(const uint8_t* data, const uint32_t width, const uint32_t height,
+Image::Image(const uint8_t* data,
+    const uint32_t width,
+    const uint32_t height,
     const ImageFormat format)
-    : width(width), height(height), format(format)
+    : width(width),
+      height(height),
+      format(format)
 {
     const auto channels = get_format_channel_count(format);
     buffer = std::vector<uint8_t>(data, data + width * height * channels);
@@ -94,8 +96,8 @@ Image read_image(const std::filesystem::path& filepath, const bool flip)
 
     stbi_set_flip_vertically_on_load(flip);
 
-    const auto data =
-        stbi_load(filepath.c_str(), &width, &height, &channels, 0);
+    const auto data
+        = stbi_load(filepath.c_str(), &width, &height, &channels, 0);
     const auto format = parse_image_format(channels);
 
     return Image(data,
@@ -105,7 +107,8 @@ Image read_image(const std::filesystem::path& filepath, const bool flip)
 }
 
 Image read_image(const std::filesystem::path& filepath,
-    const ImageFormat format, const bool flip)
+    const ImageFormat format,
+    const bool flip)
 {
     int width, height, channels = 0;
     auto desired_channels = get_format_channel_count(format);
@@ -124,7 +127,8 @@ Image read_image(const std::filesystem::path& filepath,
         format);
 }
 
-bool write_image(const std::filesystem::path& filepath, const Image& image,
+bool write_image(const std::filesystem::path& filepath,
+    const Image& image,
     const bool flip)
 {
     const auto file_extension = filepath.extension();

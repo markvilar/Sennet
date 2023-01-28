@@ -1,32 +1,13 @@
 #pragma once
 
+#include <string_view>
+
 #include "pine/gui/common.hpp"
 #include "pine/renderer/framebuffer.hpp"
 #include "pine/utils/math.hpp"
 
-
 namespace pine::gui
 {
-
-struct PanelState
-{
-    Vec2 position;
-    Vec2 size;
-    bool focused;
-    bool hovered;
-};
-
-inline PanelState get_panel_state()
-{
-    PanelState state;
-    state.position = { ImGui::GetWindowPos().x, ImGui::GetWindowPos().y };
-    state.size = { ImGui::GetWindowSize().x, ImGui::GetWindowSize().y } ;
-    state.focused = ImGui::IsWindowFocused();
-    state.hovered = ImGui::IsWindowHovered();
-
-    return state;
-}
-
 inline void empty_space(const float width, const float height)
 {
     ImGui::Dummy({width, height});
@@ -83,8 +64,7 @@ inline auto render_dockspace(const char* name, const bool fullscreen = true)
 
     const auto io = ImGui::GetIO();
 
-    [[maybe_unused]]
-    auto style = ImGui::GetStyle();
+    [[maybe_unused]] auto style = ImGui::GetStyle();
 
     ImGuiDockNodeFlags dockspace_flags = ImGuiDockNodeFlags_None;
 
@@ -102,46 +82,10 @@ inline auto render_dockspace(const char* name, const bool fullscreen = true)
     ImGui::End();
 }
 
-template <typename Function>
-auto render_window(const char* name, const Function func)
-{
-    ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(5, 5));
-    ImGui::Begin(name, nullptr, 0);
-    ImGui::PopStyleVar();
-    func();
-
-    const auto state = get_panel_state();
-
-    ImGui::End();
-
-    return state;
-}
-
-inline auto render_viewport(const char* name, const Framebuffer& framebuffer)
-{
-    ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0, 0));
-    ImGui::Begin(name,
-        nullptr,
-        ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoScrollbar
-            | ImGuiWindowFlags_NoScrollWithMouse);
-    ImGui::PopStyleVar();
-
-    const auto state = get_panel_state();
-    const auto texture_id = framebuffer.get_color_attachment_renderer_id();
-
-    ImGui::Image(reinterpret_cast<void*>(texture_id),
-        ImVec2{state.size.x, state.size.y},
-        ImVec2{0, 1},
-        ImVec2{1, 0});
-
-    ImGui::End();
-
-    return state;
-}
-
-// TODO: Improve templating - Allow container to be vector. (C++20s std::span)
+// FIXME: Improve templating - Allow container to be vector. (C++20s std::span)
 template <typename T, size_t N>
-auto dropdown(const char* name, T* t,
+auto dropdown(const char* name,
+    T* t,
     const std::array<std::pair<const char*, T>, N> options)
 {
     static_assert(std::is_trivial<T>::value, "T must be trivial.");
@@ -150,8 +94,9 @@ auto dropdown(const char* name, T* t,
     static_assert(std::is_copy_constructible_v<T>,
         "T must be copy constructible.");
 
-    static typename std::array<std::pair<const char*, T>, N>::size_type
-        label_index = 0;
+    static
+        typename std::array<std::pair<const char*, T>, N>::size_type label_index
+        = 0;
 
     // Set label index based on the value of t.
     for (size_t index = 0; index < options.size(); index++)
@@ -185,10 +130,57 @@ auto dropdown(const char* name, T* t,
     return *t;
 }
 
-// TODO: Fix implicit template deduction. Literal types ruin template argument
+template <typename T>
+constexpr auto get_internal_type()
+{
+    if constexpr (std::is_same<T, int8_t>::value)
+    {
+        return ImGuiDataType_S8;
+    }
+    else if constexpr (std::is_same<T, int16_t>::value)
+    {
+        return ImGuiDataType_S16;
+    }
+    else if constexpr (std::is_same<T, int32_t>::value)
+    {
+        return ImGuiDataType_S32;
+    }
+    else if constexpr (std::is_same<T, int64_t>::value)
+    {
+        return ImGuiDataType_S64;
+    }
+    else if constexpr (std::is_same<T, uint8_t>::value)
+    {
+        return ImGuiDataType_U8;
+    }
+    else if constexpr (std::is_same<T, uint16_t>::value)
+    {
+        return ImGuiDataType_U16;
+    }
+    else if constexpr (std::is_same<T, uint32_t>::value)
+    {
+        return ImGuiDataType_U32;
+    }
+    else if constexpr (std::is_same<T, uint64_t>::value)
+    {
+        return ImGuiDataType_U64;
+    }
+    else if constexpr (std::is_same<T, float>::value)
+    {
+        return ImGuiDataType_Float;
+    }
+    else if constexpr (std::is_same<T, double>::value)
+    {
+        return ImGuiDataType_Double;
+    }
+}
+
+// FIXME: Fix implicit template deduction. Literal types ruin template argument
 // deduction.
 template <typename T>
-auto slider_scalar(const char* name, T* value, const T min_value,
+auto slider_scalar(const char* name,
+    T* value,
+    const T min_value,
     const T max_value)
 {
     static_assert(std::is_scalar<T>::value, "T must be scalar");
@@ -196,49 +188,20 @@ auto slider_scalar(const char* name, T* value, const T min_value,
             || std::is_floating_point<T>::value,
         "T must be integral or floating point.");
 
-    ImGuiDataType type = ImGuiDataType_S8;
-    if constexpr (std::is_same<T, int8_t>::value)
-    {
-        type = ImGuiDataType_S8;
-    }
-    else if constexpr (std::is_same<T, int16_t>::value)
-    {
-        type = ImGuiDataType_S16;
-    }
-    else if constexpr (std::is_same<T, int32_t>::value)
-    {
-        type = ImGuiDataType_S32;
-    }
-    else if constexpr (std::is_same<T, int64_t>::value)
-    {
-        type = ImGuiDataType_S64;
-    }
-    else if constexpr (std::is_same<T, uint8_t>::value)
-    {
-        type = ImGuiDataType_U8;
-    }
-    else if constexpr (std::is_same<T, uint16_t>::value)
-    {
-        type = ImGuiDataType_U16;
-    }
-    else if constexpr (std::is_same<T, uint32_t>::value)
-    {
-        type = ImGuiDataType_U32;
-    }
-    else if constexpr (std::is_same<T, uint64_t>::value)
-    {
-        type = ImGuiDataType_U64;
-    }
-    else if constexpr (std::is_same<T, float>::value)
-    {
-        type = ImGuiDataType_Float;
-    }
-    else if constexpr (std::is_same<T, double>::value)
-    {
-        type = ImGuiDataType_Double;
-    }
+    const auto type = get_internal_type<T>();
+    ImGui::SliderScalar(name, type, value, &min_value, &max_value);
+}
 
-    return ImGui::SliderScalar(name, type, value, &min_value, &max_value);
+template <typename T>
+auto input_scalar(const char* name, T* value, const char* format = nullptr)
+{
+    static_assert(std::is_scalar<T>::value, "T must be scalar");
+    static_assert(std::is_integral<T>::value
+            || std::is_floating_point<T>::value,
+        "T must be integral or floating point.");
+
+    const auto type = get_internal_type<T>();
+    ImGui::InputScalar(name, type, value, nullptr, nullptr, format);
 }
 
 } // namespace pine::gui

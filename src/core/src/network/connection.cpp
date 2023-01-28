@@ -6,7 +6,6 @@
 
 namespace pine
 {
-
 bool is_connected(const ConnectionState& connection)
 {
     return connection.socket.is_open();
@@ -32,7 +31,6 @@ void connect_to_client(ConnectionState& connection)
 void connect_to_server(ConnectionState& connection,
     const ResolveType& endpoints)
 {
-    // TODO: Set up timeout.
     asio::async_connect(connection.socket,
         endpoints,
         [&connection](const std::error_code error,
@@ -52,8 +50,6 @@ void read_message_size(ConnectionState& connection)
 {
     auto message_size = std::make_shared<uint64_t>(0);
 
-    // TODO: Look into solution for copying message_size into asio, instead
-    // of making it shared.
     asio::async_read(connection.socket,
         asio::mutable_buffer(&*message_size.get(), sizeof(*message_size.get())),
         [&connection, message_size](const std::error_code error,
@@ -78,7 +74,6 @@ void read_message_size(ConnectionState& connection)
 
 void read_message(ConnectionState& connection, const uint64_t size)
 {
-
     auto message = std::make_shared<std::vector<uint8_t>>();
     message->resize(size);
 
@@ -116,8 +111,8 @@ void send(ConnectionState& connection, const uint8_t* data, const uint64_t size)
 
 void write_message_size(ConnectionState& connection)
 {
-    auto message_size =
-        std::make_shared<uint64_t>(connection.write_queue.front().size());
+    auto message_size
+        = std::make_shared<uint64_t>(connection.write_queue.front().size());
 
     // TODO: Look at possibility to move the size into asio, and not use a
     // shared pointer.

@@ -6,7 +6,6 @@
 
 namespace pine
 {
-
 class OpenGLContext : public GraphicsContext
 {
 public:
@@ -16,7 +15,7 @@ public:
     virtual void swap_buffers() override;
 
 private:
-    GLFWwindow* m_window_handle;
+    GLFWwindow* window_handle;
 };
 
 } // namespace pine

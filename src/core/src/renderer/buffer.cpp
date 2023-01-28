@@ -7,7 +7,6 @@
 
 namespace pine
 {
-
 void VertexBufferLayout::calculate_offset_and_stride()
 {
     m_stride = [this]()

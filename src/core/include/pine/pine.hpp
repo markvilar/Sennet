@@ -11,13 +11,12 @@
 #include "pine/core/timestep.hpp"
 #include "pine/core/window.hpp"
 
-// Debug stuff
-#include "pine/debug/instrumentor.hpp"
-
 // Graphical user interface
 #include "pine/gui/common.hpp"
-#include "pine/gui/graphical_interface.hpp"
+#include "pine/gui/manager.hpp"
+#include "pine/gui/style.hpp"
 #include "pine/gui/widgets.hpp"
+#include "pine/gui/window.hpp"
 
 // Network
 #include "pine/network/client.hpp"
@@ -39,5 +38,6 @@
 
 // Utils
 #include "pine/utils/filesystem.hpp"
+#include "pine/utils/fonts.hpp"
 #include "pine/utils/locked_queue.hpp"
 #include "pine/utils/math.hpp"

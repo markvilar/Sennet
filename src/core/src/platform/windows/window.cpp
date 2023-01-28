@@ -10,7 +10,6 @@
 
 namespace pine
 {
-
 static uint8_t s_glfw_window_count = 0;
 
 static void GLFWErrorCallback(int error, const char* description)
@@ -54,8 +53,8 @@ void WindowsWindow::Init()
         ++s_glfw_window_count;
     }
 
-    m_context =
-        std::unique_ptr<GraphicsContext>(GraphicsContext::create(m_window));
+    m_context
+        = std::unique_ptr<GraphicsContext>(GraphicsContext::create(m_window));
     m_context->init();
 
     glfwSetWindowUserPointer(m_window, &m_data);

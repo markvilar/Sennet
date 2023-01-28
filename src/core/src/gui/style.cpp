@@ -6,22 +6,9 @@
 
 namespace pine::gui
 {
-
-WindowFlags configure_window_flags(const bool fullscreen)
+void set_dark_theme()
 {
-    ImGuiWindowFlags window_flags = ImGuiWindowFlags_MenuBar;
-    if (fullscreen)
-    {
-        window_flags |= ImGuiWindowFlags_NoTitleBar
-            | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize
-            | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoBringToFrontOnFocus
-            | ImGuiWindowFlags_NoNavFocus;
-    }
-    return window_flags;
-}
-
-void set_dark_theme(Style& style)
-{
+    auto& style = ImGui::GetStyle();
     auto& colors = style.Colors;
     colors[ImGuiCol_WindowBg] = ImVec4(0.1f, 0.105f, 0.11f, 1.0f);
 

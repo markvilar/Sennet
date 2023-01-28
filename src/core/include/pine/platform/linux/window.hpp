@@ -12,9 +12,10 @@
 
 namespace pine
 {
-
 class LinuxWindow : public Window
 {
+    using NativeWindow = GLFWwindow;
+
 public:
     LinuxWindow(const WindowSpecs& specs);
     virtual ~LinuxWindow();
@@ -52,11 +53,11 @@ private:
         uint32_t height;
         bool vsync;
 
-        EventCallbackFn event_callback;
+        EventCallbackFn event_callback = [](Event&) {};
     };
 
 private:
-    GLFWwindow* m_window;
+    NativeWindow* m_window;
     std::unique_ptr<GraphicsContext> m_context;
 
     WindowSpecs m_specification;

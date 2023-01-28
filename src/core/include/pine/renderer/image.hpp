@@ -5,7 +5,6 @@
 
 namespace pine
 {
-
 enum class TextureFormat : uint8_t
 {
     UNKNOWN,
@@ -45,7 +44,9 @@ public:
     Image(const Image& image) = default;
     Image(Image&& image) = default;
 
-    Image(const uint8_t* data, const uint32_t width, const uint32_t height,
+    Image(const uint8_t* data,
+        const uint32_t width,
+        const uint32_t height,
         const ImageFormat format);
 
     ~Image() = default;
@@ -69,9 +70,11 @@ private:
 Image read_image(const std::filesystem::path& filepath,
     const bool flip = false);
 Image read_image(const std::filesystem::path& filepath,
-    const ImageFormat format, const bool flip = false);
+    const ImageFormat format,
+    const bool flip = false);
 
-bool write_image(const std::filesystem::path& filepath, const Image& image,
+bool write_image(const std::filesystem::path& filepath,
+    const Image& image,
     const bool flip = false);
 
 } // namespace pine

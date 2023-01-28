@@ -1,21 +1,22 @@
 #pragma once
 
-#include <cstdint>
-#include <memory>
-
 #include "pine/renderer/renderer_api.hpp"
 #include "pine/utils/math.hpp"
 
+#include <cstdint>
+#include <memory>
+
 namespace pine
 {
-
 class RenderCommand
 {
 public:
     inline static void init() { s_renderer_api->init(); }
 
-    inline static void set_viewport(const uint32_t x, const uint32_t y,
-        const uint32_t width, const uint32_t height)
+    inline static void set_viewport(const uint32_t x,
+        const uint32_t y,
+        const uint32_t width,
+        const uint32_t height)
     {
         s_renderer_api->set_viewport(x, y, width, height);
     }

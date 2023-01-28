@@ -7,19 +7,15 @@
 #include "pine/core/layer.hpp"
 #include "pine/core/timestep.hpp"
 #include "pine/core/window.hpp"
-
 #include "pine/events/application_event.hpp"
 #include "pine/events/event.hpp"
-
+#include "pine/gui/manager.hpp"
 #include "pine/renderer/renderer.hpp"
-
-#include "pine/gui/graphical_interface.hpp"
 
 int main(int argc, char** argv);
 
 namespace pine
 {
-
 struct ApplicationSpecs
 {
     std::string name = "Default App";
@@ -36,7 +32,6 @@ struct ApplicationSpecs
 
 class Application
 {
-
 public:
     Application(const ApplicationSpecs& specs);
     virtual ~Application();
@@ -58,11 +53,8 @@ public:
     void render_gui();
 
     inline Window& get_window() const { return *window; }
-    inline GraphicalInterface& get_graphical_interface() const 
-    { 
-        return *gui; 
-    }
-    
+    inline gui::Manager& get_gui() const { return *gui; }
+
     static inline Application& get() { return *instance; }
 
     inline const ApplicationSpecs& get_specification() const
@@ -79,7 +71,7 @@ private:
     ApplicationSpecs specification;
 
     std::unique_ptr<Window> window;
-    std::unique_ptr<GraphicalInterface> gui;
+    std::unique_ptr<gui::Manager> gui;
 
     LayerStack layer_stack;
 

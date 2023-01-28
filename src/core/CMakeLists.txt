@@ -14,21 +14,24 @@ target_sources(pine
         include/pine/core/platform.hpp
         include/pine/core/timestep.hpp
         include/pine/core/window.hpp
-        include/pine/debug/instrumentor.hpp
         include/pine/events/application_event.hpp
         include/pine/events/event.hpp
         include/pine/events/key_event.hpp
         include/pine/events/mouse_event.hpp
         include/pine/gui/common.hpp
-        include/pine/gui/graphical_interface.hpp
+        include/pine/gui/manager.hpp
+        include/pine/gui/style.hpp
+        include/pine/gui/widgets.hpp
+        include/pine/gui/window.hpp
         include/pine/network/client.hpp
         include/pine/network/connection.hpp
         include/pine/network/server.hpp
         include/pine/network/types.hpp
         include/pine/platform/opengl/buffer.hpp
         include/pine/platform/opengl/common.hpp
-        include/pine/platform/opengl/framebuffer.hpp
         include/pine/platform/opengl/context.hpp
+        include/pine/platform/opengl/framebuffer.hpp
+        include/pine/platform/opengl/helpers.hpp
         include/pine/platform/opengl/renderer_api.hpp
         include/pine/platform/opengl/shader.hpp
         include/pine/platform/opengl/texture.hpp
@@ -48,6 +51,7 @@ target_sources(pine
         include/pine/renderer/shader.hpp
         include/pine/renderer/texture.hpp
         include/pine/utils/filesystem.hpp
+        include/pine/utils/fonts.hpp
         include/pine/utils/math.hpp
         include/pine/utils/locked_queue.hpp
     PRIVATE 
@@ -55,14 +59,16 @@ target_sources(pine
         src/core/input.cpp
         src/core/layer.cpp
         src/core/log.cpp
-        src/gui/common.cpp
-        src/gui/graphical_interface.cpp
+        src/gui/manager.cpp
+        src/gui/style.cpp
+        src/gui/window.cpp
         src/network/client.cpp
         src/network/connection.cpp
         src/network/server.cpp
         src/platform/opengl/buffer.cpp
-        src/platform/opengl/framebuffer.cpp
         src/platform/opengl/context.cpp
+        src/platform/opengl/framebuffer.cpp
+        src/platform/opengl/helpers.cpp
         src/platform/opengl/renderer_api.cpp
         src/platform/opengl/shader.cpp
         src/platform/opengl/texture.cpp
@@ -93,7 +99,7 @@ find_package(glm REQUIRED)
 find_package(spdlog REQUIRED)
 find_package(stb REQUIRED)
 
-target_include_directories(pine PUBLIC include PRIVATE src)
+target_include_directories(pine PUBLIC include)
 
 target_link_libraries(pine
     PUBLIC 
@@ -105,8 +111,8 @@ target_link_libraries(pine
         glad::glad 
         glfw::glfw 
         stb::stb
-        pine::options
-        $<$<BOOL:${PINE_BUILD_WARNINGS}>:pine::warnings>
+        $<$<BOOL:${PINE_SANITIZERS_ENABLE}>:pine::options>
+        $<$<BOOL:${PINE_WARNINGS_ENABLE}>:pine::warnings>
 )
 
 if(MSVC)

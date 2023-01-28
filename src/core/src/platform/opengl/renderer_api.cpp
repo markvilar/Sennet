@@ -6,7 +6,6 @@
 
 namespace pine
 {
-
 void OpenGLRendererAPI::init()
 {
     glEnable(GL_BLEND);
@@ -14,8 +13,10 @@ void OpenGLRendererAPI::init()
     glEnable(GL_DEPTH_TEST);
 }
 
-void OpenGLRendererAPI::set_viewport(const uint32_t x, const uint32_t y,
-    const uint32_t width, const uint32_t height)
+void OpenGLRendererAPI::set_viewport(const uint32_t x,
+    const uint32_t y,
+    const uint32_t width,
+    const uint32_t height)
 {
     glViewport(static_cast<GLint>(x),
         static_cast<GLint>(y),
@@ -36,8 +37,9 @@ void OpenGLRendererAPI::clear()
 void OpenGLRendererAPI::draw_indexed(const VertexArray& vertex_array,
     const uint32_t index_count)
 {
-    const uint32_t count =
-        index_count ? vertex_array.get_index_buffer().get_count() : index_count;
+    const uint32_t count = index_count
+        ? vertex_array.get_index_buffer().get_count()
+        : index_count;
     vertex_array.bind();
     glDrawElements(GL_TRIANGLES,
         static_cast<GLsizei>(count),

@@ -1,7 +1,7 @@
+#include "pine/pine.hpp"
+
 #include <chrono>
 #include <thread>
-
-#include "pine/pine.hpp"
 
 static bool exit_flag = false;
 

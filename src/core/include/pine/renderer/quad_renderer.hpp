@@ -1,15 +1,14 @@
 #pragma once
 
-#include <memory>
-
 #include "pine/renderer/camera.hpp"
 #include "pine/renderer/shader.hpp"
 #include "pine/renderer/texture.hpp"
 #include "pine/utils/math.hpp"
 
+#include <memory>
+
 namespace pine
 {
-
 struct QuadVertex
 {
     Vec3 position = {};
@@ -30,9 +29,9 @@ struct QuadRenderCaps
 
     static constexpr Vec4 quad_vertex_positions[vertices_per_quad] = {
         {-0.5f, -0.5f, 0.0f, 1.0f},
-        {0.5f, -0.5f, 0.0f, 1.0f},
-        {0.5f, 0.5f, 0.0f, 1.0f},
-        {-0.5f, 0.5f, 0.0f, 1.0f},
+        {0.5f,  -0.5f, 0.0f, 1.0f},
+        {0.5f,  0.5f,  0.0f, 1.0f},
+        {-0.5f, 0.5f,  0.0f, 1.0f},
     };
 
     static constexpr Vec2 quad_texture_coordinates[vertices_per_quad] = {
@@ -86,37 +85,61 @@ void end_scene(QuadRenderData& data);
 void flush(QuadRenderData& data);
 void flush_and_reset(QuadRenderData& data);
 
-void draw_quad(QuadRenderData& data, const Vec2& position, const Vec2& size,
+void draw_quad(QuadRenderData& data,
+    const Vec2& position,
+    const Vec2& size,
     const Vec4& color);
-void draw_quad(QuadRenderData& data, const Vec3& position, const Vec2& size,
+void draw_quad(QuadRenderData& data,
+    const Vec3& position,
+    const Vec2& size,
     const Vec4& color);
-void draw_quad(QuadRenderData& data, const Vec2& position, const Vec2& size,
-    const std::shared_ptr<Texture2D>& texture, const float tilingFactor = 1.0f,
+void draw_quad(QuadRenderData& data,
+    const Vec2& position,
+    const Vec2& size,
+    const std::shared_ptr<Texture2D>& texture,
+    const float tilingFactor = 1.0f,
     const Vec4& tintColor = Vec4(1.0f));
-void draw_quad(QuadRenderData& data, const Vec3& position, const Vec2& size,
-    const std::shared_ptr<Texture2D>& texture, const float tilingFactor = 1.0f,
-    const Vec4& tintColor = Vec4(1.0f));
-
-void draw_rotated_quad(QuadRenderData& data, const Vec2& position,
-    const Vec2& size, const float rotation, const Vec4& color);
-
-void draw_rotated_quad(QuadRenderData& data, const Vec3& position,
-    const Vec2& size, const float rotation, const Vec4& color);
-
-void draw_rotated_quad(QuadRenderData& data, const Vec2& position,
-    const Vec2& size, const float rotation,
-    const std::shared_ptr<Texture2D>& texture, const float tilingFactor = 1.0f,
+void draw_quad(QuadRenderData& data,
+    const Vec3& position,
+    const Vec2& size,
+    const std::shared_ptr<Texture2D>& texture,
+    const float tilingFactor = 1.0f,
     const Vec4& tintColor = Vec4(1.0f));
 
-void draw_rotated_quad(QuadRenderData& data, const Vec3& position,
-    const Vec2& size, const float rotation,
-    const std::shared_ptr<Texture2D>& texture, const float tilingFactor = 1.0f,
+void draw_rotated_quad(QuadRenderData& data,
+    const Vec2& position,
+    const Vec2& size,
+    const float rotation,
+    const Vec4& color);
+
+void draw_rotated_quad(QuadRenderData& data,
+    const Vec3& position,
+    const Vec2& size,
+    const float rotation,
+    const Vec4& color);
+
+void draw_rotated_quad(QuadRenderData& data,
+    const Vec2& position,
+    const Vec2& size,
+    const float rotation,
+    const std::shared_ptr<Texture2D>& texture,
+    const float tilingFactor = 1.0f,
+    const Vec4& tintColor = Vec4(1.0f));
+
+void draw_rotated_quad(QuadRenderData& data,
+    const Vec3& position,
+    const Vec2& size,
+    const float rotation,
+    const std::shared_ptr<Texture2D>& texture,
+    const float tilingFactor = 1.0f,
     const Vec4& tintColor = Vec4(1.0f));
 
 void draw_quad(QuadRenderData& data, const Mat4& transform, const Vec4& color);
 
-void draw_quad(QuadRenderData& data, const Mat4& transform,
-    const std::shared_ptr<Texture2D>& texture, const float tilingFactor = 1.0f,
+void draw_quad(QuadRenderData& data,
+    const Mat4& transform,
+    const std::shared_ptr<Texture2D>& texture,
+    const float tilingFactor = 1.0f,
     const Vec4& tintColor = Vec4(1.0f));
 } // namespace QuadRenderer
 

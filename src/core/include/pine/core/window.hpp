@@ -9,14 +9,13 @@
 
 namespace pine
 {
-
 struct WindowSpecs
 {
-    std::string title;
-    uint32_t width;
-    uint32_t height;
-    bool fullscreen;
-    bool vsync;
+    std::string title{"Window"};
+    uint32_t width{1280};
+    uint32_t height{720};
+    bool fullscreen{false};
+    bool vsync{true};
 };
 
 class Window
@@ -36,6 +35,7 @@ public:
 
     virtual uint32_t get_width() const = 0;
     virtual uint32_t get_height() const = 0;
+
     virtual std::pair<uint32_t, uint32_t> get_size() const = 0;
     virtual std::pair<float, float> get_position() const = 0;
 

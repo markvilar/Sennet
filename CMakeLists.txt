@@ -2,14 +2,16 @@ cmake_minimum_required(VERSION 3.16)
 
 project(pine VERSION 0.3.0 LANGUAGES CXX)
 
-option(PINE_USE_CONAN "Use Conan for package management." ON)
+option(PINE_CONAN_ENABLE "Use Conan for package management." ON)
 
 # Build options
-option(PINE_BUILD_SHARED "Build shared library." ON)
-option(PINE_BUILD_WARNINGS "Enable compiler warnings." ON)
-option(PINE_BUILD_EDITOR "Build editor." ON)
-option(PINE_BUILD_EXAMPLES "Build examples." OFF)
-option(PINE_BUILD_TESTS "Build test." OFF)
+option(PINE_SANITIZERS_ENABLE "Enable sanitizers." ON)
+option(PINE_WARNINGS_ENABLE "Enable compiler warnings." ON)
+
+# Build targets
+option(PINE_EDITOR_ENABLE "Build editor." ON)
+option(PINE_EXAMPLE_ENABLE "Build examples." ON)
+option(PINE_TEST_ENABLE "Build test." ON)
 
 include(cmake/project_settings.cmake)
 include(cmake/prevent_in_source_build.cmake)
@@ -24,7 +26,7 @@ add_library(warnings INTERFACE)
 add_library(pine::warnings ALIAS warnings)
 
 # Use conan for package management
-if(PINE_USE_CONAN)
+if(PINE_CONAN_ENABLE)
     if(CONAN_EXPORTED)
         include(conanbuildinfo.cmake)
         conan_basic_setup()
@@ -58,17 +60,19 @@ include(cmake/static_analyzers.cmake)
 include(cmake/doxygen.cmake)
 enable_doxygen()
 
-# Add library core, resources, and dependencies
+# Add library, resources, and dependencies built by the project
 add_subdirectory(src)
 add_subdirectory(resources)
 add_subdirectory(vendor)
 
 # Add examples
-if(PINE_BUILD_EXAMPLES)
-    add_subdirectory(examples)
+if(PINE_EXAMPLE_ENABLE)
+    add_subdirectory(example)
 endif()
 
 # Add tests
-if(PINE_BUILD_TESTS)
-    add_subdirectory(tests)
+if(PINE_TEST_ENABLE)
+    include(CTest)
+    enable_testing()
+    add_subdirectory(test)
 endif()

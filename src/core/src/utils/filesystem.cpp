@@ -1,16 +1,17 @@
 #include "pine/utils/filesystem.hpp"
 
+#include <fstream>
+
 #include "pine/pch.hpp"
 
 namespace pine
 {
-
 bool filesystem::create_directory(const std::filesystem::path& directory)
 {
     return std::filesystem::create_directory(directory);
 }
 
-bool filesystem::create_directory(const std::string& directory)
+bool filesystem::create_directory(const std::string_view& directory)
 {
     return std::filesystem::create_directory(directory);
 }
@@ -50,8 +51,8 @@ bool filesystem::move_file(const std::filesystem::path& filepath,
 bool filesystem::rename_file(const std::filesystem::path& old_filepath,
     const std::string& new_name)
 {
-    auto new_filepath =
-        old_filepath.parent_path() / new_name / old_filepath.extension();
+    auto new_filepath
+        = old_filepath.parent_path() / new_name / old_filepath.extension();
     return move(old_filepath, new_filepath);
 }
 
@@ -98,6 +99,30 @@ bool filesystem::set_working_directory(const std::filesystem::path& filepath)
 std::filesystem::path filesystem::get_working_directory()
 {
     return std::filesystem::current_path();
+}
+
+std::string filesystem::read_file_source(const std::filesystem::path& filepath)
+{
+    if (!pine::filesystem::is_file(filepath))
+    {
+        return "";
+    }
+    std::string source;
+    std::ifstream input_stream(filepath, std::ios::in | std::ios::binary);
+    if (input_stream)
+    {
+        input_stream.seekg(0, std::ios::end);
+        source.resize(static_cast<uint32_t>(input_stream.tellg()));
+        input_stream.seekg(0, std::ios::beg);
+        input_stream.read(&source[0], static_cast<int>(source.size()));
+        input_stream.close();
+    }
+    else
+    {
+        PINE_CORE_ERROR("Could not open file '{0}'", filepath);
+    }
+
+    return source;
 }
 
 } // namespace pine
