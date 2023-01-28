@@ -37,34 +37,36 @@ MaxEmptyLinesToKeep: 1
 # Alignment
 # -----------------------------------------------------------------------------
 
-AlignAfterOpenBracket: DontAlign
-
-# AlignArrayOfStructures: Right # Clang-format 13
-# AlignConsecutiveBitFields: AcrossEmptyLines # Clang-format 11
-
+# Align consecutive
+AlignConsecutiveBitFields: AcrossEmptyLines
+AlignConsecutiveMacros
 AlignConsecutiveAssignments: false
 AlignConsecutiveMacros: AcrossEmptyLines
-AlignTrailingComments: Always
-AlignAfterOpenBracket: DontAlign
 AlignConsecutiveMacros: false
 AlignConsecutiveAssignments: false
 AlignConsecutiveDeclarations: false
+
+# Pointer / reference
+PointerAlignment: Left
+ReferenceAlignment: Left
+
+# Various
+AlignArrayOfStructures: Left
+AlignTrailingComments: Always
+AlignAfterOpenBracket: DontAlign
 AlignEscapedNewlines: Right
 AlignOperands: false
 AlignTrailingComments: true
-
-PointerAlignment: Left
-# ReferenceAlignment: Left # Clang-format 13
 
 # -----------------------------------------------------------------------------
 # Allowance
 # -----------------------------------------------------------------------------
 
-# Packing
+# Allow all
 AllowAllArgumentsOnNextLine: false
 AllowAllParametersOfDeclarationOnNextLine: false
 
-# Single line
+# Allow short
 AllowShortBlocksOnASingleLine: Never
 AllowShortCaseLabelsOnASingleLine: false
 AllowShortFunctionsOnASingleLine: All
@@ -86,6 +88,8 @@ AlwaysBreakTemplateDeclarations: Yes
 BinPackArguments: false
 BinPackParameters: false
 
+PackConstructorInitializers: CurrentLine
+
 # Wrap
 BraceWrapping:
   AfterCaseLabel: true
@@ -99,12 +103,15 @@ BraceWrapping:
   AfterExternBlock: true
   BeforeCatch: true
   BeforeElse: true
-  #BeforeLambdaBody: true  # Find relevant version of Clang-format
-  #BeforeWhile: true       # Find relevant version of Clang-format
+  BeforeLambdaBody: true
+  BeforeWhile: true
   IndentBraces: false
   SplitEmptyFunction: true
   SplitEmptyRecord: true
   SplitEmptyNamespace: true
+
+# Break after
+BreakAfterAttributes: Always
 
 # Break before
 BreakBeforeBinaryOperators: All
@@ -116,7 +123,7 @@ BreakInheritanceList: BeforeColon
 BreakConstructorInitializers: BeforeColon
 BreakStringLiterals: true
 
-# BreakArrays: False # Clang-format 16
+BreakArrays: false
 
 # -----------------------------------------------------------------------------
 # Identation
@@ -129,7 +136,8 @@ IndentPPDirectives: None
 IndentWidth: 4
 IndentWrappedFunctionNames: false
 
-# Namespace
+# Specific
+LambdaBodyIndentation: Signature
 NamespaceIndentation: None
 
 # -----------------------------------------------------------------------------
@@ -183,12 +191,11 @@ SpacesInCStyleCastParentheses: false
 SpacesInParentheses: false
 SpacesInSquareBrackets: false
 
-# EmptyLineBeforeAccessModifier: Always # Clang-format 12
+EmptyLineBeforeAccessModifier: Always # Clang-format 12
 
 # -----------------------------------------------------------------------------
 # Macros
 # -----------------------------------------------------------------------------
-
 
 MacroBlockBegin: ''
 MacroBlockEnd: ''

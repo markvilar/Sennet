@@ -73,7 +73,8 @@ OpenGLTexture2D::OpenGLTexture2D(const std::filesystem::path& image_path)
 }
 
 OpenGLTexture2D::OpenGLTexture2D(const Image& image)
-    : width(image.get_width()), height(image.get_height())
+    : width(image.get_width()),
+      height(image.get_height())
 {
     glCreateTextures(GL_TEXTURE_2D, 1, &renderer_id);
 

@@ -51,11 +51,11 @@ QuadRenderData QuadRenderer::init()
     auto vertex_buffer = VertexBuffer::create(
         QuadRenderCaps::max_vertices * sizeof(QuadVertex));
     vertex_buffer->set_layout({
-        {"a_Position", ShaderDataType::Float3},
-        {"a_Color", ShaderDataType::Float4},
-        {"a_TexCoord", ShaderDataType::Float2},
-        {"a_TexIndex", ShaderDataType::Uint},
-        {"a_TilingFactor", ShaderDataType::Float},
+        {"a_Position",     ShaderDataType::Float3},
+        {"a_Color",        ShaderDataType::Float4},
+        {"a_TexCoord",     ShaderDataType::Float2},
+        {"a_TexIndex",     ShaderDataType::Uint  },
+        {"a_TilingFactor", ShaderDataType::Float },
     });
 
     data.quad_vertex_array = VertexArray::create();

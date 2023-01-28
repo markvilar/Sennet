@@ -29,9 +29,9 @@ struct QuadRenderCaps
 
     static constexpr Vec4 quad_vertex_positions[vertices_per_quad] = {
         {-0.5f, -0.5f, 0.0f, 1.0f},
-        {0.5f, -0.5f, 0.0f, 1.0f},
-        {0.5f, 0.5f, 0.0f, 1.0f},
-        {-0.5f, 0.5f, 0.0f, 1.0f},
+        {0.5f,  -0.5f, 0.0f, 1.0f},
+        {0.5f,  0.5f,  0.0f, 1.0f},
+        {-0.5f, 0.5f,  0.0f, 1.0f},
     };
 
     static constexpr Vec2 quad_texture_coordinates[vertices_per_quad] = {

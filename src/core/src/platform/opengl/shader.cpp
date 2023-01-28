@@ -14,7 +14,8 @@ namespace pine
 // ----------------------------------------------------------------------------
 
 OpenGLShader::OpenGLShader(const std::string& name, const RendererID id)
-    : shader_name(name), renderer_id(id)
+    : shader_name(name),
+      renderer_id(id)
 {
 }
 

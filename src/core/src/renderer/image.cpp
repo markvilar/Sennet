@@ -82,7 +82,9 @@ Image::Image(const uint8_t* data,
     const uint32_t width,
     const uint32_t height,
     const ImageFormat format)
-    : width(width), height(height), format(format)
+    : width(width),
+      height(height),
+      format(format)
 {
     const auto channels = get_format_channel_count(format);
     buffer = std::vector<uint8_t>(data, data + width * height * channels);

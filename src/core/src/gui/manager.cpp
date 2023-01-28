@@ -151,7 +151,8 @@ bool IO::want_capture_keyboard() const
 // ----------------------------------------------------------------------------
 
 Manager::Manager(std::unique_ptr<Context>& context_, std::unique_ptr<IO>& io_)
-    : context(std::move(context_)), io(std::move(io_))
+    : context(std::move(context_)),
+      io(std::move(io_))
 {
     auto config_flags = io->get_config_flags();
     config_flags |= ConfigFlagOptions::ENABLE_KEYBOARD;

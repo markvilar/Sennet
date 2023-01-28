@@ -11,30 +11,31 @@ namespace pine
 class KeyEvent : public Event
 {
 public:
-    KeyCode GetKeyCode() const { return m_key_code; }
+    KeyCode GetKeyCode() const { return key_code; }
 
     EVENT_CLASS_CATEGORY(EventCategoryKeyboard | EventCategoryInput)
 
 protected:
-    KeyEvent(const KeyCode key_code) : m_key_code(key_code) {}
+    KeyEvent(const KeyCode key_code) : key_code(key_code) {}
 
-    KeyCode m_key_code;
+    KeyCode key_code;
 };
 
 class KeyPressedEvent : public KeyEvent
 {
 public:
-    KeyPressedEvent(const KeyCode key_code, const int repeat_count)
-        : KeyEvent(key_code), m_repeat_count(repeat_count)
+    KeyPressedEvent(const KeyCode key_code, const int repeat_count_)
+        : KeyEvent(key_code),
+          repeat_count(repeat_count_)
     {
     }
 
-    int GetRepeatCount() const { return m_repeat_count; }
+    int GetRepeatCount() const { return repeat_count; }
 
     std::string to_string() const override
     {
         std::stringstream ss;
-        ss << "[KeyPressedEvent] " << m_key_code << " (" << m_repeat_count
+        ss << "[KeyPressedEvent] " << key_code << " (" << repeat_count
            << " repeats)";
         return ss.str();
     }
@@ -42,7 +43,7 @@ public:
     EVENT_CLASS_TYPE(KeyPressed)
 
 private:
-    int m_repeat_count;
+    int repeat_count;
 };
 
 class KeyReleasedEvent : public KeyEvent
@@ -53,7 +54,7 @@ public:
     std::string to_string() const override
     {
         std::stringstream ss;
-        ss << "[KeyReleasedEvent] " << m_key_code;
+        ss << "[KeyReleasedEvent] " << key_code;
         return ss.str();
     }
 
@@ -68,7 +69,7 @@ public:
     std::string to_string() const override
     {
         std::stringstream ss;
-        ss << "[KeyTypedEvent] " << m_key_code;
+        ss << "[KeyTypedEvent] " << key_code;
         return ss.str();
     }
 
