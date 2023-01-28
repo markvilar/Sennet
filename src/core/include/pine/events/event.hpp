@@ -1,11 +1,10 @@
 #pragma once
-#include "pine/pch.hpp"
 
 #include "pine/core/common.hpp"
+#include "pine/pch.hpp"
 
 namespace pine
 {
-
 enum class EventType
 {
     None = 0,

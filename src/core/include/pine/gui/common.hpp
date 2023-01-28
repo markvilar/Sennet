@@ -8,7 +8,6 @@
 
 namespace pine::gui
 {
-
 using ConfigFlags = int;
 
 enum ConfigFlagOptions : ConfigFlags

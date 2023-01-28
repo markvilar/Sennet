@@ -5,7 +5,6 @@
 
 namespace pine
 {
-
 template <typename T>
 class LockedQueue
 {

@@ -1,15 +1,14 @@
 #pragma once
 
-#include <filesystem>
-#include <memory>
-
 #include "pine/core/common.hpp"
 #include "pine/renderer/image.hpp"
 #include "pine/renderer/renderer_api.hpp"
 
+#include <filesystem>
+#include <memory>
+
 namespace pine
 {
-
 class Texture
 {
 public:

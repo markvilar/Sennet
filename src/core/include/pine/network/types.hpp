@@ -4,7 +4,6 @@
 
 namespace pine
 {
-
 using NetworkContext = asio::io_context;
 
 using AcceptorType = asio::ip::tcp::acceptor;

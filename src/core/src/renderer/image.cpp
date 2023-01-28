@@ -4,7 +4,6 @@
 #define STBI_NO_GIF
 #define STB_IMAGE_IMPLEMENTATION
 #define STB_IMAGE_WRITE_IMPLEMENTATION
-
 #include <stb_image.h>
 #include <stb_image_write.h>
 
@@ -13,7 +12,6 @@
 
 namespace pine
 {
-
 constexpr ImageFormat parse_image_format(const int channels)
 {
     switch (channels)
@@ -96,8 +94,8 @@ Image read_image(const std::filesystem::path& filepath, const bool flip)
 
     stbi_set_flip_vertically_on_load(flip);
 
-    const auto data =
-        stbi_load(filepath.c_str(), &width, &height, &channels, 0);
+    const auto data
+        = stbi_load(filepath.c_str(), &width, &height, &channels, 0);
     const auto format = parse_image_format(channels);
 
     return Image(data,
@@ -137,7 +135,8 @@ bool write_image(const std::filesystem::path& filepath,
     stbi_set_flip_vertically_on_load(flip);
 
     const auto channels = get_format_channel_count(image.get_format());
-    const auto write_result = [filepath, image, channels, file_format]() {
+    const auto write_result = [filepath, image, channels, file_format]()
+    {
         switch (file_format)
         {
         case ImageFileFormat::JPG:

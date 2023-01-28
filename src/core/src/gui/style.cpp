@@ -6,7 +6,6 @@
 
 namespace pine::gui
 {
-
 void set_dark_theme()
 {
     auto& style = ImGui::GetStyle();

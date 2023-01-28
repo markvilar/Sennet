@@ -1,7 +1,5 @@
 #pragma once
 
-#include <memory>
-
 #include "pine/core/common.hpp"
 #include "pine/renderer/camera.hpp"
 #include "pine/renderer/renderer_api.hpp"
@@ -9,11 +7,10 @@
 #include "pine/renderer/texture.hpp"
 #include "pine/utils/math.hpp"
 
+#include <memory>
+
 namespace pine
 {
-
-class ShaderLibrary;
-
 class Renderer
 {
 public:

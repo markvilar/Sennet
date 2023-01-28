@@ -6,7 +6,6 @@
 
 namespace pine
 {
-
 std::unique_ptr<Texture2D> Texture2D::create(
     const std::filesystem::path& filepath)
 {

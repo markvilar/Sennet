@@ -7,7 +7,6 @@
 
 namespace pine
 {
-
 LinuxInputHandle::LinuxInputHandle(const Window& window_) { window = &window_; }
 
 bool LinuxInputHandle::is_key_pressed(const KeyCode key) const
@@ -20,8 +19,8 @@ bool LinuxInputHandle::is_key_pressed(const KeyCode key) const
 bool LinuxInputHandle::is_mouse_button_pressed(const MouseCode button) const
 {
     auto native_window = static_cast<GLFWwindow*>(window->get_native_window());
-    auto state =
-        glfwGetMouseButton(native_window, static_cast<int32_t>(button));
+    auto state
+        = glfwGetMouseButton(native_window, static_cast<int32_t>(button));
     return state == GLFW_PRESS;
 }
 

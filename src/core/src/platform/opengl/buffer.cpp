@@ -3,13 +3,11 @@
 #include <glad/glad.h>
 
 #include "pine/pch.hpp"
-#include "pine/renderer/common.hpp"
-
 #include "pine/platform/opengl/common.hpp"
+#include "pine/renderer/common.hpp"
 
 namespace pine
 {
-
 // ----------------------------------------------------------------------------
 // ---- Vertex buffer ---------------------------------------------------------
 // ----------------------------------------------------------------------------

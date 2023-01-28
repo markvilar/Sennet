@@ -1,14 +1,13 @@
 #pragma once
 
-#include <cstdint>
-#include <memory>
-
 #include "pine/core/common.hpp"
 #include "pine/renderer/renderer_api.hpp"
 
+#include <cstdint>
+#include <memory>
+
 namespace pine
 {
-
 struct FramebufferSpecs
 {
     uint32_t width = 0;

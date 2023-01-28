@@ -1,6 +1,6 @@
-#include <csignal>
-
 #include "pine/pine.hpp"
+
+#include <csignal>
 
 static bool exit_flag = false;
 
@@ -15,14 +15,16 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char** argv)
     pine::ServerState server(6000);
 
     server.set_connection_callback(
-        [](const pine::ConnectionState& connection) -> bool {
+        [](const pine::ConnectionState& connection) -> bool
+        {
             PINE_INFO("Server got connection: {0}",
                 connection.socket.remote_endpoint());
             return true;
         });
 
     server.set_message_callback(
-        [](const std::vector<uint8_t>& message) -> void {
+        [](const std::vector<uint8_t>& message) -> void
+        {
             PINE_INFO("Server got message: {0} : {1}",
                 message.size(),
                 std::string(message.begin(), message.end()));

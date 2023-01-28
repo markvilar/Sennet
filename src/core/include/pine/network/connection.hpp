@@ -8,7 +8,6 @@
 
 namespace pine
 {
-
 struct ConnectionState
 {
     using size_t = uint64_t;

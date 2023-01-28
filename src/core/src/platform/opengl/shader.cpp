@@ -9,7 +9,6 @@
 
 namespace pine
 {
-
 // ----------------------------------------------------------------------------
 // OpenGLShader
 // ----------------------------------------------------------------------------
@@ -120,14 +119,15 @@ void OpenGLShader::upload_uniform_mat4(const std::string& name,
 
 namespace opengl
 {
-
-std::unique_ptr<OpenGLShader> create_shader(
-    const std::filesystem::path& vertex_file,
+std::unique_ptr<OpenGLShader>
+create_shader(const std::filesystem::path& vertex_file,
     const std::filesystem::path& fragment_file)
 {
     // Check that files exist
-    const auto vertex_exists = pine::filesystem::is_file(vertex_file);
-    const auto fragment_exists = pine::filesystem::is_file(fragment_file);
+    [[maybe_unused]] const auto vertex_exists
+        = pine::filesystem::is_file(vertex_file);
+    [[maybe_unused]] const auto fragment_exists
+        = pine::filesystem::is_file(fragment_file);
 
     PINE_CORE_ASSERT(vertex_exists, "Vertex shader file does not exist.");
     PINE_CORE_ASSERT(fragment_exists, "Fragment shader file does not exist.");
@@ -136,8 +136,8 @@ std::unique_ptr<OpenGLShader> create_shader(
 
     // Read sources from file
     const auto vertex_source = pine::filesystem::read_file_source(vertex_file);
-    const auto fragment_source =
-        pine::filesystem::read_file_source(fragment_file);
+    const auto fragment_source
+        = pine::filesystem::read_file_source(fragment_file);
 
     const auto program = compile_shader(vertex_source, fragment_source);
     return std::make_unique<OpenGLShader>(name, program);

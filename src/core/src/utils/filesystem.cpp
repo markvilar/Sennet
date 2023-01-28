@@ -6,7 +6,6 @@
 
 namespace pine
 {
-
 bool filesystem::create_directory(const std::filesystem::path& directory)
 {
     return std::filesystem::create_directory(directory);
@@ -52,8 +51,8 @@ bool filesystem::move_file(const std::filesystem::path& filepath,
 bool filesystem::rename_file(const std::filesystem::path& old_filepath,
     const std::string& new_name)
 {
-    auto new_filepath =
-        old_filepath.parent_path() / new_name / old_filepath.extension();
+    auto new_filepath
+        = old_filepath.parent_path() / new_name / old_filepath.extension();
     return move(old_filepath, new_filepath);
 }
 

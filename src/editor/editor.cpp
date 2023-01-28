@@ -1,10 +1,9 @@
+#include "editor/editor_layer.hpp"
+#include "pine/pine.hpp"
+
 #include <filesystem>
 #include <memory>
 #include <string>
-
-#include "pine/pine.hpp"
-
-#include "editor/editor_layer.hpp"
 
 class Editor : public pine::Application
 {
@@ -34,7 +33,8 @@ public:
         const auto argc = m_argc;
         const auto argv = m_argv;
 
-        const auto project_path = [argc, argv]() {
+        const auto project_path = [argc, argv]()
+        {
             if (argc > 1)
             {
                 return std::string(argv[1]);

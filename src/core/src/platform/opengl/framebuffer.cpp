@@ -6,7 +6,6 @@
 
 namespace pine
 {
-
 static constexpr uint32_t s_max_framebuffer_size = 8192;
 
 OpenGLFramebuffer::OpenGLFramebuffer(const FramebufferSpecs& specs)
@@ -30,6 +29,8 @@ void OpenGLFramebuffer::invalidate()
         glDeleteTextures(1, &color_attachment);
         glDeleteTextures(1, &depth_attachment);
     }
+
+    // Create new framebuffer
     glCreateFramebuffers(1, &renderer_id);
     glBindFramebuffer(GL_FRAMEBUFFER, renderer_id);
 
@@ -67,8 +68,8 @@ void OpenGLFramebuffer::invalidate()
         depth_attachment,
         0);
 
-    PINE_CORE_ASSERT(
-        glCheckFramebufferStatus(GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE,
+    PINE_CORE_ASSERT(glCheckFramebufferStatus(GL_FRAMEBUFFER)
+            == GL_FRAMEBUFFER_COMPLETE,
         "Framebuffer is incomplete!");
 
     glBindFramebuffer(GL_FRAMEBUFFER, 0);

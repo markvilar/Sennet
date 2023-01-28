@@ -3,11 +3,8 @@
 #include "pine/core/assert.hpp"
 #include "pine/pch.hpp"
 
-#include <glad/glad.h>
-
 namespace pine::opengl
 {
-
 std::string to_string(const GLenum type)
 {
     switch (type)
@@ -59,8 +56,8 @@ GLuint compile_shader(const std::string& vertex_source,
     const auto vertex_id = process_shader(GL_VERTEX_SHADER, vertex_source);
 
     // Compile fragment shader
-    const auto fragment_id =
-        process_shader(GL_FRAGMENT_SHADER, fragment_source);
+    const auto fragment_id
+        = process_shader(GL_FRAGMENT_SHADER, fragment_source);
 
     glAttachShader(program, vertex_id);
     glAttachShader(program, fragment_id);

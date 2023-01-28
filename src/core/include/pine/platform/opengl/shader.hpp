@@ -9,7 +9,6 @@
 
 namespace pine
 {
-
 class OpenGLShader : public Shader
 {
 public:
@@ -58,16 +57,15 @@ public:
     void upload_uniform_mat4(const std::string& name, const Mat4& matrix) const;
 
 private:
-    RendererID renderer_id;
-    std::string shader_name;
+    std::string shader_name{};
+    RendererID renderer_id{};
 };
 
 namespace opengl
 {
-
 // Create from files
-std::unique_ptr<OpenGLShader> create_shader(
-    const std::filesystem::path& vertex_file,
+std::unique_ptr<OpenGLShader>
+create_shader(const std::filesystem::path& vertex_file,
     const std::filesystem::path& fragment_file);
 
 // Create from source

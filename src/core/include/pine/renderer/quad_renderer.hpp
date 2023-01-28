@@ -1,15 +1,14 @@
 #pragma once
 
-#include <memory>
-
 #include "pine/renderer/camera.hpp"
 #include "pine/renderer/shader.hpp"
 #include "pine/renderer/texture.hpp"
 #include "pine/utils/math.hpp"
 
+#include <memory>
+
 namespace pine
 {
-
 struct QuadVertex
 {
     Vec3 position = {};

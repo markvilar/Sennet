@@ -7,19 +7,15 @@
 #include "pine/core/layer.hpp"
 #include "pine/core/timestep.hpp"
 #include "pine/core/window.hpp"
-
 #include "pine/events/application_event.hpp"
 #include "pine/events/event.hpp"
-
-#include "pine/renderer/renderer.hpp"
-
 #include "pine/gui/manager.hpp"
+#include "pine/renderer/renderer.hpp"
 
 int main(int argc, char** argv);
 
 namespace pine
 {
-
 struct ApplicationSpecs
 {
     std::string name = "Default App";
@@ -36,7 +32,6 @@ struct ApplicationSpecs
 
 class Application
 {
-
 public:
     Application(const ApplicationSpecs& specs);
     virtual ~Application();
