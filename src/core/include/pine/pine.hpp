@@ -37,6 +37,7 @@
 #include "pine/renderer/texture.hpp"
 
 // Utils
+#include "pine/utils/argparse.hpp"
 #include "pine/utils/filesystem.hpp"
 #include "pine/utils/fonts.hpp"
 #include "pine/utils/locked_queue.hpp"

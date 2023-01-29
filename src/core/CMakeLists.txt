@@ -50,6 +50,7 @@ target_sources(pine
         include/pine/renderer/renderer_api.hpp
         include/pine/renderer/shader.hpp
         include/pine/renderer/texture.hpp
+        include/pine/utils/argparse.hpp
         include/pine/utils/filesystem.hpp
         include/pine/utils/fonts.hpp
         include/pine/utils/math.hpp
@@ -87,11 +88,13 @@ target_sources(pine
         src/renderer/renderer_api.cpp
         src/renderer/shader.cpp
         src/renderer/texture.cpp
+        src/utils/argparse.cpp
         src/utils/filesystem.cpp
 )
 
 target_precompile_headers(pine PRIVATE include/pine/pch.hpp)
 
+find_package(argparse REQUIRED)
 find_package(asio REQUIRED)
 find_package(glad REQUIRED)
 find_package(glfw3 REQUIRED)
@@ -103,6 +106,7 @@ target_include_directories(pine PUBLIC include)
 
 target_link_libraries(pine
     PUBLIC 
+        argparse::argparse
         asio::asio
         glm::glm
         imgui::imgui
