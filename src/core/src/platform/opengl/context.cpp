@@ -8,6 +8,7 @@
 
 namespace pine
 {
+
 OpenGLContext::OpenGLContext(GLFWwindow* window_handle)
     : window_handle(window_handle)
 {

@@ -27,7 +27,6 @@
 // Renderer
 #include "pine/renderer/buffer.hpp"
 #include "pine/renderer/camera.hpp"
-#include "pine/renderer/common.hpp"
 #include "pine/renderer/framebuffer.hpp"
 #include "pine/renderer/image.hpp"
 #include "pine/renderer/quad_renderer.hpp"
@@ -35,6 +34,7 @@
 #include "pine/renderer/renderer.hpp"
 #include "pine/renderer/shader.hpp"
 #include "pine/renderer/texture.hpp"
+#include "pine/renderer/types.hpp"
 
 // Utils
 #include "pine/utils/argparse.hpp"

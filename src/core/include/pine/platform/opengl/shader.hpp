@@ -9,6 +9,7 @@
 
 namespace pine
 {
+
 class OpenGLShader : public Shader
 {
 public:

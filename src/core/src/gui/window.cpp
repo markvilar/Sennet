@@ -4,6 +4,7 @@
 
 namespace pine::gui
 {
+
 Window::Window(const std::string& name_) : name(name_) {}
 
 void Window::update_state()

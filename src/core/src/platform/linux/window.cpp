@@ -10,6 +10,7 @@
 
 namespace pine
 {
+
 static uint8_t s_glfw_window_count = 0;
 
 static void GLFWErrorCallback(int error, const char* description)

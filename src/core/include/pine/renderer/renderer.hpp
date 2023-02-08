@@ -11,6 +11,7 @@
 
 namespace pine
 {
+
 class Renderer
 {
 public:

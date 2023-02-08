@@ -6,6 +6,7 @@
 
 namespace pine
 {
+
 class Layer
 {
 public:

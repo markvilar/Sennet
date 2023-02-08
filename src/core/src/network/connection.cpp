@@ -6,6 +6,7 @@
 
 namespace pine
 {
+
 bool is_connected(const ConnectionState& connection)
 {
     return connection.socket.is_open();

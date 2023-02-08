@@ -3,9 +3,11 @@
 #include "pine/pch.hpp"
 #include "pine/platform/opengl/texture.hpp"
 #include "pine/renderer/renderer.hpp"
+#include "pine/renderer/renderer_api.hpp"
 
 namespace pine
 {
+
 std::unique_ptr<Texture2D> Texture2D::create(
     const std::filesystem::path& filepath)
 {

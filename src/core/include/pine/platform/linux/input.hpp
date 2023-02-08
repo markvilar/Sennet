@@ -4,6 +4,7 @@
 
 namespace pine
 {
+
 class LinuxInputHandle : public InputHandle
 {
 public:

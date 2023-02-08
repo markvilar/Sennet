@@ -6,66 +6,10 @@
 #include <glad/glad.h>
 
 #include "pine/pch.hpp"
+#include "pine/platform/opengl/utilities.hpp"
 
 namespace pine
 {
-GLenum to_opengl_internal_format(const ImageFormat& image_format)
-{
-    const auto texture_format = static_cast<TextureFormat>(image_format);
-    const auto internal_format = [texture_format]()
-    {
-        switch (texture_format)
-        {
-        case TextureFormat::UNKNOWN:
-            return GL_INVALID_ENUM;
-        case TextureFormat::RED:
-            return GL_R8;
-        case TextureFormat::RG:
-            return GL_RG8;
-        case TextureFormat::RGB:
-            return GL_RGB8;
-        case TextureFormat::BGR:
-            return GL_RGB8;
-        case TextureFormat::RGBA:
-            return GL_RGBA8;
-        case TextureFormat::BGRA:
-            return GL_RGBA8;
-        }
-        return GL_INVALID_ENUM;
-    }();
-
-    PINE_CORE_ASSERT(internal_format, "Invalid OpenGL data format.");
-    return static_cast<GLenum>(internal_format);
-}
-
-GLenum to_opengl_data_format(const ImageFormat& image_format)
-{
-    const auto texture_format = static_cast<TextureFormat>(image_format);
-    const auto internal_format = [texture_format]()
-    {
-        switch (texture_format)
-        {
-        case TextureFormat::UNKNOWN:
-            return GL_INVALID_ENUM;
-        case TextureFormat::RED:
-            return GL_RED;
-        case TextureFormat::RG:
-            return GL_RG;
-        case TextureFormat::RGB:
-            return GL_RGB;
-        case TextureFormat::BGR:
-            return GL_BGR;
-        case TextureFormat::RGBA:
-            return GL_RGBA;
-        case TextureFormat::BGRA:
-            return GL_BGRA;
-        }
-        return GL_INVALID_ENUM;
-    }();
-
-    PINE_CORE_ASSERT(internal_format, "Invalid OpenGL data format.");
-    return static_cast<GLenum>(internal_format);
-}
 
 OpenGLTexture2D::OpenGLTexture2D(const std::filesystem::path& image_path)
     : OpenGLTexture2D(read_image(image_path))
@@ -80,7 +24,7 @@ OpenGLTexture2D::OpenGLTexture2D(const Image& image)
 
     glTextureStorage2D(renderer_id,
         1,
-        to_opengl_internal_format(image.get_format()),
+        opengl::to_internal_format(image.get_format()),
         static_cast<GLsizei>(image.get_width()),
         static_cast<GLsizei>(image.get_height()));
 
@@ -95,7 +39,7 @@ OpenGLTexture2D::OpenGLTexture2D(const Image& image)
         0,
         static_cast<GLsizei>(image.get_width()),
         static_cast<GLsizei>(image.get_height()),
-        to_opengl_data_format(image.get_format()),
+        opengl::to_data_format(image.get_format()),
         GL_UNSIGNED_BYTE,
         static_cast<const void*>(image.get_buffer().data()));
 }

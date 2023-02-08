@@ -70,6 +70,7 @@ class PineConan(ConanFile):
         self.requires("glm/0.9.9.8")
         self.requires("spdlog/1.9.2")
         self.requires("stb/cci.20210713")
+        self.requires("tinyply/2.3.4")
 
     def validate(self):
         """ Validates the project configuration. """

@@ -1,19 +1,21 @@
 #include "pine/renderer/buffer.hpp"
 
 #include "pine/pch.hpp"
-#include "pine/platform/opengl/buffer.hpp"
 #include "pine/renderer/renderer.hpp"
 #include "pine/renderer/renderer_api.hpp"
 
+#include "pine/platform/opengl/buffer.hpp"
+
 namespace pine
 {
+
 void VertexBufferLayout::calculate_offset_and_stride()
 {
-    m_stride = [this]()
+    stride = [this]()
     {
         uint32_t offset = 0;
         uint32_t stride = 0;
-        for (auto& element : m_elements)
+        for (auto& element : elements)
         {
             element.offset = offset;
             offset += element.size;

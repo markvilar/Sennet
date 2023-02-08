@@ -1,5 +1,6 @@
 #pragma once
 
+#include "pine/renderer/buffer.hpp"
 #include "pine/renderer/camera.hpp"
 #include "pine/renderer/shader.hpp"
 #include "pine/renderer/texture.hpp"
@@ -9,6 +10,7 @@
 
 namespace pine
 {
+
 struct QuadVertex
 {
     Vec3 position = {};
@@ -72,7 +74,7 @@ struct QuadRenderData
     uint32_t texture_slot_index = 0;
 
     QuadRenderStatistics statistics{};
-}; // QuadRenderData
+};
 
 namespace QuadRenderer
 {

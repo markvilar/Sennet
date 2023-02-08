@@ -8,6 +8,7 @@
 
 namespace pine
 {
+
 class RenderCommand
 {
 public:

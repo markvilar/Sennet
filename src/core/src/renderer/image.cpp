@@ -12,7 +12,8 @@
 
 namespace pine
 {
-constexpr ImageFormat parse_image_format(const int channels)
+
+constexpr ImageFormat default_image_format(const int channels)
 {
     switch (channels)
     {
@@ -59,7 +60,7 @@ constexpr uint32_t get_format_channel_count(const ImageFormat format)
 {
     switch (format)
     {
-    case ImageFormat::UNKNOWN:
+    case ImageFormat::INVALID:
         return 0;
     case ImageFormat::GRAY:
         return 1;
@@ -98,7 +99,7 @@ Image read_image(const std::filesystem::path& filepath, const bool flip)
 
     const auto data
         = stbi_load(filepath.c_str(), &width, &height, &channels, 0);
-    const auto format = parse_image_format(channels);
+    const auto format = default_image_format(channels);
 
     return Image(data,
         static_cast<uint32_t>(width),

@@ -7,6 +7,7 @@
 
 namespace pine
 {
+
 class InputHandle
 {
     /* Interface for input handles. */

@@ -27,8 +27,9 @@ add_library(pine::warnings ALIAS warnings)
 
 # Use conan for package management
 if(PINE_CONAN_ENABLE)
+    set(PINE_CONAN_PACKAGE_DIR "${CMAKE_CURRENT_BINARY_DIR}/conan_packages")
     if(CONAN_EXPORTED)
-        include(conanbuildinfo.cmake)
+        include("${PINE_CONAN_PACKAGE_DIR}/conanbuildinfo.cmake")
         conan_basic_setup()
     else()
         include("${CMAKE_CURRENT_SOURCE_DIR}/cmake/conan.cmake")
@@ -36,9 +37,10 @@ if(PINE_CONAN_ENABLE)
             BASIC_SETUP 
             CMAKE_TARGETS 
             BUILD missing
+            INSTALL_FOLDER "${PINE_CONAN_PACKAGE_DIR}"
         )
         # Add build directory to module path to find Conans' cmake config files.
-        list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_BINARY_DIR}")
+        list(APPEND CMAKE_MODULE_PATH "${PINE_CONAN_PACKAGE_DIR}")
     endif()
 endif()
 

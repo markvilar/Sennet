@@ -15,6 +15,7 @@
 
 namespace pine::gui
 {
+
 std::unique_ptr<Context> create_context(Window* window)
 {
     return std::make_unique<Context>(window);

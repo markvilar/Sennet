@@ -4,6 +4,7 @@
 
 namespace pine
 {
+
 ServerState::ServerState(const uint16_t port)
     : acceptor(context, EndpointType(asio::ip::tcp::v4(), port))
 {

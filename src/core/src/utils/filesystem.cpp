@@ -6,6 +6,7 @@
 
 namespace pine
 {
+
 bool filesystem::create_directory(const std::filesystem::path& directory)
 {
     return std::filesystem::create_directory(directory);

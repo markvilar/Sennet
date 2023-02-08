@@ -9,6 +9,7 @@
 
 namespace pine
 {
+
 struct ClientState
 {
     NetworkContext context{};

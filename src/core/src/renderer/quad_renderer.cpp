@@ -7,6 +7,7 @@
 
 namespace pine
 {
+
 constexpr bool is_indices_within_capabilities(const uint32_t index_count)
 {
     return index_count
@@ -51,11 +52,11 @@ QuadRenderData QuadRenderer::init()
     auto vertex_buffer = VertexBuffer::create(
         QuadRenderCaps::max_vertices * sizeof(QuadVertex));
     vertex_buffer->set_layout({
-        {"a_Position",     ShaderDataType::Float3},
-        {"a_Color",        ShaderDataType::Float4},
-        {"a_TexCoord",     ShaderDataType::Float2},
-        {"a_TexIndex",     ShaderDataType::Uint  },
-        {"a_TilingFactor", ShaderDataType::Float },
+        {"a_Position",     ShaderDataType::FLOAT3},
+        {"a_Color",        ShaderDataType::FLOAT4},
+        {"a_TexCoord",     ShaderDataType::FLOAT2},
+        {"a_TexIndex",     ShaderDataType::UINT  },
+        {"a_TilingFactor", ShaderDataType::FLOAT },
     });
 
     data.quad_vertex_array = VertexArray::create();

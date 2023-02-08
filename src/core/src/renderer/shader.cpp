@@ -6,6 +6,7 @@
 
 namespace pine
 {
+
 std::unique_ptr<Shader> create_shader(const std::filesystem::path& vertex_file,
     const std::filesystem::path& fragment_file)
 {

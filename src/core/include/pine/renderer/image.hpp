@@ -5,18 +5,8 @@
 
 namespace pine
 {
-enum class TextureFormat : uint8_t
-{
-    UNKNOWN,
-    RED,
-    RG,
-    RGB,
-    BGR,
-    RGBA,
-    BGRA
-};
 
-enum class ImageFileFormat : uint8_t
+enum class ImageFileFormat
 {
     JPG,
     PNG,
@@ -24,15 +14,15 @@ enum class ImageFileFormat : uint8_t
     TGA
 };
 
-enum class ImageFormat : uint8_t
+enum class ImageFormat
 {
-    UNKNOWN = static_cast<uint8_t>(TextureFormat::UNKNOWN),
-    GRAY = static_cast<uint8_t>(TextureFormat::RED),
-    GRAY_ALPHA = static_cast<uint8_t>(TextureFormat::RG),
-    RGB = static_cast<uint8_t>(TextureFormat::RGB),
-    BGR = static_cast<uint8_t>(TextureFormat::BGR),
-    RGBA = static_cast<uint8_t>(TextureFormat::RGBA),
-    BGRA = static_cast<uint8_t>(TextureFormat::BGRA)
+    INVALID,
+    GRAY,
+    GRAY_ALPHA,
+    RGB,
+    BGR,
+    RGBA,
+    BGRA
 };
 
 struct Image
@@ -62,11 +52,10 @@ public:
 private:
     uint32_t width = 0;
     uint32_t height = 0;
-    ImageFormat format = ImageFormat::UNKNOWN;
+    ImageFormat format = ImageFormat::INVALID;
     BufferType buffer = {};
 };
 
-// TODO: Return std::optional<Image>
 Image read_image(const std::filesystem::path& filepath,
     const bool flip = false);
 Image read_image(const std::filesystem::path& filepath,

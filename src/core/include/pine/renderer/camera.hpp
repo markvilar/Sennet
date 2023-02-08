@@ -9,6 +9,7 @@
 
 namespace pine
 {
+
 class OrthographicCamera
 {
 public:
