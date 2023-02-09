@@ -130,6 +130,7 @@ class PineConan(ConanFile):
             "glm::glm",
             "spdlog::spdlog",
             "stb::stb",
+            "tinyply::tinyply",
         ]
         self.cpp_info.components["libpine"].resdirs= ["resources"]
 

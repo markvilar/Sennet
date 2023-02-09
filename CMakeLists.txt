@@ -29,15 +29,17 @@ add_library(pine::warnings ALIAS warnings)
 if(PINE_CONAN_ENABLE)
     set(PINE_CONAN_PACKAGE_DIR "${CMAKE_CURRENT_BINARY_DIR}/conan_packages")
     if(CONAN_EXPORTED)
-        include("${PINE_CONAN_PACKAGE_DIR}/conanbuildinfo.cmake")
+        include("conanbuildinfo.cmake")
         conan_basic_setup()
     else()
         include("${CMAKE_CURRENT_SOURCE_DIR}/cmake/conan.cmake")
         conan_cmake_run(CONANFILE "${CMAKE_CURRENT_SOURCE_DIR}/conanfile.py"
             BASIC_SETUP 
             CMAKE_TARGETS 
+            REMOTE conancenter
             BUILD missing
             INSTALL_FOLDER "${PINE_CONAN_PACKAGE_DIR}"
+            OUTPUT_FOLDER "${PINE_CONAN_PACKAGE_DIR}"
         )
         # Add build directory to module path to find Conans' cmake config files.
         list(APPEND CMAKE_MODULE_PATH "${PINE_CONAN_PACKAGE_DIR}")
