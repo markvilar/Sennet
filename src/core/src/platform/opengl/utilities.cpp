@@ -3,7 +3,7 @@
 #include "pine/core/assert.hpp"
 #include "pine/pch.hpp"
 
-namespace pine::opengl
+namespace pine::glutils
 {
 
 GLenum to_opengl(const TextureFormat format)
@@ -55,6 +55,34 @@ GLenum to_opengl_internal(const TextureFormat format)
         return GL_DEPTH_COMPONENT;
     case TextureFormat::DEPTH24STENCIL8:
         return GL_DEPTH_STENCIL;
+    default:
+        return GL_INVALID_ENUM;
+    }
+    return GL_INVALID_ENUM;
+}
+
+GLenum get_attachment_type(const TextureFormat format)
+{
+    switch (format)
+    {
+    case TextureFormat::INVALID:
+        return GL_INVALID_ENUM;
+    case TextureFormat::RED:
+        return GL_COLOR_ATTACHMENT0;
+    case TextureFormat::RG:
+        return GL_COLOR_ATTACHMENT0;
+    case TextureFormat::RGB:
+        return GL_COLOR_ATTACHMENT0;
+    case TextureFormat::BGR:
+        return GL_COLOR_ATTACHMENT0;
+    case TextureFormat::RGBA:
+        return GL_COLOR_ATTACHMENT0;
+    case TextureFormat::BGRA:
+        return GL_COLOR_ATTACHMENT0;
+    case TextureFormat::DEPTH32F:
+        return GL_DEPTH_ATTACHMENT;
+    case TextureFormat::DEPTH24STENCIL8:
+        return GL_DEPTH_STENCIL_ATTACHMENT;
     default:
         return GL_INVALID_ENUM;
     }
@@ -277,4 +305,4 @@ GLuint compile_shader(const std::string& vertex_source,
     return program;
 }
 
-} // namespace pine::opengl
+} // namespace pine::glutils

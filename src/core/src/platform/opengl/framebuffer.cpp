@@ -3,6 +3,7 @@
 #include <glad/glad.h>
 
 #include "pine/pch.hpp"
+#include "pine/platform/opengl/utilities.hpp"
 #include "pine/renderer/types.hpp"
 
 namespace pine
@@ -10,9 +11,7 @@ namespace pine
 
 static constexpr uint32_t MAX_FRAMEBUFFER_SIZE = 8192;
 
-// TODO: Configure based on attachment format, filter, and wrap
-RendererID create_color_attachment([[maybe_unused]] const FramebufferAttachment&
-                                       attachment,
+RendererID create_color_attachment(const FramebufferAttachment& attachment,
     const uint32_t width,
     const uint32_t height)
 {
@@ -21,26 +20,28 @@ RendererID create_color_attachment([[maybe_unused]] const FramebufferAttachment&
     glBindTexture(GL_TEXTURE_2D, renderer_id);
     glTexImage2D(GL_TEXTURE_2D,
         0,
-        GL_RGBA8, // TODO: Convert to internal format
+        static_cast<GLint>(glutils::to_opengl_internal(attachment.format)),
         static_cast<GLsizei>(width),
         static_cast<GLsizei>(height),
         0,
-        GL_RGBA, // TODO: Convert to data format
+        glutils::to_opengl(attachment.format),
         GL_UNSIGNED_BYTE,
         nullptr);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D,
+        GL_TEXTURE_MIN_FILTER,
+        static_cast<GLint>(glutils::to_opengl(attachment.filter)));
+    glTexParameteri(GL_TEXTURE_2D,
+        GL_TEXTURE_MAG_FILTER,
+        static_cast<GLint>(glutils::to_opengl(attachment.filter)));
     glFramebufferTexture2D(GL_FRAMEBUFFER,
-        GL_COLOR_ATTACHMENT0, // TODO: Configure texture type
+        glutils::get_attachment_type(attachment.format),
         GL_TEXTURE_2D,
         renderer_id,
         0);
     return renderer_id;
 }
 
-// TODO: Configure based on attachment format, filter, and wrap
-RendererID create_depth_attachment([[maybe_unused]] const FramebufferAttachment&
-                                       attachment,
+RendererID create_depth_attachment(const FramebufferAttachment& attachment,
     const uint32_t width,
     const uint32_t height)
 {
@@ -49,11 +50,11 @@ RendererID create_depth_attachment([[maybe_unused]] const FramebufferAttachment&
     glBindTexture(GL_TEXTURE_2D, renderer_id);
     glTexStorage2D(GL_TEXTURE_2D,
         1,
-        GL_DEPTH24_STENCIL8,
+        glutils::to_opengl(attachment.format),
         static_cast<GLsizei>(width),
         static_cast<GLsizei>(height));
     glFramebufferTexture2D(GL_FRAMEBUFFER,
-        GL_DEPTH_STENCIL_ATTACHMENT, // TODO: Configure texture type
+        glutils::get_attachment_type(attachment.format),
         GL_TEXTURE_2D,
         renderer_id,
         0);
