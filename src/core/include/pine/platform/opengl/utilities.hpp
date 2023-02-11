@@ -13,12 +13,15 @@ namespace pine::opengl
 
 // Texture types
 GLenum to_opengl(const TextureFormat format);
+GLenum to_opengl_internal(const TextureFormat format);
+
+// Texture operations
 GLenum to_opengl(const TextureFilter filter);
 GLenum to_opengl(const TextureWrap wrap);
 
 // Image types
-GLenum to_data_format(const ImageFormat image_format);
-GLenum to_internal_format(const ImageFormat image_format);
+GLenum to_opengl(const ImageFormat image_format);
+GLenum to_opengl_internal(const ImageFormat image_format);
 
 // Shader types
 GLenum to_opengl(const ShaderDataType type);

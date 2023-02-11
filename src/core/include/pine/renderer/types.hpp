@@ -31,6 +31,7 @@ enum class TextureFormat
 
     // Depth
     DEPTH32F,
+    DEPTH24STENCIL8,
 };
 
 uint32_t get_byte_size(const TextureFormat format);

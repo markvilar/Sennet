@@ -28,6 +28,8 @@ void EditorLayer::on_attach()
     FramebufferSpecs specs;
     specs.width = 1;
     specs.height = 1;
+    specs.color_attachment.format = TextureFormat::RGBA;
+    specs.depth_attachment.format = TextureFormat::DEPTH32F;
     viewport_framebuffer = create_framebuffer(specs);
 
     quad_render_data = QuadRenderer::init();
