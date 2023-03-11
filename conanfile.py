@@ -64,6 +64,7 @@ class PineConan(ConanFile):
     def requirements(self):
         """ Specifies the requirements of the package. """
         self.requires("asio/1.21.0")
+        self.requires("argparse/2.9")
         self.requires("glad/0.1.34")
         self.requires("glfw/3.3.4")
         self.requires("glm/0.9.9.8")
@@ -121,6 +122,7 @@ class PineConan(ConanFile):
         self.cpp_info.components["libpine"].libs = ["pine"]
         self.cpp_info.components["libpine"].requires = [
             "libimgui",
+            "argparse::argparse",
             "asio::asio",
             "glad::glad",
             "glfw::glfw",
