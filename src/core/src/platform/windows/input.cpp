@@ -7,6 +7,7 @@
 
 namespace pine::input
 {
+
 bool is_key_pressed(const Window& window, const KeyCode key)
 {
     const auto native_window

@@ -6,6 +6,7 @@
 
 namespace pine
 {
+
 OrthographicCamera::OrthographicCamera(const float left,
     const float right,
     const float bottom,

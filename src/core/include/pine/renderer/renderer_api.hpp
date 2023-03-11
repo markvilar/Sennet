@@ -8,15 +8,14 @@
 
 namespace pine
 {
-using RendererID = uint32_t;
 
 class RendererAPI
 {
 public:
     enum class API
     {
-        None = 0,
-        OpenGL = 1,
+        None,
+        OpenGL,
     };
 
 public:

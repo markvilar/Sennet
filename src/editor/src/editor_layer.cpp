@@ -11,11 +11,10 @@ EditorLayer::EditorLayer() : Layer("EditorLayer"), camera_controller(1.0f, true)
 
 void EditorLayer::on_attach()
 {
-    const auto opensans = pine::fonts::OpenSans;
+    const auto default_font = pine::default_font();
     const auto& gui = Application::get().get_gui();
-    gui.load_font(opensans.data(), opensans.size(), 18.0f);
+    gui.load_font(default_font.data(), default_font.size(), 18.0f);
 
-    // NOTE: Goal for shader API
     auto shader = create_shader("resources/shaders/quad.vert",
         "resources/shaders/quad.frag");
 
@@ -29,7 +28,7 @@ void EditorLayer::on_attach()
     FramebufferSpecs specs;
     specs.width = 1;
     specs.height = 1;
-    viewport_framebuffer = Framebuffer::create(specs);
+    viewport_framebuffer = create_framebuffer(specs);
 
     quad_render_data = QuadRenderer::init();
 
@@ -360,34 +359,6 @@ void EditorLayer::on_gui_render()
 
             gui::empty_space(0.0f, 20.0f);
             ImGui::Separator();
-
-            static int8_t value_int8 = 0;
-            static int16_t value_int16 = 0;
-            static int32_t value_int32 = 0;
-            static int64_t value_int64 = 0;
-            static uint8_t value_uint8 = 0;
-            static uint16_t value_uint16 = 0;
-            static uint32_t value_uint32 = 0;
-            static uint64_t value_uint64 = 0;
-            static float value_float = 0.0;
-            static double value_double = 0.0;
-
-            gui::slider_scalar<int8_t>("Slider int8", &value_int8, -10, 10);
-            gui::slider_scalar<int16_t>("Slider int16", &value_int16, -10, 10);
-            gui::slider_scalar<int32_t>("Slider int32", &value_int32, -10, 10);
-            gui::slider_scalar<int64_t>("Slider int64", &value_int64, -10, 10);
-            gui::slider_scalar<uint8_t>("Slider uint8", &value_uint8, 0, 10);
-            gui::slider_scalar<uint16_t>("Slider uint16", &value_uint16, 0, 10);
-            gui::slider_scalar<uint32_t>("Slider uint32", &value_uint32, 0, 10);
-            gui::slider_scalar<uint64_t>("Slider uint64", &value_uint64, 0, 10);
-            gui::slider_scalar<float>("Slider float",
-                &value_float,
-                -1.0f,
-                1.0f);
-            gui::slider_scalar<double>("Slider double",
-                &value_double,
-                -1.0,
-                1.0);
         });
 
     console_window.on_render();

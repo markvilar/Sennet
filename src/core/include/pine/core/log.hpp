@@ -7,6 +7,7 @@
 
 namespace pine
 {
+
 class Log
 {
 public:

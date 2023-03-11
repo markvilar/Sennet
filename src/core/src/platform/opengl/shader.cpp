@@ -3,12 +3,13 @@
 #include <glad/glad.h>
 
 #include "pine/pch.hpp"
-#include "pine/platform/opengl/helpers.hpp"
+#include "pine/platform/opengl/utilities.hpp"
 #include "pine/utils/filesystem.hpp"
 #include "pine/utils/math.hpp"
 
 namespace pine
 {
+
 // ----------------------------------------------------------------------------
 // OpenGLShader
 // ----------------------------------------------------------------------------

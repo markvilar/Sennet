@@ -7,6 +7,7 @@
 
 namespace pine
 {
+
 LinuxInputHandle::LinuxInputHandle(const Window& window_) { window = &window_; }
 
 bool LinuxInputHandle::is_key_pressed(const KeyCode key) const

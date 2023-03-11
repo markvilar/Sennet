@@ -2,6 +2,7 @@
 
 namespace pine
 {
+
 typedef enum class KeyCode : uint16_t
 {
     Space = 32,

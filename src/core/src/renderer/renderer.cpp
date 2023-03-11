@@ -7,6 +7,7 @@
 
 namespace pine
 {
+
 std::unique_ptr<Renderer::SceneData> Renderer::s_scene_data
     = std::make_unique<Renderer::SceneData>();
 

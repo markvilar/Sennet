@@ -5,6 +5,7 @@
 
 namespace pine
 {
+
 RendererAPI::API RendererAPI::s_api = RendererAPI::API::OpenGL;
 
 std::unique_ptr<RendererAPI> RendererAPI::create()

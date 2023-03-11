@@ -2,6 +2,7 @@
 
 namespace pine
 {
+
 typedef enum class MouseCode : uint16_t
 {
     Button0 = 0,

@@ -1,7 +1,7 @@
 #pragma once
 
 #include "pine/core/common.hpp"
-#include "pine/renderer/common.hpp"
+#include "pine/renderer/types.hpp"
 
 #include <memory>
 #include <string>
@@ -9,10 +9,11 @@
 
 namespace pine
 {
+
 struct VertexBufferElement
 {
     std::string name = "";
-    ShaderDataType type = ShaderDataType::None;
+    ShaderDataType type = ShaderDataType::NONE;
     uint32_t size = 0;
     uint32_t component_count = 0;
     uint32_t offset = 0;
@@ -23,8 +24,8 @@ struct VertexBufferElement
         const bool is_data_normalized = false)
         : name(vertex_name),
           type(data_type),
-          size(get_size(data_type)),
-          component_count(get_count(data_type)),
+          size(get_byte_size(data_type)),
+          component_count(get_components(data_type)),
           offset(0),
           normalized(is_data_normalized)
     {
@@ -45,33 +46,30 @@ public:
     ~VertexBufferLayout() = default;
 
     VertexBufferLayout(
-        const std::initializer_list<VertexBufferElement>& elements)
-        : m_elements(elements)
+        const std::initializer_list<VertexBufferElement>& elements_)
+        : elements(elements_)
     {
         calculate_offset_and_stride();
     }
 
-    inline uint32_t get_stride() const { return m_stride; }
+    inline uint32_t get_stride() const { return stride; }
     inline const std::vector<VertexBufferElement>& get_elements() const
     {
-        return m_elements;
+        return elements;
     }
 
     std::vector<VertexBufferElement>::iterator begin()
     {
-        return m_elements.begin();
+        return elements.begin();
     }
-    std::vector<VertexBufferElement>::iterator end()
-    {
-        return m_elements.end();
-    }
+    std::vector<VertexBufferElement>::iterator end() { return elements.end(); }
     std::vector<VertexBufferElement>::const_iterator begin() const
     {
-        return m_elements.begin();
+        return elements.begin();
     }
     std::vector<VertexBufferElement>::const_iterator end() const
     {
-        return m_elements.end();
+        return elements.end();
     }
 
 private:
@@ -79,8 +77,8 @@ private:
     void calculate_offset_and_stride();
 
 private:
-    std::vector<VertexBufferElement> m_elements;
-    uint32_t m_stride = 0;
+    std::vector<VertexBufferElement> elements;
+    uint32_t stride = 0;
 };
 
 class VertexBuffer

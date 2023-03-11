@@ -9,6 +9,7 @@
 
 namespace pine
 {
+
 // Forward declaration
 class Shader;
 

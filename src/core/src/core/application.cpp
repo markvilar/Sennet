@@ -10,6 +10,7 @@
 
 namespace pine
 {
+
 Application* Application::instance = nullptr;
 
 Application::Application(const ApplicationSpecs& specs) : specification(specs)

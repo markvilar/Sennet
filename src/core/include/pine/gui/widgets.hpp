@@ -8,6 +8,7 @@
 
 namespace pine::gui
 {
+
 inline void empty_space(const float width, const float height)
 {
     ImGui::Dummy({width, height});

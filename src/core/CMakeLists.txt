@@ -3,6 +3,7 @@ add_library(pine::pine ALIAS pine)
 
 target_sources(pine
     PUBLIC 
+        # Core
         include/pine/core/application.hpp
         include/pine/core/assert.hpp
         include/pine/core/common.hpp
@@ -14,33 +15,41 @@ target_sources(pine
         include/pine/core/platform.hpp
         include/pine/core/timestep.hpp
         include/pine/core/window.hpp
+
+        # Events
         include/pine/events/application_event.hpp
         include/pine/events/event.hpp
         include/pine/events/key_event.hpp
         include/pine/events/mouse_event.hpp
+
+        # Gui
         include/pine/gui/common.hpp
         include/pine/gui/manager.hpp
         include/pine/gui/style.hpp
         include/pine/gui/widgets.hpp
         include/pine/gui/window.hpp
+
+        # Network
         include/pine/network/client.hpp
         include/pine/network/connection.hpp
         include/pine/network/server.hpp
         include/pine/network/types.hpp
+
+        # Platform
         include/pine/platform/opengl/buffer.hpp
-        include/pine/platform/opengl/common.hpp
         include/pine/platform/opengl/context.hpp
         include/pine/platform/opengl/framebuffer.hpp
-        include/pine/platform/opengl/helpers.hpp
         include/pine/platform/opengl/renderer_api.hpp
         include/pine/platform/opengl/shader.hpp
         include/pine/platform/opengl/texture.hpp
+        include/pine/platform/opengl/utilities.hpp
         include/pine/platform/windows/window.hpp
         include/pine/platform/linux/input.hpp
         include/pine/platform/linux/window.hpp
+
+        # Renderer
         include/pine/renderer/buffer.hpp
         include/pine/renderer/camera.hpp
-        include/pine/renderer/common.hpp
         include/pine/renderer/framebuffer.hpp
         include/pine/renderer/graphics_context.hpp
         include/pine/renderer/image.hpp
@@ -50,33 +59,46 @@ target_sources(pine
         include/pine/renderer/renderer_api.hpp
         include/pine/renderer/shader.hpp
         include/pine/renderer/texture.hpp
+        include/pine/renderer/types.hpp
+
+        # Utils
         include/pine/utils/argparse.hpp
         include/pine/utils/filesystem.hpp
         include/pine/utils/fonts.hpp
         include/pine/utils/math.hpp
         include/pine/utils/locked_queue.hpp
-    PRIVATE 
+    
+    PRIVATE
+        # Core
         src/core/application.cpp
         src/core/input.cpp
         src/core/layer.cpp
         src/core/log.cpp
+        
+        # Gui
         src/gui/manager.cpp
         src/gui/style.cpp
         src/gui/window.cpp
+
+        # Network
         src/network/client.cpp
         src/network/connection.cpp
         src/network/server.cpp
+
+        # Platform
         src/platform/opengl/buffer.cpp
         src/platform/opengl/context.cpp
         src/platform/opengl/framebuffer.cpp
-        src/platform/opengl/helpers.cpp
         src/platform/opengl/renderer_api.cpp
         src/platform/opengl/shader.cpp
         src/platform/opengl/texture.cpp
+        src/platform/opengl/utilities.cpp
         src/platform/windows/input.cpp
         src/platform/windows/window.cpp
         src/platform/linux/input.cpp
         src/platform/linux/window.cpp
+
+        # Renderer
         src/renderer/buffer.cpp
         src/renderer/camera.cpp
         src/renderer/framebuffer.cpp
@@ -88,6 +110,9 @@ target_sources(pine
         src/renderer/renderer_api.cpp
         src/renderer/shader.cpp
         src/renderer/texture.cpp
+        src/renderer/types.cpp
+
+        # Utils
         src/utils/argparse.cpp
         src/utils/filesystem.cpp
 )
@@ -101,6 +126,7 @@ find_package(glfw3 REQUIRED)
 find_package(glm REQUIRED)
 find_package(spdlog REQUIRED)
 find_package(stb REQUIRED)
+find_package(tinyply REQUIRED)
 
 target_include_directories(pine PUBLIC include)
 
@@ -115,6 +141,7 @@ target_link_libraries(pine
         glad::glad 
         glfw::glfw 
         stb::stb
+        tinyply::tinyply
         $<$<BOOL:${PINE_SANITIZERS_ENABLE}>:pine::options>
         $<$<BOOL:${PINE_WARNINGS_ENABLE}>:pine::warnings>
 )

@@ -4,6 +4,7 @@
 
 namespace pine
 {
+
 class GraphicsContext
 {
 public:

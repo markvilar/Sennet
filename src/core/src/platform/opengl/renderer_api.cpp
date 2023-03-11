@@ -6,6 +6,7 @@
 
 namespace pine
 {
+
 void OpenGLRendererAPI::init()
 {
     glEnable(GL_BLEND);

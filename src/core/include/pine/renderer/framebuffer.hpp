@@ -2,12 +2,21 @@
 
 #include "pine/core/common.hpp"
 #include "pine/renderer/renderer_api.hpp"
+#include "pine/renderer/texture.hpp"
 
 #include <cstdint>
 #include <memory>
 
 namespace pine
 {
+
+struct FramebufferAttachment
+{
+    TextureFormat format = TextureFormat::INVALID;
+    TextureFilter filter = TextureFilter::NONE;
+    TextureWrap wrap = TextureWrap::NONE;
+};
+
 struct FramebufferSpecs
 {
     uint32_t width = 0;
@@ -16,7 +25,8 @@ struct FramebufferSpecs
 
     bool swapchain_target = false;
 
-    // TODO: FramebufferFormat
+    FramebufferAttachment color_attachment;
+    FramebufferAttachment depth_attachment;
 };
 
 class Framebuffer
@@ -32,7 +42,8 @@ public:
     virtual RendererID get_color_attachment_renderer_id() const = 0;
 
     virtual const FramebufferSpecs& get_specification() const = 0;
-    static std::unique_ptr<Framebuffer> create(const FramebufferSpecs& specs);
 };
+
+std::unique_ptr<Framebuffer> create_framebuffer(const FramebufferSpecs& specs);
 
 } // namespace pine

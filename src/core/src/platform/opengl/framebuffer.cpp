@@ -6,7 +6,8 @@
 
 namespace pine
 {
-static constexpr uint32_t s_max_framebuffer_size = 8192;
+
+static constexpr uint32_t max_framebuffer_size = 8192;
 
 OpenGLFramebuffer::OpenGLFramebuffer(const FramebufferSpecs& specs)
     : specification(specs)
@@ -88,8 +89,8 @@ void OpenGLFramebuffer::unbind() { glBindFramebuffer(GL_FRAMEBUFFER, 0); }
 
 void OpenGLFramebuffer::resize(const uint32_t width, const uint32_t height)
 {
-    if (width == 0 || height == 0 || width > s_max_framebuffer_size
-        || height > s_max_framebuffer_size)
+    if (width == 0 || height == 0 || width > max_framebuffer_size
+        || height > max_framebuffer_size)
     {
         PINE_CORE_WARN("Attempted to resize framebuffer to {0}, {1}",
             width,

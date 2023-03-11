@@ -6,6 +6,7 @@
 
 namespace pine::gui
 {
+
 using WindowFlags = int;
 
 class Window

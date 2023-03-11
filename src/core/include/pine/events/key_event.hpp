@@ -8,6 +8,7 @@
 
 namespace pine
 {
+
 class KeyEvent : public Event
 {
 public:

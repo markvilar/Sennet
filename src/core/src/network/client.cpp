@@ -6,6 +6,7 @@
 
 namespace pine
 {
+
 bool is_connected(const ClientState& client)
 {
     return client.connection ? is_connected(*client.connection.get()) : false;

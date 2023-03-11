@@ -12,6 +12,7 @@
 
 namespace pine
 {
+
 class LinuxWindow : public Window
 {
     using NativeWindow = GLFWwindow;
