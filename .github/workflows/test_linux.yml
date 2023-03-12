@@ -7,28 +7,27 @@ on:
 
 defaults:
   run:
-    shell: bash
-
+    shell: bash 
 env:
   source_dir: "${{github.workspace}}"
   build_dir: "${{github.workspace}}/build"
 
 jobs:
   build_and_test:
-    name: "test-${{matrix.os}}-${{matrix.build_type}}-${{matrix.compiler.c}}"
+    name: "test-${{matrix.os}}-${{matrix.build_type}}-${{matrix.compiler}}"
     runs-on: "${{matrix.os}}"
     strategy:
       fail-fast: false
       matrix:
         include:
           - os: ubuntu-20.04
-            compiler: { c: gcc, cpp: g++ }
+            compiler: gcc
             generator: Ninja
             build_type: Release
             platform: x64
 
           - os: ubuntu-20.04
-            compiler: { c: clang, cpp: clang++ }
+            compiler: clang
             generator: Ninja
             build_type: Release
             platform: x64
@@ -40,23 +39,22 @@ jobs:
     - name: Environment setup
       uses: ./.github/actions/linux-setup
 
-    - name: Generate project build
-      run: |
-        export CMAKE_GENERATOR="${{matrix.generator}}"
-        export CMAKE_C_COMPILER="${{matrix.compiler.c}}"
-        export CMAKE_CXX_COMPILER="${{matrix.compiler.cpp}}"
-        cmake \
-          -S ${{env.source_dir}} \
-          -B ${{env.build_dir}} \
-          -D CMAKE_BUILD_TYPE=${{env.build_type}} \
-          -D PINE_EDITOR_ENABLE=ON \
-          -D PINE_EXAMPLE_ENABLE=ON \
-          -D PINE_TEST_ENABLE=ON \
-          -D PINE_SANITIZERS_ENABLE=OFF \
-          -D PINE_WARNINGS_ENABLE=OFF 
+    - name: Create Conan profile
+      run: conan profile new default --detect --force
 
-    - name: Build project
-      run: cmake --build ${{env.build_dir}}
+    - name: Build
+      run: |
+        conan build ${{env.source_dir}} \
+            -of ${{env.source_dir}} \
+            -s build_type=${{env.build_type}} \
+            -s compiler=${{matrix.compiler.cpp}}
+
+    - name: Build
+      run: |
+        conan build ${{env.source_dir}} \
+            -of ${{env.source_dir}} \
+            -s build_type=${{env.build_type}} \
+            -s compiler=${{matrix.compiler.cpp}}
     
     - name: Run project tests
       run: |
