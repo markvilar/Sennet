@@ -11,7 +11,6 @@ defaults:
 
 env:
   source_dir: "${{github.workspace}}"
-  build_dir: "${{github.workspace}}/build"
 
 jobs:
   build:
@@ -41,14 +40,18 @@ jobs:
       uses: ./.github/actions/linux-setup
 
     - name: Create Conan profile
-      run: conan profile new default --detect --force
+      run: |
+        conan profile detect --name worker_profile
+        conan 
 
     - name: Build
       run: |
         conan build ${{env.source_dir}} \
-            -of ${{env.source_dir}} \
             -s build_type=${{env.build_type}} \
-            -s compiler=${{matrix.compiler.cpp}}
+            -s compiler=${{matrix.compiler.cpp}} \
+            -s compiler.cppstd=17 \
+            -pr worker_profile \
+            --build missing
 
     - name: Package
       run: conan create . --build missing
