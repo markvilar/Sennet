@@ -47,7 +47,7 @@ jobs:
       run: |
         conan build ${{env.source_dir}} \
             -s build_type=${{matrix.build_type}} \
-            -s compiler=${{matrix.compiler.cpp}} \
+            -s compiler=${{matrix.compiler}} \
             -s compiler.cppstd=17 \
             -pr:b=worker_profile \
             --build missing
