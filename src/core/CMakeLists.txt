@@ -126,7 +126,6 @@ find_package(glfw3 REQUIRED)
 find_package(glm REQUIRED)
 find_package(spdlog REQUIRED)
 find_package(stb REQUIRED)
-find_package(tinyply REQUIRED)
 
 target_include_directories(pine PUBLIC include)
 
@@ -138,10 +137,9 @@ target_link_libraries(pine
         imgui::imgui
         spdlog::spdlog
     PRIVATE 
-        glad::glad 
-        glfw::glfw 
+        glad::glad
+        glfw
         stb::stb
-        tinyply::tinyply
         $<$<BOOL:${PINE_SANITIZERS_ENABLE}>:pine::options>
         $<$<BOOL:${PINE_WARNINGS_ENABLE}>:pine::warnings>
 )
@@ -165,9 +163,9 @@ target_compile_options(pine PUBLIC -std=c++17)
 
 set_target_properties(pine PROPERTIES 
     CXX_STANDARD 17
-    ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/lib"
-    LIBRARY_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/lib"
-    RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/bin"
+    ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib"
+    LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib"
+    RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin"
 )
 
 # Install static libraries, shared libraries, and executables

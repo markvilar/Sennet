@@ -1,10 +1,16 @@
-from conans import ConanFile, CMake, tools
+from conan import ConanFile
 
-required_conan_version = ">=1.39.0"
+from conan.errors import ConanInvalidConfiguration
+
+from conan.tools.cmake import CMake, CMakeDeps, CMakeToolchain, cmake_layout
+from conan.tools.files import copy, get, patch
+from conan.tools.scm import Git, Version
+
+required_conan_version = ">=2.0.0"
 
 class PineConan(ConanFile):
     name = "pine"
-    version = "0.3.0"
+    version = "0.3.1"
     license = "Apache 2.0"
     author = "Martin Kvisvik Larsen"
     description = "Pine - Library for graphics and network"
@@ -15,12 +21,16 @@ class PineConan(ConanFile):
     
     options = {
         "shared" : [True, False], 
-        "fPIC" : [True, False]
+        "fPIC" : [True, False],
+        "build_editor" : [True, False],
+        "build_examples" : [True, False],
     }
     
     default_options = {
         "shared" : False, 
-        "fPIC" : True
+        "fPIC" : True,
+        "build_editor" : True,
+        "build_examples" : True,
     }
 
     exports_sources = [
@@ -33,7 +43,7 @@ class PineConan(ConanFile):
         "vendor/*"
     ]
     
-    generators = ["cmake", "cmake_find_package", "cmake_find_package_multi"]
+    generators = ["CMakeDeps", "CMakeToolchain"]
 
     @property
     def _source_subfolder(self):
@@ -44,6 +54,7 @@ class PineConan(ConanFile):
         return "build_subfolder"
 
     def config_options(self):
+        """ Configure project options. """
         if self.settings.os == "Windows":
             del self.options.fPIC
 
@@ -63,55 +74,64 @@ class PineConan(ConanFile):
 
     def requirements(self):
         """ Specifies the requirements of the package. """
-        self.requires("asio/1.21.0")
-        self.requires("argparse/2.9")
-        self.requires("glad/0.1.34")
+        self.requires("asio/[>=1.21.0]")
+        self.requires("argparse/[>=2.9]")
+        self.requires("glad/0.1.36")
         self.requires("glfw/3.3.4")
         self.requires("glm/0.9.9.8")
         self.requires("spdlog/1.9.2")
         self.requires("stb/cci.20210713")
-        self.requires("tinyply/2.3.4")
+
+    def build_requirements(self):
+        """ Specifies requirements for building the package. """
+        self.tool_requires("cmake/[>=3.19]")
 
     def validate(self):
         """ Validates the project configuration. """
         if self.settings.compiler == "clang":
-            if tools.Version(self.settings.compiler.version) < "8":
+            if Version(self.settings.compiler.version) < "8":
                 raise ConanInvalidConfiguration("Invalid clang compiler \
                     version.")
         if self.settings.compiler == "gcc":
-            if tools.Version(self.settings.compiler.version) < "7":
+            if Version(self.settings.compiler.version) < "7":
                 raise ConanInvalidConfiguration("Invalid gcc compiler \
                     version.")
-        if self.settings.compiler == "Visual Studio":
-            if tools.Version(self.settings.compiler.version) < "16":
+        if self.settings.compiler == "msvc":
+            if Version(self.settings.compiler.version) < "16":
                 raise ConanInvalidConfiguration("Invalid Visual Studio \
                     compiler version.")
 
-    def _configure_cmake(self):
+    def layout(self):
+        """ Defines the project layout. """
+        self.folders.root = "."
+        self.folders.source = "."
+        self.folders.build = "build"
+        cmake_layout(self)
+
+    def source(self):
         """ """
-        cmake = CMake(self)
-        cmake.definitions["PINE_SANITIZERS_ENABLE"] = True
-        cmake.definitions["PINE_WARNINGS_ENABLE"] = True
-        cmake.definitions["PINE_EDITOR_ENABLE"] = True
-        cmake.definitions["PINE_EXAMPLE_ENABLE"] = True
-        cmake.definitions["PINE_TEST_ENABLE"] = True
-        cmake.configure(build_folder=self._build_subfolder)        
-        return cmake
+        pass
 
     def build(self):
         """ Builds the library. """
-        cmake = self._configure_cmake()
+        cmake = CMake(self)
+        cmake.configure()
         cmake.build()
 
     def package(self):
         """ Packages the library. """
-        self.copy("LICENSE*", dst="licenses", src=self._source_subfolder)
-        cmake = self._configure_cmake()
+        copy(self, pattern="LICENSE*", dst="licenses", src=self.source_folder)
+        cmake = CMake(self)
         cmake.install()
 
     def package_info(self):
         """ Configures the package information. """
         # ImGui component
+        imgui_comp = self.cpp_info.components["libimgui"]
+        imgui_comp.set_property("cmake_file_name", "imgui-config.cmake")
+        imgui_comp.set_property("cmake_target_name", "imgui::imgui")
+        imgui_comp.set_property("pkg_config_name", "imgui-config.cmake")
+
         self.cpp_info.components["libimgui"].libs = ["imgui"]
         self.cpp_info.components["libimgui"].requires = ["glfw::glfw"]
         self.cpp_info.components["libimgui"].defines.append(
@@ -120,6 +140,11 @@ class PineConan(ConanFile):
             "IMGUI_IMPL_OPENGL_LOADER_GLAD")
 
         # Pine component
+        pine_comp = self.cpp_info.components["libpine"]
+        pine_comp.set_property("cmake_file_name", "pine-config.cmake")
+        pine_comp.set_property("cmake_target_name", "pine::pine")
+        pine_comp.set_property("pkg_config_name", "pine-config.cmake")
+
         self.cpp_info.components["libpine"].libs = ["pine"]
         self.cpp_info.components["libpine"].requires = [
             "libimgui",
@@ -130,7 +155,6 @@ class PineConan(ConanFile):
             "glm::glm",
             "spdlog::spdlog",
             "stb::stb",
-            "tinyply::tinyply",
         ]
         self.cpp_info.components["libpine"].resdirs= ["resources"]
 
@@ -145,3 +169,15 @@ class PineConan(ConanFile):
             self.cpp_info.components["libpine"].defines.append("PINE_DEBUG")
         elif self.settings.build_type == "Release":
             self.cpp_info.components["libpine"].defines.append("PINE_RELEASE")
+
+    def generate(self):
+        """ """
+        # TODO: Implement
+        pass
+
+    def export(self):
+        """ Responsible for capturing the coordinates of the current URL and 
+        commit. """
+        git = Git(self, self.recipe_folder)
+        # TODO: Implement
+        pass
