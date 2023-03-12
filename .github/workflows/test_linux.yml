@@ -39,7 +39,9 @@ jobs:
       uses: ./.github/actions/linux-setup
 
     - name: Create Conan profile
-      run: conan profile detect --name worker_profile
+      run: |
+        conan profile detect
+        conan profile detect --name worker_profile
 
     - name: Build
       run: |
@@ -47,7 +49,7 @@ jobs:
             -s build_type=${{env.build_type}} \
             -s compiler=${{matrix.compiler.cpp}} \
             -s compiler.cppstd=17 \
-            -pr worker_profile \
+            -pr:b=worker_profile \
             --build missing
 
     - name: Run project tests
