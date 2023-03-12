@@ -27,9 +27,21 @@ jobs:
             platform: x64
 
           - os: ubuntu-20.04
+            compiler: gcc
+            generator: Ninja
+            build_type: Debug
+            platform: x64
+
+          - os: ubuntu-20.04
             compiler: clang
             generator: Ninja
             build_type: Release
+            platform: x64
+
+          - os: ubuntu-20.04
+            compiler: clang
+            generator: Ninja
+            build_type: Debug
             platform: x64
 
     steps:
@@ -47,7 +59,7 @@ jobs:
     - name: Build
       run: |
         conan build ${{env.source_dir}} \
-            -s build_type=${{env.build_type}} \
+            -s build_type=${{matrix.build_type}} \
             -s compiler=${{matrix.compiler.cpp}} \
             -s compiler.cppstd=17 \
             -pr:b=worker_profile \
