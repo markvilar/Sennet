@@ -6,6 +6,8 @@ from conan.tools.cmake import CMake, CMakeDeps, CMakeToolchain, cmake_layout
 from conan.tools.files import copy, get, patch
 from conan.tools.scm import Git, Version
 
+from typing import Dict
+
 required_conan_version = ">=2.0.0"
 
 class PineConan(ConanFile):
@@ -22,15 +24,17 @@ class PineConan(ConanFile):
     options = {
         "shared" : [True, False], 
         "fPIC" : [True, False],
-        "build_editor" : [True, False],
-        "build_examples" : [True, False],
+        "enable_editor" : [True, False],
+        "enable_examples" : [True, False],
+        "enable_tests" : [True, False],
     }
     
     default_options = {
         "shared" : False, 
         "fPIC" : True,
-        "build_editor" : True,
-        "build_examples" : True,
+        "enable_editor" : True,
+        "enable_examples" : True,
+        "enable_tests" : True,
     }
 
     exports_sources = [
@@ -45,37 +49,28 @@ class PineConan(ConanFile):
     
     generators = ["CMakeDeps", "CMakeToolchain"]
 
-    @property
-    def _source_subfolder(self):
-        return "source_subfolder"
-
-    @property
-    def _build_subfolder(self):
-        return "build_subfolder"
-
     def config_options(self):
         """ Configure project options. """
         if self.settings.os == "Windows":
             del self.options.fPIC
+        if self.options.shared:
+            del self.options.fPIC
 
     def configure(self):
         """ Configure project settings. """
-        if self.options.shared:
-            del self.options.fPIC
-        self.options["glad"].shared        = False
-        self.options["glad"].no_loader     = False
-        self.options["glad"].spec          = "gl"
-        self.options["glad"].gl_profile    = "core"
-        self.options["glad"].gl_version    = "4.6"
-        self.options["glad"].gles1_version = "None"
-        self.options["glad"].gles2_version = "None"
-        self.options["glad"].glsc2_version = "None"
-        self.options["spdlog"].header_only = True
+        self.options["glad/*"].gl_profile = "core"
+        self.options["glad/*"].gl_version = "4.6"
+        self.options["glad/*"].gles1_version = None
+        self.options["glad/*"].gles2_version = None
+        self.options["glad/*"].glsc2_version = None
+        self.options["glad/*"].no_loader = False
+        self.options["glad/*"].shared = False
+        self.options["glad/*"].spec = "gl"
 
     def requirements(self):
         """ Specifies the requirements of the package. """
-        self.requires("asio/[>=1.21.0]")
         self.requires("argparse/[>=2.9]")
+        self.requires("asio/[>=1.21.0]")
         self.requires("glad/0.1.36")
         self.requires("glfw/3.3.4")
         self.requires("glm/0.9.9.8")
@@ -112,16 +107,31 @@ class PineConan(ConanFile):
         """ """
         pass
 
+    def _get_cmake_variables(self) -> Dict:
+        """ Internal methods to get CMake variables based on options. """
+        variables = {
+            "PINE_EDITOR_ENABLE" : 
+                "ON" if self.options.enable_editor else "OFF",
+            "PINE_EXAMPLE_ENABLE" : 
+                "ON" if self.options.enable_examples else "OFF",
+            "PINE_TEST_ENABLE" : 
+                "ON" if self.options.enable_tests else "OFF",
+        }
+        return variables
+
     def build(self):
         """ Builds the library. """
         cmake = CMake(self)
-        cmake.configure()
+        variables = self._get_cmake_variables()
+        cmake.configure(variables=variables)
         cmake.build()
 
     def package(self):
         """ Packages the library. """
         copy(self, pattern="LICENSE*", dst="licenses", src=self.source_folder)
         cmake = CMake(self)
+        variables = self._get_cmake_variables()
+        cmake.configure(variables=variables)
         cmake.install()
 
     def package_info(self):
@@ -178,6 +188,5 @@ class PineConan(ConanFile):
     def export(self):
         """ Responsible for capturing the coordinates of the current URL and 
         commit. """
-        git = Git(self, self.recipe_folder)
         # TODO: Implement
         pass

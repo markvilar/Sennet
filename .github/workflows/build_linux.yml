@@ -62,8 +62,14 @@ jobs:
             -s build_type=${{matrix.build_type}} \
             -s compiler=${{matrix.compiler}} \
             -s compiler.cppstd=17 \
-            -pr:b=worker_profile \
+            -pr worker_profile \
             --build missing
 
     - name: Package
-      run: conan create . --build missing
+      run: |
+        conan create ${{env.source_dir}} \
+            -s build_type=${{matrix.build_type}} \
+            -s compiler=${{matrix.compiler}} \
+            -s compiler.cppstd=17 \
+            -pr worker_profile \
+            --build missing
