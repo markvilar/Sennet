@@ -1,6 +1,7 @@
 # Pine
 
 [![Build](https://github.com/markvilar/pine/actions/workflows/build_linux.yml/badge.svg)](https://github.com/markvilar/pine/actions/workflows/build_linux.yml)
+[![Test](https://github.com/markvilar/pine/actions/workflows/test_linux.yml/badge.svg)](https://github.com/markvilar/pine/actions/workflows/test_linux.yml)
 [![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
 ## Description
@@ -11,36 +12,37 @@ development tools.
 
 ## Requirements
 Pine requires the follow tools to be built:
-- C++17
-- CMake 3.16+
-- Conan 1.39+ (optional)
+- C++17 compiler
+- CMake 3.19+
+- Conan 2.0+
 
 ## Dependencies
 
 | **Library** | **Version**  | **Library purpose.**                |
 |-------------|--------------|-------------------------------------|
+| argparse    | >=2.9        | Command line argument parsing.      |
 | asio        | 1.21.0       | Networking and asynchronicity.      |
-| glad        | 0.1.34       | Bindings and loaders of OpenGL 4.6. |
+| glad        | 0.1.36       | OpenGL 4.6 bindings and loaders.    |
 | glfw        | 3.3.4        | Window and input handling.          |
 | glm         | 0.9.9.8      | Vectorized mathematical operations. |
-| imgui       | 1.85         | Graphical user interface.           |
 | spdlog      | 1.9.2        | Console and file logging.           |
+| stb         | cci.20210713 | Image file loading.                 |
+|-------------|--------------|-------------------------------------|
+| imgui       | 1.85         | GUI windows, widgets, etc.          |
+| implot      | 0.14         | GUI plotting.                       |
+
 
 ## Workflows
-By default, Pine utilizes CMake for build generation and Conan for package
-management. However, all the native features of CMake are preserved by Pine.
-This means that the user can utilize another package manager by simply 
-providing paths to ```FindXXX.cmake``` files for each of the dependencies in 
-the ```CMAKE_MODULE_PATH``` variable.
 
 ### Linux Workflow
 
 #### Building
 
 ```shell
-# Clone pine
+# Clone pine and checkout a tag
 git clone https://github.com/markvilar/pine.git
 cd pine
+git checkout tags/<tag> -b <branch>
 
 # Install prerequisites
 apt install -y cmake gcc python3-dev python3-pip pkg-config 
@@ -48,33 +50,22 @@ apt install -y cmake gcc python3-dev python3-pip pkg-config
 # Install conan
 pip3 install conan
 
-# Set up a default conan profile if one does not exist. Optionally, change the compiler, compiler version, and C++ standard library implementation by updating the conan profile.
-conan profile new default --detect
+# Create a Conan profile
+conan profile detect --name <profile>
 
-# Install system dependencies
-apt install -y libgl-dev libx11-xcb-dev libx11-xcb-dev libfontenc-dev \
-    libice-dev libsm-dev libxaw7-dev libxcomposite-dev libxcursor-dev \
-    libxdamage-dev libxi-dev libxinerama-dev libxkbfile-dev libxmuu-dev \
-    libxrandr-dev libxres-dev libxss-dev libxtst-dev libxv-dev libxvmc-dev \
-    libxxf86vm-dev libxcb-render0-dev libxcb-render-util0-dev libxcb-xkb-dev \
-    libxcb-icccm4-dev libxcb-image0-dev libxcb-keysyms1-dev libxcb-randr0-dev \
-    libxcb-shape0-dev libxcb-sync-dev libxcb-xfixes0-dev libxcb-xinerama0-dev \
-    libxcb-dri3-dev libxcb-util-dev libxcb-util0-dev uuid-dev
+# Build the package
+conan build . \
+    -s build_type=Release \
+    -s compiler.cppstd=17 \
+    -pr <profile> \
+    --build missing
 
-# Alternatively, allow Conan to install system dependencies by giving the default profile system install and sudo permission
-conan profile update conf.tools.system.package_manager:mode=install default
-conan profile update conf.tools.system.package_manager:sudo=True default
-
-# Generate build with CMake
-cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
-
-# Build
-cmake --build build
-```
-
-#### Packaging with Conan
-```shell
-conan create . --build missing
+# Create the package
+conan create . \
+    -s build_type=Release \
+    -s compiler.cppstd=17 \
+    -pr <profile> \
+    --build missing
 ```
 
 ## Development Plan

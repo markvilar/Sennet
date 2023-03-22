@@ -3,7 +3,7 @@
 #include "pine/core/assert.hpp"
 #include "pine/pch.hpp"
 
-namespace pine::opengl
+namespace pine::glutils
 {
 
 GLenum to_opengl(const TextureFormat format)
@@ -26,9 +26,67 @@ GLenum to_opengl(const TextureFormat format)
         return GL_BGRA;
     case TextureFormat::DEPTH32F:
         return GL_DEPTH_COMPONENT32F;
+    case TextureFormat::DEPTH24STENCIL8:
+        return GL_DEPTH24_STENCIL8;
     default:
         return GL_INVALID_ENUM;
     }
+}
+
+GLenum to_opengl_internal(const TextureFormat format)
+{
+    switch (format)
+    {
+    case TextureFormat::INVALID:
+        return GL_INVALID_ENUM;
+    case TextureFormat::RED:
+        return GL_R8;
+    case TextureFormat::RG:
+        return GL_RG8;
+    case TextureFormat::RGB:
+        return GL_RGB8;
+    case TextureFormat::BGR:
+        return GL_RGB8;
+    case TextureFormat::RGBA:
+        return GL_RGBA8;
+    case TextureFormat::BGRA:
+        return GL_RGBA8;
+    case TextureFormat::DEPTH32F:
+        return GL_DEPTH_COMPONENT;
+    case TextureFormat::DEPTH24STENCIL8:
+        return GL_DEPTH_STENCIL;
+    default:
+        return GL_INVALID_ENUM;
+    }
+    return GL_INVALID_ENUM;
+}
+
+GLenum get_attachment_type(const TextureFormat format)
+{
+    switch (format)
+    {
+    case TextureFormat::INVALID:
+        return GL_INVALID_ENUM;
+    case TextureFormat::RED:
+        return GL_COLOR_ATTACHMENT0;
+    case TextureFormat::RG:
+        return GL_COLOR_ATTACHMENT0;
+    case TextureFormat::RGB:
+        return GL_COLOR_ATTACHMENT0;
+    case TextureFormat::BGR:
+        return GL_COLOR_ATTACHMENT0;
+    case TextureFormat::RGBA:
+        return GL_COLOR_ATTACHMENT0;
+    case TextureFormat::BGRA:
+        return GL_COLOR_ATTACHMENT0;
+    case TextureFormat::DEPTH32F:
+        return GL_DEPTH_ATTACHMENT;
+    case TextureFormat::DEPTH24STENCIL8:
+        return GL_DEPTH_STENCIL_ATTACHMENT;
+    default:
+        return GL_INVALID_ENUM;
+    }
+    return GL_INVALID_ENUM;
 }
 
 GLenum to_opengl(const TextureFilter filter)
@@ -61,11 +119,11 @@ GLenum to_opengl(const TextureWrap wrap)
     }
 }
 
-GLenum to_data_format(const ImageFormat image_format)
+GLenum to_opengl(const ImageFormat format)
 {
-    const auto internal_format = [image_format]()
+    const auto data_format = [format]()
     {
-        switch (image_format)
+        switch (format)
         {
         case ImageFormat::INVALID:
             return GL_INVALID_ENUM;
@@ -85,15 +143,15 @@ GLenum to_data_format(const ImageFormat image_format)
         return GL_INVALID_ENUM;
     }();
 
-    PINE_CORE_ASSERT(internal_format, "Invalid OpenGL data format.");
-    return static_cast<GLenum>(internal_format);
+    PINE_CORE_ASSERT(data_format, "Invalid OpenGL data format.");
+    return static_cast<GLenum>(data_format);
 }
 
-GLenum to_internal_format(const ImageFormat image_format)
+GLenum to_opengl_internal(const ImageFormat format)
 {
-    const auto internal_format = [image_format]()
+    const auto internal_format = [format]()
     {
-        switch (image_format)
+        switch (format)
         {
         case ImageFormat::INVALID:
             return GL_INVALID_ENUM;
@@ -115,7 +173,7 @@ GLenum to_internal_format(const ImageFormat image_format)
         return GL_INVALID_ENUM;
     }();
 
-    PINE_CORE_ASSERT(internal_format, "Invalid OpenGL data format.");
+    PINE_CORE_ASSERT(internal_format, "Invalid OpenGL internal data format.");
     return static_cast<GLenum>(internal_format);
 }
 
@@ -247,4 +305,4 @@ GLuint compile_shader(const std::string& vertex_source,
     return program;
 }
 
-} // namespace pine::opengl
+} // namespace pine::glutils

@@ -55,15 +55,26 @@ bool is_color_format(const TextureFormat format)
 {
     switch (format)
     {
-    case TextureFormat::INVALID: return false;
-    case TextureFormat::RED: return true;
-    case TextureFormat::RG: return true;
-    case TextureFormat::RGB: return true;
-    case TextureFormat::BGR: return true;
-    case TextureFormat::RGBA: return true;
-    case TextureFormat::BGRA: return true;
-    case TextureFormat::DEPTH32F: return false;
-    default: return false;
+    case TextureFormat::INVALID:
+        return false;
+    case TextureFormat::RED:
+        return true;
+    case TextureFormat::RG:
+        return true;
+    case TextureFormat::RGB:
+        return true;
+    case TextureFormat::BGR:
+        return true;
+    case TextureFormat::RGBA:
+        return true;
+    case TextureFormat::BGRA:
+        return true;
+    case TextureFormat::DEPTH32F:
+        return false;
+    case TextureFormat::DEPTH24STENCIL8:
+        return false;
+    default:
+        return false;
     }
     return false;
 }
@@ -72,15 +83,26 @@ bool is_depth_format(const TextureFormat format)
 {
     switch (format)
     {
-    case TextureFormat::INVALID: return false;
-    case TextureFormat::RED: return false;
-    case TextureFormat::RG: return false;
-    case TextureFormat::RGB: return false;
-    case TextureFormat::BGR: return false;
-    case TextureFormat::RGBA: return false;
-    case TextureFormat::BGRA: return false;
-    case TextureFormat::DEPTH32F: return true;
-    default: return false;
+    case TextureFormat::INVALID:
+        return false;
+    case TextureFormat::RED:
+        return false;
+    case TextureFormat::RG:
+        return false;
+    case TextureFormat::RGB:
+        return false;
+    case TextureFormat::BGR:
+        return false;
+    case TextureFormat::RGBA:
+        return false;
+    case TextureFormat::BGRA:
+        return false;
+    case TextureFormat::DEPTH32F:
+        return true;
+    case TextureFormat::DEPTH24STENCIL8:
+        return true;
+    default:
+        return false;
     }
     return false;
 }

@@ -64,6 +64,7 @@ private:
 
 namespace opengl
 {
+
 // Create from files
 std::unique_ptr<OpenGLShader>
 create_shader(const std::filesystem::path& vertex_file,

@@ -25,7 +25,7 @@ target_sources(imgui
 )
 
 target_include_directories(imgui SYSTEM PUBLIC .)
-target_link_libraries(imgui PRIVATE glfw::glfw)
+target_link_libraries(imgui PRIVATE glfw)
 
 target_compile_definitions(imgui
     PUBLIC

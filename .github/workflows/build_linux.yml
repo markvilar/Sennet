@@ -11,26 +11,41 @@ defaults:
 
 env:
   source_dir: "${{github.workspace}}"
-  build_dir: "${{github.workspace}}/build"
 
 jobs:
   build:
-    name: "build-${{matrix.os}}-${{matrix.build_type}}-${{matrix.compiler.c}}"
+    name: "build-${{matrix.os}}-${{matrix.build_type}}-${{matrix.compiler}}"
     runs-on: "${{matrix.os}}"
     strategy:
       fail-fast: false
       matrix:
         include:
           - os: ubuntu-20.04
-            compiler: { c: gcc, cpp: g++ }
+            compiler: gcc
+            compiler_version: 8
             generator: Ninja
             build_type: Release
             platform: x64
 
           - os: ubuntu-20.04
-            compiler: { c: clang, cpp: clang++ }
+            compiler: gcc
+            compiler_version: 8
+            generator: Ninja
+            build_type: Debug
+            platform: x64
+
+          - os: ubuntu-20.04
+            compiler: clang
+            compiler_version: 8
             generator: Ninja
             build_type: Release
+            platform: x64
+
+          - os: ubuntu-20.04
+            compiler: clang
+            compiler_version: 8
+            generator: Ninja
+            build_type: Debug
             platform: x64
 
     steps:
@@ -40,25 +55,27 @@ jobs:
     - name: Environment setup
       uses: ./.github/actions/linux-setup
 
-    - name: Generate build
+    - name: Create Conan profile
       run: |
-        cmake \
-          -S ${{env.source_dir}} \
-          -B ${{env.build_dir}} \
-          -G ${{matrix.generator}} \
-          -D CMAKE_BUILD_TYPE=${{env.build_type}} \
-          -D CMAKE_CXX_COMPILER=${{matrix.compiler.cpp}} \
-          -D PINE_EDITOR_ENABLE=ON \
-          -D PINE_EXAMPLE_ENABLE=ON \
-          -D PINE_TEST_ENABLE=ON \
-          -D PINE_SANITIZERS_ENABLE=OFF \
-          -D PINE_WARNINGS_ENABLE=OFF 
+        conan profile detect
+        conan profile detect --name worker_profile
 
     - name: Build
-      run: cmake --build ${{env.build_dir}}
+      run: |
+        conan build ${{env.source_dir}} \
+            -s build_type=${{matrix.build_type}} \
+            -s compiler=${{matrix.compiler}} \
+            -s compiler.version=${{matrix.compiler_version}} \
+            -s compiler.cppstd=17 \
+            -pr worker_profile \
+            --build missing
 
-    - name: Create Conan profile
-      run: conan profile new default --detect --force
-
-    - name: Create Conan package
-      run: conan create . --build missing
+    - name: Package
+      run: |
+        conan create ${{env.source_dir}} \
+            -s build_type=${{matrix.build_type}} \
+            -s compiler=${{matrix.compiler}} \
+            -s compiler.version=${{matrix.compiler_version}} \
+            -s compiler.cppstd=17 \
+            -pr worker_profile \
+            --build missing

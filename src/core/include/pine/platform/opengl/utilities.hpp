@@ -8,17 +8,23 @@
 #include "pine/renderer/image.hpp"
 #include "pine/renderer/types.hpp"
 
-namespace pine::opengl
+namespace pine::glutils
 {
 
 // Texture types
 GLenum to_opengl(const TextureFormat format);
+GLenum to_opengl_internal(const TextureFormat format);
+
+// TODO: Add support for multiple color attachments
+GLenum get_attachment_type(const TextureFormat format);
+
+// Texture operations
 GLenum to_opengl(const TextureFilter filter);
 GLenum to_opengl(const TextureWrap wrap);
 
 // Image types
-GLenum to_data_format(const ImageFormat image_format);
-GLenum to_internal_format(const ImageFormat image_format);
+GLenum to_opengl(const ImageFormat image_format);
+GLenum to_opengl_internal(const ImageFormat image_format);
 
 // Shader types
 GLenum to_opengl(const ShaderDataType type);
@@ -33,4 +39,4 @@ GLuint process_shader(const GLenum type, const std::string& source);
 GLuint compile_shader(const std::string& vertex_source,
     const std::string& fragment_source);
 
-} // namespace pine::opengl
+} // namespace pine::glutils

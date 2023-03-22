@@ -121,6 +121,7 @@ void OpenGLShader::upload_uniform_mat4(const std::string& name,
 
 namespace opengl
 {
+
 std::unique_ptr<OpenGLShader>
 create_shader(const std::filesystem::path& vertex_file,
     const std::filesystem::path& fragment_file)
@@ -141,7 +142,8 @@ create_shader(const std::filesystem::path& vertex_file,
     const auto fragment_source
         = pine::filesystem::read_file_source(fragment_file);
 
-    const auto program = compile_shader(vertex_source, fragment_source);
+    const auto program
+        = glutils::compile_shader(vertex_source, fragment_source);
     return std::make_unique<OpenGLShader>(name, program);
 }
 
@@ -149,7 +151,8 @@ std::unique_ptr<OpenGLShader> create_shader(const std::string& name,
     const std::string& vertex_source,
     const std::string& fragment_source)
 {
-    const auto program = compile_shader(vertex_source, fragment_source);
+    const auto program
+        = glutils::compile_shader(vertex_source, fragment_source);
     return std::make_unique<OpenGLShader>(name, program);
 }
 

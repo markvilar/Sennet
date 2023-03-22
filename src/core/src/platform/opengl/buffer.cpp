@@ -4,7 +4,6 @@
 
 #include "pine/pch.hpp"
 #include "pine/platform/opengl/utilities.hpp"
-// #include "pine/renderer/types.hpp"
 
 namespace pine
 {
@@ -105,7 +104,7 @@ void OpenGLVertexArray::set_vertex_buffer(std::unique_ptr<VertexBuffer> buffer)
         {
             glVertexAttribIPointer(index,
                 static_cast<GLint>(element.component_count),
-                opengl::to_opengl(element.type),
+                glutils::to_opengl(element.type),
                 static_cast<GLsizei>(layout.get_stride()),
                 reinterpret_cast<const void*>(element.offset));
         }
@@ -113,7 +112,7 @@ void OpenGLVertexArray::set_vertex_buffer(std::unique_ptr<VertexBuffer> buffer)
         {
             glVertexAttribPointer(index,
                 static_cast<GLint>(element.component_count),
-                opengl::to_opengl(element.type),
+                glutils::to_opengl(element.type),
                 element.normalized ? GL_TRUE : GL_FALSE,
                 static_cast<GLsizei>(layout.get_stride()),
                 reinterpret_cast<const void*>(element.offset));
