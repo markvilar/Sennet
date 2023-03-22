@@ -22,24 +22,28 @@ jobs:
         include:
           - os: ubuntu-20.04
             compiler: gcc
+            compiler_version: 8
             generator: Ninja
             build_type: Release
             platform: x64
 
           - os: ubuntu-20.04
             compiler: gcc
+            compiler_version: 8
             generator: Ninja
             build_type: Debug
             platform: x64
 
           - os: ubuntu-20.04
             compiler: clang
+            compiler_version: 8
             generator: Ninja
             build_type: Release
             platform: x64
 
           - os: ubuntu-20.04
             compiler: clang
+            compiler_version: 8
             generator: Ninja
             build_type: Debug
             platform: x64
@@ -61,6 +65,7 @@ jobs:
         conan build ${{env.source_dir}} \
             -s build_type=${{matrix.build_type}} \
             -s compiler=${{matrix.compiler}} \
+            -s compiler.version=${{matrix.compiler_version}} \
             -s compiler.cppstd=17 \
             -pr worker_profile \
             --build missing
@@ -70,6 +75,7 @@ jobs:
         conan create ${{env.source_dir}} \
             -s build_type=${{matrix.build_type}} \
             -s compiler=${{matrix.compiler}} \
+            -s compiler.version=${{matrix.compiler_version}} \
             -s compiler.cppstd=17 \
             -pr worker_profile \
             --build missing
