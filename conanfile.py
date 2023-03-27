@@ -61,7 +61,7 @@ class PineConan(ConanFile):
         self.options["glad/*"].gl_profile = "core"
         self.options["glad/*"].gl_version = "4.6"
         self.options["glad/*"].gles1_version = None
-        self.options["glad/*"].gles2_version = None
+        self.options["glad/*"].gles2_version = "3.2"
         self.options["glad/*"].glsc2_version = None
         self.options["glad/*"].no_loader = False
         self.options["glad/*"].shared = False

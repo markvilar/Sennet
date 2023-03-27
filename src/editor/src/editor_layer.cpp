@@ -378,6 +378,13 @@ void EditorLayer::on_gui_render()
             ImGui::Text("Size:     %f, %f", size.x, size.y);
             ImGui::Text("Focused:  %d", focused);
             ImGui::Text("Hovered:  %d", hovered);
+
+            ImGui::Separator();
+
+            for (const auto uuid : uuids)
+            {
+                ImGui::Text("UUID:     %s", uuid.to_string().c_str());
+            }
         });
 }
 

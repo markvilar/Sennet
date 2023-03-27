@@ -33,3 +33,6 @@ ipch/
 */conaninfo.txt
 */conan.lock
 */graph_info.json
+
+# CMake presets
+CMakeUserPresets.json
