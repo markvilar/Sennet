@@ -57,5 +57,5 @@ jobs:
 
     - name: Run project tests
       run: |
-        cd ${{env.build_dir}}
+        cd build/${{matrix.build_type}}
         ctest
