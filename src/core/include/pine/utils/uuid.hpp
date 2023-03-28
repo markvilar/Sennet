@@ -13,6 +13,9 @@ public:
     UUID(const uint64_t value);
     UUID(const UUID& other);
 
+    bool operator==(const UUID& other) const;
+    bool operator!=(const UUID& other) const;
+
     std::string to_string() const 
     { 
         return std::to_string(value); 

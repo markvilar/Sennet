@@ -22,4 +22,14 @@ UUID::UUID(const UUID& other)
 {
 }
 
+bool UUID::operator==(const UUID& other) const
+{
+    return value == other.value;
+}
+
+bool UUID::operator!=(const UUID& other) const
+{
+    return value != other.value;
+}
+
 } // namespace pine
