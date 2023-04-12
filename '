@@ -75,6 +75,7 @@ target_sources(pine
         src/core/input.cpp
         src/core/layer.cpp
         src/core/log.cpp
+        src/core/uuid.cpp
        
         # Gui
         src/gui/manager.cpp
@@ -116,7 +117,6 @@ target_sources(pine
         # Utils
         src/utils/argparse.cpp
         src/utils/filesystem.cpp
-        src/utils/uuid.cpp
 )
 
 target_precompile_headers(pine PRIVATE include/pine/pch.hpp)

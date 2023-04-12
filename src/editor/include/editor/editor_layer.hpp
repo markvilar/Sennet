@@ -1,5 +1,6 @@
 #pragma once
 
+#include <array>
 #include <memory>
 
 #include "pine/pine.hpp"
@@ -48,6 +49,8 @@ private:
     // Misc
     Vec4 quad_color{0.2f, 0.3f, 0.8f, 1.0f};
     float quad_rotation{0.0f};
+
+    std::array<UUID, 5> uuids{};
 };
 
 } // namespace pine

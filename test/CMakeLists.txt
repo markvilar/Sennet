@@ -30,3 +30,20 @@ set_target_properties(test_window PROPERTIES
 
 # FIXME: Implement test for headless environments
 # add_test(NAME window_test COMMAND test_window)
+
+# -----------------------------------------------------------------------------
+# Test uuid
+# -----------------------------------------------------------------------------
+
+add_executable(test_uuid test_uuid.cpp)
+target_compile_features(test_uuid PRIVATE cxx_std_17)
+target_compile_options(test_uuid PRIVATE -std=c++17)
+target_compile_definitions(test_uuid PRIVATE)
+target_link_libraries(test_uuid PRIVATE pine::pine)
+
+set_target_properties(test_uuid PROPERTIES 
+    RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/bin"
+)
+
+add_test(NAME uuid_test COMMAND test_uuid)
+

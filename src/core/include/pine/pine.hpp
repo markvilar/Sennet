@@ -42,3 +42,4 @@
 #include "pine/utils/fonts.hpp"
 #include "pine/utils/locked_queue.hpp"
 #include "pine/utils/math.hpp"
+#include "pine/utils/uuid.hpp"
