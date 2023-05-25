@@ -1,8 +1,9 @@
 #pragma once
 
+#include "pine/core/common.hpp"
+
 // Core
 #include "pine/core/application.hpp"
-#include "pine/core/common.hpp"
 #include "pine/core/input.hpp"
 #include "pine/core/key_codes.hpp"
 #include "pine/core/layer.hpp"

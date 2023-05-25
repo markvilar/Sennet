@@ -159,7 +159,7 @@ void EditorLayer::on_gui_render()
             {
                 static std::array<char, 256> working_directory_buffer = {""};
                 strcpy(working_directory_buffer.data(),
-                    filesystem::get_working_directory().c_str());
+                    filesystem::get_working_directory().string().c_str());
                 ImGui::Text("Working directory: %s",
                     working_directory_buffer.data());
                 if (ImGui::Button("Close"))

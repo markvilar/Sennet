@@ -106,13 +106,13 @@ void IO::set_config_flags(const ConfigFlags& config) const
 
 bool IO::load_settings(const std::filesystem::path& filepath) const
 {
-    ImGui::LoadIniSettingsFromDisk(filepath.c_str());
+    ImGui::LoadIniSettingsFromDisk(filepath.string().c_str());
     return false;
 }
 
 bool IO::save_settings(const std::filesystem::path& filepath) const
 {
-    ImGui::SaveIniSettingsToDisk(filepath.c_str());
+    ImGui::SaveIniSettingsToDisk(filepath.string().c_str());
     return false;
 }
 
@@ -133,7 +133,8 @@ bool IO::load_font(const std::filesystem::path& filepath,
     const float pixel_size) const
 {
     auto& io = ImGui::GetIO();
-    io.Fonts->AddFontFromFileTTF(filepath.c_str(),
+    io.Fonts->AddFontFromFileTTF(
+        filepath.string().c_str(),
         pixel_size,
         nullptr,
         io.Fonts->GetGlyphRangesCyrillic());

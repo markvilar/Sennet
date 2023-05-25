@@ -135,7 +135,7 @@ create_shader(const std::filesystem::path& vertex_file,
     PINE_CORE_ASSERT(vertex_exists, "Vertex shader file does not exist.");
     PINE_CORE_ASSERT(fragment_exists, "Fragment shader file does not exist.");
 
-    const auto name = vertex_file.stem();
+    const auto name = vertex_file.stem().string();
 
     // Read sources from file
     const auto vertex_source = pine::filesystem::read_file_source(vertex_file);

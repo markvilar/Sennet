@@ -146,9 +146,15 @@ target_link_libraries(pine
         $<$<BOOL:${PINE_WARNINGS_ENABLE}>:pine::warnings>
 )
 
-if(MSVC)
+if(WIN32)
+    message(STATUS "--------------------------")
+    message(STATUS "Building pine for Windows")
+    message(STATUS "--------------------------")
     target_compile_definitions(pine PUBLIC PINE_PLATFORM_WINDOWS)
 elseif(UNIX)
+    message(STATUS "--------------------------")
+    message(STATUS "Building pine for Unix")
+    message(STATUS "--------------------------")
     target_compile_definitions(pine PUBLIC PINE_PLATFORM_LINUX)
 endif()
 

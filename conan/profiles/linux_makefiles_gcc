@@ -1,0 +1,22 @@
+[settings]
+arch=x86_64
+build_type=Release
+compiler=gcc
+compiler.cppstd=20
+compiler.libcxx=libstdc++11
+compiler.version=11
+os=Linux
+
+[options]
+
+[buildenv]
+CC=gcc-11
+CXX=g++-11
+
+[tool_requires]
+
+[conf]
+tools.build:jobs=2
+tools.cmake.cmaketoolchain:generator=Unix Makefiles
+tools.system.package_manager:mode=install
+tools.system.package_manager:sudo=True
