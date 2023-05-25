@@ -1,0 +1,46 @@
+name: build
+
+on: 
+  push:
+  pull_request:
+    branches: [main]
+
+defaults:
+  run:
+    shell: bash
+
+env:
+  source_dir: "${{github.workspace}}"
+  profile_dir: "${{github.workspace}}/conan/profiles"
+
+jobs:
+  build-ubuntu:
+    name: "build_${{matrix.profile}}"
+    runs-on: "${{matrix.os}}"
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-20.04, ubuntu-22.04]
+        profile: [linux_ninja_gcc, linux_ninja_clang]
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Environment setup
+      uses: ./.github/actions/linux-setup
+
+    - name: Conan profile
+      run: conan profile detect
+
+    - name: Conan build
+      run: |
+        conan build ${{env.source_dir}} \
+            --profile ${{env.profile_dir}}/${{matrix.profile}} \
+            --build missing
+
+    - name: Conan create
+      run: |
+        conan create ${{env.source_dir}} \
+            --profile ${{env.profile_dir}}/${{matrix.profile}} \
+            --build missing
