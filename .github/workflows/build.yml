@@ -15,13 +15,18 @@ env:
 
 jobs:
   build-ubuntu:
-    name: "build_${{matrix.profile}}"
+    name: "build_${{matrix.os}}_${{matrix.profile}}"
     runs-on: "${{matrix.os}}"
     strategy:
       fail-fast: false
       matrix:
         os: [ubuntu-20.04, ubuntu-22.04]
-        profile: [linux_ninja_gcc, linux_ninja_clang]
+        profile: [
+            linux_makefiles_gcc, 
+            linux_makefiles_clang,
+            linux_ninja_gcc, 
+            linux_ninja_clang,
+          ]
 
     steps:
     - name: Checkout repository
