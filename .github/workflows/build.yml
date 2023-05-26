@@ -15,7 +15,7 @@ env:
 
 jobs:
   build-ubuntu:
-    name: "${{matrix.os}}_${{matrix.profile}}"
+    name: "${{matrix.os}}_${{matrix.setup.profile}}"
     runs-on: "${{matrix.os}}"
     strategy:
       fail-fast: false
