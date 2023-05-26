@@ -147,14 +147,9 @@ target_link_libraries(pine
 )
 
 if(WIN32)
-    message(STATUS "--------------------------")
-    message(STATUS "Building pine for Windows")
-    message(STATUS "--------------------------")
+    target_link_libraries(pine PUBLIC wsock32 ws2_32)
     target_compile_definitions(pine PUBLIC PINE_PLATFORM_WINDOWS)
 elseif(UNIX)
-    message(STATUS "--------------------------")
-    message(STATUS "Building pine for Unix")
-    message(STATUS "--------------------------")
     target_compile_definitions(pine PUBLIC PINE_PLATFORM_LINUX)
 endif()
 

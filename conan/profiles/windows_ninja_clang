@@ -2,7 +2,7 @@
 arch=x86_64
 build_type=Release
 compiler=clang
-compiler.cppstd=20
+compiler.cppstd=17
 compiler.libcxx=libstdc++11
 compiler.version=14
 os=Windows
@@ -10,8 +10,8 @@ os=Windows
 [options]
 
 [buildenv]
-CC=clang
-CXX=clang++
+CC=clang-14
+CXX=clang++-14
 
 [tool_requires]
 

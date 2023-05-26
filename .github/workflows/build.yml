@@ -15,17 +15,17 @@ env:
 
 jobs:
   build-ubuntu:
-    name: "build_${{matrix.os}}_${{matrix.profile}}"
+    name: "${{matrix.os}}_${{matrix.profile}}"
     runs-on: "${{matrix.os}}"
     strategy:
       fail-fast: false
       matrix:
         os: [ubuntu-20.04, ubuntu-22.04]
-        profile: [
-            linux_makefiles_gcc, 
-            linux_makefiles_clang,
-            linux_ninja_gcc, 
-            linux_ninja_clang,
+        setup: [
+            { "profile": "linux_makefiles_gcc",   "compiler": "gcc",   "compiler_version": 11 },
+            { "profile": "linux_makefiles_clang", "compiler": "clang", "compiler_version": 14 },
+            { "profile": "linux_ninja_gcc",       "compiler": "gcc",   "compiler_version": 11 },
+            { "profile": "linux_ninja_clang",     "compiler": "clang", "compiler_version": 14 },
           ]
 
     steps:
@@ -34,6 +34,10 @@ jobs:
 
     - name: Environment setup
       uses: ./.github/actions/linux-setup
+      with:
+        compiler: ${{matrix.setup.compiler}}
+        compiler_version: ${{matrix.setup.compiler_version}}
+        platform: x64
 
     - name: Conan profile
       run: conan profile detect
@@ -41,11 +45,11 @@ jobs:
     - name: Conan build
       run: |
         conan build ${{env.source_dir}} \
-            --profile ${{env.profile_dir}}/${{matrix.profile}} \
+            --profile ${{env.profile_dir}}/${{matrix.setup.profile}} \
             --build missing
 
     - name: Conan create
       run: |
         conan create ${{env.source_dir}} \
-            --profile ${{env.profile_dir}}/${{matrix.profile}} \
+            --profile ${{env.profile_dir}}/${{matrix.setup.profile}} \
             --build missing

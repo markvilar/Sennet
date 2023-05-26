@@ -21,9 +21,5 @@
 #include <utility>
 #include <vector>
 
-#ifdef PINE_PLATFORM_WINDOWS
-#include <WinSock2.h>
-#include <Windows.h>
-#endif
-
+#include "pine/core/platform.hpp"
 #include "pine/core/log.hpp"

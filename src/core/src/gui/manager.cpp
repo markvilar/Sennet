@@ -21,15 +21,15 @@ std::unique_ptr<Context> create_context(Window* window)
     return std::make_unique<Context>(window);
 }
 
-std::unique_ptr<IO> create_io(Context* context)
+std::unique_ptr<IO> create_io()
 {
-    return std::make_unique<IO>(context);
+    return std::make_unique<IO>();
 }
 
 std::unique_ptr<Manager> create_manager(Window* window)
 {
     auto context = create_context(window);
-    auto io = create_io(context.get());
+    auto io = create_io();
     return std::make_unique<Manager>(context, io);
 }
 
@@ -91,7 +91,7 @@ void Context::end_frame() const
 // IO
 // ----------------------------------------------------------------------------
 
-IO::IO(Context* context_) : context(context_)
+IO::IO()
 {
     auto& io = ImGui::GetIO();
     io.WantSaveIniSettings = false;
