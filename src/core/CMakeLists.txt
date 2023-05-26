@@ -146,7 +146,8 @@ target_link_libraries(pine
         $<$<BOOL:${PINE_WARNINGS_ENABLE}>:pine::warnings>
 )
 
-if(MSVC)
+if(WIN32)
+    target_link_libraries(pine PUBLIC wsock32 ws2_32)
     target_compile_definitions(pine PUBLIC PINE_PLATFORM_WINDOWS)
 elseif(UNIX)
     target_compile_definitions(pine PUBLIC PINE_PLATFORM_LINUX)

@@ -17,7 +17,7 @@ class Manager;
 
 // Factory methods
 std::unique_ptr<Context> create_context(Window* window);
-std::unique_ptr<IO> create_io(Context* context);
+std::unique_ptr<IO> create_io();
 std::unique_ptr<Manager> create_manager(Window* window);
 
 class Context
@@ -39,7 +39,7 @@ private:
 class IO
 {
 public:
-    IO(Context* context);
+    IO();
     ~IO() = default;
 
     ConfigFlags get_config_flags() const;
@@ -55,9 +55,6 @@ public:
 
     bool want_capture_mouse() const;
     bool want_capture_keyboard() const;
-
-private:
-    Context* context{};
 };
 
 class Manager

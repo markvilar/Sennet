@@ -1,7 +1,6 @@
 # Pine
 
-[![Build](https://github.com/markvilar/pine/actions/workflows/build_linux.yml/badge.svg)](https://github.com/markvilar/pine/actions/workflows/build_linux.yml)
-[![Test](https://github.com/markvilar/pine/actions/workflows/test_linux.yml/badge.svg)](https://github.com/markvilar/pine/actions/workflows/test_linux.yml)
+[![Build](https://github.com/markvilar/pine/actions/workflows/build.yml/badge.svg)](https://github.com/markvilar/pine/actions/workflows/build.yml)
 [![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
 ## Description
@@ -12,7 +11,7 @@ development tools.
 
 ## Requirements
 Pine requires the follow tools to be built:
-- C++17 compiler
+- C++17 compiler (recommended minimum is gcc-9, clang-12)
 - CMake 3.19+
 - Conan 2.0+
 
@@ -34,9 +33,7 @@ Pine requires the follow tools to be built:
 
 ## Workflows
 
-### Linux Workflow
-
-#### Building
+### Linux and Conan Workflow
 
 ```shell
 # Clone pine and checkout a tag
@@ -45,27 +42,22 @@ cd pine
 git checkout tags/<tag> -b <branch>
 
 # Install prerequisites
-apt install -y cmake gcc python3-dev python3-pip pkg-config 
+apt install -y cmake gcc clang python3-dev python3-pip pkg-config 
 
 # Install conan
-pip3 install conan
+pip3 install --user conan
 
-# Create a Conan profile
-conan profile detect --name <profile>
+# Create a default profile
+conan profile detect
+
+# Install the dependencies (check out profiles in the `conan/profiles` directory)
+conan install . --profile <path/to/profile> --build missing
 
 # Build the package
-conan build . \
-    -s build_type=Release \
-    -s compiler.cppstd=17 \
-    -pr <profile> \
-    --build missing
+conan build . --profile <path/to/profile> --build missing
 
 # Create the package
-conan create . \
-    -s build_type=Release \
-    -s compiler.cppstd=17 \
-    -pr <profile> \
-    --build missing
+conan create . --profile <path/to/profile> --build missing
 ```
 
 ## Development Plan

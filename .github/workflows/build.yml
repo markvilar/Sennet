@@ -1,0 +1,55 @@
+name: build
+
+on: 
+  push:
+  pull_request:
+    branches: [main]
+
+defaults:
+  run:
+    shell: bash
+
+env:
+  source_dir: "${{github.workspace}}"
+  profile_dir: "${{github.workspace}}/conan/profiles"
+
+jobs:
+  build-ubuntu:
+    name: "${{matrix.os}}_${{matrix.setup.profile}}"
+    runs-on: "${{matrix.os}}"
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-20.04, ubuntu-22.04]
+        setup: [
+            { "profile": "linux_makefiles_gcc",   "compiler": "gcc",   "compiler_version": 11 },
+            { "profile": "linux_makefiles_clang", "compiler": "clang", "compiler_version": 14 },
+            { "profile": "linux_ninja_gcc",       "compiler": "gcc",   "compiler_version": 11 },
+            { "profile": "linux_ninja_clang",     "compiler": "clang", "compiler_version": 14 },
+          ]
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Environment setup
+      uses: ./.github/actions/linux-setup
+      with:
+        compiler: ${{matrix.setup.compiler}}
+        compiler_version: ${{matrix.setup.compiler_version}}
+        platform: x64
+
+    - name: Conan profile
+      run: conan profile detect
+
+    - name: Conan build
+      run: |
+        conan build ${{env.source_dir}} \
+            --profile ${{env.profile_dir}}/${{matrix.setup.profile}} \
+            --build missing
+
+    - name: Conan create
+      run: |
+        conan create ${{env.source_dir}} \
+            --profile ${{env.profile_dir}}/${{matrix.setup.profile}} \
+            --build missing

@@ -36,3 +36,6 @@ ipch/
 
 # CMake presets
 CMakeUserPresets.json
+
+# VS Code
+.vscode/

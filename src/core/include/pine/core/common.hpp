@@ -8,8 +8,8 @@
 #endif
 
 #include "pine/core/assert.hpp"
-#include "pine/core/log.hpp"
 #include "pine/core/platform.hpp"
+#include "pine/core/log.hpp"
 
 #define BIT(x) (1 << x)
 

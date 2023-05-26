@@ -2,9 +2,12 @@
 
 #if defined(PINE_PLATFORM_LINUX)
 #elif defined(PINE_PLATFORM_WINDOWS)
-#define _WIN32_WINNT 0x0601
-#include <asio.hpp>
-#include <windows.h>
+	#if not defined(_WIN32_WINNT) 
+		#define _WIN32_WINNT 0x601
+	#endif
+	#define WIN32_LEAN_AND_MEAN
+	#include <WinSock2.h>
+	#include <Windows.h>
 #elif defined(PINE_PLATFORM_MACOS)
 #error "MACOS is not supported yet!"
 #elif defined(PINE_PLATFORM_IOS)

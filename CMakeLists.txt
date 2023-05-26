@@ -14,12 +14,12 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 # ---- Project options --------------------------------------------------------
 # -----------------------------------------------------------------------------
 
-option(PINE_SANITIZERS_ENABLE "Enable sanitizers." ON)
-option(PINE_WARNINGS_ENABLE "Enable compiler warnings." ON)
+option(PINE_SANITIZERS_ENABLED "Enable sanitizers." ON)
+option(PINE_WARNINGS_ENABLED "Enable compiler warnings." ON)
 
-option(PINE_EDITOR_ENABLE "Build editor." ON)
-option(PINE_EXAMPLE_ENABLE "Build examples." ON)
-option(PINE_TEST_ENABLE "Build test." ON)
+option(PINE_EDITOR_ENABLED "Build editor." ON)
+option(PINE_EXAMPLE_ENABLED "Build examples." ON)
+option(PINE_TEST_ENABLED "Build test." ON)
 
 # -----------------------------------------------------------------------------
 # ---- Warnings / sanitizers / tools ------------------------------------------
@@ -41,12 +41,16 @@ add_library(pine::warnings ALIAS warnings)
 include(cmake/cache.cmake)
 
 # Standard compiler warnings.
-include(cmake/compiler_warning.cmake)
-set_project_warnings(warnings)
+if (PINE_WARNINGS_ENABLED)
+    include(cmake/compiler_warning.cmake)
+    set_project_warnings(warnings)
+endif()
 
 # Sanitizer options if supported by compiler.
-include(cmake/sanitizers.cmake)
-enable_sanitizers(options)
+if (PINE_SANITIZERS_ENABLED)
+    include(cmake/sanitizers.cmake)
+    enable_sanitizers(options)
+endif()
 
 # Allow static analysis options.
 include(cmake/static_analyzers.cmake)
@@ -65,12 +69,12 @@ add_subdirectory(resources)
 add_subdirectory(vendor)
 
 # Add examples
-if(PINE_EXAMPLE_ENABLE)
+if(PINE_EXAMPLE_ENABLED)
     add_subdirectory(example)
 endif()
 
 # Add tests
-if(PINE_TEST_ENABLE)
+if(PINE_TEST_ENABLED)
     include(CTest)
     enable_testing()
     add_subdirectory(test)

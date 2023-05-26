@@ -98,7 +98,7 @@ Image read_image(const std::filesystem::path& filepath, const bool flip)
     stbi_set_flip_vertically_on_load(flip);
 
     const auto data
-        = stbi_load(filepath.c_str(), &width, &height, &channels, 0);
+        = stbi_load(filepath.string().c_str(), &width, &height, &channels, 0);
     const auto format = default_image_format(channels);
 
     return Image(data,
@@ -116,7 +116,7 @@ Image read_image(const std::filesystem::path& filepath,
 
     stbi_set_flip_vertically_on_load(flip);
 
-    const auto data = stbi_load(filepath.c_str(),
+    const auto data = stbi_load(filepath.string().c_str(),
         &width,
         &height,
         &channels,
@@ -133,7 +133,7 @@ bool write_image(const std::filesystem::path& filepath,
     const bool flip)
 {
     const auto file_extension = filepath.extension();
-    const auto file_format = parse_image_file_format(file_extension.c_str());
+    const auto file_format = parse_image_file_format(file_extension.string().c_str());
 
     stbi_set_flip_vertically_on_load(flip);
 
@@ -143,27 +143,27 @@ bool write_image(const std::filesystem::path& filepath,
         switch (file_format)
         {
         case ImageFileFormat::JPG:
-            return stbi_write_jpg(filepath.c_str(),
+            return stbi_write_jpg(filepath.string().c_str(),
                 static_cast<int>(image.get_width()),
                 static_cast<int>(image.get_height()),
                 static_cast<int>(channels),
                 image.get_buffer().data(),
                 100);
         case ImageFileFormat::PNG:
-            return stbi_write_png(filepath.c_str(),
+            return stbi_write_png(filepath.string().c_str(),
                 static_cast<int>(image.get_width()),
                 static_cast<int>(image.get_height()),
                 static_cast<int>(channels),
                 image.get_buffer().data(),
                 static_cast<int>(image.get_width() * channels));
         case ImageFileFormat::BMP:
-            return stbi_write_bmp(filepath.c_str(),
+            return stbi_write_bmp(filepath.string().c_str(),
                 static_cast<int>(image.get_width()),
                 static_cast<int>(image.get_height()),
                 static_cast<int>(channels),
                 image.get_buffer().data());
         case ImageFileFormat::TGA:
-            return stbi_write_tga(filepath.c_str(),
+            return stbi_write_tga(filepath.string().c_str(),
                 static_cast<int>(image.get_width()),
                 static_cast<int>(image.get_height()),
                 static_cast<int>(channels),

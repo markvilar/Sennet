@@ -46,8 +46,6 @@ class PineConan(ConanFile):
         "test/*",
         "vendor/*"
     ]
-    
-    generators = ["CMakeDeps", "CMakeToolchain"]
 
     def config_options(self):
         """ Configure project options. """
@@ -110,14 +108,31 @@ class PineConan(ConanFile):
     def _get_cmake_variables(self) -> Dict:
         """ Internal methods to get CMake variables based on options. """
         variables = {
-            "PINE_EDITOR_ENABLE" : 
+            "PINE_EDITOR_ENABLED" : 
                 "ON" if self.options.enable_editor else "OFF",
-            "PINE_EXAMPLE_ENABLE" : 
+            "PINE_EXAMPLE_ENABLED" : 
                 "ON" if self.options.enable_examples else "OFF",
-            "PINE_TEST_ENABLE" : 
+            "PINE_TEST_ENABLED" : 
                 "ON" if self.options.enable_tests else "OFF",
         }
         return variables
+
+    def generate(self):
+        """ Generates files necessary for build the package. """
+        # Create dependency graph
+        deps = CMakeDeps(self)
+        deps.generate()
+
+        # Set up toolchain
+        tc = CMakeToolchain(self)
+
+        # Add variables to toolchain
+        variables = self._get_cmake_variables()
+        for name, value in variables.items():
+            tc.variables[name] = value
+        
+        # Generate toolchain
+        tc.generate()
 
     def build(self):
         """ Builds the library. """
@@ -179,11 +194,6 @@ class PineConan(ConanFile):
             self.cpp_info.components["libpine"].defines.append("PINE_DEBUG")
         elif self.settings.build_type == "Release":
             self.cpp_info.components["libpine"].defines.append("PINE_RELEASE")
-
-    def generate(self):
-        """ """
-        # TODO: Implement
-        pass
 
     def export(self):
         """ Responsible for capturing the coordinates of the current URL and 

@@ -21,15 +21,15 @@ std::unique_ptr<Context> create_context(Window* window)
     return std::make_unique<Context>(window);
 }
 
-std::unique_ptr<IO> create_io(Context* context)
+std::unique_ptr<IO> create_io()
 {
-    return std::make_unique<IO>(context);
+    return std::make_unique<IO>();
 }
 
 std::unique_ptr<Manager> create_manager(Window* window)
 {
     auto context = create_context(window);
-    auto io = create_io(context.get());
+    auto io = create_io();
     return std::make_unique<Manager>(context, io);
 }
 
@@ -91,7 +91,7 @@ void Context::end_frame() const
 // IO
 // ----------------------------------------------------------------------------
 
-IO::IO(Context* context_) : context(context_)
+IO::IO()
 {
     auto& io = ImGui::GetIO();
     io.WantSaveIniSettings = false;
@@ -106,13 +106,13 @@ void IO::set_config_flags(const ConfigFlags& config) const
 
 bool IO::load_settings(const std::filesystem::path& filepath) const
 {
-    ImGui::LoadIniSettingsFromDisk(filepath.c_str());
+    ImGui::LoadIniSettingsFromDisk(filepath.string().c_str());
     return false;
 }
 
 bool IO::save_settings(const std::filesystem::path& filepath) const
 {
-    ImGui::SaveIniSettingsToDisk(filepath.c_str());
+    ImGui::SaveIniSettingsToDisk(filepath.string().c_str());
     return false;
 }
 
@@ -133,7 +133,8 @@ bool IO::load_font(const std::filesystem::path& filepath,
     const float pixel_size) const
 {
     auto& io = ImGui::GetIO();
-    io.Fonts->AddFontFromFileTTF(filepath.c_str(),
+    io.Fonts->AddFontFromFileTTF(
+        filepath.string().c_str(),
         pixel_size,
         nullptr,
         io.Fonts->GetGlyphRangesCyrillic());
