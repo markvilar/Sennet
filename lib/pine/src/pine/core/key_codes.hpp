@@ -3,7 +3,7 @@
 namespace pine
 {
 
-typedef enum class KeyCode : uint16_t
+enum class KeyCode : uint16_t
 {
     Space = 32,
     Apostrophe = 39, /* ' */
@@ -135,7 +135,7 @@ typedef enum class KeyCode : uint16_t
     RightAlt = 346,
     RightSuper = 347,
     Menu = 348
-} Key;
+};
 
 inline std::ostream& operator<<(std::ostream& os, KeyCode keyCode)
 {

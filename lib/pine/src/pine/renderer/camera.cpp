@@ -24,8 +24,8 @@ void OrthographicCamera::set_projection(const float left,
     projection_matrix = ortho(left, right, bottom, top, -1.0f, 1.0f);
 }
 
-OrthographicCameraController::OrthographicCameraController(const float
-                                                               aspect_ratio,
+OrthographicCameraController::OrthographicCameraController(
+    const float aspect_ratio,
     const bool rotation)
     : aspect_ratio(aspect_ratio),
       rotation_enabled(rotation),
@@ -78,19 +78,18 @@ void OrthographicCameraController::rotate_counter_clockwise(const Timestep& ts)
     }
 }
 
-void OrthographicCameraController::on_event(Event& event)
+void OrthographicCameraController::on_event(const Event& event)
 {
-    EventDispatcher dispatcher(event);
-    dispatcher.dispatch<MouseScrolledEvent>(
-        [this](const MouseScrolledEvent& event) -> bool
-        { return on_mouse_scrolled(event); });
-
-    // PINE_BIND_EVENT_FN(OrthographicCameraController::on_mouse_scrolled));
-    dispatcher.dispatch<WindowResizeEvent>(
-        [this](const WindowResizeEvent& event) -> bool
-        { return on_window_resized(event); });
-
-    // PINE_BIND_EVENT_FN(OrthographicCameraController::on_window_resized));
+    if (std::holds_alternative<Moved<MouseWheel>>(event))
+    {
+        const auto content = std::get<Moved<MouseWheel>>(event);
+        on_mouse_scrolled(content);
+    }
+    else if (std::holds_alternative<WindowResized>(event))
+    {
+        const auto content = std::get<WindowResized>(event);
+        on_window_resized(content);
+    }
 }
 
 void OrthographicCameraController::on_resize(const float width,
@@ -103,25 +102,23 @@ void OrthographicCameraController::on_resize(const float width,
         zoom_level);
 }
 
-bool OrthographicCameraController::on_mouse_scrolled(
-    const MouseScrolledEvent& event)
+void OrthographicCameraController::on_mouse_scrolled(
+    const Moved<MouseWheel>& event)
 {
-    zoom_level -= event.get_offset_y() * 0.25f;
+    zoom_level -= event.source.offset_y * 0.25f;
     zoom_level = std::max(zoom_level, 0.25f);
     camera_linear_speed = zoom_level;
     camera.set_projection(-aspect_ratio * zoom_level,
         aspect_ratio * zoom_level,
         -zoom_level,
         zoom_level);
-    return false;
 }
 
-bool OrthographicCameraController::on_window_resized(
-    const WindowResizeEvent& event)
+void OrthographicCameraController::on_window_resized(
+    const WindowResized& event)
 {
-    on_resize(static_cast<float>(event.get_width()),
-        static_cast<float>(event.get_height()));
-    return false;
+    on_resize(static_cast<float>(event.width),
+        static_cast<float>(event.height));
 }
 
 } // namespace pine

@@ -18,7 +18,7 @@ public:
     virtual void on_detach() {}
     virtual void on_update([[maybe_unused]] const Timestep& ts) {}
     virtual void on_gui_render() {}
-    virtual void on_event([[maybe_unused]] Event& event) {}
+    virtual void on_event([[maybe_unused]] const Event& event) {}
 
     inline const std::string& get_name() const { return name; }
 

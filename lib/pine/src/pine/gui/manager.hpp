@@ -74,7 +74,7 @@ public:
     bool load_font(const std::filesystem::path& filepath,
         const float pixel_size) const;
 
-    void on_event(Event& event) const;
+    void on_event(const Event& event) const;
     void block_events(const bool block) { handle_event = block; }
 
 private:

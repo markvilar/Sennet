@@ -3,7 +3,7 @@
 namespace pine
 {
 
-typedef enum class MouseCode : uint16_t
+enum class MouseCode : uint16_t
 {
     Button0 = 0,
     Button1 = 1,
@@ -18,7 +18,7 @@ typedef enum class MouseCode : uint16_t
     Buttonleft = Button0,
     Buttonright = Button1,
     Buttonmiddle = Button2
-} Mouse;
+};
 
 inline std::ostream& operator<<(std::ostream& os, const MouseCode mouseCode)
 {
@@ -27,15 +27,15 @@ inline std::ostream& operator<<(std::ostream& os, const MouseCode mouseCode)
 
 } // namespace pine
 
-#define PINE_MOUSE_BUTTON_0 ::pine::Mouse::Button0
-#define PINE_MOUSE_BUTTON_1 ::pine::Mouse::Button1
-#define PINE_MOUSE_BUTTON_2 ::pine::Mouse::Button2
-#define PINE_MOUSE_BUTTON_3 ::pine::Mouse::Button3
-#define PINE_MOUSE_BUTTON_4 ::pine::Mouse::Button4
-#define PINE_MOUSE_BUTTON_5 ::pine::Mouse::Button5
-#define PINE_MOUSE_BUTTON_6 ::pine::Mouse::Button6
-#define PINE_MOUSE_BUTTON_7 ::pine::Mouse::Button7
-#define PINE_MOUSE_BUTTON_LAST ::pine::Mouse::ButtonLast
-#define PINE_MOUSE_BUTTON_LEFT ::pine::Mouse::ButtonLeft
-#define PINE_MOUSE_BUTTON_RIGHT ::pine::Mouse::ButtonRight
-#define PINE_MOUSE_BUTTON_MIDDLE ::pine::Mouse::ButtonMiddle
+#define PINE_MOUSE_BUTTON_0 ::pine::MouseCode::Button0
+#define PINE_MOUSE_BUTTON_1 ::pine::MouseCode::Button1
+#define PINE_MOUSE_BUTTON_2 ::pine::MouseCode::Button2
+#define PINE_MOUSE_BUTTON_3 ::pine::MouseCode::Button3
+#define PINE_MOUSE_BUTTON_4 ::pine::MouseCode::Button4
+#define PINE_MOUSE_BUTTON_5 ::pine::MouseCode::Button5
+#define PINE_MOUSE_BUTTON_6 ::pine::MouseCode::Button6
+#define PINE_MOUSE_BUTTON_7 ::pine::MouseCode::Button7
+#define PINE_MOUSE_BUTTON_LAST ::pine::MouseCode::ButtonLast
+#define PINE_MOUSE_BUTTON_LEFT ::pine::MouseCode::ButtonLeft
+#define PINE_MOUSE_BUTTON_RIGHT ::pine::MouseCode::ButtonRight
+#define PINE_MOUSE_BUTTON_MIDDLE ::pine::MouseCode::ButtonMiddle

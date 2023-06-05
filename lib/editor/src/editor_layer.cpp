@@ -5,6 +5,7 @@
 
 namespace pine
 {
+
 EditorLayer::EditorLayer() : Layer("EditorLayer"), camera_controller(1.0f, true)
 {
 }
@@ -388,7 +389,7 @@ void EditorLayer::on_gui_render()
         });
 }
 
-void EditorLayer::on_event(Event& event) { camera_controller.on_event(event); }
+void EditorLayer::on_event(const Event& event) { camera_controller.on_event(event); }
 
 void EditorLayer::update_camera_controller(const Timestep& ts)
 {

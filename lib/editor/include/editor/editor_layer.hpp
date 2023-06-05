@@ -19,7 +19,7 @@ public:
 
     virtual void on_gui_render() override;
 
-    virtual void on_event(Event& event) override;
+    virtual void on_event(const Event& event) override;
 
 private:
     void update_camera_controller(const Timestep& ts);
