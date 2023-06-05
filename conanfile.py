@@ -41,8 +41,8 @@ class PineConan(ConanFile):
         "CMakeLists.txt", 
         "cmake/*",
         "example/*", 
+        "lib/*", 
         "resources/*", 
-        "src/*", 
         "test/*",
         "vendor/*"
     ]

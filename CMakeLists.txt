@@ -64,7 +64,7 @@ enable_doxygen()
 # -----------------------------------------------------------------------------
 
 # Add library, resources, and dependencies built by the project
-add_subdirectory(src)
+add_subdirectory(lib)
 add_subdirectory(resources)
 add_subdirectory(vendor)
 
