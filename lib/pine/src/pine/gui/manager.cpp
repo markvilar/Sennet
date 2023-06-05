@@ -1,5 +1,4 @@
-#include "manager.hpp"
-#include "pine/pch.hpp"
+#include "pine/gui/manager.hpp"
 
 #include <glad/glad.h>
 
@@ -10,7 +9,8 @@
 #include <imgui.h>
 
 // FIXME: GUI implementation abstraction
-#include "pine/gui/common.hpp"
+#include "pine/pch.hpp"
+#include "pine/gui/flags.hpp"
 #include "pine/gui/style.hpp"
 
 namespace pine::gui

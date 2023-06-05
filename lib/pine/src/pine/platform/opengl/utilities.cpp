@@ -2,7 +2,7 @@
 
 #include "pine/pch.hpp"
 #include "pine/core/log.hpp"
-#include "pine/defines/assert.hpp"
+#include "pine/definitions/assert.hpp"
 
 namespace pine::glutils
 {

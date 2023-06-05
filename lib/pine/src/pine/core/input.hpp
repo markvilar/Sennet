@@ -1,6 +1,6 @@
 #pragma once
 
-#include "pine/defines/common.hpp"
+#include <memory>
 
 #include "pine/core/key_codes.hpp"
 #include "pine/core/mouse_codes.hpp"

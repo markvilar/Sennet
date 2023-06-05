@@ -3,6 +3,7 @@
 #include <glad/glad.h>
 
 #include "pine/pch.hpp"
+#include "pine/core/log.hpp"
 #include "pine/renderer/types.hpp"
 
 #include "pine/platform/opengl/utilities.hpp"

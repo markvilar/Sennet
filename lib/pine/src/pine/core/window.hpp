@@ -1,10 +1,10 @@
 #pragma once
 
+#include <cstdint>
 #include <memory>
 #include <string>
 #include <utility>
 
-#include "pine/defines/common.hpp"
 #include "pine/core/event.hpp"
 
 namespace pine

@@ -7,9 +7,8 @@ target_sources(pine
         src/pine/pine.hpp
 
         # Definitions and macros
-        src/pine/defines/assert.hpp
-        src/pine/defines/common.hpp
-        src/pine/defines/platform.hpp
+        src/pine/definitions/assert.hpp
+        src/pine/definitions/platform.hpp
 
     PRIVATE
         # Core
@@ -28,7 +27,7 @@ target_sources(pine
         src/pine/core/window.hpp
 
         # Gui
-        src/pine/gui/common.hpp
+        src/pine/gui/flags.hpp
         src/pine/gui/manager.cpp
         src/pine/gui/manager.hpp
         src/pine/gui/style.cpp

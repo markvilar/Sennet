@@ -1,8 +1,8 @@
 #pragma once
 
+#include <cstdint>
 #include <memory>
 
-#include "pine/defines/common.hpp"
 #include "pine/renderer/camera.hpp"
 #include "pine/renderer/renderer_api.hpp"
 #include "pine/renderer/shader.hpp"

@@ -3,10 +3,9 @@
 #include <cstdint>
 #include <string>
 
-#include "pine/defines/common.hpp"
-
 #include "pine/core/event.hpp"
 #include "pine/core/layer.hpp"
+#include "pine/core/log.hpp"
 #include "pine/core/timestep.hpp"
 #include "pine/core/window.hpp"
 #include "pine/gui/manager.hpp"

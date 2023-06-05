@@ -3,7 +3,6 @@
 #include <cstdint>
 #include <memory>
 
-#include "pine/defines/common.hpp"
 #include "pine/renderer/renderer_api.hpp"
 #include "pine/renderer/texture.hpp"
 

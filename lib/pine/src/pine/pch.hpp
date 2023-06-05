@@ -21,4 +21,7 @@
 #include <utility>
 #include <vector>
 
-#include "pine/defines/platform.hpp"
+#include "pine/definitions/assert.hpp"
+#include "pine/definitions/platform.hpp"
+
+#include "pine/core/log.hpp"

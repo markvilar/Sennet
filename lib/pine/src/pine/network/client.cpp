@@ -2,8 +2,6 @@
 
 #include <asio.hpp>
 
-#include "pine/defines/common.hpp"
-
 namespace pine
 {
 

@@ -8,7 +8,7 @@
 #include <stb_image_write.h>
 
 #include "pine/pch.hpp"
-#include "pine/defines/assert.hpp"
+#include "pine/definitions/assert.hpp"
 
 namespace pine
 {

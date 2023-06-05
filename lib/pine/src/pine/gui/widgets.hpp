@@ -1,8 +1,9 @@
 #pragma once
 
 #include <string_view>
+#include <type_traits>
 
-#include "pine/gui/common.hpp"
+#include "pine/gui/flags.hpp"
 #include "pine/renderer/framebuffer.hpp"
 #include "pine/utils/math.hpp"
 

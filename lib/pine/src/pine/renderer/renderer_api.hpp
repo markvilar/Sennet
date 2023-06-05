@@ -1,8 +1,8 @@
 #pragma once
 
+#include <cstdint>
 #include <memory>
 
-#include "pine/defines/common.hpp"
 #include "pine/renderer/buffer.hpp"
 #include "pine/utils/math.hpp"
 
