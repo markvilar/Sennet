@@ -234,14 +234,17 @@ bool Manager::load_font(const std::filesystem::path& filepath,
     return false;
 }
 
-void Manager::on_event(Event& event) const
+void Manager::on_event(const Event& event) const
 {
     if (handle_event)
     {
+        /*
+        TODO: Update to new event system
         event.handled |= event.is_in_category(EventCategoryMouse)
             & io->want_capture_mouse();
         event.handled |= event.is_in_category(EventCategoryKeyboard)
             & io->want_capture_keyboard();
+        */
     }
 }
 

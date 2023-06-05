@@ -44,7 +44,7 @@ public:
     virtual void on_shutdown() {}
     virtual void on_update() {}
 
-    void on_event(Event& e);
+    void on_event(const Event& event);
 
     void push_layer(Layer* layer);
     void push_overlay(Layer* overlay);
@@ -64,9 +64,9 @@ public:
     }
 
 private:
-    bool on_window_close(WindowCloseEvent& event);
-    bool on_window_resize(WindowResizeEvent& event);
-    bool on_window_iconify(WindowIconifyEvent& event);
+    void on_window_close(const WindowClosed& event);
+    void on_window_resize(const WindowResized& event);
+    void on_window_iconify(const WindowIconified& event);
 
 private:
     ApplicationSpecs specification;

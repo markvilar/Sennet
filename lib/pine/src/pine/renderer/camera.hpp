@@ -67,7 +67,7 @@ public:
     OrthographicCameraController(const float aspectRatio,
         const bool rotation = false);
 
-    void on_event(Event& event);
+    void on_event(const Event& event);
 
     void move_left(const Timestep& ts);
     void move_right(const Timestep& ts);
@@ -86,8 +86,8 @@ public:
     float get_zoom_level() const { return zoom_level; }
 
 private:
-    bool on_mouse_scrolled(const MouseScrolledEvent& event);
-    bool on_window_resized(const WindowResizeEvent& event);
+    void on_mouse_scrolled(const Moved<MouseWheel>& event);
+    void on_window_resized(const WindowResized& event);
 
 private:
     float aspect_ratio;

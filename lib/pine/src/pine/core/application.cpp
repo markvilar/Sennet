@@ -25,9 +25,10 @@ Application::Application(const ApplicationSpecs& specs) : specification(specs)
     window_specs.fullscreen = specification.fullscreen;
     window_specs.vsync = specification.vsync;
 
-    window = Window::create(window_specs);
+    // TODO: Separate factory method
+    window = create_window(window_specs);
     window->init();
-    window->set_event_callback(PINE_BIND_EVENT_FN(Application::on_event));
+    window->set_event_callback([this](const Event& event){ on_event(event); });
 
     if (specification.start_maximized)
     {
@@ -48,7 +49,7 @@ Application::Application(const ApplicationSpecs& specs) : specification(specs)
 
 Application::~Application()
 {
-    window->set_event_callback([]([[maybe_unused]] Event& event) {});
+    window->set_event_callback([]([[maybe_unused]] const Event& event) {});
 }
 
 void Application::run()
@@ -84,33 +85,68 @@ void Application::run()
 
 void Application::close() { running = false; }
 
-void Application::on_event(Event& event)
+void Application::on_event(const Event& event)
 {
-    EventDispatcher dispatcher(event);
-    dispatcher.dispatch<WindowCloseEvent>(
-        [this](WindowCloseEvent& event) -> bool
-        { return on_window_close(event); });
-    dispatcher.dispatch<WindowResizeEvent>(
-        [this](WindowResizeEvent& event) -> bool
-        { return on_window_resize(event); });
-    dispatcher.dispatch<WindowIconifyEvent>(
-        [this](WindowIconifyEvent& event) -> bool
-        { return on_window_iconify(event); });
+    if (std::holds_alternative<std::monostate>(event))
+    {
+        PINE_CORE_INFO("Got empty event!");
+    }
+    else if (std::holds_alternative<Moved<Mouse>>(event))
+    {
+        const auto content = std::get<Moved<Mouse>>(event);
+    }
+    else if (std::holds_alternative<Moved<MouseWheel>>(event))
+    {
+        const auto content = std::get<Moved<MouseWheel>>(event);
+    }
+    else if (std::holds_alternative<Pressed<MouseButton>>(event))
+    {
+        const auto content = std::get<Pressed<MouseButton>>(event);
+    }
+    else if (std::holds_alternative<Released<MouseButton>>(event))
+    {
+        const auto content = std::get<Released<MouseButton>>(event);
+    }
+    else if (std::holds_alternative<Pressed<Key>>(event))
+    {
+        const auto content = std::get<Pressed<Key>>(event);
+    }
+    else if (std::holds_alternative<Released<Key>>(event))
+    {
+        const auto content = std::get<Released<Key>>(event);
+    }
+    else if (std::holds_alternative<WindowClosed>(event))
+    {
+        const auto content = std::get<WindowClosed>(event);
+        on_window_close(content);
+    }
+    else if (std::holds_alternative<WindowIconified>(event))
+    {
+        const auto content = std::get<WindowIconified>(event);
+        on_window_iconify(content);
+    }
+    else if (std::holds_alternative<WindowResized>(event))
+    {
+        const auto content = std::get<WindowResized>(event);
+        on_window_resize(content);
+    }
+    else if (std::holds_alternative<TimeElapsed>(event))
+    {
+        const auto content = std::get<TimeElapsed>(event);
+    }
+    else
+    {
+        PINE_CORE_INFO("Got invalid event!");
+    }
 
     // Handle event in the GUI first.
-    gui->on_event(event);
+    if (gui)
+        gui->on_event(event);
 
     // Propagate event down the layer stack.
     for (auto it = layer_stack.end(); it != layer_stack.begin();)
     {
-        if (event.handled)
-        {
-            break;
-        }
-        else
-        {
-            (*--it)->on_event(event);
-        }
+        (*--it)->on_event(event);
     }
 }
 
@@ -151,22 +187,19 @@ void Application::render_gui()
     }
 }
 
-bool Application::on_window_close([[maybe_unused]] WindowCloseEvent& event)
+void Application::on_window_close([[maybe_unused]] const WindowClosed& event)
 {
     running = false;
-    return true;
 }
 
-bool Application::on_window_resize(WindowResizeEvent& event)
+void Application::on_window_iconify(const WindowIconified& event)
 {
-    Renderer::on_window_resize(event.get_width(), event.get_height());
-    return false;
+    minimized = event.minimized;
 }
 
-bool Application::on_window_iconify(WindowIconifyEvent& event)
+void Application::on_window_resize(const WindowResized& event)
 {
-    minimized = event.is_minimized();
-    return false;
+    Renderer::on_window_resize(event.width, event.height);
 }
 
 } // namespace pine

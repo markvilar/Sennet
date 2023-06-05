@@ -26,7 +26,7 @@ class Window
     */
 
 public:
-    using EventCallbackFn = std::function<void(Event&)>;
+    using EventCallbackFn = std::function<void(const Event&)>;
 
     virtual ~Window() = default;
 
@@ -52,8 +52,9 @@ public:
     virtual void set_title(const std::string& title) = 0;
 
     virtual void* get_native_window() const = 0;
-
-    static std::unique_ptr<Window> create(const WindowSpecs& specs);
 };
+
+// Factory function, implement in platform
+std::unique_ptr<Window> create_window(const WindowSpecs& specs);
 
 } // namespace pine

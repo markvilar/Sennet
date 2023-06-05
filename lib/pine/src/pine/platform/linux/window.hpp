@@ -25,8 +25,8 @@ public:
     virtual void poll_events() override;
     virtual void swap_buffers() override;
 
-    inline uint32_t get_width() const override { return m_data.width; }
-    inline uint32_t get_height() const override { return m_data.height; }
+    inline uint32_t get_width() const override { return window_data.width; }
+    inline uint32_t get_height() const override { return window_data.height; }
     virtual std::pair<uint32_t, uint32_t> get_size() const override;
     virtual std::pair<float, float> get_position() const override;
 
@@ -41,7 +41,7 @@ public:
     virtual const std::string& get_title() const override;
     virtual void set_title(const std::string& title) override;
 
-    virtual void* get_native_window() const override { return m_window; }
+    virtual void* get_native_window() const override { return native_window; }
 
 private:
     virtual void shutdown();
@@ -54,15 +54,15 @@ private:
         uint32_t height;
         bool vsync;
 
-        EventCallbackFn event_callback = [](Event&) {};
+        EventCallbackFn event_callback = [](const Event&) {};
     };
 
 private:
-    NativeWindow* m_window;
-    std::unique_ptr<GraphicsContext> m_context;
+    NativeWindow* native_window;
+    std::unique_ptr<GraphicsContext> context;
 
-    WindowSpecs m_specification;
-    WindowData m_data;
+    WindowSpecs specification;
+    WindowData window_data;
 };
 
 } // namespace pine
