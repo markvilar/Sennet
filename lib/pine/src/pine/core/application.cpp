@@ -25,7 +25,6 @@ Application::Application(const ApplicationSpecs& specs) : specification(specs)
     window_specs.fullscreen = specification.fullscreen;
     window_specs.vsync = specification.vsync;
 
-    // TODO: Separate factory method
     window = create_window(window_specs);
     window->init();
     window->set_event_callback([this](const Event& event){ on_event(event); });
@@ -44,7 +43,7 @@ Application::Application(const ApplicationSpecs& specs) : specification(specs)
 
     Renderer::init();
 
-    gui = gui::create_manager(window.get());
+    gui = gui::create_manager(window);
 }
 
 Application::~Application()
@@ -87,57 +86,53 @@ void Application::close() { running = false; }
 
 void Application::on_event(const Event& event)
 {
-    if (std::holds_alternative<std::monostate>(event))
-    {
-        PINE_CORE_INFO("Got empty event!");
-    }
-    else if (std::holds_alternative<Moved<Mouse>>(event))
-    {
-        const auto content = std::get<Moved<Mouse>>(event);
-    }
-    else if (std::holds_alternative<Moved<MouseWheel>>(event))
-    {
-        const auto content = std::get<Moved<MouseWheel>>(event);
-    }
-    else if (std::holds_alternative<Pressed<MouseButton>>(event))
-    {
-        const auto content = std::get<Pressed<MouseButton>>(event);
-    }
-    else if (std::holds_alternative<Released<MouseButton>>(event))
-    {
-        const auto content = std::get<Released<MouseButton>>(event);
-    }
-    else if (std::holds_alternative<Pressed<Key>>(event))
-    {
-        const auto content = std::get<Pressed<Key>>(event);
-    }
-    else if (std::holds_alternative<Released<Key>>(event))
-    {
-        const auto content = std::get<Released<Key>>(event);
-    }
-    else if (std::holds_alternative<WindowClosed>(event))
-    {
-        const auto content = std::get<WindowClosed>(event);
-        on_window_close(content);
-    }
-    else if (std::holds_alternative<WindowIconified>(event))
-    {
-        const auto content = std::get<WindowIconified>(event);
-        on_window_iconify(content);
-    }
-    else if (std::holds_alternative<WindowResized>(event))
-    {
-        const auto content = std::get<WindowResized>(event);
-        on_window_resize(content);
-    }
-    else if (std::holds_alternative<TimeElapsed>(event))
-    {
-        const auto content = std::get<TimeElapsed>(event);
-    }
-    else
-    {
-        PINE_CORE_INFO("Got invalid event!");
-    }
+    // Move events
+    dispatch_event<Moved<Mouse>>(event, 
+        [this](const Moved<Mouse>& key){
+        });
+
+    dispatch_event<Moved<MouseWheel>>(event, 
+        [this](const Moved<MouseWheel>& key){
+        });
+
+    // Mouse button events
+    dispatch_event<Pressed<MouseButton>>(event, 
+        [this](const Pressed<MouseButton>& key){
+        });
+
+    dispatch_event<Released<MouseButton>>(event, 
+        [this](const Released<MouseButton>& key){
+        });
+
+    // Key events
+    dispatch_event<Pressed<Key>>(event, 
+        [this](const Pressed<Key>& key){
+        });
+
+    dispatch_event<Released<Key>>(event, 
+        [this](const Released<Key>& key){
+        });
+
+    // Window events
+    dispatch_event<WindowClosed>(event, 
+        [this](const WindowClosed& event_data){
+            on_window_close(event_data);
+        });
+    
+    dispatch_event<WindowIconified>(event, 
+        [this](const WindowIconified& event_data){
+            on_window_iconify(event_data);
+        });
+    
+    dispatch_event<WindowResized>(event, 
+        [this](const WindowResized& event_data){
+            on_window_resize(event_data);
+        });
+        
+    // Time elapsed
+    dispatch_event<TimeElapsed>(event, 
+        [this](const TimeElapsed& event_data){
+        });
 
     // Handle event in the GUI first.
     if (gui)

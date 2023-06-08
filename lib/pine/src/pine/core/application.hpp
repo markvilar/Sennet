@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cstdint>
+#include <memory>
 #include <string>
 
 #include "pine/core/event.hpp"
@@ -70,7 +71,7 @@ private:
 private:
     ApplicationSpecs specification;
 
-    std::unique_ptr<Window> window;
+    std::shared_ptr<Window> window;
     std::unique_ptr<gui::Manager> gui;
 
     LayerStack layer_stack;

@@ -1,5 +1,6 @@
 #pragma once
 
+#include <array>
 #include <cstdint>
 #include <variant>
 #include <string>
@@ -19,6 +20,7 @@ template <typename Source>
 struct Pressed
 {
     constexpr static std::string_view name{"Pressed"};
+    constexpr static auto elements = std::to_array<std::string_view>({ "repeat", "source" });
     uint32_t repeat;
     Source source;
 };
@@ -27,6 +29,7 @@ template <typename Source>
 struct Released
 {
     constexpr static std::string_view name{"Released"};
+    constexpr static auto elements = std::to_array<std::string_view>({ "source" });
     Source source;
 };
 
@@ -34,6 +37,7 @@ template <typename Source>
 struct Moved
 {
     constexpr static std::string_view name{"Moved"};
+    constexpr static auto elements = std::to_array<std::string_view>({ "source" });
     Source source;
 };
 
@@ -44,13 +48,18 @@ struct Moved
 struct Mouse
 {
     constexpr static std::string_view name{"Mouse"};
-    float coordinate_x;
-    float coordinate_y;
+    constexpr static auto elements = std::to_array<std::string_view>({ "x", "y" });
+    float x;
+    float y;
 };
 
 struct MouseButton
 {
     constexpr static std::string_view name{"MouseButton"};
+    constexpr static auto elements = std::to_array<std::string_view>({ 
+        "code", 
+        "mouse" 
+    });
     MouseCode code;
     Mouse mouse;
 };
@@ -58,6 +67,11 @@ struct MouseButton
 struct MouseWheel
 {
     constexpr static std::string_view name{"MouseWheel"};
+    constexpr static auto elements = std::to_array<std::string_view>({
+        "offset_x", 
+        "offset_y",
+        "mouse"
+    });
     float offset_x;
     float offset_y;
     Mouse mouse;
@@ -66,6 +80,13 @@ struct MouseWheel
 struct Key
 {
     constexpr static std::string_view name{"Key"};
+    constexpr static auto elements = std::to_array<std::string_view>({
+        "alt", 
+        "ctrl",
+        "system",
+        "shift",
+        "code"
+    });
     bool alt;
     bool ctrl;
     bool system;
@@ -80,17 +101,25 @@ struct Key
 struct WindowClosed
 {
     constexpr static std::string_view name{"WindowClosed"};
+    constexpr static std::array<std::string_view, 0> elements{};
 };
 
 struct WindowIconified
 {
     constexpr static std::string_view name{"WindowIconified"};
+    constexpr static auto elements = std::to_array<std::string_view>({ 
+        "minimized" 
+    });
     bool minimized;
 };
 
 struct WindowResized
 {
     constexpr static std::string_view name{"WindowResized"};
+    constexpr static auto elements = std::to_array<std::string_view>({ 
+        "width",
+        "height" 
+    });
     uint32_t width;
     uint32_t height;
 };
@@ -98,6 +127,7 @@ struct WindowResized
 struct TimeElapsed
 {
     constexpr static std::string_view name{"TimeElapsed"};
+    constexpr static std::array<std::string_view, 0> elements{};
 };
 
 // ----------------------------------------------------------------------------
@@ -125,5 +155,14 @@ using Event = std::variant<
     WindowResized,
     TimeElapsed
 >;
+
+template <typename T, typename Callback>
+auto dispatch_event(const Event& event, Callback callback)
+{
+    if (std::holds_alternative<T>(event))
+    {
+        callback(std::get<T>(event));
+    }
+}
 
 } // namespace pine

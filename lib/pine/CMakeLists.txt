@@ -153,11 +153,11 @@ target_compile_definitions(pine
     PRIVATE
 )
 
-target_compile_features(pine PUBLIC cxx_std_17)
-target_compile_options(pine PUBLIC -std=c++17)
+target_compile_features(pine PUBLIC cxx_std_20)
+target_compile_options(pine PUBLIC -std=c++20)
 
 set_target_properties(pine PROPERTIES 
-    CXX_STANDARD 17
+    CXX_STANDARD 20
     ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib"
     LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib"
     RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin"

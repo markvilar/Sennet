@@ -1,12 +1,12 @@
 cmake_minimum_required(VERSION 3.16)
 
-project(pine VERSION 0.3.1 LANGUAGES CXX)
+project(pine VERSION 0.4.0 LANGUAGES CXX)
 
 # -----------------------------------------------------------------------------
 # ---- CXX settings -----------------------------------------------------------
 # -----------------------------------------------------------------------------
 
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
@@ -31,7 +31,7 @@ include(cmake/prevent_in_source_build.cmake)
 # Interface library for options
 add_library(options INTERFACE)
 add_library(pine::options ALIAS options)
-target_compile_features(options INTERFACE cxx_std_17)
+target_compile_features(options INTERFACE cxx_std_20)
 
 # Interface library for warnings
 add_library(warnings INTERFACE)

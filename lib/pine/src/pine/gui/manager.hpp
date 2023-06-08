@@ -17,14 +17,14 @@ class IO;
 class Manager;
 
 // Factory methods
-std::unique_ptr<Context> create_context(Window* window);
+std::unique_ptr<Context> create_context(const std::shared_ptr<Window>& window);
 std::unique_ptr<IO> create_io();
-std::unique_ptr<Manager> create_manager(Window* window);
+std::unique_ptr<Manager> create_manager(const std::shared_ptr<Window>& window);
 
 class Context
 {
 public:
-    Context(Window* window);
+    Context(const std::shared_ptr<Window>& window);
     ~Context();
 
     void init() const;
@@ -34,7 +34,7 @@ public:
     void end_frame() const;
 
 private:
-    Window* window{};
+    std::weak_ptr<Window> window{};
 };
 
 class IO

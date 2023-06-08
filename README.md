@@ -11,24 +11,24 @@ development tools.
 
 ## Requirements
 Pine requires the follow tools to be built:
-- C++17 compiler (recommended minimum is gcc-9, clang-12)
+- C++20 compiler (recommended minimum is gcc-10, clang-10)
 - CMake 3.19+
 - Conan 2.0+
 
 ## Dependencies
 
-| **Library** | **Version**  | **Library purpose.**                |
-|-------------|--------------|-------------------------------------|
-| argparse    | >=2.9        | Command line argument parsing.      |
-| asio        | 1.21.0       | Networking and asynchronicity.      |
-| glad        | 0.1.36       | OpenGL 4.6 bindings and loaders.    |
-| glfw        | 3.3.4        | Window and input handling.          |
-| glm         | 0.9.9.8      | Vectorized mathematical operations. |
-| spdlog      | 1.9.2        | Console and file logging.           |
-| stb         | cci.20210713 | Image file loading.                 |
-|-------------|--------------|-------------------------------------|
-| imgui       | 1.85         | GUI windows, widgets, etc.          |
-| implot      | 0.14         | GUI plotting.                       |
+| **Library** |  **Library purpose.**                |
+|-------------|--------------------------------------|
+| argparse    |  Command line argument parsing.      |
+| asio        |  Networking and asynchronicity.      |
+| glad        |  OpenGL 4.6 bindings and loaders.    |
+| glfw        |  Window and input handling.          |
+| glm         |  Vectorized mathematical operations. |
+| spdlog      |  Console and file logging.           |
+| stb         |  Image file loading.                 |
+|-------------|--------------------------------------|
+| imgui       |  GUI windows, widgets, etc.          |
+| implot      |  GUI plotting.                       |
 
 
 ## Workflows
