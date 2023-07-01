@@ -9,6 +9,7 @@ project(pine VERSION 0.4.0 LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
+#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++20")
 
 # -----------------------------------------------------------------------------
 # ---- Project options --------------------------------------------------------
@@ -70,12 +71,12 @@ add_subdirectory(vendor)
 
 # Add examples
 if(PINE_EXAMPLE_ENABLED)
-    add_subdirectory(example)
+    add_subdirectory(examples)
 endif()
 
 # Add tests
 if(PINE_TEST_ENABLED)
     include(CTest)
     enable_testing()
-    add_subdirectory(test)
+    add_subdirectory(tests)
 endif()

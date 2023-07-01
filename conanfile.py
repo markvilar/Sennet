@@ -40,10 +40,10 @@ class PineConan(ConanFile):
     exports_sources = [
         "CMakeLists.txt", 
         "cmake/*",
-        "example/*", 
+        "examples/*", 
         "lib/*", 
         "resources/*", 
-        "test/*",
+        "tests/*",
         "vendor/*"
     ]
 
@@ -82,11 +82,11 @@ class PineConan(ConanFile):
     def validate(self):
         """ Validates the project configuration. """
         if self.settings.compiler == "clang":
-            if Version(self.settings.compiler.version) < "8":
+            if Version(self.settings.compiler.version) < "10":
                 raise ConanInvalidConfiguration("Invalid clang compiler \
                     version.")
         if self.settings.compiler == "gcc":
-            if Version(self.settings.compiler.version) < "7":
+            if Version(self.settings.compiler.version) < "10":
                 raise ConanInvalidConfiguration("Invalid gcc compiler \
                     version.")
         if self.settings.compiler == "msvc":

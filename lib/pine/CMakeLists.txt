@@ -153,8 +153,9 @@ target_compile_definitions(pine
     PRIVATE
 )
 
-target_compile_features(pine PUBLIC cxx_std_20)
-target_compile_options(pine PUBLIC -std=c++20)
+# NOTE: Deprecated
+#target_compile_features(pine PUBLIC cxx_std_20)
+#target_compile_options(pine PUBLIC -std=c++20)
 
 set_target_properties(pine PROPERTIES 
     CXX_STANDARD 20
