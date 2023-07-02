@@ -10,8 +10,8 @@ os=Windows
 [options]
 
 [buildenv]
-CC=gcc-12
-CXX=g++-12
+CC=gcc
+CXX=g++
 
 [tool_requires]
 

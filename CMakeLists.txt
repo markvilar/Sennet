@@ -9,7 +9,6 @@ project(pine VERSION 0.4.0 LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
-#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++20")
 
 # -----------------------------------------------------------------------------
 # ---- Project options --------------------------------------------------------
@@ -28,11 +27,17 @@ option(PINE_TEST_ENABLED "Build test." ON)
 
 include(cmake/project_settings.cmake)
 include(cmake/prevent_in_source_build.cmake)
+include(cmake/compiler_flags.cmake)
 
 # Interface library for options
 add_library(options INTERFACE)
 add_library(pine::options ALIAS options)
-target_compile_features(options INTERFACE cxx_std_20)
+
+# Interface library for settings
+add_library(settings INTERFACE)
+add_library(pine::settings ALIAS settings)
+
+set_compiler_cxx_flags(settings)
 
 # Interface library for warnings
 add_library(warnings INTERFACE)
