@@ -12,7 +12,7 @@ required_conan_version = ">=2.0.0"
 
 class PineConan(ConanFile):
     name = "pine"
-    version = "0.3.1"
+    version = "0.4.0"
     license = "Apache 2.0"
     author = "Martin Kvisvik Larsen"
     description = "Pine - Library for graphics and network"
@@ -40,10 +40,10 @@ class PineConan(ConanFile):
     exports_sources = [
         "CMakeLists.txt", 
         "cmake/*",
-        "example/*", 
+        "examples/*", 
         "lib/*", 
         "resources/*", 
-        "test/*",
+        "tests/*",
         "vendor/*"
     ]
 
@@ -81,18 +81,13 @@ class PineConan(ConanFile):
 
     def validate(self):
         """ Validates the project configuration. """
-        if self.settings.compiler == "clang":
-            if Version(self.settings.compiler.version) < "8":
-                raise ConanInvalidConfiguration("Invalid clang compiler \
-                    version.")
-        if self.settings.compiler == "gcc":
-            if Version(self.settings.compiler.version) < "7":
-                raise ConanInvalidConfiguration("Invalid gcc compiler \
-                    version.")
-        if self.settings.compiler == "msvc":
-            if Version(self.settings.compiler.version) < "16":
-                raise ConanInvalidConfiguration("Invalid Visual Studio \
-                    compiler version.")
+        version = Version(self.settings.compiler.version)
+        if self.settings.compiler == "clang" and version < "10":
+            raise ConanInvalidConfiguration("Invalid clang compiler version.")
+        if self.settings.compiler == "gcc" and version < "10":
+            raise ConanInvalidConfiguration("Invalid gcc compiler version.")
+        if self.settings.compiler == "msvc" and version < "17":
+            raise ConanInvalidConfiguration("Invalid Visual Studio compiler version.")
 
     def layout(self):
         """ Defines the project layout. """

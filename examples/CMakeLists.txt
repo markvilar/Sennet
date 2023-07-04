@@ -3,14 +3,23 @@
 # -----------------------------------------------------------------------------
 
 add_executable(sandbox sandbox.cpp)
-target_compile_features(sandbox PRIVATE cxx_std_17)
-target_compile_options(sandbox PRIVATE -std=c++17)
 target_compile_definitions(sandbox PRIVATE)
 target_link_libraries(sandbox PRIVATE pine::pine)
 
 set_target_properties(sandbox PROPERTIES 
-    CXX_STANDARD 17
-    RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin"
+    RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/examples"
+)
+
+# -----------------------------------------------------------------------------
+# serial example
+# -----------------------------------------------------------------------------
+
+add_executable(serial_example serial.cpp)
+target_compile_definitions(serial_example PRIVATE)
+target_link_libraries(serial_example PRIVATE pine::pine)
+
+set_target_properties(serial_example PROPERTIES 
+    RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/examples"
 )
 
 # -----------------------------------------------------------------------------
@@ -18,12 +27,9 @@ set_target_properties(sandbox PROPERTIES
 # -----------------------------------------------------------------------------
 
 add_executable(server server.cpp)
-target_compile_features(server PRIVATE cxx_std_17)
-target_compile_options(server PRIVATE -std=c++17)
 target_compile_definitions(server PRIVATE)
 target_link_libraries(server PRIVATE pine::pine)
 
 set_target_properties(server PROPERTIES 
-    CXX_STANDARD 17
-    RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin"
+    RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/examples"
 )

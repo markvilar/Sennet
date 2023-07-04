@@ -1,9 +1,10 @@
 #pragma once
 
+#include <filesystem>
 #include <memory>
 
 #include "pine/core/window.hpp"
-#include "pine/gui/common.hpp"
+#include "pine/gui/flags.hpp"
 #include "pine/gui/style.hpp"
 #include "pine/utils/filesystem.hpp"
 
@@ -16,14 +17,14 @@ class IO;
 class Manager;
 
 // Factory methods
-std::unique_ptr<Context> create_context(Window* window);
+std::unique_ptr<Context> create_context(const std::shared_ptr<Window>& window);
 std::unique_ptr<IO> create_io();
-std::unique_ptr<Manager> create_manager(Window* window);
+std::unique_ptr<Manager> create_manager(const std::shared_ptr<Window>& window);
 
 class Context
 {
 public:
-    Context(Window* window);
+    Context(const std::shared_ptr<Window>& window);
     ~Context();
 
     void init() const;
@@ -33,7 +34,7 @@ public:
     void end_frame() const;
 
 private:
-    Window* window{};
+    std::weak_ptr<Window> window{};
 };
 
 class IO
@@ -69,8 +70,7 @@ public:
     bool load_settings(const std::filesystem::path& filepath) const;
     bool save_settings(const std::filesystem::path& filepath) const;
 
-    bool
-    load_font(const void* data, const int size, const float pixel_size) const;
+    bool load_font(const void* data, const int size, const float pixel_size) const;
     bool load_font(const std::filesystem::path& filepath,
         const float pixel_size) const;
 

@@ -23,6 +23,7 @@ void EditorLayer::on_attach()
         = shader_library.load_shader("resources/shaders/quad.vert",
             "resources/shaders/quad.frag");
 
+
     if (!shader_loaded)
         PINE_ERROR("Failed to load shader.");
 

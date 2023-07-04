@@ -2,8 +2,8 @@
 #include "pine/platform/windows/window.hpp"
 
 #include "pine/pch.hpp"
-#include "pine/core/input.hpp"
 #include "pine/core/event.hpp"
+#include "pine/core/input.hpp"
 
 #include "pine/platform/opengl/context.hpp"
 

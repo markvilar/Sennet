@@ -1,12 +1,12 @@
 cmake_minimum_required(VERSION 3.16)
 
-project(pine VERSION 0.3.1 LANGUAGES CXX)
+project(pine VERSION 0.4.0 LANGUAGES CXX)
 
 # -----------------------------------------------------------------------------
 # ---- CXX settings -----------------------------------------------------------
 # -----------------------------------------------------------------------------
 
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
@@ -27,11 +27,17 @@ option(PINE_TEST_ENABLED "Build test." ON)
 
 include(cmake/project_settings.cmake)
 include(cmake/prevent_in_source_build.cmake)
+include(cmake/compiler_flags.cmake)
 
 # Interface library for options
 add_library(options INTERFACE)
 add_library(pine::options ALIAS options)
-target_compile_features(options INTERFACE cxx_std_17)
+
+# Interface library for settings
+add_library(settings INTERFACE)
+add_library(pine::settings ALIAS settings)
+
+set_compiler_cxx_flags(settings)
 
 # Interface library for warnings
 add_library(warnings INTERFACE)
@@ -70,12 +76,12 @@ add_subdirectory(vendor)
 
 # Add examples
 if(PINE_EXAMPLE_ENABLED)
-    add_subdirectory(example)
+    add_subdirectory(examples)
 endif()
 
 # Add tests
 if(PINE_TEST_ENABLED)
     include(CTest)
     enable_testing()
-    add_subdirectory(test)
+    add_subdirectory(tests)
 endif()

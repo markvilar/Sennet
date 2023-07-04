@@ -1,9 +1,10 @@
 #if defined(PINE_PLATFORM_LINUX)
-#include "window.hpp"
+#include "pine/platform/linux/window.hpp"
 
 #include "pine/pch.hpp"
 #include "pine/core/event.hpp"
 #include "pine/core/input.hpp"
+#include "pine/core/log.hpp"
 
 #include "pine/platform/opengl/context.hpp"
 
@@ -182,8 +183,8 @@ void LinuxWindow::init()
             WindowData& data
                 = *static_cast<WindowData*>(glfwGetWindowUserPointer(window));
             Moved<Mouse> event;
-            event.source.coordinate_x = static_cast<float>(pos_x);
-            event.source.coordinate_y = static_cast<float>(pos_y);
+            event.source.x = static_cast<float>(pos_x);
+            event.source.y = static_cast<float>(pos_y);
             data.event_callback(event);
         });
 }
@@ -209,8 +210,8 @@ void LinuxWindow::maximize() { glfwMaximizeWindow(native_window); }
 void LinuxWindow::center_window()
 {
     const auto& video_mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
-    int x = video_mode->width / 2 - static_cast<int>(window_data.width) / 2;
-    int y = video_mode->height / 2 - static_cast<int>(window_data.height) / 2;
+    int x = ( video_mode->width - static_cast<int>(window_data.width) ) / 2;
+    int y = ( video_mode->height - static_cast<int>(window_data.height) ) / 2;
     glfwSetWindowPos(native_window, x, y);
 }
 

@@ -3,7 +3,6 @@
 #include "pine/core/event.hpp"
 #include "pine/core/timestep.hpp"
 #include "pine/core/window.hpp"
-#include "pine/defines/common.hpp"
 #include "pine/utils/math.hpp"
 
 namespace pine

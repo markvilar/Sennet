@@ -1,5 +1,12 @@
 #pragma once
 
+#if defined(PINE_DEBUG)
+#define PINE_ENABLE_ASSERTS
+#elif defined(PINE_RELEASE)
+#else
+#error "Unknown build type!"
+#endif
+
 // TODO: Make macro able to take in no arguments except condition.
 #ifdef PINE_ENABLE_ASSERTS
 #define PINE_ASSERT(x, ...)                                                    \

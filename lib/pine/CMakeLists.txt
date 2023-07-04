@@ -7,9 +7,8 @@ target_sources(pine
         src/pine/pine.hpp
 
         # Definitions and macros
-        src/pine/defines/assert.hpp
-        src/pine/defines/common.hpp
-        src/pine/defines/platform.hpp
+        src/pine/definitions/assert.hpp
+        src/pine/definitions/platform.hpp
 
     PRIVATE
         # Core
@@ -28,7 +27,7 @@ target_sources(pine
         src/pine/core/window.hpp
 
         # Gui
-        src/pine/gui/common.hpp
+        src/pine/gui/flags.hpp
         src/pine/gui/manager.cpp
         src/pine/gui/manager.hpp
         src/pine/gui/style.cpp
@@ -131,6 +130,7 @@ target_link_libraries(pine
         glm::glm
         imgui::imgui
         spdlog::spdlog
+        pine::settings
     PRIVATE 
         glad::glad
         glfw
@@ -154,11 +154,7 @@ target_compile_definitions(pine
     PRIVATE
 )
 
-target_compile_features(pine PUBLIC cxx_std_17)
-target_compile_options(pine PUBLIC -std=c++17)
-
 set_target_properties(pine PROPERTIES 
-    CXX_STANDARD 17
     ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib"
     LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib"
     RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin"

@@ -4,7 +4,6 @@
 #include <string>
 #include <vector>
 
-#include "pine/defines/common.hpp"
 #include "pine/renderer/types.hpp"
 
 namespace pine

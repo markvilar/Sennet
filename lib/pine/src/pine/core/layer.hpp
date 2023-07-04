@@ -1,6 +1,7 @@
 #pragma once
 
-#include "pine/defines/common.hpp"
+#include <string>
+#include <vector>
 
 #include "pine/core/timestep.hpp"
 #include "pine/core/event.hpp"

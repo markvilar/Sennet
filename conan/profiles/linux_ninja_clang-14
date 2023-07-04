@@ -5,13 +5,13 @@ compiler=clang
 compiler.cppstd=20
 compiler.libcxx=libstdc++11
 compiler.version=14
-os=Windows
+os=Linux
 
 [options]
 
 [buildenv]
-CC=clang
-CXX=clang++
+CC=clang-14
+CXX=clang++-14
 
 [tool_requires]
 

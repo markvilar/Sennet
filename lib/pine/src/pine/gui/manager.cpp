@@ -1,5 +1,4 @@
-#include "manager.hpp"
-#include "pine/pch.hpp"
+#include "pine/gui/manager.hpp"
 
 #include <glad/glad.h>
 
@@ -10,13 +9,14 @@
 #include <imgui.h>
 
 // FIXME: GUI implementation abstraction
-#include "pine/gui/common.hpp"
+#include "pine/pch.hpp"
+#include "pine/gui/flags.hpp"
 #include "pine/gui/style.hpp"
 
 namespace pine::gui
 {
 
-std::unique_ptr<Context> create_context(Window* window)
+std::unique_ptr<Context> create_context(const std::shared_ptr<Window>& window)
 {
     return std::make_unique<Context>(window);
 }
@@ -26,7 +26,7 @@ std::unique_ptr<IO> create_io()
     return std::make_unique<IO>();
 }
 
-std::unique_ptr<Manager> create_manager(Window* window)
+std::unique_ptr<Manager> create_manager(const std::shared_ptr<Window>& window)
 {
     auto context = create_context(window);
     auto io = create_io();
@@ -37,7 +37,7 @@ std::unique_ptr<Manager> create_manager(Window* window)
 // Context
 // ----------------------------------------------------------------------------
 
-Context::Context(Window* window_) : window(window_)
+Context::Context(const std::shared_ptr<Window>& window_) : window(window_)
 {
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
@@ -47,7 +47,8 @@ Context::~Context() { ImGui::DestroyContext(); }
 
 void Context::init() const
 {
-    auto native_window = static_cast<GLFWwindow*>(window->get_native_window());
+    auto instance = window.lock();
+    auto native_window = static_cast<GLFWwindow*>(instance->get_native_window());
     ImGui_ImplGlfw_InitForOpenGL(native_window, true);
     ImGui_ImplOpenGL3_Init("#version 410");
 }
@@ -69,10 +70,11 @@ void Context::end_frame() const
 {
     auto& io = ImGui::GetIO();
 
-    if (window)
+    if (!window.expired())
     {
-        io.DisplaySize = ImVec2(static_cast<float>(window->get_width()),
-            static_cast<float>(window->get_height()));
+        auto instance = window.lock();
+        io.DisplaySize = ImVec2(static_cast<float>(instance->get_width()),
+            static_cast<float>(instance->get_height()));
     }
 
     ImGui::Render();

@@ -1,8 +1,8 @@
 #pragma once
 
-#include "pine/defines/assert.hpp"
-#include "pine/defines/common.hpp"
-#include "pine/defines/platform.hpp"
+// Preprocessor
+#include "pine/definitions/assert.hpp"
+#include "pine/definitions/platform.hpp"
 
 // Core
 #include "pine/core/application.hpp"
@@ -15,7 +15,7 @@
 #include "pine/core/window.hpp"
 
 // Graphical user interface
-#include "pine/gui/common.hpp"
+#include "pine/gui/flags.hpp"
 #include "pine/gui/manager.hpp"
 #include "pine/gui/style.hpp"
 #include "pine/gui/widgets.hpp"

@@ -3,8 +3,8 @@
 #include <glad/glad.h>
 
 #include "pine/pch.hpp"
-#include "pine/defines/common.hpp"
 #include "pine/core/log.hpp"
+#include "pine/definitions/assert.hpp"
 
 namespace pine
 {

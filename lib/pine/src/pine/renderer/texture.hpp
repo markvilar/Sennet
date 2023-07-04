@@ -3,7 +3,6 @@
 #include <filesystem>
 #include <memory>
 
-#include "pine/defines/common.hpp"
 #include "pine/renderer/image.hpp"
 #include "pine/renderer/types.hpp"
 

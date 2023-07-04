@@ -3,7 +3,7 @@
 #include <imgui.h>
 
 #include "pine/pch.hpp"
-#include "pine/gui/common.hpp"
+#include "pine/gui/flags.hpp"
 
 namespace pine::gui
 {

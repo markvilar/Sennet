@@ -4,7 +4,7 @@
 #include <limits>
 #include <memory>
 
-#include "pine/defines/common.hpp"
+#include "pine/core/log.hpp"
 #include "pine/network/connection.hpp"
 #include "pine/network/types.hpp"
 #include "pine/utils/locked_queue.hpp"
