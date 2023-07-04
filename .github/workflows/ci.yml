@@ -41,9 +41,9 @@ jobs:
             },
             {
                 "os" : "ubuntu-22.04", 
-                "profile": "linux_ninja_clang-12",
+                "profile": "linux_ninja_clang-14",
                 "compiler": "clang",
-                "compiler_version": 12
+                "compiler_version": 14
             },
 
           ]
