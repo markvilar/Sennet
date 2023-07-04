@@ -11,7 +11,7 @@ development tools.
 
 ## Requirements
 Pine requires the follow tools to be built:
-- C++20 compiler (recommended minimum is gcc-10, clang-10)
+- C++20 compiler (recommended minimum is GCC 10, Clang 10, or MSVC 17)
 - CMake 3.19+
 - Conan 2.0+
 

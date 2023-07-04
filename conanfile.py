@@ -81,18 +81,13 @@ class PineConan(ConanFile):
 
     def validate(self):
         """ Validates the project configuration. """
-        if self.settings.compiler == "clang":
-            if Version(self.settings.compiler.version) < "10":
-                raise ConanInvalidConfiguration("Invalid clang compiler \
-                    version.")
-        if self.settings.compiler == "gcc":
-            if Version(self.settings.compiler.version) < "10":
-                raise ConanInvalidConfiguration("Invalid gcc compiler \
-                    version.")
-        if self.settings.compiler == "msvc":
-            if Version(self.settings.compiler.version) < "16":
-                raise ConanInvalidConfiguration("Invalid Visual Studio \
-                    compiler version.")
+        version = Version(self.settings.compiler.version)
+        if self.settings.compiler == "clang" and version < "10":
+            raise ConanInvalidConfiguration("Invalid clang compiler version.")
+        if self.settings.compiler == "gcc" and version < "10":
+            raise ConanInvalidConfiguration("Invalid gcc compiler version.")
+        if self.settings.compiler == "msvc" and version < "17":
+            raise ConanInvalidConfiguration("Invalid Visual Studio compiler version.")
 
     def layout(self):
         """ Defines the project layout. """

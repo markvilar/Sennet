@@ -15,33 +15,37 @@ env:
 
 jobs:
   build-ubuntu:
-    name: "${{matrix.os}}_${{matrix.setup.profile}}"
-    runs-on: "${{matrix.os}}"
+    name: "${{matrix.config.os}}_${{matrix.config.profile}}"
+    runs-on: "${{matrix.config.os}}"
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-20.04, ubuntu-22.04]
-        setup: [
-            { 
-                "profile": "linux_makefiles_gcc",
+        config: [
+            {
+                "os" : "ubuntu-20.04", 
+                "profile": "linux_ninja_gcc-10",
                 "compiler": "gcc",
                 "compiler_version": 10
             },
-            { 
-                "profile": "linux_makefiles_clang",
+            {
+                "os" : "ubuntu-20.04", 
+                "profile": "linux_ninja_clang-12",
                 "compiler": "clang",
-                "compiler_version": 10
+                "compiler_version": 12
             },
-            { 
-                "profile": "linux_ninja_gcc",
+            {
+                "os" : "ubuntu-22.04", 
+                "profile": "linux_ninja_gcc-10",
                 "compiler": "gcc",
                 "compiler_version": 10
             },
-            { 
-                "profile": "linux_ninja_clang",
+            {
+                "os" : "ubuntu-22.04", 
+                "profile": "linux_ninja_clang-12",
                 "compiler": "clang",
-                "compiler_version": 10
+                "compiler_version": 12
             },
+
           ]
 
     steps:
@@ -51,8 +55,8 @@ jobs:
     - name: Environment setup
       uses: ./.github/actions/linux-setup
       with:
-        compiler: ${{matrix.setup.compiler}}
-        compiler_version: ${{matrix.setup.compiler_version}}
+        compiler: ${{matrix.config.compiler}}
+        compiler_version: ${{matrix.config.compiler_version}}
         platform: x64
 
     - name: Conan profile
@@ -61,11 +65,11 @@ jobs:
     - name: Conan build
       run: |
         conan build ${{env.source_dir}} \
-            --profile ${{env.profile_dir}}/${{matrix.setup.profile}} \
+            --profile ${{env.profile_dir}}/${{matrix.config.profile}} \
             --build missing
 
     - name: Conan create
       run: |
         conan create ${{env.source_dir}} \
-            --profile ${{env.profile_dir}}/${{matrix.setup.profile}} \
+            --profile ${{env.profile_dir}}/${{matrix.config.profile}} \
             --build missing
