@@ -1,5 +1,4 @@
 # Ignore some common directories
-bin/
 build/
 install/
 packages/
