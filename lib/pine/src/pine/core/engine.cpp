@@ -32,7 +32,11 @@ void Engine::init()
     // Create window
     window = create_window(window_specs);
     window->init();
-    window->set_event_callback([this](const Event& event){ on_event(event); });
+    window->set_event_callback(
+        [this](const Event& event)
+        { 
+            event_queue.push_back(event);
+        });
     if (specification.start_maximized)
     {
         window->maximize();
@@ -115,17 +119,9 @@ void Engine::on_event(const Event& event)
         [this](const TimeElapsed& event_data){
         });
 
-    // Handle event in the GUI first.
+    // Handle event in the GUI
     if (gui)
         gui->on_event(event);
-
-    // TODO: Propagate event down the layer stack
-    /*
-    for (auto it = layer_stack.end(); it != layer_stack.begin();)
-    {
-        (*--it)->on_event(event);
-    }
-    */
 }
 
 void Engine::on_window_close([[maybe_unused]] const WindowClosed& event)

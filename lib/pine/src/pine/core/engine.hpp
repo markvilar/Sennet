@@ -2,6 +2,7 @@
 
 #include <concepts>
 #include <cstdint>
+#include <deque>
 #include <memory>
 #include <string>
 
@@ -58,10 +59,11 @@ public:
     template <Runnable App>
     auto run(App& app)
     {
+        // Initialize engine and application
         init();
         app.init();
 
-        // Prepare run
+        // Prepare
         state.running = true;
 
         while (state.running)
@@ -72,8 +74,15 @@ public:
             
             // Handle events
             window->poll_events();
+            while (!event_queue.empty())
+            {
+                const auto event = event_queue.front();
+                event_queue.pop_front();
+                on_event(event);
+                app.on_event(event);
+            }
 
-            // Update
+            // Update engine and application
             update(timestep);
             app.update(timestep);
             
@@ -91,7 +100,7 @@ public:
             }
         }
 
-        // Shut down
+        // Shut down application and engine
         app.shutdown();
         shutdown();
     }
@@ -126,6 +135,7 @@ private:
 private:
     EngineSpecs specification;
     EngineState state;
+    std::deque<Event> event_queue;
 
     // Shared resources
     std::shared_ptr<Window> window;
