@@ -29,3 +29,20 @@
 #define PINE_ASSERT(x, ...)
 #define PINE_CORE_ASSERT(x, ...)
 #endif
+
+
+#define PINE_VERIFY(x, ...)                                                    \
+    {                                                                          \
+        if (!(x))                                                              \
+        {                                                                      \
+            PINE_ERROR("Verification failed: {0}", __VA_ARGS__);               \
+        }                                                                      \
+    }
+#define PINE_CORE_VERIFY(x, ...)                                               \
+    {                                                                          \
+        if (!(x))                                                              \
+        {                                                                      \
+            PINE_CORE_ERROR("Verification failed: {0}", __VA_ARGS__);          \
+        }                                                                      \
+    }
+

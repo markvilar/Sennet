@@ -3,23 +3,23 @@
 #include <array>
 #include <memory>
 
-#include "pine/pine.hpp"
+#include <pine/pine.hpp>
 
 namespace pine
 {
-class EditorLayer : public Layer
+
+class Editor
 {
 public:
-    EditorLayer();
-    ~EditorLayer() = default;
+    Editor();
+    ~Editor() = default;
 
-    virtual void on_attach() override;
-    virtual void on_detach() override;
-    virtual void on_update(const Timestep& ts) override;
+    void init();
+    void update(const Timestep& ts);
+    void shutdown();
 
-    virtual void on_gui_render() override;
-
-    virtual void on_event(const Event& event) override;
+    void on_gui_render();
+    void on_event(const Event& event);
 
 private:
     void update_camera_controller(const Timestep& ts);

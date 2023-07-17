@@ -13,6 +13,21 @@ set_target_properties(test_math PROPERTIES
 add_test(NAME math_test COMMAND test_math)
 
 # -----------------------------------------------------------------------------
+# Test engine
+# -----------------------------------------------------------------------------
+
+add_executable(test_engine test_engine.cpp)
+target_compile_definitions(test_engine PRIVATE)
+target_link_libraries(test_engine PRIVATE pine::pine)
+
+set_target_properties(test_engine PROPERTIES 
+    RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/bin"
+)
+
+add_test(NAME engine_test COMMAND test_engine)
+
+
+# -----------------------------------------------------------------------------
 # Test window
 # -----------------------------------------------------------------------------
 

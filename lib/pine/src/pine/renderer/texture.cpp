@@ -1,7 +1,7 @@
 #include "pine/renderer/texture.hpp"
 
 #include "pine/pch.hpp"
-#include "pine/definitions/assert.hpp"
+#include "pine/defines/assert.hpp"
 #include "pine/renderer/renderer.hpp"
 #include "pine/renderer/renderer_api.hpp"
 

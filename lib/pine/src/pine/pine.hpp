@@ -1,14 +1,13 @@
 #pragma once
 
-// Preprocessor
-#include "pine/definitions/assert.hpp"
-#include "pine/definitions/platform.hpp"
+// Defines
+#include "pine/defines/assert.hpp"
+#include "pine/defines/platform.hpp"
 
 // Core
-#include "pine/core/application.hpp"
+#include "pine/core/engine.hpp"
 #include "pine/core/input.hpp"
 #include "pine/core/key_codes.hpp"
-#include "pine/core/layer.hpp"
 #include "pine/core/log.hpp"
 #include "pine/core/mouse_codes.hpp"
 #include "pine/core/timestep.hpp"

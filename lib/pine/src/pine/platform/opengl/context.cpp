@@ -4,7 +4,7 @@
 
 #include "pine/pch.hpp"
 #include "pine/core/log.hpp"
-#include "pine/definitions/assert.hpp"
+#include "pine/defines/assert.hpp"
 
 namespace pine
 {

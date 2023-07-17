@@ -6,13 +6,12 @@ add_library(editor STATIC)
 add_library(pine::editor ALIAS editor)
 
 target_sources(editor
-    PUBLIC 
-        include/editor/editor_layer.hpp
     PRIVATE 
-        src/editor_layer.cpp
+        src/editor/editor.cpp
+        src/editor/editor.hpp
 )
 
-target_include_directories(editor PUBLIC include)
+target_include_directories(editor PUBLIC src)
 
 target_link_libraries(editor PUBLIC pine::pine)
 target_compile_definitions(editor PUBLIC)
@@ -27,7 +26,7 @@ set_target_properties(editor PROPERTIES
 # editor application
 # -----------------------------------------------------------------------------
 
-add_executable(editor_app editor.cpp)
+add_executable(editor_app bin/editor.cpp)
 target_compile_definitions(editor_app PRIVATE)
 
 target_link_libraries(editor_app PRIVATE pine::editor)

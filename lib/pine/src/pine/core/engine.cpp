@@ -1,4 +1,4 @@
-#include "pine/core/application.hpp"
+#include "pine/core/engine.hpp"
 
 #include <GLFW/glfw3.h>
 
@@ -6,17 +6,21 @@
 #include "pine/core/input.hpp"
 #include "pine/core/log.hpp"
 #include "pine/core/timestep.hpp"
+#include "pine/defines/assert.hpp"
 #include "pine/renderer/renderer.hpp"
 
 namespace pine
 {
 
-Application* Application::instance = nullptr;
+Engine* Engine::instance = nullptr;
 
-Application::Application(const ApplicationSpecs& specs) : specification(specs)
+void Engine::init()
 {
-    PINE_CORE_ASSERT(!instance, "Application already exists!");
+    PINE_CORE_VERIFY(!instance, "An Engine instance already exists.");
     instance = this;
+
+    // Initalize log
+    Log::init();
 
     WindowSpecs window_specs;
     window_specs.title = specification.name;
@@ -25,10 +29,10 @@ Application::Application(const ApplicationSpecs& specs) : specification(specs)
     window_specs.fullscreen = specification.fullscreen;
     window_specs.vsync = specification.vsync;
 
+    // Create window
     window = create_window(window_specs);
     window->init();
     window->set_event_callback([this](const Event& event){ on_event(event); });
-
     if (specification.start_maximized)
     {
         window->maximize();
@@ -37,54 +41,31 @@ Application::Application(const ApplicationSpecs& specs) : specification(specs)
     {
         window->center_window();
     }
-
     window->set_resizable(specification.resizable);
     window->set_vsync(specification.vsync);
 
+    // Create GUI
+    gui = gui::create_manager(window);
+
+    // TODO: Remove this
     Renderer::init();
 
-    gui = gui::create_manager(window);
+    state.initialized = true;
 }
 
-Application::~Application()
+void Engine::shutdown()
 {
+    // TODO: Shut down components
     window->set_event_callback([]([[maybe_unused]] const Event& event) {});
+    state.initialized = false;
 }
 
-void Application::run()
+void Engine::update(const Timestep& timestep)
 {
-    on_init();
-    while (running)
-    {
-        // TODO: Temporary.
-        auto time = static_cast<float>(glfwGetTime()); // Platform::GetTime
-        Timestep ts = time - last_frame_time;
-
-        window->poll_events();
-
-        // Update layers.
-        if (!minimized)
-        {
-            last_frame_time = time;
-            for (Layer* layer : layer_stack)
-            {
-                layer->on_update(ts);
-            }
-
-            if (specification.enable_gui)
-            {
-                render_gui();
-            }
-
-            window->swap_buffers();
-        }
-    }
-    on_shutdown();
+    // TODO: Update components
 }
 
-void Application::close() { running = false; }
-
-void Application::on_event(const Event& event)
+void Engine::on_event(const Event& event)
 {
     // Move events
     dispatch_event<Moved<Mouse>>(event, 
@@ -138,63 +119,33 @@ void Application::on_event(const Event& event)
     if (gui)
         gui->on_event(event);
 
-    // Propagate event down the layer stack.
+    // TODO: Propagate event down the layer stack
+    /*
     for (auto it = layer_stack.end(); it != layer_stack.begin();)
     {
         (*--it)->on_event(event);
     }
+    */
 }
 
-void Application::push_layer(Layer* layer)
+void Engine::on_window_close([[maybe_unused]] const WindowClosed& event)
 {
-    layer_stack.push_layer(layer);
-    layer->on_attach();
+    stop();
 }
 
-void Application::push_overlay(Layer* layer)
+void Engine::on_window_iconify(const WindowIconified& event)
 {
-    layer_stack.push_overlay(layer);
-    layer->on_attach();
+    state.minimized = event.minimized;
 }
 
-void Application::pop_layer(Layer* layer)
-{
-    layer_stack.pop_layer(layer);
-    layer->on_detach();
-}
-
-void Application::pop_overlay(Layer* layer)
-{
-    layer_stack.pop_overlay(layer);
-    layer->on_detach();
-}
-
-void Application::render_gui()
-{
-    if (gui)
-    {
-        gui->begin_frame();
-        for (Layer* layer : layer_stack)
-        {
-            layer->on_gui_render();
-        }
-        gui->end_frame();
-    }
-}
-
-void Application::on_window_close([[maybe_unused]] const WindowClosed& event)
-{
-    running = false;
-}
-
-void Application::on_window_iconify(const WindowIconified& event)
-{
-    minimized = event.minimized;
-}
-
-void Application::on_window_resize(const WindowResized& event)
+void Engine::on_window_resize(const WindowResized& event)
 {
     Renderer::on_window_resize(event.width, event.height);
+}
+    
+float Engine::get_time() const
+{
+    return static_cast<float>(glfwGetTime()); // TODO: Platform::GetTime
 }
 
 } // namespace pine

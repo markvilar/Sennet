@@ -1,6 +1,6 @@
 #include "pine/renderer/types.hpp"
 
-#include "pine/definitions/assert.hpp"
+#include "pine/defines/assert.hpp"
 
 namespace pine
 {

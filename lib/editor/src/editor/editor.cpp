@@ -1,4 +1,4 @@
-#include "editor/editor_layer.hpp"
+#include "editor/editor.hpp"
 
 #include <array>
 #include <string_view>
@@ -6,14 +6,14 @@
 namespace pine
 {
 
-EditorLayer::EditorLayer() : Layer("EditorLayer"), camera_controller(1.0f, true)
+Editor::Editor() : camera_controller(1.0f, true)
 {
 }
 
-void EditorLayer::on_attach()
+void Editor::init()
 {
     const auto default_font = pine::default_font();
-    const auto& gui = Application::get().get_gui();
+    const auto& gui = Engine::get().get_gui();
     gui.load_font(default_font.data(), default_font.size(), 18.0f);
 
     auto shader = create_shader("resources/shaders/quad.vert",
@@ -53,9 +53,9 @@ void EditorLayer::on_attach()
     start_server(server);
 }
 
-void EditorLayer::on_detach() {}
+void Editor::shutdown() {}
 
-void EditorLayer::on_update(const Timestep& ts)
+void Editor::update(const Timestep& ts)
 {
     if (viewport_window.is_focused())
     {
@@ -103,7 +103,7 @@ void EditorLayer::on_update(const Timestep& ts)
     update_server(server);
 }
 
-void EditorLayer::on_gui_render()
+void Editor::on_gui_render()
 {
     gui::render_dockspace("editor_dockspace");
     gui::main_menu_bar(
@@ -125,7 +125,7 @@ void EditorLayer::on_gui_render()
                 }
                 if (ImGui::MenuItem("Exit", "Ctrl+W"))
                 {
-                    Application::get().close();
+                    Engine::get().stop();
                 }
                 ImGui::EndMenu();
             }
@@ -211,7 +211,7 @@ void EditorLayer::on_gui_render()
 
     update_viewport();
 
-    Application::get().get_gui().block_events(
+    Engine::get().get_gui().block_events(
         !viewport_window.is_focused() || !viewport_window.is_hovered());
 
     gui_control_window.on_render(
@@ -223,7 +223,7 @@ void EditorLayer::on_gui_render()
                 input_profile_name.data(),
                 input_profile_name.size());
 
-            const auto& gui = Application::get().get_gui();
+            const auto& gui = Engine::get().get_gui();
 
             if (ImGui::Button("Load profile"))
             {
@@ -390,28 +390,31 @@ void EditorLayer::on_gui_render()
         });
 }
 
-void EditorLayer::on_event(const Event& event) { camera_controller.on_event(event); }
+void Editor::on_event(const Event& event) { camera_controller.on_event(event); }
 
-void EditorLayer::update_camera_controller(const Timestep& ts)
+void Editor::update_camera_controller(const Timestep& ts)
 {
-    const auto& window = Application::get().get_window();
-    const auto input_handle = InputHandle::create(window);
+    const auto window = Engine::get().get_window();
+    if (window)
+    {
+        const auto input_handle = InputHandle::create(*window.get());
 
-    if (input_handle->is_key_pressed(KeyCode::A))
-        camera_controller.move_left(ts);
-    if (input_handle->is_key_pressed(KeyCode::D))
-        camera_controller.move_right(ts);
-    if (input_handle->is_key_pressed(KeyCode::W))
-        camera_controller.move_up(ts);
-    if (input_handle->is_key_pressed(KeyCode::S))
-        camera_controller.move_down(ts);
-    if (input_handle->is_key_pressed(KeyCode::Q))
-        camera_controller.rotate_counter_clockwise(ts);
-    if (input_handle->is_key_pressed(KeyCode::E))
-        camera_controller.rotate_clockwise(ts);
+        if (input_handle->is_key_pressed(KeyCode::A))
+            camera_controller.move_left(ts);
+        if (input_handle->is_key_pressed(KeyCode::D))
+            camera_controller.move_right(ts);
+        if (input_handle->is_key_pressed(KeyCode::W))
+            camera_controller.move_up(ts);
+        if (input_handle->is_key_pressed(KeyCode::S))
+            camera_controller.move_down(ts);
+        if (input_handle->is_key_pressed(KeyCode::Q))
+            camera_controller.rotate_counter_clockwise(ts);
+        if (input_handle->is_key_pressed(KeyCode::E))
+            camera_controller.rotate_clockwise(ts);
+    }
 }
 
-void EditorLayer::update_viewport()
+void Editor::update_viewport()
 {
     const auto& specs = viewport_framebuffer->get_specification();
     const auto size = viewport_window.get_size();

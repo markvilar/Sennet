@@ -6,20 +6,18 @@ target_sources(pine
         # Collection header
         src/pine/pine.hpp
 
-        # Definitions and macros
-        src/pine/definitions/assert.hpp
-        src/pine/definitions/platform.hpp
+        # Defines and macros
+        src/pine/defines/assert.hpp
+        src/pine/defines/platform.hpp
 
     PRIVATE
         # Core
-        src/pine/core/application.cpp
-        src/pine/core/application.hpp
+        src/pine/core/engine.cpp
+        src/pine/core/engine.hpp
         src/pine/core/event.hpp
         src/pine/core/input.cpp
         src/pine/core/input.hpp
         src/pine/core/key_codes.hpp
-        src/pine/core/layer.cpp
-        src/pine/core/layer.hpp
         src/pine/core/log.cpp
         src/pine/core/log.hpp
         src/pine/core/mouse_codes.hpp
