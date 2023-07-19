@@ -3,26 +3,27 @@
 #include <array>
 #include <string_view>
 
-namespace pine
-{
+#include <imgui.h>
 
-Editor::Editor() : camera_controller(1.0f, true)
-{
-}
+#include "editor/camera.hpp"
+
+namespace pine {
+
+Editor::Editor() : camera_controller(1.0f, 1.0f) {}
 
 void Editor::init()
 {
-    const auto default_font = pine::default_font();
+    const auto font = pine::font::get_default();
     const auto& gui = Engine::get().get_gui();
-    gui.load_font(default_font.data(), default_font.size(), 18.0f);
+    gui.load_font(font.data(), font.size(), 18.0f);
 
+    // Load shader
     auto shader = create_shader("resources/shaders/quad.vert",
         "resources/shaders/quad.frag");
 
     const auto shader_loaded
         = shader_library.load_shader("resources/shaders/quad.vert",
             "resources/shaders/quad.frag");
-
 
     if (!shader_loaded)
         PINE_ERROR("Failed to load shader.");
@@ -39,8 +40,7 @@ void Editor::init()
     quad_render_data = QuadRenderer::init();
 
     server.set_connection_callback(
-        [](const ConnectionState& connection) -> bool
-        {
+        [](const ConnectionState& connection) -> bool {
             PINE_INFO("Editor server: New connection {0}",
                 connection.socket.remote_endpoint());
             return true;
@@ -57,8 +57,7 @@ void Editor::shutdown() {}
 
 void Editor::update(const Timestep& ts)
 {
-    if (viewport_window.is_focused())
-    {
+    if (viewport_window.is_focused()) {
         update_camera_controller(ts);
     }
 
@@ -385,14 +384,30 @@ void Editor::on_gui_render()
 
             for (const auto uuid : uuids)
             {
-                ImGui::Text("UUID:     %s", uuid.to_string().c_str());
+                ImGui::Text("UUID:\t%s", uuid.to_string().c_str());
             }
         });
+
+    camera_window.on_render(
+        [this](){
+            render_camera_controls(camera_controller);
+        }
+    );
 }
 
-void Editor::on_event(const Event& event) { camera_controller.on_event(event); }
+void Editor::on_event(const Event& event) { 
+    if (viewport_window.is_focused() && viewport_window.is_hovered())
+    {
+        dispatch_event<Moved<MouseWheel>>(event,
+            [this](const Moved<MouseWheel>& event){
+                camera_controller.increment_zoom(event.source.offset_y);
+            }
+        );
 
-void Editor::update_camera_controller(const Timestep& ts)
+    }
+}
+
+void Editor::update_camera_controller(const Timestep& timestep)
 {
     const auto window = Engine::get().get_window();
     if (window)
@@ -400,18 +415,19 @@ void Editor::update_camera_controller(const Timestep& ts)
         const auto input_handle = InputHandle::create(*window.get());
 
         if (input_handle->is_key_pressed(KeyCode::A))
-            camera_controller.move_left(ts);
+            camera_controller.move_left(timestep);
         if (input_handle->is_key_pressed(KeyCode::D))
-            camera_controller.move_right(ts);
+            camera_controller.move_right(timestep);
         if (input_handle->is_key_pressed(KeyCode::W))
-            camera_controller.move_up(ts);
+            camera_controller.move_up(timestep);
         if (input_handle->is_key_pressed(KeyCode::S))
-            camera_controller.move_down(ts);
+            camera_controller.move_down(timestep);
         if (input_handle->is_key_pressed(KeyCode::Q))
-            camera_controller.rotate_counter_clockwise(ts);
+            camera_controller.rotate_counter_clockwise(timestep);
         if (input_handle->is_key_pressed(KeyCode::E))
-            camera_controller.rotate_clockwise(ts);
+            camera_controller.rotate_clockwise(timestep);
     }
+    camera_controller.update_camera();
 }
 
 void Editor::update_viewport()
@@ -419,7 +435,8 @@ void Editor::update_viewport()
     const auto& specs = viewport_framebuffer->get_specification();
     const auto size = viewport_window.get_size();
 
-    camera_controller.on_resize(size.x, size.y);
+    camera_controller.set_aspect(size.x, size.y);
+    camera_controller.update_camera();
 
     const auto viewport_valid = size.x > 0.0f && size.y > 0.0f;
     const auto viewport_changed = static_cast<float>(specs.width) != size.x

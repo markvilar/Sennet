@@ -74,10 +74,10 @@ public:
             
             // Handle events
             window->poll_events();
-            while (!event_queue.empty())
+            while (!events.empty())
             {
-                const auto event = event_queue.front();
-                event_queue.pop_front();
+                const auto event = events.front();
+                events.pop_front();
                 on_event(event);
                 app.on_event(event);
             }
@@ -135,7 +135,7 @@ private:
 private:
     EngineSpecs specification;
     EngineState state;
-    std::deque<Event> event_queue;
+    std::deque<Event> events;
 
     // Shared resources
     std::shared_ptr<Window> window;

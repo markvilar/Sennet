@@ -35,7 +35,7 @@ void Engine::init()
     window->set_event_callback(
         [this](const Event& event)
         { 
-            event_queue.push_back(event);
+            events.push_back(event);
         });
     if (specification.start_maximized)
     {

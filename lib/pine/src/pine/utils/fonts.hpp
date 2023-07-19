@@ -2,9 +2,9 @@
 
 #include "pine/utils/binary_fonts.hpp"
 
-namespace pine
+namespace pine::font
 {
 
-constexpr auto default_font() { return fonts::OpenSans; }
+constexpr auto get_default() { return fonts::OpenSans; }
 
 } // namespace pine

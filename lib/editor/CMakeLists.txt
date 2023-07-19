@@ -7,6 +7,8 @@ add_library(pine::editor ALIAS editor)
 
 target_sources(editor
     PRIVATE 
+        src/editor/camera.cpp
+        src/editor/camera.hpp
         src/editor/editor.cpp
         src/editor/editor.hpp
 )

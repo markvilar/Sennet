@@ -1,8 +1,6 @@
 #include "pine/renderer/camera.hpp"
 
 #include "pine/pch.hpp"
-#include "pine/core/input.hpp"
-#include "pine/core/key_codes.hpp"
 
 namespace pine
 {
@@ -24,101 +22,99 @@ void OrthographicCamera::set_projection(const float left,
     projection_matrix = ortho(left, right, bottom, top, -1.0f, 1.0f);
 }
 
+void OrthographicCamera::set_position(const Vec3& position_)
+{
+    position = position_;
+    update_view_matrix();
+}
+
+void OrthographicCamera::set_rotation(const float rotation_)
+{
+    rotation = rotation_;
+    update_view_matrix();
+}
+
 OrthographicCameraController::OrthographicCameraController(
-    const float aspect_ratio,
-    const bool rotation)
-    : aspect_ratio(aspect_ratio),
-      rotation_enabled(rotation),
-      camera(-aspect_ratio * zoom_level,
-          aspect_ratio * zoom_level,
-          -zoom_level,
-          zoom_level)
+    const float aspect_ratio_,
+    const float zoom_level_,
+    const Parameters& parameters_
+)
+    : aspect_ratio(aspect_ratio_),
+    zoom_level(zoom_level_),
+    parameters(parameters_),
+    camera(-aspect_ratio_ * zoom_level_, 
+        aspect_ratio_ * zoom_level_, 
+        -zoom_level_, 
+        zoom_level_
+    )
 {
 }
 
-void OrthographicCameraController::move_left(const Timestep& ts)
+void OrthographicCameraController::move_left(const Timestep& timestep)
 {
-    camera_position.x -= camera_linear_speed * ts;
-    camera.set_position(camera_position);
+    pose.position.x -= parameters.linear_speed * timestep;
 }
 
-void OrthographicCameraController::move_right(const Timestep& ts)
+void OrthographicCameraController::move_right(const Timestep& timestep)
 {
-    camera_position.x += camera_linear_speed * ts;
-    camera.set_position(camera_position);
+    pose.position.x += parameters.linear_speed * timestep;
 }
 
-void OrthographicCameraController::move_up(const Timestep& ts)
+void OrthographicCameraController::move_up(const Timestep& timestep)
 {
-    camera_position.y += camera_linear_speed * ts;
-    camera.set_position(camera_position);
+    pose.position.y += parameters.linear_speed * timestep;
 }
 
-void OrthographicCameraController::move_down(const Timestep& ts)
+void OrthographicCameraController::move_down(const Timestep& timestep)
 {
-    camera_position.y -= camera_linear_speed * ts;
-    camera.set_position(camera_position);
+    pose.position.y -= parameters.linear_speed * timestep;
 }
 
-void OrthographicCameraController::rotate_clockwise(const Timestep& ts)
+void OrthographicCameraController::rotate_clockwise(const Timestep& timestep)
 {
-    if (rotation_enabled)
+    if (parameters.rotation_enabled)
     {
-        camera_rotation -= camera_rotation_speed * ts;
-        camera.set_rotation(camera_rotation);
+        pose.rotation -= parameters.rotation_speed * timestep;
     }
 }
 
-void OrthographicCameraController::rotate_counter_clockwise(const Timestep& ts)
+void OrthographicCameraController::rotate_counter_clockwise(const Timestep& timestep)
 {
-    if (rotation_enabled)
+    if (parameters.rotation_enabled)
     {
-        camera_rotation += camera_rotation_speed * ts;
-        camera.set_rotation(camera_rotation);
+        pose.rotation += parameters.rotation_speed * timestep;
     }
 }
 
-void OrthographicCameraController::on_event(const Event& event)
+void OrthographicCameraController::increment_zoom(const float increment)
 {
-    if (std::holds_alternative<Moved<MouseWheel>>(event))
+    if (parameters.zoom_enabled)
     {
-        const auto content = std::get<Moved<MouseWheel>>(event);
-        on_mouse_scrolled(content);
-    }
-    else if (std::holds_alternative<WindowResized>(event))
-    {
-        const auto content = std::get<WindowResized>(event);
-        on_window_resized(content);
+        // Update zoom
+        zoom_level -= parameters.zoom_speed * increment;
+        zoom_level = std::max(zoom_level, parameters.min_zoom);
+
+        // Update linear speed based on zoom
+        parameters.linear_speed = zoom_level;
     }
 }
 
-void OrthographicCameraController::on_resize(const float width,
+void OrthographicCameraController::set_aspect(const float width,
     const float height)
 {
     aspect_ratio = width / height;
+}
+
+void OrthographicCameraController::update_camera()
+{
+    // TODO: Validate position and rotation
+    camera.set_position(pose.position);
+    camera.set_rotation(pose.rotation);
     camera.set_projection(-aspect_ratio * zoom_level,
         aspect_ratio * zoom_level,
         -zoom_level,
-        zoom_level);
-}
-
-void OrthographicCameraController::on_mouse_scrolled(
-    const Moved<MouseWheel>& event)
-{
-    zoom_level -= event.source.offset_y * 0.25f;
-    zoom_level = std::max(zoom_level, 0.25f);
-    camera_linear_speed = zoom_level;
-    camera.set_projection(-aspect_ratio * zoom_level,
-        aspect_ratio * zoom_level,
-        -zoom_level,
-        zoom_level);
-}
-
-void OrthographicCameraController::on_window_resized(
-    const WindowResized& event)
-{
-    on_resize(static_cast<float>(event.width),
-        static_cast<float>(event.height));
+        zoom_level
+    );
 }
 
 } // namespace pine

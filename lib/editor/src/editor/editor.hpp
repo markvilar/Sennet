@@ -27,7 +27,7 @@ private:
 
 private:
     // Rendering
-    OrthographicCameraController camera_controller{1.0f};
+    OrthographicCameraController camera_controller{1.0f, 1.0f};
     ShaderLibrary shader_library{};
     std::shared_ptr<Framebuffer> viewport_framebuffer;
     std::shared_ptr<Texture2D> texture;
@@ -45,6 +45,7 @@ private:
     gui::Window renderer_window{"Renderer"};
     gui::Window console_window{"Console"};
     gui::Window test_window{"Test"};
+    gui::Window camera_window{"Camera"};
 
     // Misc
     Vec4 quad_color{0.2f, 0.3f, 0.8f, 1.0f};
