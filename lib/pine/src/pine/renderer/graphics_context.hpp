@@ -2,11 +2,9 @@
 
 #include <memory>
 
-namespace pine
-{
+namespace pine {
 
-class GraphicsContext
-{
+class GraphicsContext {
 public:
     virtual ~GraphicsContext() = default;
 

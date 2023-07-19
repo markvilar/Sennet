@@ -2,8 +2,7 @@
 
 #include <asio.hpp>
 
-namespace pine
-{
+namespace pine {
 
 using NetworkContext = asio::io_context;
 

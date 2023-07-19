@@ -2,10 +2,9 @@
 
 #include "pine/pch.hpp"
 
-namespace pine
-{
+namespace pine {
 
-std::unique_ptr<RendererAPI> RenderCommand::s_renderer_api
-    = RendererAPI::create();
+std::unique_ptr<RendererAPI> RenderCommand::s_renderer_api =
+    RendererAPI::create();
 
 }

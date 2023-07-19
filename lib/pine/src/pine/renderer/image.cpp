@@ -7,16 +7,13 @@
 #include <stb_image.h>
 #include <stb_image_write.h>
 
-#include "pine/pch.hpp"
 #include "pine/defines/assert.hpp"
+#include "pine/pch.hpp"
 
-namespace pine
-{
+namespace pine {
 
-constexpr ImageFormat default_image_format(const int channels)
-{
-    switch (channels)
-    {
+constexpr ImageFormat default_image_format(const int channels) {
+    switch (channels) {
     case 1:
         return ImageFormat::GRAY;
     case 2:
@@ -31,35 +28,23 @@ constexpr ImageFormat default_image_format(const int channels)
 }
 
 constexpr ImageFileFormat parse_image_file_format(
-    const std::string_view file_extension)
-{
-    if (file_extension == ".png")
-    {
+    const std::string_view file_extension) {
+    if (file_extension == ".png") {
         return ImageFileFormat::PNG;
-    }
-    else if (file_extension == ".bmp")
-    {
+    } else if (file_extension == ".bmp") {
         return ImageFileFormat::BMP;
-    }
-    else if (file_extension == ".tga")
-    {
+    } else if (file_extension == ".tga") {
         return ImageFileFormat::TGA;
-    }
-    else if (file_extension == ".jpg")
-    {
+    } else if (file_extension == ".jpg") {
         return ImageFileFormat::JPG;
-    }
-    else
-    {
+    } else {
         PINE_CORE_ASSERT(false, "Invalid image file format.");
         return ImageFileFormat::PNG;
     }
 }
 
-constexpr uint32_t get_format_channel_count(const ImageFormat format)
-{
-    switch (format)
-    {
+constexpr uint32_t get_format_channel_count(const ImageFormat format) {
+    switch (format) {
     case ImageFormat::INVALID:
         return 0;
     case ImageFormat::GRAY:
@@ -85,20 +70,18 @@ Image::Image(const uint8_t* data,
     const ImageFormat format)
     : width(width),
       height(height),
-      format(format)
-{
+      format(format) {
     const auto channels = get_format_channel_count(format);
     buffer = std::vector<uint8_t>(data, data + width * height * channels);
 }
 
-Image read_image(const std::filesystem::path& filepath, const bool flip)
-{
+Image read_image(const std::filesystem::path& filepath, const bool flip) {
     int width, height, channels = 0;
 
     stbi_set_flip_vertically_on_load(flip);
 
-    const auto data
-        = stbi_load(filepath.string().c_str(), &width, &height, &channels, 0);
+    const auto data =
+        stbi_load(filepath.string().c_str(), &width, &height, &channels, 0);
     const auto format = default_image_format(channels);
 
     return Image(data,
@@ -109,8 +92,7 @@ Image read_image(const std::filesystem::path& filepath, const bool flip)
 
 Image read_image(const std::filesystem::path& filepath,
     const ImageFormat format,
-    const bool flip)
-{
+    const bool flip) {
     int width, height, channels = 0;
     auto desired_channels = get_format_channel_count(format);
 
@@ -130,18 +112,16 @@ Image read_image(const std::filesystem::path& filepath,
 
 bool write_image(const std::filesystem::path& filepath,
     const Image& image,
-    const bool flip)
-{
+    const bool flip) {
     const auto file_extension = filepath.extension();
-    const auto file_format = parse_image_file_format(file_extension.string().c_str());
+    const auto file_format =
+        parse_image_file_format(file_extension.string().c_str());
 
     stbi_set_flip_vertically_on_load(flip);
 
     const auto channels = get_format_channel_count(image.get_format());
-    const auto write_result = [filepath, image, channels, file_format]()
-    {
-        switch (file_format)
-        {
+    const auto write_result = [filepath, image, channels, file_format]() {
+        switch (file_format) {
         case ImageFileFormat::JPG:
             return stbi_write_jpg(filepath.string().c_str(),
                 static_cast<int>(image.get_width()),

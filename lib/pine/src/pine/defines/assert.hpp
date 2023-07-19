@@ -11,16 +11,14 @@
 #ifdef PINE_ENABLE_ASSERTS
 #define PINE_ASSERT(x, ...)                                                    \
     {                                                                          \
-        if (!(x))                                                              \
-        {                                                                      \
+        if (!(x)) {                                                            \
             PINE_ERROR("Assertion failed: {0}", __VA_ARGS__);                  \
             PINE_DEBUGBREAK();                                                 \
         }                                                                      \
     }
 #define PINE_CORE_ASSERT(x, ...)                                               \
     {                                                                          \
-        if (!(x))                                                              \
-        {                                                                      \
+        if (!(x)) {                                                            \
             PINE_CORE_ERROR("Assertion failed: {0}", __VA_ARGS__);             \
             PINE_DEBUGBREAK();                                                 \
         }                                                                      \
@@ -30,19 +28,15 @@
 #define PINE_CORE_ASSERT(x, ...)
 #endif
 
-
 #define PINE_VERIFY(x, ...)                                                    \
     {                                                                          \
-        if (!(x))                                                              \
-        {                                                                      \
+        if (!(x)) {                                                            \
             PINE_ERROR("Verification failed: {0}", __VA_ARGS__);               \
         }                                                                      \
     }
 #define PINE_CORE_VERIFY(x, ...)                                               \
     {                                                                          \
-        if (!(x))                                                              \
-        {                                                                      \
+        if (!(x)) {                                                            \
             PINE_CORE_ERROR("Verification failed: {0}", __VA_ARGS__);          \
         }                                                                      \
     }
-

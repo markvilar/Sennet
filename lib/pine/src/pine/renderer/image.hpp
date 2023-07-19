@@ -4,30 +4,13 @@
 #include <filesystem>
 #include <vector>
 
-namespace pine
-{
+namespace pine {
 
-enum class ImageFileFormat
-{
-    JPG,
-    PNG,
-    BMP,
-    TGA
-};
+enum class ImageFileFormat { JPG, PNG, BMP, TGA };
 
-enum class ImageFormat
-{
-    INVALID,
-    GRAY,
-    GRAY_ALPHA,
-    RGB,
-    BGR,
-    RGBA,
-    BGRA
-};
+enum class ImageFormat { INVALID, GRAY, GRAY_ALPHA, RGB, BGR, RGBA, BGRA };
 
-struct Image
-{
+struct Image {
     using BufferType = std::vector<uint8_t>;
 
 public:

@@ -4,11 +4,9 @@
 
 #include "pine/renderer/graphics_context.hpp"
 
-namespace pine
-{
+namespace pine {
 
-class OpenGLContext : public GraphicsContext
-{
+class OpenGLContext : public GraphicsContext {
 public:
     OpenGLContext(GLFWwindow* windowHandle);
 

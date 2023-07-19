@@ -2,11 +2,9 @@
 
 #include "pine/core/input.hpp"
 
-namespace pine
-{
+namespace pine {
 
-class WindowsInputHandle : public InputHandle
-{
+class WindowsInputHandle : public InputHandle {
 public:
     WindowsInputHandle(const Window& window);
     virtual ~WindowsInputHandle() = default;

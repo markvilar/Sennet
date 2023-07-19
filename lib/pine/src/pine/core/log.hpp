@@ -5,21 +5,17 @@
 #include <spdlog/fmt/ostr.h>
 #include <spdlog/spdlog.h>
 
-namespace pine
-{
+namespace pine {
 
-class Log
-{
+class Log {
 public:
     static void init();
 
-    static const std::shared_ptr<spdlog::logger>& get_core_logger()
-    {
+    static const std::shared_ptr<spdlog::logger>& get_core_logger() {
         return s_core_logger;
     }
 
-    static const std::shared_ptr<spdlog::logger>& get_client_logger()
-    {
+    static const std::shared_ptr<spdlog::logger>& get_client_logger() {
         return s_client_logger;
     }
 

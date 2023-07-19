@@ -6,11 +6,9 @@
 #include "pine/renderer/image.hpp"
 #include "pine/renderer/types.hpp"
 
-namespace pine
-{
+namespace pine {
 
-class Texture
-{
+class Texture {
 public:
     virtual ~Texture() = default;
 
@@ -25,8 +23,7 @@ public:
     virtual bool operator==(const Texture& other) const = 0;
 };
 
-class Texture2D : public Texture
-{
+class Texture2D : public Texture {
 public:
     static std::unique_ptr<Texture2D> create(
         const std::filesystem::path& filepath);

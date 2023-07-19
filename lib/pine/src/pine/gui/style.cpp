@@ -2,14 +2,12 @@
 
 #include <imgui.h>
 
-#include "pine/pch.hpp"
 #include "pine/gui/flags.hpp"
+#include "pine/pch.hpp"
 
-namespace pine::gui
-{
+namespace pine::gui {
 
-void set_dark_theme()
-{
+void set_dark_theme() {
     auto& style = ImGui::GetStyle();
     auto& colors = style.Colors;
     colors[ImGuiCol_WindowBg] = ImVec4(0.1f, 0.105f, 0.11f, 1.0f);

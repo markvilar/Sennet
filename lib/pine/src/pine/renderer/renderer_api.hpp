@@ -6,14 +6,11 @@
 #include "pine/renderer/buffer.hpp"
 #include "pine/utils/math.hpp"
 
-namespace pine
-{
+namespace pine {
 
-class RendererAPI
-{
+class RendererAPI {
 public:
-    enum class API
-    {
+    enum class API {
         None,
         OpenGL,
     };
@@ -25,14 +22,12 @@ public:
     virtual void set_viewport(const uint32_t x,
         const uint32_t y,
         const uint32_t width,
-        const uint32_t height)
-        = 0;
+        const uint32_t height) = 0;
     virtual void set_clear_color(const Vec4& color) = 0;
     virtual void clear() = 0;
 
     virtual void draw_indexed(const VertexArray& vertex_array,
-        const uint32_t index_count = 0)
-        = 0;
+        const uint32_t index_count = 0) = 0;
 
     inline static API get_api() { return s_api; }
     static std::unique_ptr<RendererAPI> create();

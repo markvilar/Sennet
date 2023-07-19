@@ -6,13 +6,11 @@
 
 #include "pine/pch.hpp"
 
-namespace pine::gui
-{
+namespace pine::gui {
 
 using ConfigFlags = int;
 
-enum ConfigFlagOptions : ConfigFlags
-{
+enum ConfigFlagOptions : ConfigFlags {
     NONE = 0,
     ENABLE_KEYBOARD = 1 << 0,
     ENABLE_GAMEPAD = 1 << 1,

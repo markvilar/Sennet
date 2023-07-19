@@ -5,13 +5,10 @@
 
 #include "pine/platform/opengl/framebuffer.hpp"
 
-namespace pine
-{
+namespace pine {
 
-std::unique_ptr<Framebuffer> create_framebuffer(const FramebufferSpecs& specs)
-{
-    switch (Renderer::get_api())
-    {
+std::unique_ptr<Framebuffer> create_framebuffer(const FramebufferSpecs& specs) {
+    switch (Renderer::get_api()) {
     case RendererAPI::API::None:
         PINE_CORE_ASSERT(false, "RendererAPI::None is currently not \
 				supported!");

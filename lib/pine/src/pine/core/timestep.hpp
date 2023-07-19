@@ -1,10 +1,8 @@
 #pragma once
 
-namespace pine
-{
+namespace pine {
 
-class Timestep
-{
+class Timestep {
 public:
     Timestep(float time_ = 0.0f) : time(time_) {}
 

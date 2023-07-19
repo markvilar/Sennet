@@ -4,28 +4,24 @@
 
 #include "pine/utils/math.hpp"
 
-namespace pine::gui
-{
+namespace pine::gui {
 
 using WindowFlags = int;
 
-class Window
-{
+class Window {
 public:
     Window(const std::string& name);
     ~Window() = default;
 
     template <typename Callback>
-    void on_render(const Callback& callback)
-    {
+    void on_render(const Callback& callback) {
         begin();
         callback();
         update_state();
         end();
     }
 
-    void on_render()
-    {
+    void on_render() {
         begin();
         update_state();
         end();

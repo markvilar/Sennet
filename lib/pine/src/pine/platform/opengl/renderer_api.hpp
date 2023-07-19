@@ -5,11 +5,9 @@
 
 #include "pine/renderer/renderer_api.hpp"
 
-namespace pine
-{
+namespace pine {
 
-class OpenGLRendererAPI : public RendererAPI
-{
+class OpenGLRendererAPI : public RendererAPI {
 public:
     virtual void init() override;
 

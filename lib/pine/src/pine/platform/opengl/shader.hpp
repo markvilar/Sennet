@@ -7,11 +7,9 @@
 #include "pine/renderer/shader.hpp"
 #include "pine/utils/math.hpp"
 
-namespace pine
-{
+namespace pine {
 
-class OpenGLShader : public Shader
-{
+class OpenGLShader : public Shader {
 public:
     OpenGLShader(const std::string& shader_name, const RendererID id);
     virtual ~OpenGLShader();
@@ -62,12 +60,11 @@ private:
     RendererID renderer_id{};
 };
 
-namespace opengl
-{
+namespace opengl {
 
 // Create from files
-std::unique_ptr<OpenGLShader>
-create_shader(const std::filesystem::path& vertex_file,
+std::unique_ptr<OpenGLShader> create_shader(
+    const std::filesystem::path& vertex_file,
     const std::filesystem::path& fragment_file);
 
 // Create from source

@@ -9,18 +9,14 @@
 
 #include "pine/platform/opengl/utilities.hpp"
 
-namespace pine
-{
+namespace pine {
 
 OpenGLTexture2D::OpenGLTexture2D(const std::filesystem::path& image_path)
-    : OpenGLTexture2D(read_image(image_path))
-{
-}
+    : OpenGLTexture2D(read_image(image_path)) {}
 
 OpenGLTexture2D::OpenGLTexture2D(const Image& image)
     : width(image.get_width()),
-      height(image.get_height())
-{
+      height(image.get_height()) {
     glCreateTextures(GL_TEXTURE_2D, 1, &renderer_id);
 
     glTextureStorage2D(renderer_id,
@@ -47,17 +43,15 @@ OpenGLTexture2D::OpenGLTexture2D(const Image& image)
 
 OpenGLTexture2D::~OpenGLTexture2D() { glDeleteTextures(1, &renderer_id); }
 
-void OpenGLTexture2D::bind(const uint32_t slot) const
-{
+void OpenGLTexture2D::bind(const uint32_t slot) const {
     glBindTextureUnit(slot, renderer_id);
 }
 
 void OpenGLTexture2D::unbind() const { glBindTexture(GL_TEXTURE_2D, 0); }
 
-bool OpenGLTexture2D::operator==(const Texture& other) const
-{
-    return renderer_id
-        == reinterpret_cast<const OpenGLTexture2D&>(other).renderer_id;
+bool OpenGLTexture2D::operator==(const Texture& other) const {
+    return renderer_id ==
+        reinterpret_cast<const OpenGLTexture2D&>(other).renderer_id;
 }
 
 } // namespace pine

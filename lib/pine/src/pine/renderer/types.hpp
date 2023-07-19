@@ -2,13 +2,11 @@
 
 #include <cstdint>
 
-namespace pine
-{
+namespace pine {
 
 using RendererID = uint32_t;
 
-enum class GeometryPrimitive
-{
+enum class GeometryPrimitive {
     POINTS,
     LINES,
     TRIANGLES,
@@ -17,8 +15,7 @@ enum class GeometryPrimitive
     TRIANGLE_FAN,
 };
 
-enum class TextureFormat
-{
+enum class TextureFormat {
     INVALID,
 
     // Color
@@ -40,22 +37,11 @@ uint32_t get_components(const TextureFormat format);
 bool is_color_format(const TextureFormat format);
 bool is_depth_format(const TextureFormat format);
 
-enum class TextureFilter
-{
-    NONE,
-    NEAREST,
-    LINEAR
-};
+enum class TextureFilter { NONE, NEAREST, LINEAR };
 
-enum class TextureWrap
-{
-    NONE,
-    CLAMP,
-    REPEAT
-};
+enum class TextureWrap { NONE, CLAMP, REPEAT };
 
-enum class ShaderDataType
-{
+enum class ShaderDataType {
     NONE,
     FLOAT,
     FLOAT2,

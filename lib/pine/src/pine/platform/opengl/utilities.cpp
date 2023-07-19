@@ -1,16 +1,13 @@
 #include "pine/platform/opengl/utilities.hpp"
 
-#include "pine/pch.hpp"
 #include "pine/core/log.hpp"
 #include "pine/defines/assert.hpp"
+#include "pine/pch.hpp"
 
-namespace pine::glutils
-{
+namespace pine::glutils {
 
-GLenum to_opengl(const TextureFormat format)
-{
-    switch (format)
-    {
+GLenum to_opengl(const TextureFormat format) {
+    switch (format) {
     case TextureFormat::INVALID:
         return GL_INVALID_ENUM;
     case TextureFormat::RED:
@@ -34,10 +31,8 @@ GLenum to_opengl(const TextureFormat format)
     }
 }
 
-GLenum to_opengl_internal(const TextureFormat format)
-{
-    switch (format)
-    {
+GLenum to_opengl_internal(const TextureFormat format) {
+    switch (format) {
     case TextureFormat::INVALID:
         return GL_INVALID_ENUM;
     case TextureFormat::RED:
@@ -62,10 +57,8 @@ GLenum to_opengl_internal(const TextureFormat format)
     return GL_INVALID_ENUM;
 }
 
-GLenum get_attachment_type(const TextureFormat format)
-{
-    switch (format)
-    {
+GLenum get_attachment_type(const TextureFormat format) {
+    switch (format) {
     case TextureFormat::INVALID:
         return GL_INVALID_ENUM;
     case TextureFormat::RED:
@@ -90,10 +83,8 @@ GLenum get_attachment_type(const TextureFormat format)
     return GL_INVALID_ENUM;
 }
 
-GLenum to_opengl(const TextureFilter filter)
-{
-    switch (filter)
-    {
+GLenum to_opengl(const TextureFilter filter) {
+    switch (filter) {
     case TextureFilter::NONE:
         return GL_INVALID_ENUM;
     case TextureFilter::NEAREST:
@@ -105,10 +96,8 @@ GLenum to_opengl(const TextureFilter filter)
     }
 }
 
-GLenum to_opengl(const TextureWrap wrap)
-{
-    switch (wrap)
-    {
+GLenum to_opengl(const TextureWrap wrap) {
+    switch (wrap) {
     case TextureWrap::NONE:
         return GL_INVALID_ENUM;
     case TextureWrap::CLAMP:
@@ -120,12 +109,9 @@ GLenum to_opengl(const TextureWrap wrap)
     }
 }
 
-GLenum to_opengl(const ImageFormat format)
-{
-    const auto data_format = [format]()
-    {
-        switch (format)
-        {
+GLenum to_opengl(const ImageFormat format) {
+    const auto data_format = [format]() {
+        switch (format) {
         case ImageFormat::INVALID:
             return GL_INVALID_ENUM;
         case ImageFormat::GRAY:
@@ -148,12 +134,9 @@ GLenum to_opengl(const ImageFormat format)
     return static_cast<GLenum>(data_format);
 }
 
-GLenum to_opengl_internal(const ImageFormat format)
-{
-    const auto internal_format = [format]()
-    {
-        switch (format)
-        {
+GLenum to_opengl_internal(const ImageFormat format) {
+    const auto internal_format = [format]() {
+        switch (format) {
         case ImageFormat::INVALID:
             return GL_INVALID_ENUM;
         case ImageFormat::GRAY:
@@ -178,10 +161,8 @@ GLenum to_opengl_internal(const ImageFormat format)
     return static_cast<GLenum>(internal_format);
 }
 
-GLenum to_opengl(const ShaderDataType type)
-{
-    switch (type)
-    {
+GLenum to_opengl(const ShaderDataType type) {
+    switch (type) {
     case ShaderDataType::FLOAT:
         return GL_FLOAT;
     case ShaderDataType::FLOAT2:
@@ -221,10 +202,8 @@ GLenum to_opengl(const ShaderDataType type)
     return GL_INVALID_ENUM;
 }
 
-std::string to_string(const GLenum type)
-{
-    switch (type)
-    {
+std::string to_string(const GLenum type) {
+    switch (type) {
     case GL_VERTEX_SHADER:
         return "GL_VERTEX_SHADER";
     case GL_FRAGMENT_SHADER:
@@ -234,8 +213,7 @@ std::string to_string(const GLenum type)
     return std::string();
 }
 
-GLuint process_shader(const GLenum type, const std::string& source)
-{
+GLuint process_shader(const GLenum type, const std::string& source) {
     const auto shader = glCreateShader(type);
 
     const auto source_string = source.c_str();
@@ -244,8 +222,7 @@ GLuint process_shader(const GLenum type, const std::string& source)
 
     auto is_compiled = 0;
     glGetShaderiv(shader, GL_COMPILE_STATUS, &is_compiled);
-    if (is_compiled == GL_FALSE)
-    {
+    if (is_compiled == GL_FALSE) {
         auto max_length = 0;
         glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &max_length);
 
@@ -263,8 +240,7 @@ GLuint process_shader(const GLenum type, const std::string& source)
 }
 
 GLuint compile_shader(const std::string& vertex_source,
-    const std::string& fragment_source)
-{
+    const std::string& fragment_source) {
     // Create new shader program
     const auto program = glCreateProgram();
 
@@ -272,8 +248,8 @@ GLuint compile_shader(const std::string& vertex_source,
     const auto vertex_id = process_shader(GL_VERTEX_SHADER, vertex_source);
 
     // Compile fragment shader
-    const auto fragment_id
-        = process_shader(GL_FRAGMENT_SHADER, fragment_source);
+    const auto fragment_id =
+        process_shader(GL_FRAGMENT_SHADER, fragment_source);
 
     glAttachShader(program, vertex_id);
     glAttachShader(program, fragment_id);
@@ -282,8 +258,7 @@ GLuint compile_shader(const std::string& vertex_source,
 
     auto is_linked = 0;
     glGetProgramiv(program, GL_LINK_STATUS, &is_linked);
-    if (is_linked == GL_FALSE)
-    {
+    if (is_linked == GL_FALSE) {
         auto max_length = 0;
         glGetProgramiv(program, GL_INFO_LOG_LENGTH, &max_length);
 

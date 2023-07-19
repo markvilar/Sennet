@@ -4,11 +4,9 @@
 
 #include "pine/platform/opengl/context.hpp"
 
-namespace pine
-{
+namespace pine {
 
-std::unique_ptr<GraphicsContext> GraphicsContext::create(void* window)
-{
+std::unique_ptr<GraphicsContext> GraphicsContext::create(void* window) {
     return std::make_unique<OpenGLContext>(static_cast<GLFWwindow*>(window));
 }
 

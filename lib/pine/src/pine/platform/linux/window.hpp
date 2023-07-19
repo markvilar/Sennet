@@ -10,11 +10,9 @@
 #include "pine/core/window.hpp"
 #include "pine/renderer/graphics_context.hpp"
 
-namespace pine
-{
+namespace pine {
 
-class LinuxWindow : public Window
-{
+class LinuxWindow : public Window {
     using NativeWindow = GLFWwindow;
 
 public:
@@ -47,8 +45,7 @@ private:
     virtual void shutdown();
 
 private:
-    struct WindowData
-    {
+    struct WindowData {
         std::string title;
         uint32_t width;
         uint32_t height;

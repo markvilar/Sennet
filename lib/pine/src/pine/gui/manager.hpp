@@ -8,8 +8,7 @@
 #include "pine/gui/style.hpp"
 #include "pine/utils/filesystem.hpp"
 
-namespace pine::gui
-{
+namespace pine::gui {
 
 // Forward declaration
 class Context;
@@ -21,8 +20,7 @@ std::unique_ptr<Context> create_context(const std::shared_ptr<Window>& window);
 std::unique_ptr<IO> create_io();
 std::unique_ptr<Manager> create_manager(const std::shared_ptr<Window>& window);
 
-class Context
-{
+class Context {
 public:
     Context(const std::shared_ptr<Window>& window);
     ~Context();
@@ -37,8 +35,7 @@ private:
     std::weak_ptr<Window> window{};
 };
 
-class IO
-{
+class IO {
 public:
     IO();
     ~IO() = default;
@@ -58,8 +55,7 @@ public:
     bool want_capture_keyboard() const;
 };
 
-class Manager
-{
+class Manager {
 public:
     Manager(std::unique_ptr<Context>& context, std::unique_ptr<IO>& io);
     ~Manager();
@@ -70,7 +66,8 @@ public:
     bool load_settings(const std::filesystem::path& filepath) const;
     bool save_settings(const std::filesystem::path& filepath) const;
 
-    bool load_font(const void* data, const int size, const float pixel_size) const;
+    bool
+    load_font(const void* data, const int size, const float pixel_size) const;
     bool load_font(const std::filesystem::path& filepath,
         const float pixel_size) const;
 

@@ -6,11 +6,9 @@
 #include "pine/network/types.hpp"
 #include "pine/utils/locked_queue.hpp"
 
-namespace pine
-{
+namespace pine {
 
-struct ConnectionState
-{
+struct ConnectionState {
     using size_t = uint64_t;
 
     SocketType socket;
@@ -25,9 +23,7 @@ public:
         LockedQueue<std::vector<uint8_t>>& owner_queue)
         : socket(std::move(socket)),
           context(context),
-          read_queue(owner_queue)
-    {
-    }
+          read_queue(owner_queue) {}
 
     ~ConnectionState() { socket.close(); }
 };

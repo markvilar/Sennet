@@ -6,11 +6,9 @@
 #include "pine/core/mouse_codes.hpp"
 #include "pine/core/window.hpp"
 
-namespace pine
-{
+namespace pine {
 
-class InputHandle
-{
+class InputHandle {
     /* Interface for input handles. */
 
 public:

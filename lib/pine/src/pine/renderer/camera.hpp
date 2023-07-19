@@ -3,11 +3,9 @@
 #include "pine/core/timestep.hpp"
 #include "pine/utils/math.hpp"
 
-namespace pine
-{
+namespace pine {
 
-class OrthographicCamera
-{
+class OrthographicCamera {
 public:
     OrthographicCamera(const float left,
         const float right,
@@ -28,16 +26,14 @@ public:
     Mat4 get_projection_matrix() const { return projection_matrix; }
     Mat4 get_view_matrix() const { return view_matrix; }
 
-    Mat4 calculate_view_projection_matrix() const
-    {
+    Mat4 calculate_view_projection_matrix() const {
         return projection_matrix * view_matrix;
     }
 
 private:
-    void update_view_matrix()
-    {
-        Mat4 transform = translate(Mat4(1.0f), position)
-            * rotate(Mat4(1.0f), rotation, Vec3(0, 0, 1));
+    void update_view_matrix() {
+        Mat4 transform = translate(Mat4(1.0f), position) *
+            rotate(Mat4(1.0f), rotation, Vec3(0, 0, 1));
         view_matrix = inverse(transform);
     }
 
@@ -49,8 +45,7 @@ private:
     float rotation = 0.0f; // Rotation in radians.
 };
 
-struct CameraControllerParameters
-{
+struct CameraControllerParameters {
     bool zoom_enabled = true;
     bool rotation_enabled = true;
     float zoom_speed = 0.25f;
@@ -59,40 +54,40 @@ struct CameraControllerParameters
     float rotation_speed = 1.0f;
 };
 
-struct CameraControllerPose
-{
+struct CameraControllerPose {
     Vec3 position{0.0f, 0.0f, 0.0f};
     float rotation = 0.0f;
 };
 
-class OrthographicCameraController
-{
+class OrthographicCameraController {
     using Camera = OrthographicCamera;
     using Pose = CameraControllerPose;
     using Parameters = CameraControllerParameters;
 
 public:
-    OrthographicCameraController(
-        const float aspect_ratio, 
+    OrthographicCameraController(const float aspect_ratio,
         const float zoom_level,
-        const Parameters& parameters = Parameters()
-    );
+        const Parameters& parameters = Parameters());
 
     Parameters get_parameters() const { return parameters; }
     Parameters& get_parameters() { return parameters; }
-    
+
     Pose get_pose() const { return pose; }
     Pose& get_pose() { return pose; }
-    
+
     float get_aspect_ratio() const { return aspect_ratio; }
     float& get_aspect_ratio() { return aspect_ratio; }
-    
+
     float get_zoom_level() const { return zoom_level; }
     float& get_zoom_level() { return zoom_level; }
 
-    void set_parameters(const Parameters& parameters_) { parameters = parameters_; }
+    void set_parameters(const Parameters& parameters_) {
+        parameters = parameters_;
+    }
     void set_pose(const Pose& pose_) { pose = pose_; }
-    void set_aspect_ratio(const float& aspect_ratio_) { aspect_ratio = aspect_ratio_; }
+    void set_aspect_ratio(const float& aspect_ratio_) {
+        aspect_ratio = aspect_ratio_;
+    }
     void set_zoom_level(const float& level) { zoom_level = level; }
 
     void increment_zoom(const float increment);

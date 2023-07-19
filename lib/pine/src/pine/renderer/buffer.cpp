@@ -7,17 +7,13 @@
 // TODO: Add define to enable/disable OpenGL backend
 #include "pine/platform/opengl/buffer.hpp"
 
-namespace pine
-{
+namespace pine {
 
-void VertexBufferLayout::calculate_offset_and_stride()
-{
-    stride = [this]()
-    {
+void VertexBufferLayout::calculate_offset_and_stride() {
+    stride = [this]() {
         uint32_t offset = 0;
         uint32_t stride = 0;
-        for (auto& element : elements)
-        {
+        for (auto& element : elements) {
             element.offset = offset;
             offset += element.size;
             stride += element.size;
@@ -26,10 +22,8 @@ void VertexBufferLayout::calculate_offset_and_stride()
     }();
 }
 
-std::unique_ptr<VertexBuffer> VertexBuffer::create(const uint32_t size)
-{
-    switch (Renderer::get_api())
-    {
+std::unique_ptr<VertexBuffer> VertexBuffer::create(const uint32_t size) {
+    switch (Renderer::get_api()) {
     case RendererAPI::API::None:
         PINE_CORE_ASSERT(false, "RendererAPI::API::None is currently not \
 				supported!");
@@ -43,10 +37,8 @@ std::unique_ptr<VertexBuffer> VertexBuffer::create(const uint32_t size)
 }
 
 std::unique_ptr<VertexBuffer> VertexBuffer::create(const float* vertices,
-    const uint32_t size)
-{
-    switch (Renderer::get_api())
-    {
+    const uint32_t size) {
+    switch (Renderer::get_api()) {
     case RendererAPI::API::None:
         PINE_CORE_ASSERT(false, "RendererAPI::API::None is currently not \
 				supported!");
@@ -60,10 +52,8 @@ std::unique_ptr<VertexBuffer> VertexBuffer::create(const float* vertices,
 }
 
 std::unique_ptr<IndexBuffer> IndexBuffer::create(const uint32_t* indices,
-    const uint32_t count)
-{
-    switch (Renderer::get_api())
-    {
+    const uint32_t count) {
+    switch (Renderer::get_api()) {
     case RendererAPI::API::None:
         PINE_CORE_ASSERT(false, "RendererAPI::API::None is currently not \
 				supported!");
@@ -76,10 +66,8 @@ std::unique_ptr<IndexBuffer> IndexBuffer::create(const uint32_t* indices,
     return nullptr;
 }
 
-std::unique_ptr<VertexArray> VertexArray::create()
-{
-    switch (Renderer::get_api())
-    {
+std::unique_ptr<VertexArray> VertexArray::create() {
+    switch (Renderer::get_api()) {
     case RendererAPI::API::None:
         PINE_CORE_ASSERT(false, "Renderer API None is currently not \
 				supported!");

@@ -2,21 +2,19 @@
 
 #include <glad/glad.h>
 
-#include "pine/pch.hpp"
 #include "pine/core/log.hpp"
+#include "pine/pch.hpp"
 #include "pine/renderer/types.hpp"
 
 #include "pine/platform/opengl/utilities.hpp"
 
-namespace pine
-{
+namespace pine {
 
 static constexpr uint32_t MAX_FRAMEBUFFER_SIZE = 8192;
 
 RendererID create_color_attachment(const FramebufferAttachment& attachment,
     const uint32_t width,
-    const uint32_t height)
-{
+    const uint32_t height) {
     RendererID renderer_id;
     glCreateTextures(GL_TEXTURE_2D, 1, &renderer_id);
     glBindTexture(GL_TEXTURE_2D, renderer_id);
@@ -45,8 +43,7 @@ RendererID create_color_attachment(const FramebufferAttachment& attachment,
 
 RendererID create_depth_attachment(const FramebufferAttachment& attachment,
     const uint32_t width,
-    const uint32_t height)
-{
+    const uint32_t height) {
     RendererID renderer_id;
     glCreateTextures(GL_TEXTURE_2D, 1, &renderer_id);
     glBindTexture(GL_TEXTURE_2D, renderer_id);
@@ -64,22 +61,18 @@ RendererID create_depth_attachment(const FramebufferAttachment& attachment,
 }
 
 OpenGLFramebuffer::OpenGLFramebuffer(const FramebufferSpecs& specs)
-    : specification(specs)
-{
+    : specification(specs) {
     invalidate();
 }
 
-OpenGLFramebuffer::~OpenGLFramebuffer()
-{
+OpenGLFramebuffer::~OpenGLFramebuffer() {
     glDeleteFramebuffers(1, &renderer_id);
     glDeleteTextures(1, &color_attachment);
     glDeleteTextures(1, &depth_attachment);
 }
 
-void OpenGLFramebuffer::invalidate()
-{
-    if (renderer_id)
-    {
+void OpenGLFramebuffer::invalidate() {
+    if (renderer_id) {
         glDeleteFramebuffers(1, &renderer_id);
         glDeleteTextures(1, &color_attachment);
         glDeleteTextures(1, &depth_attachment);
@@ -89,40 +82,33 @@ void OpenGLFramebuffer::invalidate()
     glCreateFramebuffers(1, &renderer_id);
     glBindFramebuffer(GL_FRAMEBUFFER, renderer_id);
 
-    if (is_color_format(specification.color_attachment.format))
-    {
-        color_attachment
-            = create_color_attachment(specification.color_attachment,
+    if (is_color_format(specification.color_attachment.format)) {
+        color_attachment =
+            create_color_attachment(specification.color_attachment,
                 specification.width,
                 specification.height);
-    }
-    else
-    {
+    } else {
         PINE_INFO("Framebuffer: Invalid color attachment format.");
     }
 
-    if (is_depth_format(specification.depth_attachment.format))
-    {
-        depth_attachment
-            = create_depth_attachment(specification.depth_attachment,
+    if (is_depth_format(specification.depth_attachment.format)) {
+        depth_attachment =
+            create_depth_attachment(specification.depth_attachment,
                 specification.width,
                 specification.height);
-    }
-    else
-    {
+    } else {
         PINE_INFO("Framebuffer: Invalid depth attachment format.");
     }
 
     // Check framebuffer completion
-    PINE_CORE_ASSERT(glCheckFramebufferStatus(GL_FRAMEBUFFER)
-            == GL_FRAMEBUFFER_COMPLETE,
+    PINE_CORE_ASSERT(
+        glCheckFramebufferStatus(GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE,
         "Framebuffer is incomplete!");
 
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
-void OpenGLFramebuffer::bind()
-{
+void OpenGLFramebuffer::bind() {
     glBindFramebuffer(GL_FRAMEBUFFER, renderer_id);
     glViewport(0,
         0,
@@ -132,11 +118,9 @@ void OpenGLFramebuffer::bind()
 
 void OpenGLFramebuffer::unbind() { glBindFramebuffer(GL_FRAMEBUFFER, 0); }
 
-void OpenGLFramebuffer::resize(const uint32_t width, const uint32_t height)
-{
-    if (width == 0 || height == 0 || width > MAX_FRAMEBUFFER_SIZE
-        || height > MAX_FRAMEBUFFER_SIZE)
-    {
+void OpenGLFramebuffer::resize(const uint32_t width, const uint32_t height) {
+    if (width == 0 || height == 0 || width > MAX_FRAMEBUFFER_SIZE ||
+        height > MAX_FRAMEBUFFER_SIZE) {
         PINE_CORE_WARN("Attempted to resize framebuffer to {0}, {1}",
             width,
             height);

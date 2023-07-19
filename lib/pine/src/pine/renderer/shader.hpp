@@ -7,8 +7,7 @@
 
 #include "pine/utils/math.hpp"
 
-namespace pine
-{
+namespace pine {
 
 // Forward declaration
 class Shader;
@@ -22,8 +21,7 @@ std::unique_ptr<Shader> create_shader(const std::string& name,
     const std::string& vertex_source,
     const std::string& fragment_source);
 
-class Shader
-{
+class Shader {
 public:
     Shader() = default;
     virtual ~Shader() = default;
@@ -40,21 +38,19 @@ public:
     virtual void set_int(const std::string& name, const int value) const = 0;
     virtual void set_int_array(const std::string& name,
         const int* values,
-        const uint32_t count) const
-        = 0;
-    virtual void set_float(const std::string& name, const float value) const
-        = 0;
-    virtual void set_float3(const std::string& name, const Vec3& value) const
-        = 0;
-    virtual void set_float4(const std::string& name, const Vec4& value) const
-        = 0;
+        const uint32_t count) const = 0;
+    virtual void set_float(const std::string& name,
+        const float value) const = 0;
+    virtual void set_float3(const std::string& name,
+        const Vec3& value) const = 0;
+    virtual void set_float4(const std::string& name,
+        const Vec4& value) const = 0;
     virtual void set_mat4(const std::string& name, const Mat4& value) const = 0;
 
     virtual const std::string& get_name() const = 0;
 };
 
-class ShaderLibrary
-{
+class ShaderLibrary {
     using ShaderMap = std::unordered_map<std::string, std::shared_ptr<Shader>>;
 
 public:

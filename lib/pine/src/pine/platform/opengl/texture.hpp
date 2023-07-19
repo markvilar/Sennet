@@ -2,11 +2,9 @@
 
 #include "pine/renderer/texture.hpp"
 
-namespace pine
-{
+namespace pine {
 
-class OpenGLTexture2D : public Texture2D
-{
+class OpenGLTexture2D : public Texture2D {
 public:
     OpenGLTexture2D(const std::filesystem::path& imagePath);
     OpenGLTexture2D(const Image& image);

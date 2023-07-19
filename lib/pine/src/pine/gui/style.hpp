@@ -2,13 +2,11 @@
 
 #include "pine/utils/math.hpp"
 
-namespace pine::gui
-{
+namespace pine::gui {
 
 void set_dark_theme();
 
-enum Color : int
-{
+enum Color : int {
     TEXT = 0,
     TEXT_DISABLED = 1,
     WINDOW_BG = 2,
@@ -67,8 +65,7 @@ enum Color : int
     COUNT = 55,
 };
 
-struct CustomStyle
-{
+struct CustomStyle {
     float alpha = 1.0f;
     float disabled_alpha = 0.6f;
     Vec2 window_padding = Vec2(8.0f, 8.0f);

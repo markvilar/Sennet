@@ -10,10 +10,8 @@
 #include "pine/core/window.hpp"
 #include "pine/renderer/graphics_context.hpp"
 
-namespace pine
-{
-class WindowsWindow : public Window
-{
+namespace pine {
+class WindowsWindow : public Window {
 public:
     WindowsWindow(const WindowSpecs& specs);
     virtual ~WindowsWindow();
@@ -44,8 +42,7 @@ private:
     virtual void shutdown();
 
 private:
-    struct WindowData
-    {
+    struct WindowData {
         std::string title;
         uint32_t width;
         uint32_t height;

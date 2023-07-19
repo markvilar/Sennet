@@ -6,8 +6,7 @@
 
 #include <pine/pine.hpp>
 
-int main(int argc, char** argv)
-{
+int main(int argc, char** argv) {
     pine::EngineSpecs specs;
     specs.working_directory = ".";
     specs.name = "Editor";
@@ -24,8 +23,8 @@ int main(int argc, char** argv)
 
     // Initialize engine and run application
     pine::Engine engine(specs);
-    //engine.init();
+    // engine.init();
     engine.run(editor);
-    
+
     return 0;
 }

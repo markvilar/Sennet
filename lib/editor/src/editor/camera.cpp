@@ -9,15 +9,15 @@ void render_camera_controls(OrthographicCameraController& controller) {
     auto& pose = controller.get_pose();
     auto& aspect_ratio = controller.get_aspect_ratio();
     auto& zoom_level = controller.get_zoom_level();
-    
+
     ImGui::Text("Parameters");
 
     gui::empty_space(0.0f, 2.0f);
-    
+
     ImGui::Checkbox("Enable zoom", &parameters.zoom_enabled);
     ImGui::SameLine();
     ImGui::Checkbox("Enable rot.", &parameters.rotation_enabled);
-    
+
     gui::empty_space(0.0f, 2.0f);
 
     ImGui::InputFloat("Zoom speed", &parameters.zoom_speed);

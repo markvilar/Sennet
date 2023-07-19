@@ -6,11 +6,9 @@
 
 #include "pine/renderer/types.hpp"
 
-namespace pine
-{
+namespace pine {
 
-struct VertexBufferElement
-{
+struct VertexBufferElement {
     std::string name = "";
     ShaderDataType type = ShaderDataType::NONE;
     uint32_t size = 0;
@@ -26,13 +24,10 @@ struct VertexBufferElement
           size(get_byte_size(data_type)),
           component_count(get_components(data_type)),
           offset(0),
-          normalized(is_data_normalized)
-    {
-    }
+          normalized(is_data_normalized) {}
 };
 
-class VertexBufferLayout
-{
+class VertexBufferLayout {
 public:
     VertexBufferLayout() = default;
 
@@ -46,28 +41,23 @@ public:
 
     VertexBufferLayout(
         const std::initializer_list<VertexBufferElement>& elements_)
-        : elements(elements_)
-    {
+        : elements(elements_) {
         calculate_offset_and_stride();
     }
 
     inline uint32_t get_stride() const { return stride; }
-    inline const std::vector<VertexBufferElement>& get_elements() const
-    {
+    inline const std::vector<VertexBufferElement>& get_elements() const {
         return elements;
     }
 
-    std::vector<VertexBufferElement>::iterator begin()
-    {
+    std::vector<VertexBufferElement>::iterator begin() {
         return elements.begin();
     }
     std::vector<VertexBufferElement>::iterator end() { return elements.end(); }
-    std::vector<VertexBufferElement>::const_iterator begin() const
-    {
+    std::vector<VertexBufferElement>::const_iterator begin() const {
         return elements.begin();
     }
-    std::vector<VertexBufferElement>::const_iterator end() const
-    {
+    std::vector<VertexBufferElement>::const_iterator end() const {
         return elements.end();
     }
 
@@ -80,8 +70,7 @@ private:
     uint32_t stride = 0;
 };
 
-class VertexBuffer
-{
+class VertexBuffer {
 public:
     virtual ~VertexBuffer() = default;
 
@@ -98,8 +87,7 @@ public:
         const uint32_t size);
 };
 
-class IndexBuffer
-{
+class IndexBuffer {
 public:
     virtual ~IndexBuffer() = default;
 
@@ -112,8 +100,7 @@ public:
         const uint32_t count);
 };
 
-class VertexArray
-{
+class VertexArray {
 public:
     virtual ~VertexArray() {}
 

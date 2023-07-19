@@ -7,11 +7,9 @@
 
 #include "pine/core/event.hpp"
 
-namespace pine
-{
+namespace pine {
 
-struct WindowSpecs
-{
+struct WindowSpecs {
     std::string title{"Window"};
     uint32_t width{1280};
     uint32_t height{720};
@@ -19,8 +17,7 @@ struct WindowSpecs
     bool vsync{true};
 };
 
-class Window
-{
+class Window {
     /*
     Interface class for Pines window implementations.
     */

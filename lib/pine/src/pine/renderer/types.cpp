@@ -2,17 +2,14 @@
 
 #include "pine/defines/assert.hpp"
 
-namespace pine
-{
+namespace pine {
 
 // ----------------------------------------------------------------------------
 // TextureFormat
 // ----------------------------------------------------------------------------
 
-uint32_t get_byte_size(const TextureFormat format)
-{
-    switch (format)
-    {
+uint32_t get_byte_size(const TextureFormat format) {
+    switch (format) {
     case TextureFormat::RED:
         return 1;
     case TextureFormat::RG:
@@ -30,10 +27,8 @@ uint32_t get_byte_size(const TextureFormat format)
     }
 }
 
-uint32_t get_components(const TextureFormat format)
-{
-    switch (format)
-    {
+uint32_t get_components(const TextureFormat format) {
+    switch (format) {
     case TextureFormat::RED:
         return 1;
     case TextureFormat::RG:
@@ -51,10 +46,8 @@ uint32_t get_components(const TextureFormat format)
     }
 }
 
-bool is_color_format(const TextureFormat format)
-{
-    switch (format)
-    {
+bool is_color_format(const TextureFormat format) {
+    switch (format) {
     case TextureFormat::INVALID:
         return false;
     case TextureFormat::RED:
@@ -79,10 +72,8 @@ bool is_color_format(const TextureFormat format)
     return false;
 }
 
-bool is_depth_format(const TextureFormat format)
-{
-    switch (format)
-    {
+bool is_depth_format(const TextureFormat format) {
+    switch (format) {
     case TextureFormat::INVALID:
         return false;
     case TextureFormat::RED:
@@ -111,10 +102,8 @@ bool is_depth_format(const TextureFormat format)
 // ShaderDataType
 // ----------------------------------------------------------------------------
 
-uint32_t get_byte_size(const ShaderDataType type)
-{
-    switch (type)
-    {
+uint32_t get_byte_size(const ShaderDataType type) {
+    switch (type) {
     case ShaderDataType::NONE:
         return 0;
     case ShaderDataType::FLOAT:
@@ -153,10 +142,8 @@ uint32_t get_byte_size(const ShaderDataType type)
     return 0;
 }
 
-uint32_t get_components(const ShaderDataType type)
-{
-    switch (type)
-    {
+uint32_t get_components(const ShaderDataType type) {
+    switch (type) {
     case ShaderDataType::NONE:
         return 0;
     case ShaderDataType::FLOAT:
@@ -195,10 +182,8 @@ uint32_t get_components(const ShaderDataType type)
     return 0;
 }
 
-bool is_integer_type(const ShaderDataType type)
-{
-    switch (type)
-    {
+bool is_integer_type(const ShaderDataType type) {
+    switch (type) {
     case ShaderDataType::NONE:
         return false;
     case ShaderDataType::FLOAT:
@@ -236,10 +221,8 @@ bool is_integer_type(const ShaderDataType type)
     return 0;
 }
 
-bool is_float_type(const ShaderDataType type)
-{
-    switch (type)
-    {
+bool is_float_type(const ShaderDataType type) {
+    switch (type) {
     case ShaderDataType::NONE:
         return false;
     case ShaderDataType::FLOAT:

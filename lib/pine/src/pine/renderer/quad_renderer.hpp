@@ -8,11 +8,9 @@
 #include "pine/renderer/texture.hpp"
 #include "pine/utils/math.hpp"
 
-namespace pine
-{
+namespace pine {
 
-struct QuadVertex
-{
+struct QuadVertex {
     Vec3 position = {};
     Vec4 color = {};
     Vec2 texture_coordinates = {};
@@ -20,8 +18,7 @@ struct QuadVertex
     float tiling_factor = {};
 };
 
-struct QuadRenderCaps
-{
+struct QuadRenderCaps {
     static constexpr uint32_t max_quads = 20000;
     static constexpr uint32_t max_texture_slots = 32;
     static constexpr uint32_t vertices_per_quad = 4;
@@ -44,24 +41,20 @@ struct QuadRenderCaps
     };
 };
 
-struct QuadRenderStatistics
-{
+struct QuadRenderStatistics {
     uint32_t draw_calls = 0;
     uint32_t quad_count = 0;
 
-    uint32_t get_total_vertex_count()
-    {
+    uint32_t get_total_vertex_count() {
         return quad_count * QuadRenderCaps::vertices_per_quad;
     }
 
-    uint32_t get_total_index_count()
-    {
+    uint32_t get_total_index_count() {
         return quad_count * QuadRenderCaps::indices_per_quad;
     }
 };
 
-struct QuadRenderData
-{
+struct QuadRenderData {
     std::unique_ptr<Shader> quad_shader = {};
     std::unique_ptr<VertexArray> quad_vertex_array = {};
 
@@ -76,8 +69,7 @@ struct QuadRenderData
     QuadRenderStatistics statistics{};
 };
 
-namespace QuadRenderer
-{
+namespace QuadRenderer {
 QuadRenderData init();
 void shutdown(QuadRenderData& data);
 

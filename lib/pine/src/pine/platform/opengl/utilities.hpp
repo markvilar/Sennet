@@ -8,8 +8,7 @@
 #include "pine/renderer/image.hpp"
 #include "pine/renderer/types.hpp"
 
-namespace pine::glutils
-{
+namespace pine::glutils {
 
 // Texture types
 GLenum to_opengl(const TextureFormat format);

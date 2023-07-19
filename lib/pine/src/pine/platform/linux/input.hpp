@@ -2,11 +2,9 @@
 
 #include "pine/core/input.hpp"
 
-namespace pine
-{
+namespace pine {
 
-class LinuxInputHandle : public InputHandle
-{
+class LinuxInputHandle : public InputHandle {
 public:
     LinuxInputHandle(const Window& window);
     virtual ~LinuxInputHandle() = default;

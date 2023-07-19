@@ -3,11 +3,9 @@
 #include <cstdint>
 #include <random>
 
-namespace pine
-{
+namespace pine {
 
-class UUID
-{
+class UUID {
 public:
     UUID();
     UUID(const uint64_t value);
@@ -16,10 +14,7 @@ public:
     bool operator==(const UUID& other) const;
     bool operator!=(const UUID& other) const;
 
-    std::string to_string() const 
-    { 
-        return std::to_string(value); 
-    }
+    std::string to_string() const { return std::to_string(value); }
 
 private:
     uint64_t value{};

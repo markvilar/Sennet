@@ -7,11 +7,9 @@
 #include "pine/network/connection.hpp"
 #include "pine/network/types.hpp"
 
-namespace pine
-{
+namespace pine {
 
-struct ClientState
-{
+struct ClientState {
     NetworkContext context{};
     std::thread context_thread{};
 
@@ -27,11 +25,9 @@ public:
     ClientState& operator=(const ClientState&) = delete;
     ClientState& operator=(ClientState&&) = delete;
 
-    ~ClientState()
-    {
+    ~ClientState() {
         context.stop();
-        if (context_thread.joinable())
-        {
+        if (context_thread.joinable()) {
             context_thread.join();
         }
     }

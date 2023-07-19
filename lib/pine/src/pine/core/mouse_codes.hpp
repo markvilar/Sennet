@@ -2,11 +2,9 @@
 
 #include <iostream>
 
-namespace pine
-{
+namespace pine {
 
-enum class MouseCode : uint16_t
-{
+enum class MouseCode : uint16_t {
     Button0 = 0,
     Button1 = 1,
     Button2 = 2,
@@ -22,8 +20,7 @@ enum class MouseCode : uint16_t
     Buttonmiddle = Button2
 };
 
-inline std::ostream& operator<<(std::ostream& os, const MouseCode mouseCode)
-{
+inline std::ostream& operator<<(std::ostream& os, const MouseCode mouseCode) {
     return os << static_cast<int32_t>(mouseCode);
 }
 

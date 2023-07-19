@@ -25,7 +25,7 @@ DeriveLineEnding: true
 DerivePointerAlignment: false
 DisableFormat: false
 
-ExperimentalAutoDetectBinPacking: false
+ExperimentalAutoDetectBinPacking: true # NOTE: false
 FixNamespaceComments: true
 
 ReflowComments: true
@@ -39,11 +39,9 @@ MaxEmptyLinesToKeep: 1
 
 # Align consecutive
 AlignConsecutiveBitFields: AcrossEmptyLines
-AlignConsecutiveMacros
 AlignConsecutiveAssignments: false
-AlignConsecutiveMacros: AcrossEmptyLines
-AlignConsecutiveMacros: false
-AlignConsecutiveAssignments: false
+#AlignConsecutiveMacros: false
+#AlignConsecutiveAssignments: false
 AlignConsecutiveDeclarations: false
 
 # Pointer / reference
@@ -52,11 +50,10 @@ ReferenceAlignment: Left
 
 # Various
 AlignArrayOfStructures: Left
-AlignTrailingComments: Always
 AlignAfterOpenBracket: DontAlign
 AlignEscapedNewlines: Right
 AlignOperands: false
-AlignTrailingComments: true
+#AlignTrailingComments: true
 
 # -----------------------------------------------------------------------------
 # Allowance
@@ -85,8 +82,8 @@ AlwaysBreakBeforeMultilineStrings: false
 AlwaysBreakTemplateDeclarations: Yes
 
 # Bin
-BinPackArguments: false
-BinPackParameters: false
+BinPackArguments: true # NOTE: false
+BinPackParameters: true # NOTE: false 
 
 PackConstructorInitializers: CurrentLine
 
@@ -114,9 +111,9 @@ BraceWrapping:
 BreakAfterAttributes: Always
 
 # Break before
-BreakBeforeBinaryOperators: All
-BreakBeforeBraces: Allman
-BreakBeforeTernaryOperators: true
+#BreakBeforeBinaryOperators: All
+#BreakBeforeBraces: Allman
+#BreakBeforeTernaryOperators: true
 
 # Break
 BreakInheritanceList: BeforeColon
@@ -145,7 +142,7 @@ NamespaceIndentation: None
 # -----------------------------------------------------------------------------
 
 PenaltyBreakAssignment: 2
-PenaltyBreakBeforeFirstCallParameter: 1000
+PenaltyBreakBeforeFirstCallParameter: 2
 PenaltyBreakComment: 300
 PenaltyBreakFirstLessLess: 120
 PenaltyBreakString: 1000

@@ -13,11 +13,9 @@
 #include "pine/gui/manager.hpp"
 #include "pine/renderer/renderer.hpp"
 
-namespace pine
-{
+namespace pine {
 
-struct EngineSpecs
-{
+struct EngineSpecs {
     std::string name = "Pine Engine";
     uint32_t window_width = 1600;
     uint32_t window_height = 800;
@@ -30,8 +28,7 @@ struct EngineSpecs
     bool enable_gui = true;
 };
 
-struct EngineState
-{
+struct EngineState {
     bool initialized = false;
     bool running = false;
     bool minimized = false;
@@ -39,26 +36,22 @@ struct EngineState
 };
 
 template <typename T>
-concept Runnable = requires(T t)
-{
+concept Runnable = requires(T t) {
     t.init();
-    t.update( pine::Timestep() );
+    t.update(pine::Timestep());
     t.shutdown();
 
     t.on_gui_render();
-    t.on_event( pine::Event() );
+    t.on_event(pine::Event());
 };
 
-class Engine
-{
+class Engine {
 public:
     Engine(const EngineSpecs& specs = EngineSpecs{}) : specification(specs) {}
     ~Engine() = default;
 
-
     template <Runnable App>
-    auto run(App& app)
-    {
+    auto run(App& app) {
         // Initialize engine and application
         init();
         app.init();
@@ -66,16 +59,14 @@ public:
         // Prepare
         state.running = true;
 
-        while (state.running)
-        {
+        while (state.running) {
             // TODO: Temporary.
             const auto time = get_time();
             const Timestep timestep = time - state.last_frame_time;
-            
+
             // Handle events
             window->poll_events();
-            while (!events.empty())
-            {
+            while (!events.empty()) {
                 const auto event = events.front();
                 events.pop_front();
                 on_event(event);
@@ -85,13 +76,11 @@ public:
             // Update engine and application
             update(timestep);
             app.update(timestep);
-            
+
             // Render GUI and swap buffers
-            if (!state.minimized)
-            {
+            if (!state.minimized) {
                 state.last_frame_time = time;
-                if (specification.enable_gui && gui)
-                {
+                if (specification.enable_gui && gui) {
                     gui->begin_frame();
                     app.on_gui_render();
                     gui->end_frame();
@@ -113,8 +102,7 @@ public:
 
     static inline Engine& get() { return *instance; }
 
-    inline const EngineSpecs& get_specification() const
-    {
+    inline const EngineSpecs& get_specification() const {
         return specification;
     }
 

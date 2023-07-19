@@ -9,11 +9,9 @@
 #include "pine/renderer/texture.hpp"
 #include "pine/utils/math.hpp"
 
-namespace pine
-{
+namespace pine {
 
-class Renderer
-{
+class Renderer {
 public:
     static void init();
     static void on_window_resize(const uint32_t width, const uint32_t height);
@@ -28,8 +26,7 @@ public:
     inline static RendererAPI::API get_api() { return RendererAPI::get_api(); }
 
 private:
-    struct SceneData
-    {
+    struct SceneData {
         Mat4 view_projection_matrix;
     };
 

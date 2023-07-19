@@ -5,11 +5,9 @@
 
 #include <pine/pine.hpp>
 
-namespace pine
-{
+namespace pine {
 
-class Editor
-{
+class Editor {
 public:
     Editor();
     ~Editor() = default;

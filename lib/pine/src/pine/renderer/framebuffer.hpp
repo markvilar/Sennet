@@ -6,18 +6,15 @@
 #include "pine/renderer/renderer_api.hpp"
 #include "pine/renderer/texture.hpp"
 
-namespace pine
-{
+namespace pine {
 
-struct FramebufferAttachment
-{
+struct FramebufferAttachment {
     TextureFormat format = TextureFormat::INVALID;
     TextureFilter filter = TextureFilter::NONE;
     TextureWrap wrap = TextureWrap::NONE;
 };
 
-struct FramebufferSpecs
-{
+struct FramebufferSpecs {
     uint32_t width = 0;
     uint32_t height = 0;
     uint32_t samples = 1;
@@ -28,8 +25,7 @@ struct FramebufferSpecs
     FramebufferAttachment depth_attachment;
 };
 
-class Framebuffer
-{
+class Framebuffer {
 public:
     virtual ~Framebuffer() = default;
 
