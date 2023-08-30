@@ -11,7 +11,7 @@ bool filesystem::create_directory(const std::filesystem::path& directory) {
     return std::filesystem::create_directory(directory);
 }
 
-bool filesystem::create_directory(const std::string_view& directory) {
+bool filesystem::create_directory(const std::string_view directory) {
     return std::filesystem::create_directory(directory);
 }
 
@@ -19,7 +19,7 @@ bool filesystem::exists(const std::filesystem::path& filepath) {
     return std::filesystem::exists(filepath);
 }
 
-bool filesystem::exists(const std::string& filepath) {
+bool filesystem::exists(const std::string_view filepath) {
     return std::filesystem::exists(std::filesystem::path(filepath));
 }
 
@@ -43,7 +43,7 @@ bool filesystem::move_file(const std::filesystem::path& filepath,
 }
 
 bool filesystem::rename_file(const std::filesystem::path& old_filepath,
-    const std::string& new_name) {
+    const std::string_view new_name) {
     auto new_filepath =
         old_filepath.parent_path() / new_name / old_filepath.extension();
     return move(old_filepath, new_filepath);

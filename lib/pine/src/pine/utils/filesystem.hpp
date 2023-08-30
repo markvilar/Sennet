@@ -8,10 +8,10 @@
 namespace pine::filesystem {
 
 bool create_directory(const std::filesystem::path& directory);
-bool create_directory(const std::string_view& directory);
+bool create_directory(const std::string_view directory);
 
 bool exists(const std::filesystem::path& filepath);
-bool exists(const std::string& filepath);
+bool exists(const std::string_view filepath);
 
 bool copy(const std::filesystem::path& old_filepath,
     const std::filesystem::path& new_filepath);
@@ -21,7 +21,7 @@ bool move(const std::filesystem::path& old_filepath,
 bool move_file(const std::filesystem::path& filepath,
     const std::filesystem::path& destination);
 bool rename_file(const std::filesystem::path& old_filepath,
-    const std::string& new_name);
+    const std::string_view new_name);
 bool delete_file(const std::filesystem::path& filepath);
 
 bool is_empty(const std::filesystem::path& filepath);

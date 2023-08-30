@@ -1,20 +1,21 @@
 #pragma once
 
-#include <GLFW/glfw3.h>
+#include <memory>
 
+#include "pine/core/window.hpp"
 #include "pine/renderer/graphics_context.hpp"
 
 namespace pine {
 
 class OpenGLContext : public GraphicsContext {
 public:
-    OpenGLContext(GLFWwindow* windowHandle);
+    OpenGLContext(std::shared_ptr<Window>& window);
 
     virtual void init() override;
-    virtual void swap_buffers() override;
+    virtual void set_vsync(const bool enabled) override;
 
 private:
-    GLFWwindow* window_handle;
+    std::weak_ptr<Window> window;
 };
 
 } // namespace pine

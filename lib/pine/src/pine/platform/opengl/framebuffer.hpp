@@ -3,6 +3,7 @@
 #include "pine/renderer/framebuffer.hpp"
 
 namespace pine {
+
 class OpenGLFramebuffer : public Framebuffer {
 public:
     OpenGLFramebuffer(const FramebufferSpecs& specs);

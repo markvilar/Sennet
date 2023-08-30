@@ -2,8 +2,7 @@
 
 #include <memory>
 
-#include "pine/core/key_codes.hpp"
-#include "pine/core/mouse_codes.hpp"
+#include "pine/core/codes.hpp"
 #include "pine/core/window.hpp"
 
 namespace pine {
@@ -21,5 +20,6 @@ public:
 
     static std::unique_ptr<InputHandle> create(const Window& window);
 };
+
 
 } // namespace pine

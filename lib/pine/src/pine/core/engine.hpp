@@ -12,37 +12,38 @@
 #include "pine/core/window.hpp"
 #include "pine/gui/manager.hpp"
 #include "pine/renderer/renderer.hpp"
+#include "pine/renderer/graphics_context.hpp"
 
 namespace pine {
 
 struct EngineSpecs {
-    std::string name = "Pine Engine";
-    uint32_t window_width = 1600;
-    uint32_t window_height = 800;
-    bool fullscreen = false;
-    bool vsync = true;
+    std::string name{"Pine Engine"};
+    uint32_t window_width{1600};
+    uint32_t window_height{800};
+    bool fullscreen{false};
+    bool vsync{true};
 
-    std::string working_directory;
-    bool start_maximized = true;
-    bool resizable = true;
-    bool enable_gui = true;
+    std::string working_directory{};
+    bool start_maximized{true};
+    bool resizable{true};
+    bool enable_gui{true};
 };
 
 struct EngineState {
-    bool initialized = false;
-    bool running = false;
-    bool minimized = false;
-    float last_frame_time = 0.0f;
+    bool initialized{false};
+    bool running{false};
+    bool minimized{false};
+    float last_frame_time{0.0f};
 };
 
 template <typename T>
-concept Runnable = requires(T t) {
+concept ApplicationConcept = requires(T t, Timestep timestep, Event event) {
     t.init();
-    t.update(pine::Timestep());
+    t.update(timestep);
     t.shutdown();
 
     t.on_gui_render();
-    t.on_event(pine::Event());
+    t.on_event(event);
 };
 
 class Engine {
@@ -50,7 +51,7 @@ public:
     Engine(const EngineSpecs& specs = EngineSpecs{}) : specification(specs) {}
     ~Engine() = default;
 
-    template <Runnable App>
+    template <ApplicationConcept App>
     auto run(App& app) {
         // Initialize engine and application
         init();
@@ -121,15 +122,16 @@ private:
     float get_time() const;
 
 private:
-    EngineSpecs specification;
-    EngineState state;
-    std::deque<Event> events;
+    EngineSpecs specification{};
+    EngineState state{};
+    std::deque<Event> events{};
 
     // Shared resources
-    std::shared_ptr<Window> window;
+    std::shared_ptr<Window> window{nullptr};
+    std::shared_ptr<GraphicsContext> graphics_context{nullptr};
 
     // Owned resources
-    std::unique_ptr<gui::Manager> gui;
+    std::unique_ptr<gui::Manager> gui{nullptr};
 
     // Singleton
     static Engine* instance;

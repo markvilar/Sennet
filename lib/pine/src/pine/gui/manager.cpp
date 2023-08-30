@@ -70,10 +70,8 @@ void Context::end_frame() const {
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
     if (io.ConfigFlags & ConfigFlagOptions::VIEWPORTS_ENABLE) {
-        auto backup_current_context = glfwGetCurrentContext();
         ImGui::UpdatePlatformWindows();
         ImGui::RenderPlatformWindowsDefault();
-        glfwMakeContextCurrent(backup_current_context);
     }
 }
 
@@ -201,15 +199,7 @@ bool Manager::load_font(const std::filesystem::path& filepath,
 }
 
 void Manager::on_event(const Event& event) const {
-    if (handle_event) {
-        /*
-        TODO: Update to new event system
-        event.handled |= event.is_in_category(EventCategoryMouse)
-            & io->want_capture_mouse();
-        event.handled |= event.is_in_category(EventCategoryKeyboard)
-            & io->want_capture_keyboard();
-        */
-    }
+    // TODO: Implement
 }
 
 } // namespace pine::gui

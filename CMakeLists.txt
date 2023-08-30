@@ -21,6 +21,11 @@ option(PINE_EDITOR_ENABLED "Build editor." ON)
 option(PINE_EXAMPLE_ENABLED "Build examples." ON)
 option(PINE_TEST_ENABLED "Build test." ON)
 
+# Backends
+option(PINE_GLFW_ENABLED "Enable GLFW backend" ON)
+option(PINE_OPENGL_ENABLED "Enable OpenGL backend" ON)
+option(PINE_IMGUI_ENABLED "Enable ImGui backend" ON)
+
 # -----------------------------------------------------------------------------
 # ---- Warnings / sanitizers / tools ------------------------------------------
 # -----------------------------------------------------------------------------

@@ -5,10 +5,10 @@
 namespace pine {
 
 void render_camera_controls(OrthographicCameraController& controller) {
-    auto& parameters = controller.get_parameters();
-    auto& pose = controller.get_pose();
-    auto& aspect_ratio = controller.get_aspect_ratio();
-    auto& zoom_level = controller.get_zoom_level();
+    auto parameters = controller.get_parameters();
+    auto pose = controller.get_pose();
+    auto aspect_ratio = controller.get_aspect_ratio();
+    auto zoom_level = controller.get_zoom_level();
 
     ImGui::Text("Parameters");
 
@@ -32,6 +32,12 @@ void render_camera_controls(OrthographicCameraController& controller) {
     ImGui::InputFloat("Rotation", &pose.rotation);
     ImGui::InputFloat("Aspect", &aspect_ratio);
     ImGui::InputFloat("Zoom", &zoom_level);
+
+    controller.set_parameters(parameters);
+    controller.set_pose(pose);
+    controller.set_aspect_ratio(aspect_ratio);
+    controller.set_zoom_level(zoom_level);
+
 }
 
 }; // namespace pine

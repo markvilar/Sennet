@@ -11,7 +11,7 @@ namespace pine {
 
 static uint8_t s_glfw_window_count = 0;
 
-static void GLFWErrorCallback(int error, const char* description) {
+static void error_callback(int error, const char* description) {
     PINE_CORE_ERROR("GLFW error ({0}): {1}", error, description);
 }
 
@@ -31,7 +31,7 @@ void WindowsWindow::init() {
     if (s_glfw_window_count == 0) {
         [[maybe_unused]] int success = glfwInit();
         PINE_CORE_ASSERT(success, "Could not initialize GLFW!");
-        glfwSetErrorCallback(GLFWErrorCallback);
+        glfwSetErrorCallback(error_callback);
     }
 
     {
@@ -50,7 +50,6 @@ void WindowsWindow::init() {
     context->init();
 
     glfwSetWindowUserPointer(window, &window_data);
-    set_vsync(true);
 
     glfwSetWindowSizeCallback(window,
         [](GLFWwindow* reference_window, int width, int height) {
@@ -180,17 +179,6 @@ void WindowsWindow::center_window() {
 void WindowsWindow::set_event_callback(const EventCallbackFn& callback) {
     window_data.event_callback = callback;
 }
-
-void WindowsWindow::set_vsync(const bool enabled) {
-    if (enabled) {
-        glfwSwapInterval(1);
-    } else {
-        glfwSwapInterval(0);
-    }
-    window_data.vsync = enabled;
-}
-
-bool WindowsWindow::is_vsync() const { return window_data.vsync; }
 
 void WindowsWindow::set_resizable(const bool resizable) const {
     glfwSetWindowAttrib(window,

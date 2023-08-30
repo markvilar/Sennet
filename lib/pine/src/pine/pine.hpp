@@ -5,11 +5,10 @@
 #include "pine/defines/platform.hpp"
 
 // Core
+#include "pine/core/codes.hpp"
 #include "pine/core/engine.hpp"
 #include "pine/core/input.hpp"
-#include "pine/core/key_codes.hpp"
 #include "pine/core/log.hpp"
-#include "pine/core/mouse_codes.hpp"
 #include "pine/core/timestep.hpp"
 #include "pine/core/window.hpp"
 
@@ -20,7 +19,7 @@
 #include "pine/gui/widgets.hpp"
 #include "pine/gui/window.hpp"
 
-// Networkpine
+// Network
 #include "pine/network/client.hpp"
 #include "pine/network/connection.hpp"
 #include "pine/network/server.hpp"

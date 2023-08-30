@@ -70,16 +70,9 @@ public:
         const Parameters& parameters = Parameters());
 
     Parameters get_parameters() const { return parameters; }
-    Parameters& get_parameters() { return parameters; }
-
     Pose get_pose() const { return pose; }
-    Pose& get_pose() { return pose; }
-
     float get_aspect_ratio() const { return aspect_ratio; }
-    float& get_aspect_ratio() { return aspect_ratio; }
-
     float get_zoom_level() const { return zoom_level; }
-    float& get_zoom_level() { return zoom_level; }
 
     void set_parameters(const Parameters& parameters_) {
         parameters = parameters_;

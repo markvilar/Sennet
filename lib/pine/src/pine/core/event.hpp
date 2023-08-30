@@ -5,8 +5,7 @@
 #include <string>
 #include <variant>
 
-#include "pine/core/key_codes.hpp"
-#include "pine/core/mouse_codes.hpp"
+#include "pine/core/codes.hpp"
 #include "pine/pch.hpp"
 
 namespace pine {
@@ -113,17 +112,21 @@ struct TimeElapsed {
 // Event
 // ----------------------------------------------------------------------------
 
+// Event aliases
+using MouseMoved = Moved<Mouse>;
+using MouseWheelMoved = Moved<MouseWheel>;
+using MousePressed = Pressed<MouseButton>;
+using MouseReleased = Released<MouseButton>;
+using KeyPressed = Pressed<Key>; 
+using KeyReleased = Released<Key>;
+
 using Event = std::variant<std::monostate,
-
     // Move events
-    Moved<Mouse>, Moved<MouseWheel>,
-
+    MouseMoved, MouseWheelMoved,
     // Mouse button
-    Pressed<MouseButton>, Released<MouseButton>,
-
+    MousePressed, MouseReleased,
     // Key
-    Pressed<Key>, Released<Key>,
-
+    KeyPressed, KeyReleased,
     // Special
     WindowClosed, WindowIconified, WindowResized, TimeElapsed>;
 

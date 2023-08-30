@@ -17,11 +17,10 @@ target_sources(pine
         src/pine/core/event.hpp
         src/pine/core/input.cpp
         src/pine/core/input.hpp
-        src/pine/core/key_codes.hpp
         src/pine/core/log.cpp
         src/pine/core/log.hpp
-        src/pine/core/mouse_codes.hpp
         src/pine/core/timestep.hpp
+        src/pine/core/window.cpp
         src/pine/core/window.hpp
 
         # Gui
@@ -107,6 +106,14 @@ target_sources(pine
         src/pine/utils/math.hpp
         src/pine/utils/uuid.cpp
         src/pine/utils/uuid.hpp
+
+        # NOTE: Experimental
+        src/pine/graphics/api.cpp
+        src/pine/graphics/api.hpp
+        src/pine/platform/glad/loader.cpp
+        src/pine/platform/glad/loader.hpp
+        src/pine/platform/glfw/window.cpp
+        src/pine/platform/glfw/window.hpp
 )
 
 target_precompile_headers(pine PRIVATE src/pine/pch.hpp)
@@ -149,6 +156,8 @@ target_compile_definitions(pine
         GLFW_INCLUDE_NONE
         $<$<CONFIG:Debug>:PINE_DEBUG>
         $<$<CONFIG:Release>:PINE_RELEASE>
+        $<$<BOOL:${PINE_GLFW_ENABLED}>:PINE_WINDOW_GLFW>
+        $<$<BOOL:${PINE_OPENGL_ENABLED}>:PINE_RENDER_OPENGL>
     PRIVATE
 )
 

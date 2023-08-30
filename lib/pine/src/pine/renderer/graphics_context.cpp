@@ -6,8 +6,12 @@
 
 namespace pine {
 
-std::unique_ptr<GraphicsContext> GraphicsContext::create(void* window) {
-    return std::make_unique<OpenGLContext>(static_cast<GLFWwindow*>(window));
+std::unique_ptr<GraphicsContext> GraphicsContext::create(std::shared_ptr<Window>& window) {
+    if (window)
+    {
+        return std::make_unique<OpenGLContext>(window);
+    }
+    return nullptr;
 }
 
 } // namespace pine

@@ -1,3 +1,5 @@
+#pragma once
+
 #include <pine/pine.hpp>
 
 namespace pine {

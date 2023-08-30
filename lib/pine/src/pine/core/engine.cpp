@@ -27,9 +27,13 @@ void Engine::init() {
     window_specs.fullscreen = specification.fullscreen;
     window_specs.vsync = specification.vsync;
 
+    // TODO: Create window and render context together
+
     // Create window
     window = create_window(window_specs);
     window->init();
+
+    // Configure window
     window->set_event_callback(
         [this](const Event& event) { events.push_back(event); });
     if (specification.start_maximized) {
@@ -38,13 +42,17 @@ void Engine::init() {
         window->center_window();
     }
     window->set_resizable(specification.resizable);
-    window->set_vsync(specification.vsync);
+
+    // Create graphics context
+    graphics_context = GraphicsContext::create(window);
+    graphics_context->init();
+    graphics_context->set_vsync(specification.vsync);
 
     // Create GUI
     gui = gui::create_manager(window);
 
     // TODO: Remove this
-    Renderer::init();
+    // Renderer::init();
 
     state.initialized = true;
 }
@@ -61,10 +69,10 @@ void Engine::update(const Timestep& timestep) {
 
 void Engine::on_event(const Event& event) {
     // Move events
-    dispatch_event<Moved<Mouse>>(event, [this](const Moved<Mouse>& key) {});
+    dispatch_event<MouseMoved>(event, [this](const MouseMoved& key) {});
 
-    dispatch_event<Moved<MouseWheel>>(event,
-        [this](const Moved<MouseWheel>& key) {});
+    dispatch_event<MouseWheelMoved>(event,
+        [this](const MouseWheelMoved& key) {});
 
     // Mouse button events
     dispatch_event<Pressed<MouseButton>>(event,
@@ -74,9 +82,9 @@ void Engine::on_event(const Event& event) {
         [this](const Released<MouseButton>& key) {});
 
     // Key events
-    dispatch_event<Pressed<Key>>(event, [this](const Pressed<Key>& key) {});
+    dispatch_event<KeyPressed>(event, [this](const KeyPressed& key) {});
 
-    dispatch_event<Released<Key>>(event, [this](const Released<Key>& key) {});
+    dispatch_event<KeyReleased>(event, [this](const KeyReleased& key) {});
 
     // Window events
     dispatch_event<WindowClosed>(event, [this](const WindowClosed& event_data) {

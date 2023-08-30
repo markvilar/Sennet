@@ -29,8 +29,6 @@ public:
     virtual void center_window() override;
 
     virtual void set_event_callback(const EventCallbackFn& callback) override;
-    virtual void set_vsync(const bool enabled) override;
-    virtual bool is_vsync() const override;
     virtual void set_resizable(const bool resizable) const override;
 
     virtual const std::string& get_title() const override;
@@ -46,8 +44,6 @@ private:
         std::string title;
         uint32_t width;
         uint32_t height;
-        bool vsync;
-
         EventCallbackFn event_callback;
     };
 

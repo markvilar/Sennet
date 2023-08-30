@@ -5,16 +5,12 @@
 #include <string>
 #include <utility>
 
-#include <GLFW/glfw3.h>
-
 #include "pine/core/window.hpp"
 #include "pine/renderer/graphics_context.hpp"
 
 namespace pine {
 
 class LinuxWindow : public Window {
-    using NativeWindow = GLFWwindow;
-
 public:
     LinuxWindow(const WindowSpecs& specs);
     virtual ~LinuxWindow();
@@ -32,8 +28,6 @@ public:
     virtual void center_window() override;
 
     virtual void set_event_callback(const EventCallbackFn& callback) override;
-    virtual void set_vsync(const bool enabled) override;
-    virtual bool is_vsync() const override;
     virtual void set_resizable(const bool resizable) const override;
 
     virtual const std::string& get_title() const override;
@@ -43,21 +37,18 @@ public:
 
 private:
     virtual void shutdown();
+    void set_callbacks();
 
 private:
     struct WindowData {
         std::string title;
         uint32_t width;
         uint32_t height;
-        bool vsync;
-
         EventCallbackFn event_callback = [](const Event&) {};
     };
 
 private:
-    NativeWindow* native_window;
-    std::unique_ptr<GraphicsContext> context;
-
+    void* native_window;
     WindowSpecs specification;
     WindowData window_data;
 };
