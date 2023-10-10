@@ -110,8 +110,8 @@ target_sources(pine
         # NOTE: Experimental
         src/pine/graphics/api.cpp
         src/pine/graphics/api.hpp
-        src/pine/platform/glad/loader.cpp
-        src/pine/platform/glad/loader.hpp
+        src/pine/platform/glfw/api.cpp
+        src/pine/platform/glfw/api.hpp
         src/pine/platform/glfw/window.cpp
         src/pine/platform/glfw/window.hpp
 )

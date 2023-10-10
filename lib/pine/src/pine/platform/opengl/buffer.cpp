@@ -93,13 +93,13 @@ void OpenGLVertexArray::set_vertex_buffer(std::unique_ptr<VertexBuffer>
         if (is_integer_type(element.type)) {
             glVertexAttribIPointer(index,
                 static_cast<GLint>(element.component_count),
-                glutils::to_opengl(element.type),
+                opengl::to_opengl(element.type),
                 static_cast<GLsizei>(layout.get_stride()),
                 reinterpret_cast<const void*>(element.offset));
         } else {
             glVertexAttribPointer(index,
                 static_cast<GLint>(element.component_count),
-                glutils::to_opengl(element.type),
+                opengl::to_opengl(element.type),
                 element.normalized ? GL_TRUE : GL_FALSE,
                 static_cast<GLsizei>(layout.get_stride()),
                 reinterpret_cast<const void*>(element.offset));

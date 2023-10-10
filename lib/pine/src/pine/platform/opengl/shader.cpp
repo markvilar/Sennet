@@ -127,7 +127,7 @@ std::unique_ptr<OpenGLShader> create_shader(
         pine::filesystem::read_file_source(fragment_file);
 
     const auto program =
-        glutils::compile_shader(vertex_source, fragment_source);
+        opengl::compile_shader(vertex_source, fragment_source);
     return std::make_unique<OpenGLShader>(name, program);
 }
 
@@ -135,7 +135,7 @@ std::unique_ptr<OpenGLShader> create_shader(const std::string& name,
     const std::string& vertex_source,
     const std::string& fragment_source) {
     const auto program =
-        glutils::compile_shader(vertex_source, fragment_source);
+        opengl::compile_shader(vertex_source, fragment_source);
     return std::make_unique<OpenGLShader>(name, program);
 }
 

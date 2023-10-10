@@ -7,13 +7,14 @@ MAINTAINER markvilar EMAIL martin.kvisvik.larsen@hotmail.com
 ENV DEBIAN_FRONTEND="noninteractive" TZ="Etc/UTC"
 
 # Install system dependencies
-RUN apt update -y
+RUN apt update -y --fix-missing
 RUN apt install -y \
     sudo \
     cmake \
     gcc-10 \
     g++-10 \
     clang-10 \
+    clang-12 \
     ninja-build \
     python3-dev \
     python3-pip \
@@ -32,4 +33,4 @@ RUN cd /pine
 RUN conan profile detect
 
 # Install dependencies and invoke build
-RUN conan build . --profile ./conan/profiles/linux_ninja_clang --build missing
+RUN conan build . --profile ./conan/profiles/linux_ninja_clang-12 --build missing

@@ -25,7 +25,7 @@ concept EventCallback = requires(Callback callback, Event& event) {
 
 class Window {
     /*
-    TODO: Create design based on bridge design pattern (i.e. pimpl).
+    TODO: Deprecated class. Replace with new WindowBase.
     Interface class for Pines window implementations.
     */
 
@@ -85,25 +85,29 @@ concept WindowConcept = requires(T t, const std::function<void(const Event&)>& c
 };
 
 template <typename T>
-concept WindowContextConcept = requires(T t) {
+concept WindowFactoryConcept = requires(T t) {
     typename T::WindowType;
     typename T::InputType;
     t.create_window();
 };
 
-class BasicInputHandle {
+class InputHandleBase {
 public:
-    virtual ~BasicInputHandle() = default;
+    virtual ~InputHandleBase() = default;
     virtual bool is_key_pressed(const KeyCode key) = 0;
     virtual bool is_mouse_button_pressed(const MouseCode button) = 0;
     virtual std::pair<float, float> get_mouse_position() = 0;
 };
 
-template <InputConcept Impl>
-class ErasedInputHandle final : public BasicInputHandle {
+/*
+InputHandleWrapper:
+Wrapper for an input handle based on external polymorphism.
+*/
+template <InputConcept InputImpl>
+class InputHandleWrapper final : public InputHandleBase {
 public:
-    ErasedInputHandle(Impl impl_) : impl(std::move(impl_)) {}
-    virtual ~ErasedInputHandle() = default;
+    InputHandleWrapper(InputImpl impl_) : impl(std::move(impl_)) {}
+    virtual ~InputHandleWrapper() = default;
     
     virtual bool is_key_pressed(const KeyCode key) override {
         return impl.is_key_pressed(key);
@@ -118,18 +122,22 @@ public:
     }
 
 private:
-    Impl impl;
+    InputImpl impl;
 };
 
-class BasicWindow {
+/*
+WindowBase:
+Base class for a pine window.
+*/
+class WindowBase {
 public:
     using size_t = std::uint32_t;
 
-    virtual ~BasicWindow() = default;
+    virtual ~WindowBase() = default;
     virtual std::string_view get_title() = 0;
     virtual std::pair<size_t, size_t> get_size() = 0;
     virtual std::pair<size_t, size_t> get_position() = 0;
-    virtual std::unique_ptr<BasicInputHandle> get_input() = 0;
+    virtual std::unique_ptr<InputHandleBase> get_input() = 0;
     virtual void swap_buffers() = 0;
     virtual void maximize() = 0;
     virtual void center() = 0;
@@ -137,35 +145,60 @@ public:
 };
 
 /*
-WindowContext:
-Context for loading of window backend, and creation of windows. The client is 
-responsible for loading and unloading the window backend, and maintaining the 
-lifetime of the created windows.
+WindowFactoryBase:
+Base class for a window factory. 
+*/
+class WindowFactoryBase {
+public:
+    virtual ~WindowFactoryBase() = default;
+    virtual std::shared_ptr<WindowBase> create_window() = 0;
+};
 
-Public interfaces:
-- BasicWindowContext
-
-Private implementation:
-- ErasedWindow
-- WindowContextWrapper
+/*
+WindowSystem:
+Class for a window system consisting of window factory and a backend loader. 
+- The backend loader is responsible for loading and unloading the window backend
+- The factory is reponsible for window creation
+- The client is responsible for maintaining window lifetime
 */
 
-class WindowContext {
+class WindowSystem {
+
+using BackendLoader = std::function<bool(void)>;
+using BackendObserver = std::function<bool(void)>;
+using BackendUnloader = std::function<bool(void)>;
 
 public:
+    template <WindowFactoryConcept Factory>
+    WindowSystem(
+        Factory factory_, 
+        const BackendLoader& loader_,
+        const BackendObserver& observer_,
+        const BackendUnloader& unloader_
+    ) 
+    : factory(std::make_unique<WindowFactoryWrapper<Factory>>(std::move(factory_))),
+        loader(loader_), observer(observer_), unloader(unloader_) {}
 
-class BasicWindowContext {
-public:
-    virtual ~BasicWindowContext() = default;
-    virtual std::shared_ptr<BasicWindow> create_window() = 0;
-};
+    bool load() const noexcept { return loader(); }
+    bool is_loaded() const noexcept { return observer(); }
+    bool unload() const noexcept { return unloader(); }
+
+    /* Factory */
+    std::shared_ptr<WindowBase> create_window() {
+        return factory->create_window();
+    }
 
 private:
 
-template <WindowConcept Impl>
-class ErasedWindow final : public BasicWindow {
+/*
+WindowWrapper:
+Wrapper for a window based on external polymorphism. The wrapper is responsible
+for dispatching function calls to the window implementation.
+*/
+template <WindowConcept WindowImpl>
+class WindowWrapper final : public WindowBase {
 public:
-    ErasedWindow(std::unique_ptr<Impl> impl_) : impl(std::move(impl_)) {}
+    WindowWrapper(std::unique_ptr<WindowImpl> impl_) : impl(std::move(impl_)) {}
 
     virtual std::string_view get_title() override {
         return impl->get_title();
@@ -179,8 +212,10 @@ public:
         return impl->get_position();
     }
 
-    virtual std::unique_ptr<BasicInputHandle> get_input() override {
-        return std::make_unique<ErasedInputHandle<typename Impl::InputType>>(impl->get_input());
+    virtual std::unique_ptr<InputHandleBase> get_input() override {
+        return std::make_unique<InputHandleWrapper<typename WindowImpl::InputType>>(
+            impl->get_input()
+        );
     }
 
     virtual void swap_buffers() override {
@@ -200,49 +235,35 @@ public:
     }
 
 private:
-    std::unique_ptr<Impl> impl;
+    std::unique_ptr<WindowImpl> impl;
 };
 
-template <WindowContextConcept Impl>
-class WindowContextWrapper final : public BasicWindowContext {
+/*
+WindowFactoryWrapper:
+Wrapper for a window factory based on external polymorphism. The window factory 
+is responsible for creating new windows.
+*/
+template <WindowFactoryConcept FactoryImpl>
+class WindowFactoryWrapper final : public WindowFactoryBase {
 public:
-    WindowContextWrapper(const Impl& impl_) : impl(impl_) {}
+    WindowFactoryWrapper(const FactoryImpl& impl_) : impl(impl_) {}
 
-    virtual std::shared_ptr<BasicWindow> create_window() override {
-        return std::make_shared<ErasedWindow<typename Impl::WindowType>>(impl.create_window());
+    virtual std::shared_ptr<WindowBase> create_window() override {
+        return std::make_shared<WindowWrapper<typename FactoryImpl::WindowType>>(
+            impl.create_window()
+        );
     }
 
 private:
-    Impl impl;
+    FactoryImpl impl;
 };
 
-public:
-    using BackendLoader = std::function<bool(void)>;
-    using BackendVerifier = std::function<bool(void)>;
-    using BackendUnloader = std::function<bool(void)>;
-
-    template <WindowContextConcept Impl>
-    WindowContext(Impl impl_, 
-        const BackendLoader& loader_,
-        const BackendVerifier& verifier_,
-        const BackendUnloader& unloader_
-    ) 
-    : impl(std::make_shared<WindowContextWrapper<Impl>>(std::move(impl_))),
-        loader(loader_), verifier(verifier_), unloader(unloader_) {}
-
-    bool load() const noexcept { return loader(); }
-    bool is_loaded() const noexcept { return verifier(); }
-    bool unload() const noexcept { return unloader(); }
-
-    /* Builder */
-    std::shared_ptr<BasicWindow> create_window() {
-        return impl->create_window();
-    }
-
 private:
-    std::shared_ptr<BasicWindowContext> impl;
+    std::unique_ptr<WindowFactoryBase> factory;
+
+    // TODO: Replace with backend loader.
     BackendLoader loader{[](){ return false; }};
-    BackendVerifier verifier{[](){ return false; }};
+    BackendObserver observer{[](){ return false; }};
     BackendUnloader unloader{[](){ return false; }};
 };
 

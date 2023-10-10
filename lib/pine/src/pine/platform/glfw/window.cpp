@@ -1,129 +1,21 @@
 #if defined(PINE_WINDOW_GLFW)
 
 #include "pine/platform/glfw/window.hpp"
+#include "pine/platform/glfw/api.hpp"
 
 #include <GLFW/glfw3.h>
 
 namespace pine {
 
 // ----------------------------------------------------------------------------
-// ---- Statics ---------------------------------------------------------------
-// ----------------------------------------------------------------------------
-
-static void error_callback(const int error, const char* description) {
-    PINE_CORE_ERROR("GLFW error ({0}): {1}", error, description);
-}
-
-// Statics to monitor the state of GLFW
-static bool glfw_initialized = false;
-static uint8_t glfw_window_count = 0;
-
-// ----------------------------------------------------------------------------
-// ---- Free functions / API wrappers -----------------------------------------
-// ----------------------------------------------------------------------------
-
-namespace glfw {
-
-bool load() noexcept {
-    glfwSetErrorCallback(error_callback);
-    const auto success = glfwInit();
-    if (success) {
-        glfw_initialized = true;
-    }
-    return success;
-}
-
-bool loaded() noexcept {
-    return glfw_initialized;
-}
-
-bool unload() noexcept {
-    if (glfw_initialized) {
-        glfwTerminate();
-        glfw_initialized = false;
-        return true;
-    } else {
-        return false;
-    }
-}
-
-bool is_key_pressed(GLFWwindow* window, const KeyCode key) {
-    auto state = glfwGetKey(window, static_cast<int>(key));
-    return state == GLFW_PRESS || state == GLFW_REPEAT;
-}
-
-bool is_mouse_button_pressed(GLFWwindow* window, const MouseCode button) {
-    auto state = glfwGetMouseButton(window, static_cast<int>(button));
-    return state == GLFW_PRESS;
-}
-
-std::pair<float, float> get_mouse_position(GLFWwindow* window) {
-    double pos_x, pos_y;
-    glfwGetCursorPos(window, &pos_x, &pos_y);
-    return {static_cast<float>(pos_x), static_cast<float>(pos_y)};
-}
-
-} // namespace glfw
-
-// ----------------------------------------------------------------------------
-// ---- GlfwContext -----------------------------------------------------------
+// ---- GlfwFactory -----------------------------------------------------------
 // ----------------------------------------------------------------------------
 
 // Initialize statics
-uint8_t GlfwContext::window_count = 0;
-GlfwContext* GlfwContext::instance = nullptr;
+GlfwFactory* GlfwFactory::instance = nullptr;
 
-void GlfwContext::poll_events() {
-    glfwPollEvents();
-}
-
-void GlfwContext::set_vsync(const bool enabled) {
-    if (enabled) {
-        glfwSwapInterval(1);
-    } else {
-        glfwSwapInterval(0);
-    }
-    vsync = enabled;
-}
-
-void GlfwContext::set_context(WindowType& window) {
-    glfwMakeContextCurrent(static_cast<GLFWwindow*>(window.get_native()));
-}
-
-bool GlfwContext::has_context() {
-    return glfwGetCurrentContext() != nullptr;
-}
-
-std::unique_ptr<GlfwContext::WindowType> GlfwContext::create_window(const WindowSpecs& specs) {
-    window_count++;
-    return std::make_unique<GlfwContext::WindowType>(specs);
-}
-
-void GlfwContext::init() {
-    PINE_CORE_VERIFY(instance == nullptr, "GLFW context already exists!");
-    instance = this;
-
-    // Initialize GLFW
-    if (window_count == 0) {
-        [[maybe_unused]] const auto success = glfwInit();
-        PINE_CORE_ASSERT(success, "Could not initialize GLFW!");
-        glfwSetErrorCallback(error_callback);
-    }
-
-
-#if defined(PINE_DEBUG)
-    glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GLFW_TRUE);
-#endif
-    initialized = true;
-}
-
-void GlfwContext::shutdown() {
-    if (window_count == 0) {
-        glfwTerminate();
-    }
-
-    initialized = false;
-    instance = nullptr;
+std::unique_ptr<GlfwFactory::WindowType> GlfwFactory::create_window(const WindowSpecs& specs) {
+    return std::make_unique<GlfwFactory::WindowType>(specs);
 }
 
 // ----------------------------------------------------------------------------
@@ -145,7 +37,7 @@ std::pair<float, float> GlfwInputHandle::get_mouse_position() {
 }
 
 // ----------------------------------------------------------------------------
-// ---- GlfwWindow ------------------------------------------------------------
+// ---- WindowImpl ------------------------------------------------------------
 // ----------------------------------------------------------------------------
 
 GlfwWindow::GlfwWindow(const WindowSpecs& specs) : specification(specs) { 
@@ -160,12 +52,11 @@ void GlfwWindow::init() {
     window_data.height = specification.height;
 
     // Create window
-    window = glfwCreateWindow(
+    window = glfw::create_window(
         static_cast<int>(window_data.width),
         static_cast<int>(window_data.height),
-        window_data.title.c_str(),
-        nullptr,
-        nullptr);
+        window_data.title
+    );
 
     // Set up event callbacks
     set_callbacks();

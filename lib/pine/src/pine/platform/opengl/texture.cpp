@@ -21,7 +21,7 @@ OpenGLTexture2D::OpenGLTexture2D(const Image& image)
 
     glTextureStorage2D(renderer_id,
         1,
-        glutils::to_opengl_internal(image.get_format()),
+        opengl::to_opengl_internal(image.get_format()),
         static_cast<GLsizei>(image.get_width()),
         static_cast<GLsizei>(image.get_height()));
 
@@ -36,7 +36,7 @@ OpenGLTexture2D::OpenGLTexture2D(const Image& image)
         0,
         static_cast<GLsizei>(image.get_width()),
         static_cast<GLsizei>(image.get_height()),
-        glutils::to_opengl(image.get_format()),
+        opengl::to_opengl(image.get_format()),
         GL_UNSIGNED_BYTE,
         static_cast<const void*>(image.get_buffer().data()));
 }

@@ -20,21 +20,21 @@ RendererID create_color_attachment(const FramebufferAttachment& attachment,
     glBindTexture(GL_TEXTURE_2D, renderer_id);
     glTexImage2D(GL_TEXTURE_2D,
         0,
-        static_cast<GLint>(glutils::to_opengl_internal(attachment.format)),
+        static_cast<GLint>(opengl::to_opengl_internal(attachment.format)),
         static_cast<GLsizei>(width),
         static_cast<GLsizei>(height),
         0,
-        glutils::to_opengl(attachment.format),
+        opengl::to_opengl(attachment.format),
         GL_UNSIGNED_BYTE,
         nullptr);
     glTexParameteri(GL_TEXTURE_2D,
         GL_TEXTURE_MIN_FILTER,
-        static_cast<GLint>(glutils::to_opengl(attachment.filter)));
+        static_cast<GLint>(opengl::to_opengl(attachment.filter)));
     glTexParameteri(GL_TEXTURE_2D,
         GL_TEXTURE_MAG_FILTER,
-        static_cast<GLint>(glutils::to_opengl(attachment.filter)));
+        static_cast<GLint>(opengl::to_opengl(attachment.filter)));
     glFramebufferTexture2D(GL_FRAMEBUFFER,
-        glutils::get_attachment_type(attachment.format),
+        opengl::get_attachment_type(attachment.format),
         GL_TEXTURE_2D,
         renderer_id,
         0);
@@ -49,11 +49,11 @@ RendererID create_depth_attachment(const FramebufferAttachment& attachment,
     glBindTexture(GL_TEXTURE_2D, renderer_id);
     glTexStorage2D(GL_TEXTURE_2D,
         1,
-        glutils::to_opengl(attachment.format),
+        opengl::to_opengl(attachment.format),
         static_cast<GLsizei>(width),
         static_cast<GLsizei>(height));
     glFramebufferTexture2D(GL_FRAMEBUFFER,
-        glutils::get_attachment_type(attachment.format),
+        opengl::get_attachment_type(attachment.format),
         GL_TEXTURE_2D,
         renderer_id,
         0);

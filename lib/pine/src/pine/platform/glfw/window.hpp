@@ -14,51 +14,24 @@ struct GLFWwindow;
 
 namespace pine {
 
-namespace glfw {
-
-// Backend loading
-bool load() noexcept;
-bool loaded() noexcept;
-bool unload() noexcept;
-
-// Input functions
-bool is_key_pressed(GLFWwindow* window, const KeyCode key);
-bool is_mouse_button_pressed(GLFWwindow* window, const MouseCode button);
-std::pair<float, float> get_mouse_position(GLFWwindow* window);
-
-} // namespace glfw
-
 // Forward declaration
 class GlfwWindow;
 class GlfwInput;
 
-class GlfwContext {
+class GlfwFactory {
 public:
     using WindowType = GlfwWindow;
     using InputType = bool; // NOTE: Temporary
 
-    GlfwContext() = default;
-    ~GlfwContext() = default;
+    GlfwFactory() = default;
+    ~GlfwFactory() = default;
 
-    void poll_events();
-
-    void set_vsync(const bool enabled);
-    void set_context(WindowType& window);
-
-    bool has_context();
-
-    // Factories
     std::unique_ptr<WindowType> create_window(const WindowSpecs& specs = {});
-
-private:
-    void init();
-    void shutdown();
 
 private:
     bool initialized{false};
     bool vsync{false};
-    static uint8_t window_count;
-    static GlfwContext* instance;
+    static GlfwFactory* instance;
 };
 
 class GlfwInputHandle {

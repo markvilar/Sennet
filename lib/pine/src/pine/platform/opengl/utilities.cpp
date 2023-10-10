@@ -4,7 +4,19 @@
 #include "pine/defines/assert.hpp"
 #include "pine/pch.hpp"
 
-namespace pine::glutils {
+namespace pine::opengl {
+
+std::string get_opengl_vendor() {
+    return std::string(reinterpret_cast<const char*>(glGetString(GL_VENDOR)));
+}
+
+std::string get_opengl_renderer() {
+    return std::string(reinterpret_cast<const char*>(glGetString(GL_RENDERER)));
+}
+
+std::string get_opengl_version() {
+    return std::string(reinterpret_cast<const char*>(glGetString(GL_VERSION)));
+}
 
 GLenum to_opengl(const TextureFormat format) {
     switch (format) {
@@ -281,4 +293,4 @@ GLuint compile_shader(const std::string& vertex_source,
     return program;
 }
 
-} // namespace pine::glutils
+} // namespace pine::opengl

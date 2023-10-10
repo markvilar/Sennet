@@ -3,9 +3,11 @@
 
 #include <pine/pine.hpp>
 #include <pine/graphics/api.hpp>
+
+#include <pine/platform/glfw/api.hpp>
 #include <pine/platform/glfw/window.hpp>
 
-class TestInput : public pine::BasicInputHandle {
+class TestInput : public pine::InputHandleBase {
 public:
     virtual bool is_key_pressed(const pine::KeyCode key) override { 
         return false; 
@@ -18,7 +20,7 @@ public:
     }
 };
 
-class TestWindow : public pine::BasicWindow {
+class TestWindow : public pine::WindowBase {
 public:
     virtual ~TestWindow() = default;
     virtual std::string_view get_title() override {
@@ -30,7 +32,7 @@ public:
     virtual std::pair<uint32_t, uint32_t> get_position() override {
         return { 0, 0 };
     }
-    virtual std::unique_ptr<pine::BasicInputHandle> get_input () override {
+    virtual std::unique_ptr<pine::InputHandleBase> get_input () override {
         return std::make_unique<TestInput>();
     }
     virtual void swap_buffers() override {}
@@ -43,25 +45,28 @@ int main(int argc, char** argv)
 {
     pine::Log::init();
 
-    using Windows = std::vector<std::shared_ptr<pine::BasicWindow>>;
+    using Windows = std::vector<std::shared_ptr<pine::WindowBase>>;
 
-    // Inject GLFW components into a pine window context
-    auto context = pine::WindowContext(
-        pine::GlfwContext(),
+    // Inject GLFW components into a pine window system
+    auto system = pine::WindowSystem(
+        pine::GlfwFactory(),
         []() -> bool { return pine::glfw::load(); },
-        []() -> bool { return pine::glfw::loaded(); },
+        []() -> bool { return pine::glfw::is_loaded(); },
         []() -> bool { return pine::glfw::unload(); }
     );
 
-    context.load();
+    // Call the injected load function
+    system.load();
 
+    // Create and push windows into a vector
     Windows windows;
-    windows.push_back(context.create_window());
-    windows.push_back(context.create_window());
-    windows.push_back(context.create_window());
-    windows.push_back(context.create_window());
+    windows.push_back(system.create_window());
+    windows.push_back(system.create_window());
+    windows.push_back(system.create_window());
+    windows.push_back(system.create_window());
     windows.push_back(std::make_unique<TestWindow>());
 
+    // Get window names and mouse positions
     auto window_count = 0;
     for (auto window : windows) {
         if (window) {
@@ -79,8 +84,9 @@ int main(int argc, char** argv)
         }
     }
 
+    // Count frames while the window system is loaded
     auto count = 0;
-    while (context.is_loaded()) {
+    while (system.is_loaded()) {
         PINE_CORE_INFO("Count: {0}", count++);
         for (auto window : windows) {
             window->swap_buffers();
